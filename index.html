@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Tempnext</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#FAF7F2}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1C1C1E;-webkit-font-smoothing:antialiased}
+input,select,textarea{
+  font-family:inherit;background:#fff;
+  border:1.5px solid #E8E4DE;border-radius:12px;
+  padding:13px 16px;color:#1C1C1E;font-size:15px;
+  width:100%;outline:none;-webkit-appearance:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#C17E3A;
+  box-shadow:0 0 0 3px rgba(193,126,58,0.12);
+}
+::placeholder{color:#B0A898}
+::-webkit-scrollbar{width:0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
+.fu{animation:fadeUp .3s ease forwards}
+.fi{animation:fadeIn .22s ease}
+.su{animation:slideUp .32s cubic-bezier(.32,.72,0,1) forwards}
+.pop{animation:pop .2s ease forwards}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useRef,useEffect} = React;
+
+// ── Supabase ──────────────────────────────────────────────────
+const SUPA_URL = "https://ahvmyhxromworlysqsam.supabase.co";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFodm15aHhyb213b3JseXNxc2FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDg3MjAsImV4cCI6MjA5MTQyNDcyMH0.oSUCpEMK2i8d7siCadDy4kfTOmJwFz9gydxjniq75iE";
+const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ── Tokens ────────────────────────────────────────────────────
+const T = {
+  bg:"#FAF7F2", surface:"#FFFFFF",
+  border:"#EDE9E3", borderMd:"#DDD8D0",
+  text:"#1C1C1E", sub:"#3D3830", muted:"#8C8478",
+  faint:"#F5F1EB", accent:"#C17E3A",
+  accentDk:"#9A5F22", accentBg:"rgba(193,126,58,0.1)",
+  blue:"#1565C0", blueBg:"rgba(21,101,192,0.08)",
+  green:"#2E7D5E", greenBg:"rgba(46,125,94,0.1)",
+  red:"#C0392B",
+};
+
+const PLACES = [
+  {value:"escola",   label:"Escola"},
+  {value:"fazenda",  label:"Fazenda / Sítio"},
+  {value:"bairro",   label:"Bairro"},
+  {value:"cidade",   label:"Cidade"},
+  {value:"vila",     label:"Vila / Povoado"},
+  {value:"cond",     label:"Condomínio"},
+  {value:"trabalho", label:"Local de Trabalho"},
+  {value:"outro",    label:"Outro"},
+];
+const STATES = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+const ERAS   = [
+  {value:"passado",  label:"Passado",  desc:"Vivi aqui antes",      color:"#7B5EA7"},
+  {value:"presente", label:"Presente", desc:"Moro aqui agora",      color:"#1565C0"},
+  {value:"futuro",   label:"Futuro",   desc:"Vou estar aqui",       color:"#2E7D5E"},
+];
+
+const placeLabel  = v => PLACES.find(p=>p.value===v)?.label||"Local";
+const eraInfo     = v => ERAS.find(e=>e.value===v)||ERAS[0];
+const initials    = n => n.trim().split(" ").filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join("");
+const fmtTime     = ts => new Date(ts).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+const fileToB64   = f => new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});
+
+// ── Logo ──────────────────────────────────────────────────────
+function Logo({size="sm"}){
+  const lg=size==="lg", fs=lg?42:22;
+  // Two interleaved arcs above "temp": S-curve style
+  // Arc1 goes up (hill), Arc2 continues where Arc1 ends going down (valley)
+  // They share the middle point creating a smooth wave
+  const W=lg?80:44, H=lg?14:8;
+  return(
+    <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
+      <div style={{position:"relative",display:"inline-flex",alignItems:"flex-end"}}>
+        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
+          style={{position:"absolute",top:lg?-14:-8,left:0,overflow:"visible"}}>
+          {/* Arc 1: starts bottom-left, peaks up in first half */}
+          <path d={`M 2 ${H} Q ${W*0.25} 0 ${W*0.5} ${H*0.5}`}
+            fill="none" stroke={T.blue} strokeWidth={lg?2:1.5} strokeLinecap="round"/>
+          {/* Arc 2: continues from middle, dips down then back up */}
+          <path d={`M ${W*0.5} ${H*0.5} Q ${W*0.75} ${H} ${W-2} ${H*0.1}`}
+            fill="none" stroke={T.blue} strokeWidth={lg?2:1.5} strokeLinecap="round"/>
+        </svg>
+        <div style={{fontSize:fs,fontWeight:800,letterSpacing:lg?"-2px":"-1px",lineHeight:1,fontFamily:"Georgia,serif"}}>
+          <span style={{color:T.text}}>temp</span>
+          <span style={{color:T.accent}}>next</span>
+        </div>
+      </div>
+      {lg&&<div style={{fontSize:10,fontWeight:700,letterSpacing:"0.2em",textTransform:"uppercase",color:T.muted,marginTop:10}}>O tempo tem endereço.</div>}
+    </div>
+  );
+}
+
+// ── Base UI ───────────────────────────────────────────────────
+function Btn({children,onClick,variant="primary",full,disabled,size="md",style={}}){
+  const s={
+    primary:{background:`linear-gradient(135deg,${T.accent},${T.accentDk})`,color:"#fff",border:"none",boxShadow:"0 2px 12px rgba(193,126,58,0.3)"},
+    outline:{background:"#fff",color:T.sub,border:`1.5px solid ${T.border}`},
+    ghost:  {background:"transparent",color:T.muted,border:"none",boxShadow:"none"},
+    danger: {background:"transparent",color:T.red,border:`1.5px solid rgba(192,57,43,0.3)`,boxShadow:"none"},
+    blue:   {background:`linear-gradient(135deg,${T.blue},#0D47A1)`,color:"#fff",border:"none",boxShadow:"0 2px 12px rgba(21,101,192,0.3)"},
+    green:  {background:`linear-gradient(135deg,${T.green},#1B5E40)`,color:"#fff",border:"none",boxShadow:"0 2px 12px rgba(46,125,94,0.3)"},
+  };
+  return(
+    <button onClick={e=>{e.preventDefault();if(!disabled&&onClick)onClick(e);}} disabled={disabled} style={{
+      ...s[variant],borderRadius:12,fontFamily:"inherit",
+      padding:size==="sm"?"8px 14px":size==="lg"?"15px 26px":"12px 22px",
+      fontSize:size==="sm"?13:size==="lg"?16:14,fontWeight:700,
+      cursor:disabled?"not-allowed":"pointer",
+      width:full?"100%":"auto",opacity:disabled?.45:1,
+      transition:"all .18s",letterSpacing:"0.01em",
+      display:"inline-flex",alignItems:"center",justifyContent:"center",gap:8,
+      ...style,
+    }}>{children}</button>
+  );
+}
+
+function Avatar({name,src,size=46}){
+  return(
+    <div style={{width:size,height:size,borderRadius:"50%",flexShrink:0,overflow:"hidden",
+      background:`linear-gradient(135deg,${T.accentBg},rgba(193,126,58,0.2))`,
+      display:"flex",alignItems:"center",justifyContent:"center",
+      fontSize:size*.32,fontWeight:700,color:T.accent,
+      border:`2px solid rgba(193,126,58,0.2)`,
+    }}>
+      {src?<img src={src} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>:initials(name||"?")}
+    </div>
+  );
+}
+
+function Lbl({children}){
+  return <div style={{fontSize:11,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:T.muted,marginBottom:7}}>{children}</div>;
+}
+
+function Spinner({size=18}){
+  return <div style={{width:size,height:size,border:`2px solid ${T.border}`,borderTopColor:T.accent,borderRadius:"50%",animation:"spin .7s linear infinite",flexShrink:0}}/>;
+}
+
+// ── Big Profile Card (like mockup) ────────────────────────────
+function BigCard({p,onView,onAdd,isContact,delay=0}){
+  const era=eraInfo(p.era||"passado");
+  const hasPhoto=!!(p.avatar_url);
+  return(
+    <div className="fu" style={{animationDelay:`${delay}ms`,opacity:0,marginBottom:14}}>
+      <div style={{background:T.surface,borderRadius:18,overflow:"hidden",boxShadow:"0 2px 16px rgba(0,0,0,0.07)",border:`1px solid ${T.border}`,display:"flex",minHeight:110}}>
+        {/* Foto grande à esquerda */}
+        <div style={{width:110,flexShrink:0,background:hasPhoto?"transparent":T.faint,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+          {hasPhoto
+            ?<img src={p.avatar_url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+            :<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+              <div style={{fontSize:32,fontWeight:700,color:T.accent}}>{initials(p.name)}</div>
+            </div>
+          }
+        </div>
+        {/* Conteúdo */}
+        <div style={{flex:1,padding:"14px 14px 12px",display:"flex",flexDirection:"column",justifyContent:"space-between",minWidth:0}}>
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+              <span style={{fontWeight:700,fontSize:16,color:T.text}}>{p.name}</span>
+              {p.nick&&<span style={{color:T.muted,fontSize:13}}>"{p.nick}"</span>}
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:4}}>
+              <svg width="12" height="14" viewBox="0 0 12 14" fill="none"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 8 4 8s4-5 4-8c0-2.2-1.8-4-4-4z" stroke={T.accent} strokeWidth="1.4" fill={T.accentBg}/></svg>
+              <span style={{fontSize:13,color:T.sub,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.place_name}</span>
+            </div>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+              <span style={{fontSize:11,color:T.muted}}>{p.city}, {p.state}</span>
+              <span style={{fontSize:11,color:T.muted}}>·</span>
+              <span style={{fontSize:11,color:T.muted}}>{p.year_start}–{p.year_end}</span>
+              <span style={{fontSize:10,fontWeight:700,color:era.color,background:`${era.color}18`,padding:"1px 7px",borderRadius:20,textTransform:"uppercase",letterSpacing:"0.04em"}}>{era.label}</span>
+            </div>
+          </div>
+          {/* Botões */}
+          <div style={{display:"flex",gap:8,marginTop:10}}>
+            <Btn onClick={()=>onView(p)} variant="outline" size="sm" style={{flex:1}}>Ver perfil</Btn>
+            {isContact
+              ?<Btn onClick={()=>onView(p)} variant="green" size="sm" style={{flex:1}}>
+                <svg width="13" height="11" viewBox="0 0 13 11" fill="none"><path d="M1 5.5l4 4L12 1" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                Contato
+              </Btn>
+              :<Btn onClick={()=>onAdd(p)} variant="primary" size="sm" style={{flex:1}}>
+                + Adicionar
+              </Btn>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Screen: Início ────────────────────────────────────────────
+function Inicio({user,onCadastrar,onBuscar,onView,onAdd,contacts}){
+  const [profiles,setProfiles]=useState([]);
+  const [loading,setLoading]=useState(true);
+
+  useEffect(()=>{
+    db.from("profiles").select("*").order("created_at",{ascending:false}).limit(20)
+      .then(({data})=>{setProfiles(data||[]);setLoading(false);})
+      .catch(()=>setLoading(false));
+  },[]);
+
+  const contactIds=new Set(contacts.map(c=>c.id));
+  const futuros=profiles.filter(p=>p.era==="futuro");
+  const recentes=profiles.filter(p=>p.era!=="futuro");
+
+  return(
+    <div style={{padding:"0 18px 100px"}}>
+      {/* Header */}
+      <div style={{paddingTop:52,paddingBottom:24}}>
+        <Logo size="lg"/>
+        <div style={{marginTop:22}}>
+          {user
+            ?<div style={{fontSize:17,fontWeight:600,color:T.text}}>Olá, {user.nick||user.name.split(" ")[0]}</div>
+            :<div style={{fontSize:22,fontWeight:700,color:T.text}}>Bem-vindo</div>
+          }
+          <div style={{fontSize:14,color:T.muted,marginTop:4}}>
+            {user?"Veja quem viveu no mesmo lugar que você":"Encontre quem compartilhou o mesmo lugar e época"}
+          </div>
+        </div>
+        {/* Botões de ação — some "Criar perfil" quando logado */}
+        <div style={{display:"flex",gap:10,marginTop:18}}>
+          {!user&&<Btn onClick={onCadastrar} size="lg" style={{flex:1}}>Criar perfil</Btn>}
+          <Btn onClick={onBuscar} variant={user?"primary":"outline"} size="lg" style={{flex:1}}>Buscar pessoas</Btn>
+        </div>
+      </div>
+
+      {/* Reencontros futuros */}
+      {futuros.length>0&&(
+        <div style={{marginBottom:8}}>
+          <div style={{fontSize:13,fontWeight:700,color:T.green,letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:14,display:"flex",alignItems:"center",gap:6}}>
+            <span>📅</span> Reencontros planejados
+          </div>
+          {futuros.map((p,i)=><BigCard key={p.id} p={p} onView={onView} onAdd={onAdd} isContact={contactIds.has(p.id)} delay={i*40}/>)}
+        </div>
+      )}
+
+      {/* Perfis recentes */}
+      <div style={{fontSize:13,fontWeight:700,color:T.muted,letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:14,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <span>Perfis recentes</span>
+        {!loading&&<span style={{fontWeight:500,fontSize:12}}>{profiles.length} pessoas</span>}
+      </div>
+
+      {loading
+        ?<div style={{padding:"40px",textAlign:"center"}}><Spinner size={28}/></div>
+        :recentes.length===0
+          ?<div style={{background:T.surface,borderRadius:18,padding:"40px 20px",textAlign:"center",border:`1px solid ${T.border}`}}>
+            <div style={{fontSize:14,color:T.muted,lineHeight:1.9}}>Nenhum perfil ainda.<br/>Seja o primeiro!</div>
+            <div style={{marginTop:16}}><Btn onClick={onCadastrar}>Criar meu perfil</Btn></div>
+          </div>
+          :recentes.map((p,i)=><BigCard key={p.id} p={p} onView={onView} onAdd={onAdd} isContact={contactIds.has(p.id)} delay={i*50}/>)
+      }
+    </div>
+  );
+}
+
+// ── Screen: Buscar ────────────────────────────────────────────
+function Buscar({onView,onAdd,contacts}){
+  const [q,setQ]=useState("");
+  const [lugar,setLugar]=useState("");
+  const [res,setRes]=useState(null);
+  const [loading,setLoading]=useState(false);
+  const timer=useRef();
+  const contactIds=new Set(contacts.map(c=>c.id));
+
+  useEffect(()=>{
+    clearTimeout(timer.current);
+    if(!q&&!lugar){setRes(null);return;}
+    timer.current=setTimeout(buscar,400);
+  },[q,lugar]);
+
+  async function buscar(){
+    setLoading(true);
+    let query=db.from("profiles").select("*");
+    if(q.trim()) query=query.or(`name.ilike.%${q.trim()}%,nick.ilike.%${q.trim()}%`);
+    if(lugar.trim()) query=query.or(`place_name.ilike.%${lugar.trim()}%,city.ilike.%${lugar.trim()}%,state.ilike.%${lugar.trim()}%`);
+    const {data}=await query.order("created_at",{ascending:false}).limit(30);
+    setRes(data||[]);
+    setLoading(false);
+  }
+
+  return(
+    <div style={{padding:"0 18px 100px"}}>
+      <div style={{paddingTop:52,paddingBottom:20}}>
+        <Logo/>
+        <div style={{fontSize:20,fontWeight:700,color:T.text,marginTop:16}}>Buscar pessoas</div>
+        <div style={{fontSize:13,color:T.muted,marginTop:3}}>Digite pouco — os resultados aparecem sozinhos</div>
+      </div>
+
+      <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:8}}>
+        <div style={{position:"relative"}}>
+          <input placeholder="Nome ou apelido…" value={q} onChange={e=>setQ(e.target.value)}/>
+          {q&&<button onClick={()=>setQ("")} style={{position:"absolute",right:13,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:18,lineHeight:1,fontFamily:"inherit"}}>×</button>}
+        </div>
+        <div style={{position:"relative"}}>
+          <input placeholder="Lugar, cidade ou estado…" value={lugar} onChange={e=>setLugar(e.target.value)}/>
+          {lugar&&<button onClick={()=>setLugar("")} style={{position:"absolute",right:13,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:18,lineHeight:1,fontFamily:"inherit"}}>×</button>}
+        </div>
+        {(q||lugar)&&(
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"2px 2px"}}>
+            <span style={{fontSize:12,color:T.muted}}>{loading?"Buscando…":res!==null?`${res.length} resultado${res.length!==1?"s":""}`:""}</span>
+            <button onClick={()=>{setQ("");setLugar("");setRes(null);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,color:T.accent,fontWeight:700,fontFamily:"inherit"}}>Limpar</button>
+          </div>
+        )}
+      </div>
+
+      {loading&&<div style={{padding:"32px",textAlign:"center"}}><Spinner size={24}/></div>}
+      {!loading&&res?.map((p,i)=><BigCard key={p.id} p={p} onView={onView} onAdd={onAdd} isContact={contactIds.has(p.id)} delay={i*40}/>)}
+      {!q&&!lugar&&(
+        <div style={{marginTop:24,textAlign:"center",color:T.muted,fontSize:13,lineHeight:1.9}}>
+          Digite um nome, apelido,<br/>cidade ou lugar para buscar.
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ── Componente: Adicionar Lugar ───────────────────────────────
+function NovoLugar({onAdd,addrTimer}){
+  const [open,setOpen]=useState(false);
+  const [d,setD]=useState({placeType:"escola",placeName:"",addrSearch:"",addrSugs:[],addrLoading:false,city:"",uf:"MT",y1:"",y2:""});
+  const timer=useRef();
+
+  async function searchAddr(q){
+    if(q.length<3){setD(v=>({...v,addrSugs:[]}));return;}
+    setD(v=>({...v,addrLoading:true}));
+    try{
+      const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+", Brasil")}&format=json&addressdetails=1&limit=4&accept-language=pt-BR`);
+      const data=await r.json();
+      setD(v=>({...v,addrSugs:data,addrLoading:false}));
+    }catch{setD(v=>({...v,addrLoading:false}));}
+  }
+  function handleAddrInput(e){
+    const val=e.target.value;
+    setD(v=>({...v,addrSearch:val,placeName:val}));
+    clearTimeout(timer.current);
+    timer.current=setTimeout(()=>searchAddr(val),500);
+  }
+  function selectAddr(s){
+    const addr=s.address;
+    const city=addr.city||addr.town||addr.village||addr.municipality||addr.county||"";
+    const SM={"Acre":"AC","Alagoas":"AL","Amapá":"AP","Amazonas":"AM","Bahia":"BA","Ceará":"CE","Distrito Federal":"DF","Espírito Santo":"ES","Goiás":"GO","Maranhão":"MA","Mato Grosso":"MT","Mato Grosso do Sul":"MS","Minas Gerais":"MG","Pará":"PA","Paraíba":"PB","Paraná":"PR","Pernambuco":"PE","Piauí":"PI","Rio de Janeiro":"RJ","Rio Grande do Norte":"RN","Rio Grande do Sul":"RS","Rondônia":"RO","Roraima":"RR","Santa Catarina":"SC","São Paulo":"SP","Sergipe":"SE","Tocantins":"TO"};
+    const uf=SM[addr.state]||d.uf;
+    setD(v=>({...v,addrSearch:s.display_name.split(",")[0],placeName:s.display_name.split(",")[0],city,uf,addrSugs:[]}));
+  }
+  function adicionar(){
+    if(!d.placeName||!d.city||!d.y1||!d.y2)return;
+    onAdd({placeType:d.placeType,placeName:d.placeName,city:d.city,uf:d.uf,y1:d.y1,y2:d.y2});
+    setD({placeType:"escola",placeName:"",addrSearch:"",addrSugs:[],addrLoading:false,city:"",uf:"MT",y1:"",y2:""});
+    setOpen(false);
+  }
+  const canAdd=d.placeName&&d.city&&d.y1&&d.y2;
+
+  if(!open)return(
+    <button onClick={()=>setOpen(true)} style={{width:"100%",padding:"13px",border:`1.5px dashed ${T.borderMd}`,borderRadius:12,background:"rgba(255,255,255,0.6)",cursor:"pointer",fontSize:14,fontWeight:600,color:T.accent,fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all .15s"}}
+    onMouseEnter={e=>{e.currentTarget.style.background=T.accentBg;e.currentTarget.style.borderColor=T.accent;}}
+    onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.6)";e.currentTarget.style.borderColor=T.borderMd;}}>
+      + Adicionar lugar
+    </button>
+  );
+
+  return(
+    <div style={{background:"#fff",borderRadius:14,padding:"16px",border:`1.5px solid ${T.accent}`,marginTop:4}}>
+      <div style={{fontSize:13,fontWeight:700,color:T.accent,marginBottom:12}}>Novo lugar</div>
+      <div style={{display:"flex",flexDirection:"column",gap:10}}>
+        <div>
+          <Lbl>Tipo</Lbl>
+          <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+            {PLACES.map(p=>(
+              <div key={p.value} onClick={()=>setD({...d,placeType:p.value})} style={{padding:"6px 12px",borderRadius:20,cursor:"pointer",fontSize:12,border:`1.5px solid ${d.placeType===p.value?T.accent:T.border}`,background:d.placeType===p.value?T.accentBg:"#fff",color:d.placeType===p.value?T.accent:T.muted,fontWeight:d.placeType===p.value?600:400,transition:"all .15s"}}>{p.label}</div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <Lbl>Nome do lugar *</Lbl>
+          <div style={{position:"relative"}}>
+            <input placeholder="Ex: Fazenda Santa Cruz…" value={d.addrSearch} onChange={handleAddrInput} style={{paddingRight:d.addrLoading?36:14}}/>
+            {d.addrLoading&&<div style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)"}}><Spinner/></div>}
+          </div>
+          {d.addrSugs.length>0&&(
+            <div style={{border:`1px solid ${T.border}`,borderRadius:10,marginTop:4,overflow:"hidden",background:"#fff",boxShadow:"0 4px 14px rgba(0,0,0,.08)"}}>
+              {d.addrSugs.map((s,i)=>(
+                <div key={i} onClick={()=>selectAddr(s)} style={{padding:"10px 13px",cursor:"pointer",fontSize:13,borderBottom:i<d.addrSugs.length-1?`1px solid ${T.border}`:"none"}}
+                onMouseEnter={e=>e.currentTarget.style.background=T.faint}
+                onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                  <span style={{fontWeight:600}}>{s.display_name.split(",")[0]}</span>
+                  <span style={{color:T.muted,fontSize:12}}>, {s.display_name.split(",").slice(1,2).join(",")}</span>
+                </div>
+              ))}
+              <div onClick={()=>setD(v=>({...v,addrSugs:[]}))} style={{padding:"8px",fontSize:12,color:T.muted,cursor:"pointer",textAlign:"center",background:T.faint}}>Fechar</div>
+            </div>
+          )}
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 80px",gap:10}}>
+          <div><Lbl>Município *</Lbl><input placeholder="Ex: Campo Verde" value={d.city} onChange={e=>setD({...d,city:e.target.value})}/></div>
+          <div><Lbl>Estado</Lbl><select value={d.uf} onChange={e=>setD({...d,uf:e.target.value})}>{STATES.map(s=><option key={s} value={s}>{s}</option>)}</select></div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <div><Lbl>De (ano) *</Lbl><input type="number" placeholder="1990" value={d.y1} onChange={e=>setD({...d,y1:e.target.value})}/></div>
+          <div><Lbl>Até (ano) *</Lbl><input type="number" placeholder="2005" value={d.y2} onChange={e=>setD({...d,y2:e.target.value})}/></div>
+        </div>
+        <div style={{display:"flex",gap:8}}>
+          <Btn variant="outline" onClick={()=>setOpen(false)}>Cancelar</Btn>
+          <Btn full onClick={adicionar} disabled={!canAdd}>Confirmar lugar</Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Screen: Cadastrar ─────────────────────────────────────────
+function Cadastrar({onSave}){
+  const [saving,setSaving]=useState(false);
+  const [done,setDone]=useState(false);
+  const [err,setErr]=useState("");
+  const addrTimer=useRef();
+  const [f,setF]=useState({
+    name:"",nick:"",note:"",
+    avatarPreview:null,avatarB64:null,
+    photos:[],photoB64s:[],
+    lugares:[],
+    placeType:"escola",placeName:"",addrSearch:"",addrSugs:[],addrLoading:false,
+    city:"",uf:"MT",y1:"",y2:"",
+    era:"passado",futureDate:"",
+  });
+
+  async function handleAvatar(e){
+    const file=e.target.files[0]; if(!file) return;
+    const b64=await fileToB64(file);
+    setF(v=>({...v,avatarPreview:URL.createObjectURL(file),avatarB64:b64}));
+  }
+  async function handlePhotos(e){
+    const files=Array.from(e.target.files).slice(0,6);
+    const previews=files.map(f=>URL.createObjectURL(f));
+    const b64s=await Promise.all(files.map(fileToB64));
+    setF(v=>({...v,photos:[...v.photos,...previews].slice(0,6),photoB64s:[...v.photoB64s,...b64s].slice(0,6)}));
+  }
+  function removePhoto(i){setF(v=>({...v,photos:v.photos.filter((_,j)=>j!==i),photoB64s:v.photoB64s.filter((_,j)=>j!==i)}));}
+
+  async function searchAddr(q){
+    if(q.length<3){setF(v=>({...v,addrSugs:[]}));return;}
+    setF(v=>({...v,addrLoading:true}));
+    try{
+      const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+", Brasil")}&format=json&addressdetails=1&limit=4&accept-language=pt-BR`);
+      const data=await r.json();
+      setF(v=>({...v,addrSugs:data,addrLoading:false}));
+    }catch{setF(v=>({...v,addrLoading:false}));}
+  }
+  function handleAddrInput(e){
+    const val=e.target.value;
+    setF(v=>({...v,addrSearch:val,placeName:val}));
+    clearTimeout(addrTimer.current);
+    addrTimer.current=setTimeout(()=>searchAddr(val),500);
+  }
+  function selectAddr(s){
+    const addr=s.address;
+    const city=addr.city||addr.town||addr.village||addr.municipality||addr.county||"";
+    const SM={"Acre":"AC","Alagoas":"AL","Amapá":"AP","Amazonas":"AM","Bahia":"BA","Ceará":"CE","Distrito Federal":"DF","Espírito Santo":"ES","Goiás":"GO","Maranhão":"MA","Mato Grosso":"MT","Mato Grosso do Sul":"MS","Minas Gerais":"MG","Pará":"PA","Paraíba":"PB","Paraná":"PR","Pernambuco":"PE","Piauí":"PI","Rio de Janeiro":"RJ","Rio Grande do Norte":"RN","Rio Grande do Sul":"RS","Rondônia":"RO","Roraima":"RR","Santa Catarina":"SC","São Paulo":"SP","Sergipe":"SE","Tocantins":"TO"};
+    const uf=SM[addr.state]||f.uf;
+    const placeName=s.display_name.split(",")[0];
+    setF(v=>({...v,addrSearch:placeName,placeName,city,uf,addrSugs:[]}));
+  }
+
+  const canSave=f.name.trim().length>=2&&f.lugares.length>0;
+
+  async function salvar(){
+    if(!canSave){setErr("Preencha seu nome e adicione pelo menos um lugar.");return;}
+    setSaving(true);setErr("");
+    const profile={
+      id:crypto.randomUUID?crypto.randomUUID():Date.now().toString(),
+      created_at:new Date().toISOString(),
+      name:f.name.trim(), nick:f.nick.trim()||null,
+      place_type:f.lugares[0]?.placeType||"outro",
+      place_name:f.lugares[0]?.placeName||"",
+      city:f.lugares[0]?.city||"",
+      state:f.lugares[0]?.uf||"MT",
+      year_start:parseInt(f.lugares[0]?.y1||0),
+      year_end:parseInt(f.lugares[0]?.y2||0),
+      lugares:f.lugares,
+      note:f.note.trim()||null,
+      era:f.era,
+      future_date:(f.era==="futuro"&&f.futureDate)?f.futureDate:null,
+      avatar_url:f.avatarB64||null,
+      photos:f.photoB64s||[],
+    };
+    try{await db.from("profiles").insert(profile);}catch(e){console.log("Supabase:",e?.message);}
+    onSave(profile);
+    setSaving(false);setDone(true);
+  }
+
+  if(done)return(
+    <div style={{padding:"100px 24px",textAlign:"center"}} className="fi">
+      <div style={{width:72,height:72,borderRadius:"50%",background:`linear-gradient(135deg,${T.accent},${T.accentDk})`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 28px",boxShadow:"0 8px 28px rgba(193,126,58,0.35)"}}>
+        <svg width="28" height="20" viewBox="0 0 28 20" fill="none"><path d="M1 10l9 9L27 1" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </div>
+      <Logo size="lg"/>
+      <div style={{marginTop:20,fontSize:16,color:T.sub,lineHeight:1.8}}>Perfil criado!<br/>Agora você pode ser encontrado.</div>
+    </div>
+  );
+
+  return(
+    <div style={{padding:"0 18px 120px"}}>
+      <div style={{paddingTop:52,paddingBottom:24}}>
+        <Logo/>
+        <div style={{fontSize:20,fontWeight:700,color:T.text,marginTop:16}}>Criar perfil</div>
+        <div style={{fontSize:13,color:T.muted,marginTop:4}}>Preencha e apareça nas buscas</div>
+      </div>
+
+      <div style={{display:"flex",flexDirection:"column",gap:0}}>
+
+        {/* Seção: Você */}
+        <STitle>Quem é você?</STitle>
+
+        <FRow>
+          <div style={{display:"flex",alignItems:"center",gap:16}}>
+            <div style={{position:"relative",flexShrink:0}}>
+              <Avatar name={f.name||"?"} src={f.avatarPreview} size={68}/>
+              <label style={{position:"absolute",bottom:0,right:0,width:26,height:26,borderRadius:"50%",background:T.accent,border:"2px solid #fff",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,0.15)"}}>
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 2v7M2 5.5h7" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg>
+                <input type="file" accept="image/*" onChange={handleAvatar} style={{display:"none"}}/>
+              </label>
+            </div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:14,fontWeight:600,color:T.text,marginBottom:3}}>Foto de perfil</div>
+              <div style={{fontSize:12,color:T.muted}}>Opcional — ajuda a te reconhecerem</div>
+            </div>
+          </div>
+        </FRow>
+
+        <FRow label="Nome completo *">
+          <input placeholder="Seu nome" value={f.name} onChange={e=>setF({...f,name:e.target.value})}/>
+        </FRow>
+        <FRow label="Apelido">
+          <input placeholder="Como te chamavam? Ex: Cadu, Marizinha…" value={f.nick} onChange={e=>setF({...f,nick:e.target.value})}/>
+        </FRow>
+
+        {/* Seção: Quando */}
+        <STitle>Quando?</STitle>
+        <FRow>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
+            {ERAS.map(e=>(
+              <div key={e.value} onClick={()=>setF({...f,era:e.value})} style={{padding:"11px 8px",borderRadius:12,cursor:"pointer",textAlign:"center",border:`1.5px solid ${f.era===e.value?e.color:T.border}`,background:f.era===e.value?`${e.color}12`:"#fff",transition:"all .15s"}}>
+                <div style={{fontSize:12,fontWeight:700,color:f.era===e.value?e.color:T.muted,textTransform:"uppercase",letterSpacing:"0.04em"}}>{e.label}</div>
+                <div style={{fontSize:10,color:T.muted,marginTop:3,lineHeight:1.4}}>{e.desc}</div>
+              </div>
+            ))}
+          </div>
+          {f.era==="futuro"&&(
+            <div style={{marginTop:12}}>
+              <Lbl>Data do reencontro</Lbl>
+              <input type="date" value={f.futureDate} onChange={e=>setF({...f,futureDate:e.target.value})}/>
+            </div>
+          )}
+        </FRow>
+
+        {/* Seção: Localização */}
+        <STitle>Onde você viveu?</STitle>
+        <FRow>
+          <div style={{fontSize:13,color:T.muted,marginBottom:12,lineHeight:1.6}}>
+            Adicione quantos lugares quiser — escola, fazenda, bairro, cidade…
+          </div>
+          {/* Lista de lugares já adicionados */}
+          {f.lugares.map((loc,i)=>(
+            <div key={i} style={{background:T.faint,borderRadius:12,padding:"12px 14px",marginBottom:8,border:`1px solid ${T.border}`,position:"relative"}}>
+              <button onClick={()=>setF(v=>({...v,lugares:v.lugares.filter((_,j)=>j!==i)}))} style={{position:"absolute",top:8,right:10,background:"none",border:"none",cursor:"pointer",fontSize:16,color:T.muted,lineHeight:1}}>×</button>
+              <div style={{fontWeight:600,fontSize:14,color:T.text,paddingRight:24}}>{loc.placeName}</div>
+              <div style={{fontSize:12,color:T.muted,marginTop:2}}>{loc.city} – {loc.uf} · {loc.y1}–{loc.y2} · {placeLabel(loc.placeType)}</div>
+            </div>
+          ))}
+          {/* Formulário para novo lugar */}
+          <NovoLugar onAdd={loc=>setF(v=>({...v,lugares:[...v.lugares,loc]}))} addrTimer={addrTimer}/>
+        </FRow>
+
+        {/* Seção: Memória */}
+        <STitle>Uma memória (opcional)</STitle>
+        <FRow>
+          <textarea rows={3} placeholder="Ex: Morei perto do córrego, vizinho da família Silva…" value={f.note} onChange={e=>setF({...f,note:e.target.value})} style={{resize:"vertical"}}/>
+        </FRow>
+
+        {/* Seção: Fotos */}
+        <STitle>Fotos da época</STitle>
+        <FRow>
+          <div style={{fontSize:13,color:T.muted,marginBottom:12}}>Até 6 fotos — ajuda as pessoas a te reconhecerem</div>
+          {f.photos.length===0
+            ?<label style={{display:"flex",flexDirection:"column",alignItems:"center",gap:8,border:`1.5px dashed ${T.borderMd}`,borderRadius:14,padding:"28px",cursor:"pointer",background:"rgba(255,255,255,0.7)",textAlign:"center",transition:"all .15s"}}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor=T.accent;e.currentTarget.style.background=T.accentBg;}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor=T.borderMd;e.currentTarget.style.background="rgba(255,255,255,0.7)";}}>
+                <div style={{fontSize:14,fontWeight:600,color:T.sub}}>Adicionar fotos</div>
+                <div style={{fontSize:12,color:T.muted}}>JPG ou PNG · Até 6 fotos</div>
+                <input type="file" accept="image/*" multiple onChange={handlePhotos} style={{display:"none"}}/>
+              </label>
+            :<div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+              {f.photos.map((src,i)=>(
+                <div key={i} style={{aspectRatio:"1",borderRadius:12,overflow:"hidden",position:"relative",border:`1px solid ${T.border}`}}>
+                  <img src={src} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                  <button onClick={()=>removePhoto(i)} style={{position:"absolute",top:5,right:5,width:22,height:22,borderRadius:"50%",background:"rgba(0,0,0,.55)",border:"none",color:"#fff",fontSize:13,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,lineHeight:1}}>×</button>
+                </div>
+              ))}
+              {f.photos.length<6&&(
+                <label style={{aspectRatio:"1",borderRadius:12,border:`1.5px dashed ${T.borderMd}`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",background:"rgba(255,255,255,0.7)"}}>
+                  <span style={{fontSize:26,color:T.accent,fontWeight:300}}>+</span>
+                  <input type="file" accept="image/*" multiple onChange={handlePhotos} style={{display:"none"}}/>
+                </label>
+              )}
+            </div>
+          }
+        </FRow>
+
+        {err&&<div style={{margin:"12px 0",padding:"12px 16px",background:"rgba(192,57,43,0.06)",border:"1px solid rgba(192,57,43,0.2)",borderRadius:10,fontSize:13,color:T.red}}>{err}</div>}
+
+        <div style={{paddingTop:20}}>
+          <Btn full onClick={salvar} disabled={saving||!canSave} size="lg">
+            {saving?<><Spinner/>Salvando…</>:"Criar meu perfil"}
+          </Btn>
+          {!canSave&&<div style={{marginTop:10,fontSize:12,color:T.muted,textAlign:"center"}}>Preencha seu nome e adicione pelo menos um lugar</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Screen: Contatos (como WhatsApp) ──────────────────────────
+function Contatos({user,contacts,onChat,onRemove,onCadastrar,onBuscar}){
+  const [buscando,setBuscando]=useState(false);
+  const [termo,setTermo]=useState("");
+  const [results,setResults]=useState([]);
+  const [loading,setLoading]=useState(false);
+  const timer=useRef();
+
+  useEffect(()=>{
+    if(!termo.trim()){setResults([]);return;}
+    clearTimeout(timer.current);
+    timer.current=setTimeout(async()=>{
+      setLoading(true);
+      const {data}=await db.from("profiles").select("*")
+        .or(`name.ilike.%${termo}%,nick.ilike.%${termo}%`)
+        .neq("id",user?.id||"")
+        .limit(10);
+      setResults(data||[]);setLoading(false);
+    },400);
+  },[termo]);
+
+  if(!user)return(
+    <div style={{padding:"80px 20px",textAlign:"center"}}>
+      <Logo size="lg"/>
+      <div style={{marginTop:24,fontSize:15,color:T.sub,lineHeight:1.8,marginBottom:28}}>
+        Crie seu perfil para adicionar<br/>contatos e trocar mensagens.
+      </div>
+      <Btn full onClick={onCadastrar} size="lg">Criar perfil</Btn>
+    </div>
+  );
+
+  const filtrados=contacts.filter(c=>c.name.toLowerCase().includes(termo.toLowerCase())||
+    (c.nick||"").toLowerCase().includes(termo.toLowerCase()));
+
+  return(
+    <div style={{padding:"0 18px 100px"}}>
+      <div style={{paddingTop:52,paddingBottom:20}}>
+        <Logo/>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:16}}>
+          <div>
+            <div style={{fontSize:20,fontWeight:700,color:T.text}}>Contatos</div>
+            <div style={{fontSize:12,color:T.muted,marginTop:2}}>{contacts.length} contato{contacts.length!==1?"s":""}</div>
+          </div>
+          <Btn onClick={onBuscar} variant="primary" size="sm">+ Adicionar</Btn>
+        </div>
+      </div>
+
+      {/* Busca dentro dos contatos / nova pessoa */}
+      <div style={{position:"relative",marginBottom:16}}>
+        <input
+          placeholder="Buscar contatos ou encontrar novas pessoas…"
+          value={termo}
+          onChange={e=>setTermo(e.target.value)}
+          style={{paddingRight:termo?40:14}}
+        />
+        {termo&&<button onClick={()=>setTermo("")} style={{position:"absolute",right:13,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:18,lineHeight:1}}>×</button>}
+      </div>
+
+      {/* Lista de contatos */}
+      {contacts.length===0&&!termo?(
+        <div style={{background:T.surface,borderRadius:18,padding:"40px 20px",textAlign:"center",border:`1px solid ${T.border}`,marginBottom:16}}>
+          <div style={{fontSize:24,marginBottom:12}}>👥</div>
+          <div style={{fontSize:15,fontWeight:600,color:T.text,marginBottom:8}}>Nenhum contato ainda</div>
+          <div style={{fontSize:13,color:T.muted,lineHeight:1.8,marginBottom:20}}>Encontre pessoas que viveram no<br/>mesmo lugar que você e adicione.</div>
+          <Btn onClick={onBuscar}>Buscar pessoas</Btn>
+        </div>
+      ):(
+        <div style={{display:"flex",flexDirection:"column",gap:2,marginBottom:16}}>
+          {(termo?filtrados:contacts).map((c,i)=>(
+            <div key={c.id} style={{background:T.surface,borderRadius:14,padding:"12px 14px",display:"flex",gap:12,alignItems:"center",border:`1px solid ${T.border}`,marginBottom:6,transition:"all .15s",cursor:"pointer"}}
+            onClick={()=>onChat(c,"msg")}
+            onMouseEnter={e=>e.currentTarget.style.background=T.faint}
+            onMouseLeave={e=>e.currentTarget.style.background=T.surface}>
+              <Avatar name={c.name} src={c.avatar_url} size={50}/>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:600,fontSize:15,color:T.text}}>{c.name}</div>
+                <div style={{fontSize:12,color:T.muted,marginTop:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.place_name} · {c.city}</div>
+              </div>
+              {/* Ações */}
+              <div style={{display:"flex",gap:8,flexShrink:0}}>
+                <button onClick={e=>{e.stopPropagation();onChat(c,"call");}} style={{width:36,height:36,borderRadius:"50%",background:T.faint,border:`1px solid ${T.border}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 2C5.5 2 3 5 3 7.5c0 3 2.5 6 7.5 7 3 0 6-2.5 6-2.5L14.5 9.5l-3 .8S10 9 9.5 8.5 9 6.5 9 6.5L9.5 4 5.5 2z" stroke={T.sub} strokeWidth="1.3" strokeLinejoin="round"/></svg>
+                </button>
+                <button onClick={e=>{e.stopPropagation();onChat(c,"msg");}} style={{width:36,height:36,borderRadius:"50%",background:T.accent,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(193,126,58,0.3)"}}>
+                  <svg width="15" height="13" viewBox="0 0 15 13" fill="none"><path d="M1 1h13v9H8.5l-3 2.5V10H1V1z" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Resultados de busca de novas pessoas */}
+      {termo&&results.length>0&&(
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:T.muted,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:12}}>Pessoas encontradas</div>
+          {results.filter(r=>!contacts.find(c=>c.id===r.id)).map((p,i)=>(
+            <div key={p.id} style={{background:T.surface,borderRadius:14,padding:"12px 14px",display:"flex",gap:12,alignItems:"center",border:`1px solid ${T.border}`,marginBottom:6}}>
+              <Avatar name={p.name} src={p.avatar_url} size={48}/>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:600,fontSize:14,color:T.text}}>{p.name}</div>
+                <div style={{fontSize:12,color:T.muted,marginTop:2}}>{p.place_name} · {p.city}</div>
+              </div>
+              <Btn onClick={()=>{}} variant="primary" size="sm">+ Adicionar</Btn>
+            </div>
+          ))}
+        </div>
+      )}
+      {loading&&<div style={{textAlign:"center",padding:"20px"}}><Spinner/></div>}
+    </div>
+  );
+}
+
+// ── Screen: Perfil ────────────────────────────────────────────
+function Perfil({user,onLogout,onCadastrar,onUpdateUser}){
+  if(!user)return(
+    <div style={{padding:"80px 20px",textAlign:"center"}}>
+      <Logo size="lg"/>
+      <div style={{marginTop:24,fontSize:15,color:T.sub,lineHeight:1.8,marginBottom:28}}>Seu lugar no tempo está aqui.</div>
+      <Btn full onClick={onCadastrar} size="lg">Criar meu perfil</Btn>
+    </div>
+  );
+  const era=eraInfo(user.era||"passado");
+
+  async function handleNewAvatar(e){
+    const file=e.target.files[0]; if(!file) return;
+    const b64=await fileToB64(file);
+    const updated={...user,avatar_url:b64};
+    onUpdateUser(updated);
+    try{await db.from("profiles").update({avatar_url:b64}).eq("id",user.id);}catch{}
+  }
+  async function handleMorePhotos(e){
+    const files=Array.from(e.target.files).slice(0,6);
+    const b64s=await Promise.all(files.map(fileToB64));
+    const newPhotos=[...(user.photos||[]),...b64s].slice(0,6);
+    onUpdateUser({...user,photos:newPhotos});
+    try{await db.from("profiles").update({photos:newPhotos}).eq("id",user.id);}catch{}
+  }
+
+  return(
+    <div style={{padding:"0 18px 100px"}}>
+      <div style={{paddingTop:52,paddingBottom:24}}>
+        <Logo/>
+        <div style={{fontSize:20,fontWeight:700,color:T.text,marginTop:16}}>Meu perfil</div>
+      </div>
+
+      <div style={{background:T.surface,borderRadius:18,overflow:"hidden",border:`1px solid ${T.border}`,marginBottom:12}}>
+        {/* Banner/foto grande */}
+        <div style={{height:100,background:`linear-gradient(135deg,${T.accentBg},rgba(21,101,192,0.1))`,position:"relative"}}>
+          <div style={{position:"absolute",bottom:-28,left:20}}>
+            <div style={{position:"relative"}}>
+              <Avatar name={user.name} src={user.avatar_url} size={72}/>
+              <label style={{position:"absolute",bottom:2,right:2,width:22,height:22,borderRadius:"50%",background:T.accent,border:"2px solid #fff",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M4.5 1.5v6M1.5 4.5h6" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"/></svg>
+                <input type="file" accept="image/*" onChange={handleNewAvatar} style={{display:"none"}}/>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div style={{padding:"40px 20px 20px"}}>
+          <div style={{fontSize:20,fontWeight:700,color:T.text}}>{user.name}</div>
+          {user.nick&&<div style={{color:T.muted,fontSize:13,marginTop:2}}>"{user.nick}"</div>}
+          <span style={{fontSize:10,fontWeight:700,color:era.color,background:`${era.color}15`,padding:"2px 10px",borderRadius:20,textTransform:"uppercase",letterSpacing:"0.05em",display:"inline-block",marginTop:8}}>{era.label}</span>
+        </div>
+      </div>
+
+      <div style={{background:T.surface,borderRadius:18,overflow:"hidden",border:`1px solid ${T.border}`,marginBottom:12}}>
+        {[["Local",user.place_name],["Município",`${user.city} – ${user.state}`],["Período",`${user.year_start} – ${user.year_end}`],["Tipo",placeLabel(user.place_type)]].map(([l,v],i,arr)=>(
+          <div key={l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"13px 18px",borderBottom:i<arr.length-1?`1px solid ${T.border}`:"none"}}>
+            <span style={{fontSize:12,color:T.muted,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.08em"}}>{l}</span>
+            <span style={{fontSize:13,color:T.text,fontWeight:500,textAlign:"right",maxWidth:"60%"}}>{v}</span>
+          </div>
+        ))}
+      </div>
+
+      {user.note&&(
+        <div style={{background:T.surface,borderRadius:18,padding:"16px 18px",border:`1px solid ${T.border}`,marginBottom:12}}>
+          <Lbl>Memória</Lbl>
+          <div style={{fontSize:14,color:T.sub,lineHeight:1.6,fontStyle:"italic"}}>"{user.note}"</div>
+        </div>
+      )}
+
+      <div style={{background:T.surface,borderRadius:18,padding:"16px 18px",border:`1px solid ${T.border}`,marginBottom:16}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+          <Lbl>Fotos da época</Lbl>
+          <label style={{cursor:"pointer",fontSize:13,color:T.accent,fontWeight:700,textDecoration:"underline",textUnderlineOffset:3}}>
+            + Adicionar
+            <input type="file" accept="image/*" multiple onChange={handleMorePhotos} style={{display:"none"}}/>
+          </label>
+        </div>
+        {(!user.photos||user.photos.length===0)
+          ?<label style={{display:"block",border:`1.5px dashed ${T.borderMd}`,borderRadius:12,padding:"24px",cursor:"pointer",textAlign:"center",background:T.faint}}>
+            <div style={{fontSize:13,color:T.sub,fontWeight:600}}>Adicionar fotos daquela época</div>
+            <input type="file" accept="image/*" multiple onChange={handleMorePhotos} style={{display:"none"}}/>
+          </label>
+          :<div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
+            {user.photos.map((src,i)=>(
+              <div key={i} style={{aspectRatio:"1",borderRadius:10,overflow:"hidden",border:`1px solid ${T.border}`}}>
+                <img src={src} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+              </div>
+            ))}
+            {user.photos.length<6&&(
+              <label style={{aspectRatio:"1",borderRadius:10,border:`1.5px dashed ${T.borderMd}`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",background:T.faint}}>
+                <span style={{fontSize:26,color:T.accent}}>+</span>
+                <input type="file" accept="image/*" multiple onChange={handleMorePhotos} style={{display:"none"}}/>
+              </label>
+            )}
+          </div>
+        }
+      </div>
+
+      <Btn variant="danger" full onClick={onLogout}>Sair da conta</Btn>
+    </div>
+  );
+}
+
+
+// ── Componente: Foto com curtida e comentário ─────────────────
+function FotoInterativa({src,user}){
+  const [likes,setLikes]=useState(0);
+  const [liked,setLiked]=useState(false);
+  const [showComments,setShowComments]=useState(false);
+  const [comments,setComments]=useState([]);
+  const [newComment,setNewComment]=useState("");
+
+  function toggleLike(){
+    setLiked(v=>!v);
+    setLikes(v=>liked?v-1:v+1);
+  }
+  function addComment(){
+    if(!newComment.trim()||!user)return;
+    setComments(v=>[...v,{name:user.name,text:newComment.trim(),ts:Date.now()}]);
+    setNewComment("");
+  }
+
+  return(
+    <div style={{marginBottom:12}}>
+      <div style={{borderRadius:12,overflow:"hidden",border:`1px solid ${T.border}`,background:"#fff"}}>
+        <img src={src} alt="" style={{width:"100%",aspectRatio:"1",objectFit:"cover",display:"block"}}/>
+        {/* Ações */}
+        <div style={{padding:"10px 12px 6px",display:"flex",alignItems:"center",gap:16}}>
+          <button onClick={toggleLike} style={{background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:5,color:liked?T.red:T.muted,fontFamily:"inherit",fontSize:13,fontWeight:600,padding:0,transition:"color .15s"}}>
+            <svg width="18" height="17" viewBox="0 0 18 17" fill={liked?"#e74c3c":"none"}><path d="M9 15.5S1.5 10.5 1.5 5.5a4 4 0 017.5-2 4 4 0 017.5 2C16.5 10.5 9 15.5 9 15.5z" stroke={liked?"#e74c3c":T.muted} strokeWidth="1.5" strokeLinejoin="round"/></svg>
+            {likes>0&&<span>{likes}</span>}
+          </button>
+          <button onClick={()=>setShowComments(v=>!v)} style={{background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:5,color:T.muted,fontFamily:"inherit",fontSize:13,fontWeight:600,padding:0}}>
+            <svg width="17" height="16" viewBox="0 0 17 16" fill="none"><path d="M1 1h15v10H9.5l-3 3V11H1V1z" stroke={T.muted} strokeWidth="1.5" strokeLinejoin="round"/></svg>
+            {comments.length>0&&<span>{comments.length}</span>}
+          </button>
+        </div>
+        {/* Comentários */}
+        {showComments&&(
+          <div style={{padding:"0 12px 12px",borderTop:`1px solid ${T.border}`}}>
+            {comments.length===0
+              ?<div style={{fontSize:12,color:T.muted,padding:"8px 0"}}>Nenhum comentário ainda.</div>
+              :comments.map((c,i)=>(
+                <div key={i} style={{padding:"6px 0",borderBottom:i<comments.length-1?`1px solid ${T.faint}`:"none"}}>
+                  <span style={{fontWeight:700,fontSize:12,color:T.text}}>{c.name} </span>
+                  <span style={{fontSize:12,color:T.sub}}>{c.text}</span>
+                </div>
+              ))
+            }
+            {user&&(
+              <div style={{display:"flex",gap:8,marginTop:8}}>
+                <input placeholder="Adicionar comentário…" value={newComment} onChange={e=>setNewComment(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addComment()} style={{flex:1,padding:"8px 12px",fontSize:13,borderRadius:20}}/>
+                <button onClick={addComment} style={{background:T.accent,border:"none",borderRadius:20,padding:"8px 14px",color:"#fff",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"inherit"}}>Ok</button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Modal: Ver Perfil ─────────────────────────────────────────
+function ModalPerfil({p,onClose,onAdd,onChat,user,isContact}){
+  const era=eraInfo(p.era||"passado");
+  return(
+    <div className="fi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.35)",zIndex:90,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(3px)"}}>
+      <div className="su" onClick={e=>e.stopPropagation()} style={{background:"#FAF7F2",borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,maxHeight:"88vh",overflowY:"auto"}}>
+        <div style={{padding:"12px 0 0",display:"flex",justifyContent:"center"}}>
+          <div style={{width:36,height:4,borderRadius:2,background:T.border}}/>
+        </div>
+        {/* Foto de capa */}
+        <div style={{height:140,background:`linear-gradient(135deg,${T.accentBg},rgba(21,101,192,0.08))`,position:"relative",margin:"8px 0 0"}}>
+          {p.avatar_url&&<img src={p.avatar_url} alt="" style={{width:"100%",height:"100%",objectFit:"cover",opacity:.4}}/>}
+          <div style={{position:"absolute",bottom:-30,left:20}}>
+            <Avatar name={p.name} src={p.avatar_url} size={72}/>
+          </div>
+        </div>
+        <div style={{padding:"40px 20px 0"}}>
+          <div style={{fontSize:22,fontWeight:700,color:T.text}}>{p.name}</div>
+          {p.nick&&<div style={{color:T.muted,fontSize:14,marginTop:2}}>"{p.nick}"</div>}
+          <span style={{fontSize:10,fontWeight:700,color:era.color,background:`${era.color}15`,padding:"2px 10px",borderRadius:20,textTransform:"uppercase",letterSpacing:"0.05em",display:"inline-block",marginTop:8}}>{era.label}</span>
+        </div>
+        <div style={{padding:"16px 20px 32px",display:"flex",flexDirection:"column",gap:12}}>
+          <div style={{background:T.surface,borderRadius:14,overflow:"hidden",border:`1px solid ${T.border}`}}>
+            {[["Local",p.place_name],["Município",`${p.city} – ${p.state}`],["Período",`${p.year_start} – ${p.year_end}`],["Tipo",placeLabel(p.place_type)]].map(([l,v],i,arr)=>(
+              <div key={l} style={{display:"flex",justifyContent:"space-between",padding:"11px 16px",borderBottom:i<arr.length-1?`1px solid ${T.border}`:"none"}}>
+                <span style={{fontSize:11,color:T.muted,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.08em"}}>{l}</span>
+                <span style={{fontSize:13,color:T.text,fontWeight:500,textAlign:"right",maxWidth:"60%"}}>{v}</span>
+              </div>
+            ))}
+          </div>
+          {p.note&&<div style={{background:T.surface,borderRadius:14,padding:"14px 16px",border:`1px solid ${T.border}`}}>
+            <div style={{fontSize:14,color:T.sub,lineHeight:1.6,fontStyle:"italic"}}>"{p.note}"</div>
+          </div>}
+          {p.photos?.length>0&&(
+            <div>
+              <Lbl>Fotos da época</Lbl>
+              <div style={{marginTop:8}}>
+                {p.photos.map((src,i)=>(
+                  <FotoInterativa key={i} src={src} user={user}/>
+                ))}
+              </div>
+            </div>
+          )}
+          {user&&user.id!==p.id?(
+            isContact
+              ?<div style={{display:"flex",gap:10}}>
+                <Btn full onClick={()=>{onChat(p,"call");onClose();}} variant="outline" size="lg">📞 Chamar</Btn>
+                <Btn full onClick={()=>{onChat(p,"msg");onClose();}} size="lg">💬 Mensagem</Btn>
+              </div>
+              :<div style={{display:"flex",gap:10}}>
+                <Btn full onClick={()=>{onAdd(p);onClose();}} size="lg">+ Adicionar contato</Btn>
+              </div>
+          ):!user&&<div style={{textAlign:"center",fontSize:13,color:T.muted}}>Crie seu perfil para interagir</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Modal: Chat ───────────────────────────────────────────────
+function ModalChat({user,dest,type="msg",msgs,onSend,onClose}){
+  const [txt,setTxt]=useState("");
+  const [mediaPreview,setMediaPreview]=useState(null);
+  const [mediaFile,setMediaFile]=useState(null);
+  const [mediaType,setMediaType]=useState(null);
+  const [isRecording,setIsRecording]=useState(false);
+  const [audioBlob,setAudioBlob]=useState(null);
+  const recorderRef=useRef(null);
+  const endRef=useRef();
+
+  function toggleRecord(){
+    if(isRecording){
+      recorderRef.current?.stop();
+      setIsRecording(false);
+    } else {
+      navigator.mediaDevices?.getUserMedia({audio:true}).then(stream=>{
+        const rec=new MediaRecorder(stream);
+        const chunks=[];
+        rec.ondataavailable=e=>chunks.push(e.data);
+        rec.onstop=()=>{
+          const blob=new Blob(chunks,{type:"audio/webm"});
+          setAudioBlob(URL.createObjectURL(blob));
+          stream.getTracks().forEach(t=>t.stop());
+        };
+        recorderRef.current=rec;
+        rec.start();
+        setIsRecording(true);
+      }).catch(()=>alert("Permita acesso ao microfone"));
+    }
+  }
+  const cid=[String(user.id),String(dest.id)].sort().join("_");
+  const ms=msgs[cid]||[];
+  useEffect(()=>{endRef.current?.scrollIntoView({behavior:"smooth"})},[ms.length]);
+
+  async function send(){
+    if(!txt.trim()&&!mediaFile&&!audioBlob)return;
+    const msg={from:user.id,text:txt.trim(),ts:Date.now(),media:mediaFile||null,mediaType:mediaType||null,audio:audioBlob||null};
+    onSend(cid,msg);
+    setTxt("");setMediaPreview(null);setMediaFile(null);setMediaType(null);setAudioBlob(null);
+    try{await db.from("messages").insert({conv_id:cid,from_id:user.id,text:txt.trim()||"[mídia]"});}catch{}
+  }
+
+  return(
+    <div style={{position:"fixed",inset:0,background:"#FAF7F2",zIndex:100,display:"flex",flexDirection:"column",maxWidth:430,margin:"0 auto"}}>
+      {/* Header */}
+      <div style={{padding:"52px 18px 14px",borderBottom:`1px solid ${T.border}`,display:"flex",alignItems:"center",gap:12,background:T.surface}}>
+        <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",padding:"0 10px 0 0",color:T.text}}>
+          <svg width="10" height="17" viewBox="0 0 10 17" fill="none"><path d="M9 1L1 8.5L9 16" stroke={T.text} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+        <Avatar name={dest.name} src={dest.avatar_url} size={38}/>
+        <div style={{flex:1}}>
+          <div style={{fontWeight:700,fontSize:15,color:T.text}}>{dest.name}</div>
+          <div style={{color:T.muted,fontSize:11,marginTop:1}}>Conversa privada</div>
+        </div>
+        <button onClick={()=>{}} style={{width:34,height:34,borderRadius:"50%",background:T.faint,border:`1px solid ${T.border}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 2C5.5 2 3 5 3 7.5c0 3 2.5 6 7.5 7 3 0 6-2.5 6-2.5L14.5 9.5l-3 .8S10 9 9.5 8.5 9 6.5 9 6.5L9.5 4 5.5 2z" stroke={T.sub} strokeWidth="1.3" strokeLinejoin="round"/></svg>
+        </button>
+      </div>
+
+      {/* Chamada de voz UI */}
+      {type==="call"&&(
+        <div style={{padding:"28px 20px",textAlign:"center",borderBottom:`1px solid ${T.border}`,background:T.faint}}>
+          <Avatar name={dest.name} src={dest.avatar_url} size={72}/>
+          <div style={{fontSize:16,fontWeight:600,color:T.text,marginTop:14,marginBottom:4}}>{dest.name}</div>
+          <div style={{fontSize:12,color:T.muted,marginBottom:20}}>Chamada de voz</div>
+          <div style={{display:"flex",gap:24,justifyContent:"center"}}>
+            <div style={{textAlign:"center"}}>
+              <button onClick={onClose} style={{width:56,height:56,borderRadius:"50%",background:"#e74c3c",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 6px",boxShadow:"0 4px 14px rgba(231,76,60,0.35)"}}>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><line x1="4" y1="4" x2="18" y2="18" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/><line x1="18" y1="4" x2="4" y2="18" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/></svg>
+              </button>
+              <div style={{fontSize:11,color:T.muted}}>Encerrar</div>
+            </div>
+            <div style={{textAlign:"center"}}>
+              <button style={{width:56,height:56,borderRadius:"50%",background:T.accent,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 6px",boxShadow:"0 4px 14px rgba(193,126,58,0.35)"}}>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M7 2C7 2 4 6 4 9c0 4 3 9 10 10 4 0 9-3 9-3L20.5 12.5l-4 1S14 12 13 11s-1.5-4-1.5-4L12.5 4 7 2z" stroke="#fff" strokeWidth="1.8" strokeLinejoin="round" fill="rgba(255,255,255,0.2)"/></svg>
+              </button>
+              <div style={{fontSize:11,color:T.muted}}>Atender</div>
+            </div>
+          </div>
+          <div style={{marginTop:18,fontSize:12,color:T.muted,padding:"8px 14px",background:T.accentBg,borderRadius:8}}>Chamadas em tempo real — em breve</div>
+        </div>
+      )}
+
+      {/* Mensagens */}
+      <div style={{flex:1,overflowY:"auto",padding:"18px 18px 8px",display:"flex",flexDirection:"column",gap:10}}>
+        {ms.length===0&&<div style={{textAlign:"center",color:T.muted,fontSize:13,marginTop:40,lineHeight:1.7}}>Nenhuma mensagem ainda.<br/>Diga olá!</div>}
+        {ms.map((m,i)=>{
+          const mine=m.from===user.id;
+          return(
+            <div key={i} style={{display:"flex",justifyContent:mine?"flex-end":"flex-start"}}>
+              <div style={{background:mine?`linear-gradient(135deg,${T.accent},${T.accentDk})`:"#fff",color:mine?"#fff":T.text,border:mine?"none":`1px solid ${T.border}`,borderRadius:mine?"18px 18px 4px 18px":"18px 18px 18px 4px",padding:m.media||m.audio?"8px":"11px 15px",maxWidth:"76%",fontSize:14,lineHeight:1.5,boxShadow:mine?"0 2px 10px rgba(193,126,58,0.25)":"0 1px 4px rgba(0,0,0,0.05)",overflow:"hidden"}}>
+                {m.media&&m.mediaType==="image"&&<img src={m.media} alt="" style={{width:"100%",maxWidth:220,display:"block",borderRadius:10,marginBottom:m.text?6:0}}/>}
+                {m.media&&m.mediaType==="video"&&<video src={m.media} controls style={{width:"100%",maxWidth:220,display:"block",borderRadius:10,marginBottom:m.text?6:0}}/>}
+                {m.audio&&<audio src={m.audio} controls style={{width:"100%",maxWidth:220,display:"block",marginBottom:m.text?6:0}}/>}
+                {m.text&&<div style={{padding:m.media||m.audio?"0 7px 6px":"0"}}>{m.text}</div>}
+                <div style={{fontSize:10,opacity:.5,marginTop:2,textAlign:"right",padding:m.media||m.audio?"0 7px 6px":"0"}}>{fmtTime(m.ts)}</div>
+              </div>
+            </div>
+          );
+        })}
+        <div ref={endRef}/>
+      </div>
+
+      {/* Input com mídia */}
+      <div style={{padding:"10px 14px 32px",borderTop:`1px solid ${T.border}`,background:T.surface}}>
+        {/* Preview de imagem/vídeo */}
+        {mediaPreview&&(
+          <div style={{position:"relative",marginBottom:8,borderRadius:10,overflow:"hidden",maxHeight:120,border:`1px solid ${T.border}`}}>
+            {mediaType==="image"
+              ?<img src={mediaPreview} alt="" style={{width:"100%",maxHeight:120,objectFit:"cover"}}/>
+              :<video src={mediaPreview} style={{width:"100%",maxHeight:120}} controls/>}
+            <button onClick={()=>{setMediaPreview(null);setMediaFile(null);setMediaType(null);}} style={{position:"absolute",top:6,right:6,width:24,height:24,borderRadius:"50%",background:"rgba(0,0,0,.6)",border:"none",color:"#fff",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700}}>×</button>
+          </div>
+        )}
+        <div style={{display:"flex",gap:8,alignItems:"center"}}>
+          {/* Attach media */}
+          <label style={{width:38,height:38,borderRadius:"50%",background:T.faint,border:`1px solid ${T.border}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2" stroke={T.muted} strokeWidth="1.4"/><circle cx="5.5" cy="6.5" r="1" fill={T.muted}/><path d="M1 10l4-3 3 3 2-2 5 4" stroke={T.muted} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <input type="file" accept="image/*,video/*" onChange={async e=>{const file=e.target.files[0];if(!file)return;const t=file.type.startsWith("video")?"video":"image";const b64=await fileToB64(file);setMediaPreview(URL.createObjectURL(file));setMediaFile(b64);setMediaType(t);}} style={{display:"none"}}/>
+          </label>
+          {/* Audio record */}
+          <button onClick={toggleRecord} style={{width:38,height:38,borderRadius:"50%",background:isRecording?"#e74c3c":T.faint,border:`1px solid ${isRecording?"#e74c3c":T.border}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"all .2s"}}>
+            <svg width="14" height="18" viewBox="0 0 14 18" fill="none"><rect x="4" y="1" width="6" height="10" rx="3" stroke={isRecording?"#fff":T.muted} strokeWidth="1.4"/><path d="M1 9c0 3.3 2.7 6 6 6s6-2.7 6-6" stroke={isRecording?"#fff":T.muted} strokeWidth="1.4" strokeLinecap="round"/><path d="M7 15v2" stroke={isRecording?"#fff":T.muted} strokeWidth="1.4" strokeLinecap="round"/></svg>
+          </button>
+          <input style={{flex:1,borderRadius:50,padding:"11px 18px",fontSize:14}} placeholder="Mensagem…" value={txt} onChange={e=>setTxt(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()}/>
+          <button onClick={send} style={{width:42,height:42,borderRadius:"50%",background:(txt.trim()||mediaFile||audioBlob)?`linear-gradient(135deg,${T.accent},${T.accentDk})`:T.border,border:"none",color:"#fff",cursor:(txt.trim()||mediaFile||audioBlob)?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"all .15s"}}>
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M1 14L14 7.5L1 1V6L10 7.5L1 9V14Z" fill="#fff"/></svg>
+          </button>
+        </div>
+        {isRecording&&<div style={{fontSize:11,color:"#e74c3c",textAlign:"center",marginTop:6,fontWeight:600}}>Gravando… toque novamente para parar</div>}
+      </div>
+    </div>
+  );
+}
+
+// ── Helpers layout ────────────────────────────────────────────
+function STitle({children}){
+  return <div style={{paddingTop:24,paddingBottom:10,borderBottom:`1px solid ${T.border}`}}>
+    <div style={{fontSize:12,fontWeight:700,color:T.accent,letterSpacing:"0.08em",textTransform:"uppercase"}}>{children}</div>
+  </div>;
+}
+function FRow({label,children}){
+  return <div style={{padding:"14px 0",borderBottom:`1px solid ${T.border}`}}>
+    {label&&<Lbl>{label}</Lbl>}
+    {children}
+  </div>;
+}
+
+
+// ── Sistema de Al
