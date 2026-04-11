@@ -63,6 +63,8 @@ const PLACES = [
   {value:"fazenda",  label:"Fazenda / Sítio"},
   {value:"bairro",   label:"Bairro"},
   {value:"cidade",   label:"Cidade"},
+  {value:"rural",    label:"Zona Rural"},
+  {value:"urbana",   label:"Zona Urbana"},
   {value:"vila",     label:"Vila / Povoado"},
   {value:"cond",     label:"Condomínio"},
   {value:"trabalho", label:"Local de Trabalho"},
@@ -70,10 +72,93 @@ const PLACES = [
 ];
 const STATES = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 const ERAS   = [
-  {value:"passado",  label:"Passado",  desc:"Vivi aqui antes",      color:"#7B5EA7"},
-  {value:"presente", label:"Presente", desc:"Moro aqui agora",      color:"#1565C0"},
-  {value:"futuro",   label:"Futuro",   desc:"Vou estar aqui",       color:"#2E7D5E"},
+  {value:"passado",  label:"Passado",  desc:"Minha história",      color:"#7B5EA7"},
+  {value:"presente", label:"Presente", desc:"Onde estou",      color:"#1565C0"},
+  {value:"futuro",   label:"Futuro",   desc:"Quero estar",       color:"#2E7D5E"},
 ];
+
+const RELACIONAMENTOS = [
+  {value:"conhecido",  label:"Conhecido",     color:"#7a8fa8"},
+  {value:"amigo",      label:"Amigo",         color:"#1565C0"},
+  {value:"proximo",    label:"Amigo próximo",  color:"#C17E3A"},
+  {value:"parente",    label:"Parente",        color:"#7B5EA7"},
+  {value:"familia",    label:"Família",        color:"#2E7D5E"},
+];
+
+
+
+
+// ── Labels dinâmicos por era ─────────────────────────────────
+const LABELS = {
+  passado: {
+    color: "#7B5EA7",
+    bg: "rgba(123,94,167,0.08)",
+    border: "rgba(123,94,167,0.25)",
+    gradient: "linear-gradient(135deg,#f5f0ff,#ede4ff)",
+    quemVoce: "Quem você era?",
+    comoConhecido: "Como era conhecido",
+    nomesFamilia: "Nomes na família",
+    moradia: "Onde morava",
+    interesses: "Do que gostava",
+    curtia: "Brincadeiras e passatempos",
+    nota: "Uma memória",
+    moro: "Onde morava",
+    profissao: "O que fazia",
+    disponivel: "Disponível para relembrar",
+    placeHolder_nome: "Como era conhecido no passado? Ex: O filho do Seu Zé…",
+    placeHolder_memoria: "Ex: Morei perto do córrego, vizinho da família Silva…",
+  },
+  presente: {
+    color: "#1565C0",
+    bg: "rgba(21,101,192,0.08)",
+    border: "rgba(21,101,192,0.25)",
+    gradient: "linear-gradient(135deg,#f0f5ff,#e3edff)",
+    quemVoce: "Quem você é hoje?",
+    comoConhecido: "Como é conhecido hoje",
+    nomesFamilia: "Nomes na família",
+    moradia: "Onde mora",
+    interesses: "Do que gosta hoje",
+    curtia: "Curtidas e interesses",
+    nota: "Algo sobre você",
+    moro: "Onde mora atualmente",
+    profissao: "O que faz hoje",
+    disponivel: "Disponível para",
+    placeHolder_nome: "Como te chamam hoje? Ex: Professor Silva, Doutora Ana…",
+    placeHolder_memoria: "Ex: Trabalho em Campo Verde, tenho uma família linda…",
+  },
+  futuro: {
+    color: "#2E7D5E",
+    bg: "rgba(46,125,94,0.08)",
+    border: "rgba(46,125,94,0.25)",
+    gradient: "linear-gradient(135deg,#f0fff8,#e3fff2)",
+    quemVoce: "Quem você quer ser?",
+    comoConhecido: "Como quer ser lembrado",
+    nomesFamilia: "Nomes na família",
+    moradia: "Onde quer morar",
+    interesses: "Do que vai gostar",
+    curtia: "Sonhos e planos",
+    nota: "Seu plano ou sonho",
+    moro: "Onde quer estar",
+    profissao: "O que quer fazer",
+    disponivel: "Disponível para",
+    placeHolder_nome: "Como quer ser reconhecido? Ex: Empresário, Viajante…",
+    placeHolder_memoria: "Ex: Quero voltar a Campo Verde, reencontrar velhos amigos…",
+  },
+};
+function getLbl(era, campo){ return LABELS[era]?.[campo] || LABELS.passado[campo] || campo; }
+function getColor(era){ return LABELS[era]?.color || "#7B5EA7"; }
+function getBg(era){ return LABELS[era]?.bg || "rgba(123,94,167,0.08)"; }
+function getGradient(era){ return LABELS[era]?.gradient || "linear-gradient(135deg,#f5f0ff,#ede4ff)"; }
+
+// ── Detecta era pelo período ──────────────────────────────────
+function detectarEra(y1, y2){
+  const ano = 2026;
+  const inicio = parseInt(y1)||0;
+  const fim = parseInt(y2)||0;
+  if(inicio > ano) return "futuro";
+  if(fim >= ano && inicio <= ano) return "presente";
+  return "passado";
+}
 
 const placeLabel  = v => PLACES.find(p=>p.value===v)?.label||"Local";
 const eraInfo     = v => ERAS.find(e=>e.value===v)||ERAS[0];
@@ -84,28 +169,39 @@ const fileToB64   = f => new Promise((res,rej)=>{const r=new FileReader();r.onlo
 // ── Logo ──────────────────────────────────────────────────────
 function Logo({size="sm"}){
   const lg=size==="lg", fs=lg?42:22;
-  // Two interleaved arcs above "temp": S-curve style
-  // Arc1 goes up (hill), Arc2 continues where Arc1 ends going down (valley)
-  // They share the middle point creating a smooth wave
-  const W=lg?80:44, H=lg?14:8;
+  const W=lg?96:52, H=lg?16:9;
+  const pad=lg?8:4;
+  const boxH=lg?68:38, boxPad=lg?"10px 18px":"6px 12px";
   return(
     <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
-      <div style={{position:"relative",display:"inline-flex",alignItems:"flex-end"}}>
+      <div style={{
+        display:"inline-flex",flexDirection:"column",alignItems:"flex-start",
+        background:"#FFFFFF",
+        border:`2px solid ${T.borderMd}`,
+        borderRadius:lg?14:8,
+        padding:boxPad,
+        boxShadow:"0 2px 12px rgba(0,0,0,0.08)",
+        position:"relative",
+      }}>
+        {/* Wave above "Temp" - two connected arcs, closer to name */}
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}
-          style={{position:"absolute",top:lg?-14:-8,left:0,overflow:"visible"}}>
-          {/* Arc 1: starts bottom-left, peaks up in first half */}
-          <path d={`M 2 ${H} Q ${W*0.25} 0 ${W*0.5} ${H*0.5}`}
-            fill="none" stroke={T.blue} strokeWidth={lg?2:1.5} strokeLinecap="round"/>
-          {/* Arc 2: continues from middle, dips down then back up */}
-          <path d={`M ${W*0.5} ${H*0.5} Q ${W*0.75} ${H} ${W-2} ${H*0.1}`}
-            fill="none" stroke={T.blue} strokeWidth={lg?2:1.5} strokeLinecap="round"/>
+          style={{marginBottom:lg?2:1,display:"block"}}>
+          {/* Arc 1: up */}
+          <path d={`M ${pad} ${H-1} Q ${W*0.27} 0 ${W*0.5} ${H*0.55}`}
+            fill="none" stroke={T.blue} strokeWidth={lg?2.5:1.8} strokeLinecap="round"/>
+          {/* Arc 2: down */}
+          <path d={`M ${W*0.5} ${H*0.55} Q ${W*0.73} ${H} ${W-pad} ${H*0.15}`}
+            fill="none" stroke={T.blue} strokeWidth={lg?2.5:1.8} strokeLinecap="round"/>
         </svg>
         <div style={{fontSize:fs,fontWeight:800,letterSpacing:lg?"-2px":"-1px",lineHeight:1,fontFamily:"Georgia,serif"}}>
-          <span style={{color:T.text}}>temp</span>
+          <span style={{color:T.blue}}>T</span>
+          <span style={{color:T.text}}>emp</span>
           <span style={{color:T.accent}}>next</span>
         </div>
+        {lg&&<div style={{fontSize:10,fontWeight:700,letterSpacing:"0.18em",textTransform:"uppercase",color:T.muted,marginTop:8}}>
+          O tempo no seu lugar
+        </div>}
       </div>
-      {lg&&<div style={{fontSize:10,fontWeight:700,letterSpacing:"0.2em",textTransform:"uppercase",color:T.muted,marginTop:10}}>O tempo tem endereço.</div>}
     </div>
   );
 }
@@ -163,13 +259,15 @@ function BigCard({p,onView,onAdd,isContact,delay=0}){
     <div className="fu" style={{animationDelay:`${delay}ms`,opacity:0,marginBottom:14}}>
       <div style={{background:T.surface,borderRadius:18,overflow:"hidden",boxShadow:"0 2px 16px rgba(0,0,0,0.07)",border:`1px solid ${T.border}`,display:"flex",minHeight:110}}>
         {/* Foto grande à esquerda */}
-        <div style={{width:110,flexShrink:0,background:hasPhoto?"transparent":T.faint,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+        <div style={{width:110,flexShrink:0,background:hasPhoto?"transparent":T.faint,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative"}}>
           {hasPhoto
             ?<img src={p.avatar_url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
             :<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
               <div style={{fontSize:32,fontWeight:700,color:T.accent}}>{initials(p.name)}</div>
             </div>
           }
+          {/* Era badge overlay */}
+          <div style={{position:"absolute",bottom:6,left:6,fontSize:8,fontWeight:700,color:"#fff",background:era.color,padding:"2px 6px",borderRadius:20,textTransform:"uppercase",letterSpacing:"0.04em",opacity:.9}}>{era.label}</div>
         </div>
         {/* Conteúdo */}
         <div style={{flex:1,padding:"14px 14px 12px",display:"flex",flexDirection:"column",justifyContent:"space-between",minWidth:0}}>
@@ -180,13 +278,16 @@ function BigCard({p,onView,onAdd,isContact,delay=0}){
             </div>
             <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:4}}>
               <svg width="12" height="14" viewBox="0 0 12 14" fill="none"><path d="M6 1C3.8 1 2 2.8 2 5c0 3 4 8 4 8s4-5 4-8c0-2.2-1.8-4-4-4z" stroke={T.accent} strokeWidth="1.4" fill={T.accentBg}/></svg>
-              <span style={{fontSize:13,color:T.sub,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.place_name}</span>
+              <span style={{fontSize:13,color:T.sub,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                {p.place_type&&p.place_type!=="outro"?`${placeLabel(p.place_type)} ${p.place_name}`:p.place_name}
+              </span>
             </div>
             <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
               <span style={{fontSize:11,color:T.muted}}>{p.city}, {p.state}</span>
               <span style={{fontSize:11,color:T.muted}}>·</span>
               <span style={{fontSize:11,color:T.muted}}>{p.year_start}–{p.year_end}</span>
               <span style={{fontSize:10,fontWeight:700,color:era.color,background:`${era.color}18`,padding:"1px 7px",borderRadius:20,textTransform:"uppercase",letterSpacing:"0.04em"}}>{era.label}</span>
+              {p.lugares?.filter(l=>(l.era||detectarEra(l.y1,l.y2))!==p.era).map((l,i)=>{const e=eraInfo(l.era||detectarEra(l.y1,l.y2));return <span key={i} style={{fontSize:10,fontWeight:700,color:e.color,background:`${e.color}18`,padding:"1px 7px",borderRadius:20,textTransform:"uppercase",letterSpacing:"0.04em"}}>{e.label}</span>})}
             </div>
           </div>
           {/* Botões */}
@@ -208,8 +309,137 @@ function BigCard({p,onView,onAdd,isContact,delay=0}){
   );
 }
 
+
+// ── Modal: Reencontrar ────────────────────────────────────────
+function ModalReencontrar({onClose,onBuscar}){
+  const [tipo,setTipo]=useState("pessoas");
+  const [era,setEra]=useState("passado");
+  const [q,setQ]=useState("");
+
+  const tipos=[
+    {value:"pessoas", label:"Pessoas",   desc:"Encontre quem você conheceu"},
+    {value:"lugares", label:"Lugares",   desc:"Explore os lugares do passado"},
+    {value:"momentos",label:"Momentos",  desc:"Reviva épocas marcantes"},
+  ];
+  const eras=[
+    {value:"passado",  label:"Passado",  color:"#7B5EA7"},
+    {value:"presente", label:"Presente", color:"#1565C0"},
+    {value:"futuro",   label:"Futuro",   color:"#2E7D5E"},
+  ];
+
+  function buscar(){
+    onBuscar({tipo,era,q});
+    onClose();
+  }
+
+  return(
+    <div className="fi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",zIndex:90,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}}>
+      <div className="su" onClick={e=>e.stopPropagation()} style={{background:"#FAF7F2",borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,padding:"0 20px 48px"}}>
+        {/* Handle */}
+        <div style={{padding:"14px 0 0",display:"flex",justifyContent:"center",marginBottom:8}}>
+          <div style={{width:36,height:4,borderRadius:2,background:"#DDD8D0"}}/>
+        </div>
+
+        <div style={{fontSize:22,fontWeight:800,color:"#1C1C1E",letterSpacing:"-0.5px",marginBottom:4}}>Reencontrar</div>
+        <div style={{fontSize:13,color:"#8C8478",marginBottom:22}}>O que você quer encontrar?</div>
+
+        {/* Tipo */}
+        <div style={{marginBottom:20}}>
+          <Lbl>O que buscar</Lbl>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
+            {tipos.map(t=>(
+              <div key={t.value} onClick={()=>setTipo(t.value)} style={{
+                padding:"13px 8px",borderRadius:12,cursor:"pointer",textAlign:"center",
+                border:`1.5px solid ${tipo===t.value?"#C17E3A":"#EDE9E3"}`,
+                background:tipo===t.value?"rgba(193,126,58,0.08)":"#fff",
+                transition:"all .15s",
+              }}>
+                <div style={{fontSize:13,fontWeight:700,color:tipo===t.value?"#C17E3A":"#3D3830"}}>{t.label}</div>
+                <div style={{fontSize:10,color:"#8C8478",marginTop:3,lineHeight:1.3}}>{t.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Era */}
+        <div style={{marginBottom:20}}>
+          <Lbl>Época</Lbl>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
+            {eras.map(e=>(
+              <div key={e.value} onClick={()=>setEra(e.value)} style={{
+                padding:"12px 8px",borderRadius:12,cursor:"pointer",textAlign:"center",
+                border:`1.5px solid ${era===e.value?e.color:"#EDE9E3"}`,
+                background:era===e.value?`${e.color}12`:"#fff",
+                transition:"all .15s",
+              }}>
+                <div style={{fontSize:13,fontWeight:700,color:era===e.value?e.color:"#8C8478",textTransform:"uppercase",letterSpacing:"0.04em"}}>{e.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Busca livre */}
+        <div style={{marginBottom:20}}>
+          <Lbl>Nome, lugar ou cidade (opcional)</Lbl>
+          <input
+            placeholder="Ex: João, Fazenda Santa Cruz, Campo Verde…"
+            value={q}
+            onChange={e=>setQ(e.target.value)}
+            onKeyDown={e=>e.key==="Enter"&&buscar()}
+          />
+        </div>
+
+        <Btn full onClick={buscar} size="lg">Buscar agora</Btn>
+      </div>
+    </div>
+  );
+}
+
+
+// ── Feed de Momentos ─────────────────────────────────────────
+function MomentosFeed({user,onView}){
+  const [momentos,setMomentos]=useState([]);
+  const [loading,setLoading]=useState(true);
+
+  useEffect(()=>{
+    db.from("momentos").select("*").order("ts",{ascending:false}).limit(10)
+      .then(({data})=>{setMomentos(data||[]);setLoading(false);})
+      .catch(()=>setLoading(false));
+  },[]);
+
+  if(loading||momentos.length===0) return null;
+
+  return(
+    <div style={{marginBottom:20}}>
+      <div style={{fontSize:11,fontWeight:700,color:T.muted,letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:12}}>
+        Momentos recentes
+      </div>
+      <div style={{display:"flex",gap:10,overflowX:"auto",paddingBottom:8}}>
+        {momentos.map((m,i)=>(
+          <div key={m.id||i} style={{
+            flexShrink:0,width:160,background:"#fff",borderRadius:14,
+            overflow:"hidden",border:`1px solid ${T.border}`,
+            boxShadow:"0 2px 8px rgba(0,0,0,0.06)",cursor:"pointer",
+          }}>
+            {m.fotos?.length>0&&(
+              <div style={{height:100,overflow:"hidden"}}>
+                <img src={m.fotos[0]} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+              </div>
+            )}
+            <div style={{padding:"10px 10px 10px"}}>
+              <div style={{fontSize:12,fontWeight:700,color:T.text,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.user_name||"Alguém"}</div>
+              {m.texto&&<div style={{fontSize:11,color:T.muted,marginTop:3,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{m.texto}</div>}
+              {m.lugar&&<div style={{fontSize:10,color:T.accent,marginTop:4,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>📍 {m.lugar}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Screen: Início ────────────────────────────────────────────
-function Inicio({user,onCadastrar,onBuscar,onView,onAdd,contacts}){
+function Inicio({user,onCadastrar,onBuscar,onReencontrar,onPerfil,onView,onAdd,contacts}){
   const [profiles,setProfiles]=useState([]);
   const [loading,setLoading]=useState(true);
 
@@ -227,22 +457,62 @@ function Inicio({user,onCadastrar,onBuscar,onView,onAdd,contacts}){
     <div style={{padding:"0 18px 100px"}}>
       {/* Header */}
       <div style={{paddingTop:52,paddingBottom:24}}>
-        <Logo size="lg"/>
-        <div style={{marginTop:22}}>
-          {user
-            ?<div style={{fontSize:17,fontWeight:600,color:T.text}}>Olá, {user.nick||user.name.split(" ")[0]}</div>
-            :<div style={{fontSize:22,fontWeight:700,color:T.text}}>Bem-vindo</div>
-          }
-          <div style={{fontSize:14,color:T.muted,marginTop:4}}>
-            {user?"Veja quem viveu no mesmo lugar que você":"Encontre quem compartilhou o mesmo lugar e época"}
-          </div>
+        {/* Logo + Mini Perfil */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+          <Logo size="lg"/>
+          {user?(
+            <div onClick={onPerfil} style={{
+              display:"flex",alignItems:"center",gap:8,
+              background:"#fff",border:`1px solid ${T.border}`,
+              borderRadius:40,padding:"7px 12px 7px 7px",
+              cursor:"pointer",boxShadow:"0 2px 10px rgba(0,0,0,0.06)",
+              transition:"box-shadow .15s",flexShrink:0,marginLeft:12,
+            }}
+            onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 16px rgba(193,126,58,0.18)"}
+            onMouseLeave={e=>e.currentTarget.style.boxShadow="0 2px 10px rgba(0,0,0,0.06)"}>
+              <Avatar name={user.name} src={user.avatar_url} size={30}/>
+              <div style={{maxWidth:80}}>
+                <div style={{fontSize:12,fontWeight:700,color:T.text,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                  {user.name.split(" ")[0]}
+                </div>
+                <div style={{fontSize:10,color:T.muted,marginTop:1}}>Ver perfil</div>
+              </div>
+            </div>
+          ):(
+            <button onClick={onCadastrar} style={{
+              background:`linear-gradient(135deg,${T.accent},${T.accentDk})`,
+              border:"none",borderRadius:40,padding:"9px 16px",
+              cursor:"pointer",color:"#fff",fontSize:12,fontWeight:700,
+              fontFamily:"inherit",boxShadow:"0 2px 10px rgba(193,126,58,0.3)",
+              flexShrink:0,whiteSpace:"nowrap",marginLeft:12,
+            }}>Criar perfil</button>
+          )}
         </div>
-        {/* Botões de ação — some "Criar perfil" quando logado */}
-        <div style={{display:"flex",gap:10,marginTop:18}}>
-          {!user&&<Btn onClick={onCadastrar} size="lg" style={{flex:1}}>Criar perfil</Btn>}
-          <Btn onClick={onBuscar} variant={user?"primary":"outline"} size="lg" style={{flex:1}}>Buscar pessoas</Btn>
+
+        <div style={{marginTop:20}}>
+          {user
+            ?<div style={{fontSize:17,fontWeight:600,color:T.text}}>Olá, {user.name.split(" ")[0]}</div>
+            :<div style={{fontSize:20,fontWeight:700,color:T.text}}>Bem-vindo</div>
+          }
+          <div style={{fontSize:14,color:T.muted,marginTop:3}}>O tempo que aproxima</div>
+        </div>
+
+        <div style={{display:"flex",gap:10,marginTop:20}}>
+          {!user?(
+            <>
+              <Btn onClick={onCadastrar} size="lg" style={{flex:1}}>Criar perfil</Btn>
+              <Btn onClick={onReencontrar} variant="outline" size="lg" style={{flex:1}}>Reencontrar</Btn>
+            </>
+          ):(
+            <>
+              <Btn onClick={onReencontrar} size="lg" style={{flex:1}}>Reencontrar</Btn>
+              <Btn onClick={onCadastrar} variant="outline" size="lg" style={{flex:1}}>+ Lugar</Btn>
+            </>
+          )}
         </div>
       </div>
+      {/* Feed de Momentos */}
+      <MomentosFeed user={user} onView={setModal}/>
 
       {/* Reencontros futuros */}
       {futuros.length>0&&(
@@ -279,55 +549,121 @@ function Buscar({onView,onAdd,contacts}){
   const [lugar,setLugar]=useState("");
   const [res,setRes]=useState(null);
   const [loading,setLoading]=useState(false);
+  const [searched,setSearched]=useState(false);
   const timer=useRef();
-  const contactIds=new Set(contacts.map(c=>c.id));
+  const contactIds=new Set(contacts.map(c=>String(c.id)));
 
+  // Auto-busca enquanto digita (debounced)
   useEffect(()=>{
     clearTimeout(timer.current);
-    if(!q&&!lugar){setRes(null);return;}
-    timer.current=setTimeout(buscar,400);
+    if(!q.trim()&&!lugar.trim()){setRes(null);setSearched(false);return;}
+    timer.current=setTimeout(()=>executarBusca(),500);
+    return()=>clearTimeout(timer.current);
   },[q,lugar]);
 
-  async function buscar(){
+  async function executarBusca(){
     setLoading(true);
-    let query=db.from("profiles").select("*");
-    if(q.trim()) query=query.or(`name.ilike.%${q.trim()}%,nick.ilike.%${q.trim()}%`);
-    if(lugar.trim()) query=query.or(`place_name.ilike.%${lugar.trim()}%,city.ilike.%${lugar.trim()}%,state.ilike.%${lugar.trim()}%`);
-    const {data}=await query.order("created_at",{ascending:false}).limit(30);
-    setRes(data||[]);
+    try{
+      let query=db.from("profiles").select("*");
+      if(q.trim()) query=query.or(
+        `name.ilike.%${q.trim()}%,nick.ilike.%${q.trim()}%,first_name.ilike.%${q.trim()}%,last_name.ilike.%${q.trim()}%`
+      );
+      if(lugar.trim()) query=query.or(
+        `place_name.ilike.%${lugar.trim()}%,city.ilike.%${lugar.trim()}%,state.ilike.%${lugar.trim()}%`
+      );
+      const {data}=await query.order("created_at",{ascending:false}).limit(30);
+      setRes(data||[]);
+      setSearched(true);
+    }catch(e){console.log("busca erro:",e);}
     setLoading(false);
   }
+
+  function limpar(){setQ("");setLugar("");setRes(null);setSearched(false);}
 
   return(
     <div style={{padding:"0 18px 100px"}}>
       <div style={{paddingTop:52,paddingBottom:20}}>
         <Logo/>
-        <div style={{fontSize:20,fontWeight:700,color:T.text,marginTop:16}}>Buscar pessoas</div>
-        <div style={{fontSize:13,color:T.muted,marginTop:3}}>Digite pouco — os resultados aparecem sozinhos</div>
+        <div style={{fontSize:20,fontWeight:700,color:T.text,marginTop:16}}>Buscar</div>
+        <div style={{fontSize:13,color:T.muted,marginTop:3}}>Encontre quem viveu no mesmo lugar e época</div>
       </div>
 
-      <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:8}}>
+      {/* Campos de busca */}
+      <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:12}}>
         <div style={{position:"relative"}}>
-          <input placeholder="Nome ou apelido…" value={q} onChange={e=>setQ(e.target.value)}/>
-          {q&&<button onClick={()=>setQ("")} style={{position:"absolute",right:13,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:18,lineHeight:1,fontFamily:"inherit"}}>×</button>}
+          <input
+            placeholder="Nome ou sobrenome…"
+            value={q}
+            onChange={e=>setQ(e.target.value)}
+            onKeyDown={e=>e.key==="Enter"&&executarBusca()}
+            style={{paddingRight:q?36:14}}
+          />
+          {q&&<button onClick={()=>setQ("")} style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:18,lineHeight:1}}>×</button>}
         </div>
+
         <div style={{position:"relative"}}>
-          <input placeholder="Lugar, cidade ou estado…" value={lugar} onChange={e=>setLugar(e.target.value)}/>
-          {lugar&&<button onClick={()=>setLugar("")} style={{position:"absolute",right:13,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:18,lineHeight:1,fontFamily:"inherit"}}>×</button>}
+          <input
+            placeholder="Lugar, cidade ou estado…"
+            value={lugar}
+            onChange={e=>setLugar(e.target.value)}
+            onKeyDown={e=>e.key==="Enter"&&executarBusca()}
+            style={{paddingRight:lugar?36:14}}
+          />
+          {lugar&&<button onClick={()=>setLugar("")} style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:18,lineHeight:1}}>×</button>}
         </div>
-        {(q||lugar)&&(
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"2px 2px"}}>
-            <span style={{fontSize:12,color:T.muted}}>{loading?"Buscando…":res!==null?`${res.length} resultado${res.length!==1?"s":""}`:""}</span>
-            <button onClick={()=>{setQ("");setLugar("");setRes(null);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,color:T.accent,fontWeight:700,fontFamily:"inherit"}}>Limpar</button>
+
+        {/* Botões de ação */}
+        <div style={{display:"flex",gap:8}}>
+          <Btn
+            full
+            onClick={executarBusca}
+            disabled={loading||(!q.trim()&&!lugar.trim())}
+            size="lg"
+          >
+            {loading?<><Spinner/>Buscando…</>:"Buscar"}
+          </Btn>
+          {(q||lugar||searched)&&(
+            <Btn variant="outline" onClick={limpar}>Limpar</Btn>
+          )}
+        </div>
+
+        {/* Contador */}
+        {searched&&!loading&&(
+          <div style={{fontSize:12,color:T.muted,textAlign:"center",padding:"4px 0"}}>
+            {res?.length===0?"Nenhum resultado encontrado":`${res?.length} resultado${res?.length!==1?"s":""} encontrado${res?.length!==1?"s":""}`}
           </div>
         )}
       </div>
 
-      {loading&&<div style={{padding:"32px",textAlign:"center"}}><Spinner size={24}/></div>}
-      {!loading&&res?.map((p,i)=><BigCard key={p.id} p={p} onView={onView} onAdd={onAdd} isContact={contactIds.has(p.id)} delay={i*40}/>)}
-      {!q&&!lugar&&(
-        <div style={{marginTop:24,textAlign:"center",color:T.muted,fontSize:13,lineHeight:1.9}}>
-          Digite um nome, apelido,<br/>cidade ou lugar para buscar.
+      {/* Loading */}
+      {loading&&(
+        <div style={{padding:"32px",textAlign:"center"}}><Spinner size={24}/></div>
+      )}
+
+      {/* Resultados */}
+      {!loading&&res?.length>0&&(
+        <div>
+          {res.map((p,i)=>(
+            <BigCard key={p.id} p={p} onView={onView} onAdd={onAdd} isContact={contactIds.has(String(p.id))} delay={i*30}/>
+          ))}
+        </div>
+      )}
+
+      {/* Estado vazio */}
+      {!q&&!lugar&&!searched&&(
+        <div style={{marginTop:32,textAlign:"center",color:T.muted,fontSize:13,lineHeight:2}}>
+          Digite um nome, sobrenome,<br/>cidade ou lugar para buscar.
+        </div>
+      )}
+
+      {/* Sem resultado */}
+      {searched&&!loading&&res?.length===0&&(
+        <div style={{marginTop:24,background:"#fff",borderRadius:18,padding:"32px 20px",textAlign:"center",border:`1px solid ${T.border}`}}>
+          <div style={{fontSize:15,fontWeight:600,color:T.text,marginBottom:8}}>Nenhum resultado</div>
+          <div style={{fontSize:13,color:T.muted,lineHeight:1.8}}>
+            Tente outro nome ou cidade.<br/>
+            A pessoa pode ainda não ter se cadastrado.
+          </div>
         </div>
       )}
     </div>
@@ -335,10 +671,11 @@ function Buscar({onView,onAdd,contacts}){
 }
 
 
+
 // ── Componente: Adicionar Lugar ───────────────────────────────
 function NovoLugar({onAdd,addrTimer}){
   const [open,setOpen]=useState(false);
-  const [d,setD]=useState({placeType:"escola",placeName:"",addrSearch:"",addrSugs:[],addrLoading:false,city:"",uf:"MT",y1:"",y2:""});
+  const [d,setD]=useState({placeType:"escola",placeName:"",addrSearch:"",addrSugs:[],addrLoading:false,city:"",uf:"MT",pais:"Brasil",cep:"",y1:"",y2:"",era:"passado"});
   const timer=useRef();
 
   async function searchAddr(q){
@@ -350,12 +687,14 @@ function NovoLugar({onAdd,addrTimer}){
       setD(v=>({...v,addrSugs:data,addrLoading:false}));
     }catch{setD(v=>({...v,addrLoading:false}));}
   }
+
   function handleAddrInput(e){
     const val=e.target.value;
     setD(v=>({...v,addrSearch:val,placeName:val}));
     clearTimeout(timer.current);
     timer.current=setTimeout(()=>searchAddr(val),500);
   }
+
   function selectAddr(s){
     const addr=s.address;
     const city=addr.city||addr.town||addr.village||addr.municipality||addr.county||"";
@@ -363,25 +702,43 @@ function NovoLugar({onAdd,addrTimer}){
     const uf=SM[addr.state]||d.uf;
     setD(v=>({...v,addrSearch:s.display_name.split(",")[0],placeName:s.display_name.split(",")[0],city,uf,addrSugs:[]}));
   }
+
   function adicionar(){
     if(!d.placeName||!d.city||!d.y1||!d.y2)return;
-    onAdd({placeType:d.placeType,placeName:d.placeName,city:d.city,uf:d.uf,y1:d.y1,y2:d.y2});
-    setD({placeType:"escola",placeName:"",addrSearch:"",addrSugs:[],addrLoading:false,city:"",uf:"MT",y1:"",y2:""});
+    onAdd({placeType:d.placeType,placeName:d.placeName,city:d.city,uf:d.uf,pais:d.pais,cep:d.cep,y1:d.y1,y2:d.y2,era:d.era||detectarEra(d.y1,d.y2)});
+    setD({placeType:"escola",placeName:"",addrSearch:"",addrSugs:[],addrLoading:false,city:"",uf:"MT",pais:"Brasil",cep:"",y1:"",y2:""});
     setOpen(false);
   }
-  const canAdd=d.placeName&&d.city&&d.y1&&d.y2;
+
+  function adicionarManual(){
+    const nome=window.prompt("Nome do lugar:");if(!nome)return;
+    const cidade=window.prompt("Cidade:");if(!cidade)return;
+    const estado=window.prompt("Estado (ex: MT):");
+    const de=window.prompt("De (ano):");if(!de)return;
+    const ate=window.prompt("Até (ano):");if(!ate)return;
+    onAdd({placeType:"outro",placeName:nome,city:cidade,uf:estado||"MT",pais:"Brasil",cep:"",y1:de,y2:ate});
+  }
+
+  const canAdd=!!(d.placeName&&d.city&&d.y1&&d.y2);
 
   if(!open)return(
-    <button onClick={()=>setOpen(true)} style={{width:"100%",padding:"13px",border:`1.5px dashed ${T.borderMd}`,borderRadius:12,background:"rgba(255,255,255,0.6)",cursor:"pointer",fontSize:14,fontWeight:600,color:T.accent,fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all .15s"}}
-    onMouseEnter={e=>{e.currentTarget.style.background=T.accentBg;e.currentTarget.style.borderColor=T.accent;}}
-    onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.6)";e.currentTarget.style.borderColor=T.borderMd;}}>
-      + Adicionar lugar
-    </button>
+    <div style={{marginTop:4}}>
+      <button onClick={()=>setOpen(true)} style={{flex:1,padding:"13px",border:`1.5px dashed ${T.borderMd}`,borderRadius:12,background:"rgba(255,255,255,0.6)",cursor:"pointer",fontSize:14,fontWeight:600,color:T.accent,fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all .15s"}}
+      onMouseEnter={e=>{e.currentTarget.style.background=T.accentBg;e.currentTarget.style.borderColor=T.accent;}}
+      onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.6)";e.currentTarget.style.borderColor=T.borderMd;}}>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke={T.accent} strokeWidth="2" strokeLinecap="round"/></svg>
+        Adicionar lugar
+      </button>
+
+    </div>
   );
 
   return(
     <div style={{background:"#fff",borderRadius:14,padding:"16px",border:`1.5px solid ${T.accent}`,marginTop:4}}>
-      <div style={{fontSize:13,fontWeight:700,color:T.accent,marginBottom:12}}>Novo lugar</div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+        <div style={{fontSize:13,fontWeight:700,color:T.accent}}>Novo lugar</div>
+        <button onClick={()=>setOpen(false)} style={{background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:18,lineHeight:1}}>×</button>
+      </div>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
         <div>
           <Lbl>Tipo</Lbl>
@@ -416,13 +773,79 @@ function NovoLugar({onAdd,addrTimer}){
           <div><Lbl>Estado</Lbl><select value={d.uf} onChange={e=>setD({...d,uf:e.target.value})}>{STATES.map(s=><option key={s} value={s}>{s}</option>)}</select></div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <div><Lbl>De (ano) *</Lbl><input type="number" placeholder="1990" value={d.y1} onChange={e=>setD({...d,y1:e.target.value})}/></div>
-          <div><Lbl>Até (ano) *</Lbl><input type="number" placeholder="2005" value={d.y2} onChange={e=>setD({...d,y2:e.target.value})}/></div>
+          <div><Lbl>País</Lbl><input placeholder="Brasil" value={d.pais} onChange={e=>setD({...d,pais:e.target.value})}/></div>
+          <div>
+            <Lbl>CEP / Postal</Lbl>
+            <input placeholder="00000-000" value={d.cep} onChange={async e=>{
+              const val=e.target.value;
+              setD(prev=>({...prev,cep:val}));
+              const digits=val.replace(/[^0-9]/g,"");
+              if(digits.length===8){
+                try{
+                  const r=await fetch(`https://viacep.com.br/ws/${digits}/json/`);
+                  const data=await r.json();
+                  if(!data.erro){
+                    const SM={"AC":"AC","AL":"AL","AP":"AP","AM":"AM","BA":"BA","CE":"CE","DF":"DF","ES":"ES","GO":"GO","MA":"MA","MT":"MT","MS":"MS","MG":"MG","PA":"PA","PB":"PB","PR":"PR","PE":"PE","PI":"PI","RJ":"RJ","RN":"RN","RS":"RS","RO":"RO","RR":"RR","SC":"SC","SP":"SP","SE":"SE","TO":"TO"};
+                    const logradouro=data.logradouro?`${data.logradouro}${data.bairro?", "+data.bairro:""}`:null;
+                    setD(prev=>({
+                      ...prev,
+                      city:data.localidade||prev.city,
+                      uf:SM[data.uf]||prev.uf,
+                      placeName:logradouro||prev.placeName,
+                      addrSearch:logradouro||prev.addrSearch,
+                    }));
+                  }
+                }catch{}
+              }
+            }}/>
+          </div>
         </div>
-        <div style={{display:"flex",gap:8}}>
-          <Btn variant="outline" onClick={()=>setOpen(false)}>Cancelar</Btn>
-          <Btn full onClick={adicionar} disabled={!canAdd}>Confirmar lugar</Btn>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <div>
+            <Lbl>De (ano) *</Lbl>
+            <input type="number" placeholder="1990" value={d.y1}
+              onChange={e=>{const v=e.target.value.slice(0,4);setD(prev=>({...prev,y1:v,era:detectarEra(v,prev.y2)}));}}
+              maxLength={4}
+            />
+          </div>
+          <div>
+            <Lbl>Até (ano) *</Lbl>
+            <input type="number" placeholder="2005" value={d.y2}
+              onChange={e=>{const v=e.target.value.slice(0,4);setD(prev=>({...prev,y2:v,era:detectarEra(prev.y1,v)}));}}
+              onBlur={()=>{if(d.y1&&d.y2&&parseInt(d.y2)<parseInt(d.y1))setD(prev=>({...prev,y2:String(parseInt(prev.y1)+1)}));}}
+              style={{borderColor:d.y1&&d.y2&&parseInt(d.y2)<parseInt(d.y1)?"#e74c3c":undefined}}
+            />
+            {d.y1&&d.y2&&parseInt(d.y2)<parseInt(d.y1)&&(
+              <div style={{fontSize:11,color:"#e74c3c",marginTop:3}}>Deve ser maior que {d.y1}</div>
+            )}
+          </div>
         </div>
+        {/* Era detectada automaticamente */}
+        {d.y1&&d.y2&&(()=>{
+          const era=eraInfo(detectarEra(d.y1,d.y2));
+          return(
+            <div style={{padding:"10px 14px",background:`${era.color}10`,border:`1.5px solid ${era.color}`,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div>
+                <div style={{fontSize:11,color:T.muted,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.06em"}}>Período detectado como</div>
+                <div style={{fontSize:14,fontWeight:700,color:era.color,marginTop:2}}>{era.label} · {era.desc}</div>
+              </div>
+              {/* Override manual */}
+              <div style={{display:"flex",gap:4}}>
+                {ERAS.map(e=>(
+                  <div key={e.value} onClick={()=>setD(prev=>({...prev,era:e.value}))} style={{
+                    padding:"4px 10px",borderRadius:16,cursor:"pointer",fontSize:11,fontWeight:700,
+                    background:d.era===e.value?e.color:"transparent",
+                    color:d.era===e.value?"#fff":e.color,
+                    border:`1.5px solid ${e.color}`,
+                    transition:"all .15s",
+                  }}>{e.label}</div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+        {!canAdd&&<div style={{fontSize:12,color:T.muted,padding:"8px 12px",background:T.faint,borderRadius:8}}>Preencha nome, município e período.</div>}
+        <Btn full onClick={adicionar} disabled={!canAdd}>Confirmar lugar</Btn>
       </div>
     </div>
   );
@@ -435,13 +858,18 @@ function Cadastrar({onSave}){
   const [err,setErr]=useState("");
   const addrTimer=useRef();
   const [f,setF]=useState({
-    name:"",nick:"",note:"",
+    firstName:"",lastName:"",nick:"",note:"",
     avatarPreview:null,avatarB64:null,
     photos:[],photoB64s:[],
     lugares:[],
     placeType:"escola",placeName:"",addrSearch:"",addrSugs:[],addrLoading:false,
     city:"",uf:"MT",y1:"",y2:"",
     era:"passado",futureDate:"",
+    // Campos opcionais do perfil
+    birthDay:"",birthMonth:"",birthYear:"",currentCity:"",currentState:"",currentCountry:"Brasil",currentDate:"",
+    interests:[],curtia:[],knownAs:"",
+    familyRef:"",howIam:"",
+    available:"sim",
   });
 
   async function handleAvatar(e){
@@ -481,7 +909,7 @@ function Cadastrar({onSave}){
     setF(v=>({...v,addrSearch:placeName,placeName,city,uf,addrSugs:[]}));
   }
 
-  const canSave=f.name.trim().length>=2&&f.lugares.length>0;
+  const canSave=f.firstName.trim().length>=1&&f.lastName.trim().length>=1&&f.lugares.length>0;
 
   async function salvar(){
     if(!canSave){setErr("Preencha seu nome e adicione pelo menos um lugar.");return;}
@@ -489,7 +917,9 @@ function Cadastrar({onSave}){
     const profile={
       id:crypto.randomUUID?crypto.randomUUID():Date.now().toString(),
       created_at:new Date().toISOString(),
-      name:f.name.trim(), nick:f.nick.trim()||null,
+      name:(f.firstName.trim()+" "+f.lastName.trim()).trim(),
+      first_name:f.firstName.trim(),
+      last_name:f.lastName.trim(), nick:f.nick.trim()||null,
       place_type:f.lugares[0]?.placeType||"outro",
       place_name:f.lugares[0]?.placeName||"",
       city:f.lugares[0]?.city||"",
@@ -502,6 +932,18 @@ function Cadastrar({onSave}){
       future_date:(f.era==="futuro"&&f.futureDate)?f.futureDate:null,
       avatar_url:f.avatarB64||null,
       photos:f.photoB64s||[],
+      birth_day:f.birthDay?parseInt(f.birthDay):null,
+      birth_month:f.birthMonth?parseInt(f.birthMonth):null,
+      birth_year:f.birthYear?parseInt(f.birthYear):null,
+      current_city:f.currentCity||null,
+      current_state:f.currentState||null,
+      current_country:f.currentCountry||null,
+      interests:f.interests.length>0?f.interests:null,
+      curtia:f.curtia.length>0?f.curtia:null,
+      known_as:f.knownAs||null,
+      family_ref:f.familyRef||null,
+      how_iam:f.howIam||null,
+      available:f.available||"sim",
     };
     try{await db.from("profiles").insert(profile);}catch(e){console.log("Supabase:",e?.message);}
     onSave(profile);
@@ -526,10 +968,31 @@ function Cadastrar({onSave}){
         <div style={{fontSize:13,color:T.muted,marginTop:4}}>Preencha e apareça nas buscas</div>
       </div>
 
+      {/* Dynamic era indicator at top */}
+      {f.era&&(
+        <div style={{
+          padding:"12px 16px",borderRadius:12,marginBottom:16,
+          background:getBg(f.era),border:`1.5px solid ${getColor(f.era)}40`,
+          display:"flex",alignItems:"center",gap:10,
+        }}>
+          <div style={{width:10,height:10,borderRadius:"50%",background:getColor(f.era),flexShrink:0}}/>
+          <div>
+            <div style={{fontSize:13,fontWeight:700,color:getColor(f.era)}}>
+              {f.era==="passado"?"Contando sua história":""}
+              {f.era==="presente"?"Compartilhando quem você é":""}
+              {f.era==="futuro"?"Seus planos e sonhos":""}
+            </div>
+            <div style={{fontSize:11,color:getColor(f.era),opacity:.7,marginTop:1}}>
+              Os campos abaixo se adaptam ao momento selecionado
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{display:"flex",flexDirection:"column",gap:0}}>
 
         {/* Seção: Você */}
-        <STitle>Quem é você?</STitle>
+        <STitle style={{color:getColor(f.era)}}>{getLbl(f.era,"quemVoce")}</STitle>
 
         <FRow>
           <div style={{display:"flex",alignItems:"center",gap:16}}>
@@ -547,11 +1010,24 @@ function Cadastrar({onSave}){
           </div>
         </FRow>
 
-        <FRow label="Nome completo *">
-          <input placeholder="Seu nome" value={f.name} onChange={e=>setF({...f,name:e.target.value})}/>
+        <FRow>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+            <div><Lbl>Nome *</Lbl><input placeholder="Ex: Maria" value={f.firstName} onChange={e=>setF({...f,firstName:e.target.value})}/></div>
+            <div><Lbl>Sobrenome *</Lbl><input placeholder="Ex: Silva" value={f.lastName} onChange={e=>setF({...f,lastName:e.target.value})}/></div>
+          </div>
         </FRow>
         <FRow label="Apelido">
           <input placeholder="Como te chamavam? Ex: Cadu, Marizinha…" value={f.nick} onChange={e=>setF({...f,nick:e.target.value})}/>
+        </FRow>
+        
+        <FRow {getLbl(f.era,"comoConhecido")}>
+          <input placeholder={getLbl(f.era,"placeHolder_nome")} value={f.knownAs} onChange={e=>setF({...f,knownAs:e.target.value})}/>
+        </FRow>
+        <FRow label="Nome da família">
+          <input placeholder="Ex: Família Silva, Família Oliveira…" value={f.familyRef} onChange={e=>setF({...f,familyRef:e.target.value})}/>
+          <div style={{fontSize:11,color:T.muted,marginTop:5,padding:"6px 10px",background:T.faint,borderRadius:8}}>
+            Você será alertado quando alguém do mesmo sobrenome se cadastrar
+          </div>
         </FRow>
 
         {/* Seção: Quando */}
@@ -559,11 +1035,16 @@ function Cadastrar({onSave}){
         <FRow>
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
             {ERAS.map(e=>(
-              <div key={e.value} onClick={()=>setF({...f,era:e.value})} style={{padding:"11px 8px",borderRadius:12,cursor:"pointer",textAlign:"center",border:`1.5px solid ${f.era===e.value?e.color:T.border}`,background:f.era===e.value?`${e.color}12`:"#fff",transition:"all .15s"}}>
+              <div key={e.value} onClick={()=>setF({...f,era:e.value})} style={{padding:"13px 8px",borderRadius:12,cursor:"pointer",textAlign:"center",border:`2px solid ${f.era===e.value?e.color:T.border}`,background:f.era===e.value?getBg(e.value):"#fff",transform:f.era===e.value?"scale(1.03)":"scale(1)",boxShadow:f.era===e.value?`0 4px 16px ${e.color}25`:"none",transition:"all .2s"}}>
                 <div style={{fontSize:12,fontWeight:700,color:f.era===e.value?e.color:T.muted,textTransform:"uppercase",letterSpacing:"0.04em"}}>{e.label}</div>
                 <div style={{fontSize:10,color:T.muted,marginTop:3,lineHeight:1.4}}>{e.desc}</div>
               </div>
             ))}
+          </div>
+          <div style={{fontSize:12,color:getColor(f.era),padding:"8px 12px",background:getBg(f.era),borderRadius:8,marginTop:4,fontWeight:500}}>
+            {f.era==="passado"&&"Os campos ficam no passado — como era, o que gostava, onde morava…"}
+            {f.era==="presente"&&"Os campos ficam no presente — como é, o que gosta, onde mora…"}
+            {f.era==="futuro"&&"Os campos ficam no futuro — como quer ser, o que vai curtir, onde quer estar…"}
           </div>
           {f.era==="futuro"&&(
             <div style={{marginTop:12}}>
@@ -574,27 +1055,151 @@ function Cadastrar({onSave}){
         </FRow>
 
         {/* Seção: Localização */}
-        <STitle>Onde você viveu?</STitle>
+        <STitle style={{color:getColor(f.era)}}>Lugares {f.era==="passado"?"que já morei":f.era==="presente"?"onde moro ou estou":"onde quero estar"}</STitle>
         <FRow>
           <div style={{fontSize:13,color:T.muted,marginBottom:12,lineHeight:1.6}}>
             Adicione quantos lugares quiser — escola, fazenda, bairro, cidade…
           </div>
           {/* Lista de lugares já adicionados */}
           {f.lugares.map((loc,i)=>(
-            <div key={i} style={{background:T.faint,borderRadius:12,padding:"12px 14px",marginBottom:8,border:`1px solid ${T.border}`,position:"relative"}}>
-              <button onClick={()=>setF(v=>({...v,lugares:v.lugares.filter((_,j)=>j!==i)}))} style={{position:"absolute",top:8,right:10,background:"none",border:"none",cursor:"pointer",fontSize:16,color:T.muted,lineHeight:1}}>×</button>
-              <div style={{fontWeight:600,fontSize:14,color:T.text,paddingRight:24}}>{loc.placeName}</div>
-              <div style={{fontSize:12,color:T.muted,marginTop:2}}>{loc.city} – {loc.uf} · {loc.y1}–{loc.y2} · {placeLabel(loc.placeType)}</div>
+            <div key={i} style={{background:T.surface,borderRadius:12,padding:"12px 14px 12px 14px",marginBottom:8,border:`1.5px solid ${T.accent}`,display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:600,fontSize:14,color:T.text}}>{loc.placeName}</div>
+                <div style={{fontSize:12,color:T.muted,marginTop:3}}>{loc.city} – {loc.uf}{loc.pais&&loc.pais!=="Brasil"?` · ${loc.pais}`:""}{loc.cep?` · CEP ${loc.cep}`:""}</div>
+                <div style={{fontSize:12,color:T.accent,marginTop:2,fontWeight:600}}>{loc.y1} – {loc.y2} · {placeLabel(loc.placeType)}</div>
+              </div>
+              <button onClick={()=>setF(v=>({...v,lugares:v.lugares.filter((_,j)=>j!==i)}))} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,color:T.muted,lineHeight:1,flexShrink:0,padding:"0 0 0 8px"}}>×</button>
             </div>
           ))}
           {/* Formulário para novo lugar */}
-          <NovoLugar onAdd={loc=>setF(v=>({...v,lugares:[...v.lugares,loc]}))} addrTimer={addrTimer}/>
+          <NovoLugar key={f.lugares.length} onAdd={loc=>setF(v=>({...v,lugares:[...v.lugares,loc]}))} addrTimer={addrTimer}/>
         </FRow>
 
         {/* Seção: Memória */}
-        <STitle>Uma memória (opcional)</STitle>
+        <STitle style={{color:getColor(f.era)}}>{getLbl(f.era,"nota")} (opcional)</STitle>
         <FRow>
-          <textarea rows={3} placeholder="Ex: Morei perto do córrego, vizinho da família Silva…" value={f.note} onChange={e=>setF({...f,note:e.target.value})} style={{resize:"vertical"}}/>
+          <textarea rows={3} placeholder={getLbl(f.era,"placeHolder_memoria")} value={f.note} onChange={e=>setF({...f,note:e.target.value})} style={{resize:"vertical"}}/>
+        </FRow>
+
+        {/* Seção: Sobre você */}
+        <STitle style={{color:getColor(f.era)}}>Sobre você</STitle>
+
+        <FRow>
+          <div>
+            <Lbl>Data de nascimento</Lbl>
+            <div style={{display:"grid",gridTemplateColumns:"70px 70px 1fr",gap:8}}>
+              <input
+                type="number" placeholder="Dia" min="1" max="31"
+                value={f.birthDay}
+                onChange={e=>{
+                  const v=e.target.value.slice(0,2);
+                  setF({...f,birthDay:v});
+                  if(v.length===2){document.getElementById("editBirthMonth")?.focus();}
+                }}
+                style={{textAlign:"center"}}
+              />
+              <input
+                id="editBirthMonth"
+                type="number" placeholder="Mês" min="1" max="12"
+                value={f.birthMonth}
+                onChange={e=>{
+                  const v=e.target.value.slice(0,2);
+                  setF({...f,birthMonth:v});
+                  if(v.length===2){document.getElementById("editBirthYear")?.focus();}
+                }}
+                style={{textAlign:"center"}}
+              />
+              <input
+                id="editBirthYear"
+                type="number" placeholder="Ano"
+                value={f.birthYear}
+                onChange={e=>setF({...f,birthYear:e.target.value.slice(0,4)})}
+              />
+            </div>
+
+          </div>
+          
+          <div>
+            <Lbl>Atualmente estou em</Lbl>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              <input placeholder="Cidade atual" value={f.currentCity} onChange={e=>setF({...f,currentCity:e.target.value})}/>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                <select value={f.currentState} onChange={e=>setF({...f,currentState:e.target.value})}>
+                  <option value="">Estado</option>
+                  {STATES.map(s=><option key={s} value={s}>{s}</option>)}
+                </select>
+                <input placeholder="País" value={f.currentCountry} onChange={e=>setF({...f,currentCountry:e.target.value})}/>
+              </div>
+            </div>
+          </div>
+        </FRow>
+
+        <FRow label="Como você era conhecido">
+          <input placeholder="Ex: O filho do Seu Zé, A Gracinha da padaria…" value={f.knownAs} onChange={e=>setF({...f,knownAs:e.target.value})}/>
+        </FRow>
+
+        <FRow label="Nomes na família">
+          <input placeholder="Ex: Silva, Maria das Graças, Tio Zé…" value={f.familyRef} onChange={e=>setF({...f,familyRef:e.target.value})}/>
+        </FRow>
+
+        <FRow label="Um fato marcante da época">
+
+        </FRow>
+
+        <FRow label="Do que mais gosta hoje?">
+          <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
+            {["Futebol","Pesca","Música","Agricultura","Culinária","Dança","Leitura","Viagem","Religião","Arte","Tecnologia","Pecuária"].map(item=>(
+              <div key={item} onClick={()=>{
+                setF(v=>({...v,interests:v.interests.includes(item)?v.interests.filter(i=>i!==item):[...v.interests,item]}));
+              }} style={{
+                padding:"6px 12px",borderRadius:20,cursor:"pointer",fontSize:13,
+                border:`1.5px solid ${f.interests.includes(item)?T.accent:T.border}`,
+                background:f.interests.includes(item)?T.accentBg:"#fff",
+                color:f.interests.includes(item)?T.accent:T.muted,
+                fontWeight:f.interests.includes(item)?600:400,
+                transition:"all .15s",
+              }}>{item}</div>
+            ))}
+          </div>
+        </FRow>
+
+
+
+        <FRow label="Do que você gostava?">
+          <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
+            {["Futebol","Pesca","Música","Agricultura","Culinária","Dança","Leitura","Viagem","Religião","Arte","Tecnologia","Pecuária"].map(item=>(
+              <div key={item} onClick={()=>setF(v=>({...v,curtia:v.curtia.includes(item)?v.curtia.filter(i=>i!==item):[...v.curtia,item]}))} style={{
+                padding:"6px 12px",borderRadius:20,cursor:"pointer",fontSize:13,
+                border:`1.5px solid ${f.curtia.includes(item)?"#7B5EA7":T.border}`,
+                background:f.curtia.includes(item)?"rgba(123,94,167,0.1)":"#fff",
+                color:f.curtia.includes(item)?"#7B5EA7":T.muted,
+                fontWeight:f.curtia.includes(item)?600:400,
+                transition:"all .15s",
+              }}>{item}</div>
+            ))}
+          </div>
+          <AddOutro
+            placeholder="Adicionar outro… ex: Cavalgada, Baile, Dominó"
+            color="#7B5EA7"
+            bgColor="rgba(123,94,167,0.1)"
+            onAdd={v=>setF(prev=>({...prev,curtia:prev.curtia.includes(v)?prev.curtia:[...prev.curtia,v]}))}
+            onRemove={v=>setF(prev=>({...prev,curtia:prev.curtia.filter(i=>i!==v)}))}
+            extras={f.curtia.filter(i=>!["Futebol","Pesca","Música","Agricultura","Culinária","Dança","Leitura","Viagem","Religião","Arte","Tecnologia","Pecuária"].includes(i))}
+          />
+        </FRow>
+        <FRow label="Disponível para">
+          <div style={{display:"flex",gap:8}}>
+            {[{v:"sim",l:"Relembrar"},{v:"mensagem",l:"Só mensagem"},{v:"nao",l:"Por enquanto não"}].map(o=>(
+              <div key={o.v} onClick={()=>setF({...f,available:o.v})} style={{
+                flex:1,padding:"10px 8px",borderRadius:10,cursor:"pointer",textAlign:"center",
+                border:`1.5px solid ${f.available===o.v?T.accent:T.border}`,
+                background:f.available===o.v?T.accentBg:"#fff",
+                fontSize:12,fontWeight:f.available===o.v?700:400,
+                color:f.available===o.v?T.accent:T.muted,
+                transition:"all .15s",
+              }}>{o.l}</div>
+            ))}
+          </div>
         </FRow>
 
         {/* Seção: Fotos */}
@@ -630,7 +1235,7 @@ function Cadastrar({onSave}){
 
         <div style={{paddingTop:20}}>
           <Btn full onClick={salvar} disabled={saving||!canSave} size="lg">
-            {saving?<><Spinner/>Salvando…</>:"Criar meu perfil"}
+            {saving?<><Spinner/>Salvando…</>:f.era==="passado"?"Criar meu perfil":f.era==="presente"?"Compartilhar meu perfil":"Registrar meus planos"}
           </Btn>
           {!canSave&&<div style={{marginTop:10,fontSize:12,color:T.muted,textAlign:"center"}}>Preencha seu nome e adicione pelo menos um lugar</div>}
         </div>
@@ -639,26 +1244,34 @@ function Cadastrar({onSave}){
   );
 }
 
-// ── Screen: Contatos (como WhatsApp) ──────────────────────────
-function Contatos({user,contacts,onChat,onRemove,onCadastrar,onBuscar}){
-  const [buscando,setBuscando]=useState(false);
+// ── Screen: Contatos ─────────────────────────────────────────
+function Contatos({user,contacts,onChat,onAdd,onUpdateRel,onRemove,onCadastrar,onBuscar}){
+  const [aba,setAba]=useState("conectados"); // "conectados" | "regiao"
   const [termo,setTermo]=useState("");
-  const [results,setResults]=useState([]);
-  const [loading,setLoading]=useState(false);
-  const timer=useRef();
+  const [regiaoProfiles,setRegiaoProfiles]=useState([]);
+  const [loadingRegiao,setLoadingRegiao]=useState(false);
+  const [visiveis,setVisiveis]=useState({}); // id -> bool (visível para outros)
 
+  // Carrega perfis da mesma região do usuário
   useEffect(()=>{
-    if(!termo.trim()){setResults([]);return;}
-    clearTimeout(timer.current);
-    timer.current=setTimeout(async()=>{
-      setLoading(true);
-      const {data}=await db.from("profiles").select("*")
-        .or(`name.ilike.%${termo}%,nick.ilike.%${termo}%`)
-        .neq("id",user?.id||"")
-        .limit(10);
-      setResults(data||[]);setLoading(false);
-    },400);
-  },[termo]);
+    if(aba!=="regiao"||!user)return;
+    setLoadingRegiao(true);
+    const lugares=user.lugares||[];
+    const cidades=lugares.map(l=>l.city).filter(Boolean);
+    const estados=lugares.map(l=>l.uf).filter(Boolean);
+    if(cidades.length===0&&estados.length===0){setLoadingRegiao(false);return;}
+    const orFilter=[
+      ...cidades.map(c=>`city.ilike.%${c}%`),
+      ...estados.map(s=>`state.eq.${s}`),
+    ].join(",");
+    db.from("profiles").select("*")
+      .neq("id",user.id)
+      .or(orFilter)
+      .order("created_at",{ascending:false})
+      .limit(50)
+      .then(({data})=>{setRegiaoProfiles(data||[]);setLoadingRegiao(false);})
+      .catch(()=>setLoadingRegiao(false));
+  },[aba,user?.id]);
 
   if(!user)return(
     <div style={{padding:"80px 20px",textAlign:"center"}}>
@@ -670,26 +1283,57 @@ function Contatos({user,contacts,onChat,onRemove,onCadastrar,onBuscar}){
     </div>
   );
 
-  const filtrados=contacts.filter(c=>c.name.toLowerCase().includes(termo.toLowerCase())||
-    (c.nick||"").toLowerCase().includes(termo.toLowerCase()));
+  const contactIds=new Set(contacts.map(c=>String(c.id)));
+  const filtrados=contacts.filter(c=>
+    c.name.toLowerCase().includes(termo.toLowerCase())||
+    (c.nick||"").toLowerCase().includes(termo.toLowerCase())||
+    (c.city||"").toLowerCase().includes(termo.toLowerCase())
+  );
+  const filtradosRegiao=regiaoProfiles.filter(p=>
+    p.name.toLowerCase().includes(termo.toLowerCase())||
+    (p.city||"").toLowerCase().includes(termo.toLowerCase())||
+    (p.place_name||"").toLowerCase().includes(termo.toLowerCase())
+  );
+
+  function toggleVisivel(id){
+    setVisiveis(prev=>({...prev,[id]:!prev[id]}));
+  }
 
   return(
     <div style={{padding:"0 18px 100px"}}>
-      <div style={{paddingTop:52,paddingBottom:20}}>
+      {/* Header */}
+      <div style={{paddingTop:52,paddingBottom:16}}>
         <Logo/>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:16}}>
           <div>
-            <div style={{fontSize:20,fontWeight:700,color:T.text}}>Contatos</div>
-            <div style={{fontSize:12,color:T.muted,marginTop:2}}>{contacts.length} contato{contacts.length!==1?"s":""}</div>
+            <div style={{fontSize:20,fontWeight:700,color:T.text}}>Conexões</div>
+            <div style={{fontSize:12,color:T.muted,marginTop:2}}>{contacts.length} conectado{contacts.length!==1?"s":""}</div>
           </div>
           <Btn onClick={onBuscar} variant="primary" size="sm">+ Adicionar</Btn>
         </div>
       </div>
 
-      {/* Busca dentro dos contatos / nova pessoa */}
+      {/* Abas */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:16}}>
+        {[
+          {id:"conectados", label:"Meus Contatos"},
+          {id:"regiao",     label:"Por Região"},
+        ].map(a=>(
+          <button key={a.id} onClick={()=>setAba(a.id)} style={{
+            padding:"10px",borderRadius:12,cursor:"pointer",fontFamily:"inherit",
+            fontWeight:aba===a.id?700:500,fontSize:13,
+            border:`1.5px solid ${aba===a.id?T.accent:T.border}`,
+            background:aba===a.id?T.accentBg:"#fff",
+            color:aba===a.id?T.accent:T.muted,
+            transition:"all .15s",
+          }}>{a.label}</button>
+        ))}
+      </div>
+
+      {/* Campo de busca */}
       <div style={{position:"relative",marginBottom:16}}>
         <input
-          placeholder="Buscar contatos ou encontrar novas pessoas…"
+          placeholder={aba==="conectados"?"Buscar nos seus contatos…":"Buscar por nome, lugar ou cidade…"}
           value={termo}
           onChange={e=>setTermo(e.target.value)}
           style={{paddingRight:termo?40:14}}
@@ -697,74 +1341,348 @@ function Contatos({user,contacts,onChat,onRemove,onCadastrar,onBuscar}){
         {termo&&<button onClick={()=>setTermo("")} style={{position:"absolute",right:13,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:18,lineHeight:1}}>×</button>}
       </div>
 
-      {/* Lista de contatos */}
-      {contacts.length===0&&!termo?(
-        <div style={{background:T.surface,borderRadius:18,padding:"40px 20px",textAlign:"center",border:`1px solid ${T.border}`,marginBottom:16}}>
-          <div style={{fontSize:24,marginBottom:12}}>👥</div>
-          <div style={{fontSize:15,fontWeight:600,color:T.text,marginBottom:8}}>Nenhum contato ainda</div>
-          <div style={{fontSize:13,color:T.muted,lineHeight:1.8,marginBottom:20}}>Encontre pessoas que viveram no<br/>mesmo lugar que você e adicione.</div>
-          <Btn onClick={onBuscar}>Buscar pessoas</Btn>
-        </div>
-      ):(
-        <div style={{display:"flex",flexDirection:"column",gap:2,marginBottom:16}}>
-          {(termo?filtrados:contacts).map((c,i)=>(
-            <div key={c.id} style={{background:T.surface,borderRadius:14,padding:"12px 14px",display:"flex",gap:12,alignItems:"center",border:`1px solid ${T.border}`,marginBottom:6,transition:"all .15s",cursor:"pointer"}}
-            onClick={()=>onChat(c,"msg")}
-            onMouseEnter={e=>e.currentTarget.style.background=T.faint}
-            onMouseLeave={e=>e.currentTarget.style.background=T.surface}>
-              <Avatar name={c.name} src={c.avatar_url} size={50}/>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontWeight:600,fontSize:15,color:T.text}}>{c.name}</div>
-                <div style={{fontSize:12,color:T.muted,marginTop:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.place_name} · {c.city}</div>
+      {/* ABA: Meus Contatos */}
+      {aba==="conectados"&&(
+        <div>
+          {filtrados.length===0?(
+            <div style={{background:"#fff",borderRadius:18,padding:"40px 20px",textAlign:"center",border:`1px solid ${T.border}`}}>
+              <div style={{fontSize:24,marginBottom:12}}>👥</div>
+              <div style={{fontSize:15,fontWeight:600,color:T.text,marginBottom:8}}>
+                {termo?"Nenhum resultado":"Nenhuma conexão ainda"}
               </div>
-              {/* Ações */}
-              <div style={{display:"flex",gap:8,flexShrink:0}}>
-                <button onClick={e=>{e.stopPropagation();onChat(c,"call");}} style={{width:36,height:36,borderRadius:"50%",background:T.faint,border:`1px solid ${T.border}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 2C5.5 2 3 5 3 7.5c0 3 2.5 6 7.5 7 3 0 6-2.5 6-2.5L14.5 9.5l-3 .8S10 9 9.5 8.5 9 6.5 9 6.5L9.5 4 5.5 2z" stroke={T.sub} strokeWidth="1.3" strokeLinejoin="round"/></svg>
-                </button>
-                <button onClick={e=>{e.stopPropagation();onChat(c,"msg");}} style={{width:36,height:36,borderRadius:"50%",background:T.accent,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(193,126,58,0.3)"}}>
-                  <svg width="15" height="13" viewBox="0 0 15 13" fill="none"><path d="M1 1h13v9H8.5l-3 2.5V10H1V1z" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round"/></svg>
-                </button>
+              <div style={{fontSize:13,color:T.muted,lineHeight:1.8,marginBottom:20}}>
+                {termo?"Tente outro nome ou cidade":"Encontre pessoas da sua região e adicione"}
               </div>
+              {!termo&&<Btn onClick={onBuscar}>Buscar pessoas</Btn>}
             </div>
-          ))}
+          ):(
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              {filtrados.map((c)=>(
+                <div key={c.id} style={{background:"#fff",borderRadius:14,padding:"13px 14px",display:"flex",gap:12,alignItems:"center",border:`1px solid ${T.border}`,cursor:"pointer",transition:"all .15s"}}
+                onClick={()=>onChat(c,"msg")}
+                onMouseEnter={e=>e.currentTarget.style.background=T.faint}
+                onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
+                  <Avatar name={c.name} src={c.avatar_url} size={50}/>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",alignItems:"center",gap:6}}>
+                    <span style={{fontWeight:600,fontSize:15,color:T.text}}>{c.name}</span>
+                    {c.how_iam&&<span style={{fontSize:16}} title={c.how_iam}>{c.how_iam.split(" ")[0]}</span>}
+                  </div>
+                    <div style={{fontSize:12,color:T.muted,marginTop:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                      {c.place_name} · {c.city}
+                    </div>
+                  </div>
+                  <div style={{display:"flex",gap:8,flexShrink:0,alignItems:"center"}}>
+                    {/* Badge de relacionamento */}
+                    {(()=>{
+                      const rel=RELACIONAMENTOS.find(r=>r.value===(c._rel||"conhecido"));
+                      return <span onClick={e=>{e.stopPropagation();const vals=RELACIONAMENTOS.map(r=>r.value);const cur=vals.indexOf(c._rel||"conhecido");onUpdateRel(c.id,vals[(cur+1)%vals.length]);}} style={{fontSize:10,fontWeight:700,color:rel?.color,background:`${rel?.color}15`,padding:"2px 8px",borderRadius:20,cursor:"pointer",border:`1px solid ${rel?.color}33`,whiteSpace:"nowrap"}}>{rel?.label}</span>;
+                    })()}
+                    <button onClick={e=>{e.stopPropagation();onChat(c,"call");}} style={{width:36,height:36,borderRadius:"50%",background:T.faint,border:`1px solid ${T.border}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 2C5.5 2 3 5 3 7.5c0 3 2.5 6 7.5 7 3 0 6-2.5 6-2.5L14.5 9.5l-3 .8S10 9 9.5 8.5 9 6.5 9 6.5L9.5 4 5.5 2z" stroke={T.sub} strokeWidth="1.3" strokeLinejoin="round"/></svg>
+                    </button>
+                    <button onClick={e=>{e.stopPropagation();onChat(c,"msg");}} style={{width:36,height:36,borderRadius:"50%",background:T.accent,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(193,126,58,0.3)"}}>
+                      <svg width="15" height="13" viewBox="0 0 15 13" fill="none"><path d="M1 1h13v9H8.5l-3 2.5V10H1V1z" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round"/></svg>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
-      {/* Resultados de busca de novas pessoas */}
-      {termo&&results.length>0&&(
+      {/* ABA: Por Região */}
+      {aba==="regiao"&&(
         <div>
-          <div style={{fontSize:11,fontWeight:700,color:T.muted,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:12}}>Pessoas encontradas</div>
-          {results.filter(r=>!contacts.find(c=>c.id===r.id)).map((p,i)=>(
-            <div key={p.id} style={{background:T.surface,borderRadius:14,padding:"12px 14px",display:"flex",gap:12,alignItems:"center",border:`1px solid ${T.border}`,marginBottom:6}}>
-              <Avatar name={p.name} src={p.avatar_url} size={48}/>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontWeight:600,fontSize:14,color:T.text}}>{p.name}</div>
-                <div style={{fontSize:12,color:T.muted,marginTop:2}}>{p.place_name} · {p.city}</div>
+          {/* Info */}
+          <div style={{background:T.accentBg,borderRadius:12,padding:"12px 14px",marginBottom:16,fontSize:13,color:T.accent,lineHeight:1.6}}>
+            Pessoas que viveram nos mesmos lugares que você. Selecione quem deseja conectar — elas receberão uma notificação.
+          </div>
+
+          {loadingRegiao?(
+            <div style={{padding:"32px",textAlign:"center"}}><Spinner size={24}/></div>
+          ):filtradosRegiao.length===0?(
+            <div style={{background:"#fff",borderRadius:18,padding:"40px 20px",textAlign:"center",border:`1px solid ${T.border}`}}>
+              <div style={{fontSize:14,color:T.muted,lineHeight:1.8}}>
+                {user.lugares?.length===0
+                  ?"Adicione seus lugares no perfil para ver pessoas da região"
+                  :"Nenhuma pessoa encontrada na sua região ainda"}
               </div>
-              <Btn onClick={()=>{}} variant="primary" size="sm">+ Adicionar</Btn>
             </div>
-          ))}
+          ):(
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              {filtradosRegiao.map((p)=>{
+                const jaContato=contactIds.has(String(p.id));
+                const visivel=visiveis[p.id]!==undefined?visiveis[p.id]:true;
+                const era=eraInfo(p.era||"passado");
+                return(
+                  <div key={p.id} style={{background:"#fff",borderRadius:14,border:`1px solid ${jaContato?T.green:T.border}`,overflow:"hidden",transition:"all .15s"}}>
+                    <div style={{padding:"13px 14px",display:"flex",gap:12,alignItems:"center"}}>
+                      <Avatar name={p.name} src={p.avatar_url} size={48}/>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:"flex",alignItems:"center",gap:6}}>
+                          <span style={{fontWeight:600,fontSize:14,color:T.text}}>{p.name}</span>
+                          <span style={{fontSize:10,fontWeight:700,color:era.color,background:`${era.color}15`,padding:"1px 7px",borderRadius:20,textTransform:"uppercase"}}>{era.label}</span>
+                        </div>
+                        <div style={{fontSize:12,color:T.muted,marginTop:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.place_name} · {p.city}, {p.state}</div>
+                      </div>
+                    </div>
+
+                    {/* Ações */}
+                    <div style={{padding:"10px 14px 13px",borderTop:`1px solid ${T.border}`,display:"flex",gap:8,alignItems:"center"}}>
+                      {/* Toggle visível */}
+                      <div onClick={()=>toggleVisivel(p.id)} style={{display:"flex",alignItems:"center",gap:6,cursor:"pointer",flex:1}}>
+                        <div style={{
+                          width:36,height:20,borderRadius:10,
+                          background:visivel?T.green:"#DDD8D0",
+                          position:"relative",transition:"background .2s",flexShrink:0,
+                        }}>
+                          <div style={{
+                            width:16,height:16,borderRadius:"50%",background:"#fff",
+                            position:"absolute",top:2,
+                            left:visivel?18:2,
+                            transition:"left .2s",
+                            boxShadow:"0 1px 3px rgba(0,0,0,0.2)",
+                          }}/>
+                        </div>
+                        <span style={{fontSize:12,color:visivel?T.green:T.muted,fontWeight:600}}>
+                          {visivel?"Visível para ela":"Invisível"}
+                        </span>
+                      </div>
+
+                      {jaContato?(
+                        <div style={{display:"flex",gap:8}}>
+                          <button onClick={()=>onChat(p,"call")} style={{width:34,height:34,borderRadius:"50%",background:T.faint,border:`1px solid ${T.border}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 1.5C5 1.5 3 4 3 6c0 3 2.5 5.5 7 6.5 3 0 5.5-2.5 5.5-2.5L13 8.5l-2.5.6S9 8 8.5 7.5 8 5.5 8 5.5L8.5 3.5 5 1.5z" stroke={T.sub} strokeWidth="1.3" strokeLinejoin="round"/></svg>
+                          </button>
+                          <button onClick={()=>onChat(p,"msg")} style={{width:34,height:34,borderRadius:"50%",background:T.accent,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                            <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><path d="M1 1h12v8H8l-3 2.5V9H1V1z" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round"/></svg>
+                          </button>
+                        </div>
+                      ):(
+                        <Btn onClick={()=>onAdd(p)} variant="primary" size="sm">+ Conectar</Btn>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
-      {loading&&<div style={{textAlign:"center",padding:"20px"}}><Spinner/></div>}
     </div>
   );
 }
 
-// ── Screen: Perfil ────────────────────────────────────────────
-function Perfil({user,onLogout,onCadastrar,onUpdateUser}){
+// ── Modal: Editar Perfil ─────────────────────────────────────
+function ModalEditarPerfil({user,onClose,onSave}){
+  const [saving,setSaving]=useState(false);
+  const [f,setF]=useState({
+    name:user.name||"",
+    nick:user.nick||"",
+    note:user.note||"",
+    birthDay:user.birth_day||"",
+    birthMonth:user.birth_month||"",
+    birthYear:user.birth_year||"",
+    currentDate:user.current_date||"",
+    currentCity:user.current_city||"",
+    currentState:user.current_state||"",
+    currentCountry:user.current_country||"Brasil",
+    howIam:user.how_iam||"",
+    knownAs:user.known_as||"",
+    familyRef:user.family_ref||"",
+    howIam:user.how_iam||"",
+    available:user.available||"sim",
+    interests:user.interests||[],
+    curtia:user.curtia||[],
+  });
+
+  async function salvar(){
+    if(!f.name.trim())return;
+    setSaving(true);
+    const updated={
+      ...user,
+      name:f.name.trim(),
+      nick:f.nick.trim()||null,
+      note:f.note.trim()||null,
+      birth_year:f.birthYear?parseInt(f.birthYear):null,
+      birth_day:f.birthDay?parseInt(f.birthDay):null,
+      birth_month:f.birthMonth?parseInt(f.birthMonth):null,
+      birth_year:f.birthYear?parseInt(f.birthYear):null,
+      current_city:f.currentCity.trim()||null,
+      current_state:f.currentState||null,
+      current_country:f.currentCountry||null,
+      known_as:f.knownAs.trim()||null,
+      curtia:f.curtia.length>0?f.curtia:null,
+      how_iam:f.howIam.trim()||null,
+      family_ref:f.familyRef.trim()||null,
+      how_iam:f.howIam.trim()||null,
+      available:f.available,
+      interests:f.interests.length>0?f.interests:null,
+    };
+    try{
+      await db.from("profiles").update({
+        name:updated.name, nick:updated.nick, note:updated.note,
+        birth_year:updated.birth_year, profession:updated.profession,
+        known_as:updated.known_as, family_ref:updated.family_ref,
+        how_iam:updated.how_iam,
+        available:updated.available, interests:updated.interests,
+      }).eq("id",user.id);
+    }catch(e){console.log("Erro:",e);}
+    onSave(updated);
+    setSaving(false);
+    onClose();
+  }
+
+  const INTERESSES=["Futebol","Pesca","Música","Agricultura","Culinária","Dança","Leitura","Viagem","Religião","Arte","Tecnologia","Pecuária","Esporte","Fotografia","Natureza"];
+
+  return(
+    <div className="fi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}}>
+      <div className="su" onClick={e=>e.stopPropagation()} style={{background:"#FAF7F2",borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,maxHeight:"92vh",overflowY:"auto",padding:"0 20px 48px"}}>
+        {/* Handle */}
+        <div style={{padding:"14px 0 4px",display:"flex",justifyContent:"center"}}>
+          <div style={{width:36,height:4,borderRadius:2,background:"#DDD8D0"}}/>
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0 20px"}}>
+          <div style={{fontSize:18,fontWeight:700,color:T.text}}>Editar perfil</div>
+          <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:22,lineHeight:1}}>×</button>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:0}}>
+          <STitle>Sobre você</STitle>
+
+          <FRow label="Nome completo *">
+            <input value={f.name} onChange={e=>setF({...f,name:e.target.value})} placeholder="Seu nome"/>
+          </FRow>
+          <FRow label="Apelido">
+            <input value={f.nick} onChange={e=>setF({...f,nick:e.target.value})} placeholder="Como te chamavam?"/>
+          </FRow>
+          <FRow label={getLbl(f.era,"comoConhecido")}>
+            <input value={f.knownAs} onChange={e=>setF({...f,knownAs:e.target.value})} placeholder="Ex: O filho do Seu Zé…"/>
+          </FRow>
+<FRow label="Nomes na família">
+            <input value={f.familyRef} onChange={e=>setF({...f,familyRef:e.target.value})} placeholder="Ex: Silva, Maria das Graças, Tio Zé…"/>
+          </FRow>
+
+          <FRow label="Memória">
+            <textarea rows={3} value={f.note} onChange={e=>setF({...f,note:e.target.value})} placeholder="Conte uma memória daquela época…" style={{resize:"vertical"}}/>
+          </FRow>
+
+          <STitle>Sobre você</STitle>
+
+          <FRow>
+            <div>
+            <Lbl>Data de nascimento</Lbl>
+            <div style={{display:"grid",gridTemplateColumns:"70px 70px 1fr",gap:8}}>
+              <input type="number" placeholder="Dia" min="1" max="31" value={f.birthDay} onChange={e=>setF({...f,birthDay:e.target.value})} style={{textAlign:"center"}}/>
+              <input type="number" placeholder="Mês" min="1" max="12" value={f.birthMonth} onChange={e=>setF({...f,birthMonth:e.target.value})} style={{textAlign:"center"}}/>
+              <input type="number" placeholder="Ano" value={f.birthYear} onChange={e=>setF({...f,birthYear:e.target.value})}/>
+            </div>
+          </div>
+          <div style={{marginTop:12}}>
+            <Lbl>Atualmente estou em</Lbl>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              <input placeholder="Cidade atual" value={f.currentCity} onChange={e=>setF({...f,currentCity:e.target.value})}/>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                <select value={f.currentState} onChange={e=>setF({...f,currentState:e.target.value})}>
+                  <option value="">Estado</option>
+                  {STATES.map(s=><option key={s} value={s}>{s}</option>)}
+                </select>
+                <input placeholder="País" value={f.currentCountry} onChange={e=>setF({...f,currentCountry:e.target.value})}/>
+              </div>
+            </div>
+          </div>
+          </FRow>
+          
+
+
+
+          <STitle style={{color:getColor(f.era)}}>{getLbl(f.era,"interesses")}</STitle>
+          <FRow>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+              {INTERESSES.map(item=>(
+                <div key={item} onClick={()=>setF(v=>({...v,interests:v.interests.includes(item)?v.interests.filter(i=>i!==item):[...v.interests,item]}))} style={{
+                  padding:"6px 13px",borderRadius:20,cursor:"pointer",fontSize:13,
+                  border:`1.5px solid ${f.interests.includes(item)?T.accent:T.border}`,
+                  background:f.interests.includes(item)?T.accentBg:"#fff",
+                  color:f.interests.includes(item)?T.accent:T.muted,
+                  fontWeight:f.interests.includes(item)?600:400,
+                  transition:"all .15s",
+                }}>{item}</div>
+              ))}
+            </div>
+          </FRow>
+
+          <STitle style={{color:getColor(f.era)}}>{getLbl(f.era,"curtia")}</STitle>
+          <FRow>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+              {["Futebol","Pesca","Música","Agricultura","Culinária","Dança","Leitura","Viagem","Religião","Arte","Tecnologia","Pecuária"].map(item=>(
+                <div key={item} onClick={()=>setF(v=>({...v,curtia:v.curtia.includes(item)?v.curtia.filter(i=>i!==item):[...v.curtia,item]}))} style={{
+                  padding:"6px 13px",borderRadius:20,cursor:"pointer",fontSize:13,
+                  border:`1.5px solid ${f.curtia.includes(item)?"#7B5EA7":T.border}`,
+                  background:f.curtia.includes(item)?"rgba(123,94,167,0.1)":"#fff",
+                  color:f.curtia.includes(item)?"#7B5EA7":T.muted,
+                  fontWeight:f.curtia.includes(item)?600:400,
+                  transition:"all .15s",
+                }}>{item}</div>
+              ))}
+            </div>
+            <div style={{marginTop:8}}>
+              <AddOutro
+                placeholder="Adicionar outro… ex: Cavalgada, Baile, Dominó"
+                color="#7B5EA7"
+                bgColor="rgba(123,94,167,0.1)"
+                onAdd={v=>setF(prev=>({...prev,curtia:prev.curtia.includes(v)?prev.curtia:[...prev.curtia,v]}))}
+                onRemove={v=>setF(prev=>({...prev,curtia:prev.curtia.filter(i=>i!==v)}))}
+                extras={f.curtia.filter(i=>!["Futebol","Pesca","Música","Agricultura","Culinária","Dança","Leitura","Viagem","Religião","Arte","Tecnologia","Pecuária"].includes(i))}
+              />
+            </div>
+          </FRow>
+          <STitle style={{color:getColor(f.era)}}>{getLbl(f.era,"disponivel")}</STitle>
+          <FRow>
+            <div style={{display:"flex",gap:8}}>
+              {[{v:"sim",l:"Relembrar"},{v:"mensagem",l:"Só mensagem"},{v:"nao",l:"Por enquanto não"}].map(o=>(
+                <div key={o.v} onClick={()=>setF({...f,available:o.v})} style={{
+                  flex:1,padding:"10px 6px",borderRadius:10,cursor:"pointer",textAlign:"center",
+                  border:`1.5px solid ${f.available===o.v?T.accent:T.border}`,
+                  background:f.available===o.v?T.accentBg:"#fff",
+                  fontSize:12,fontWeight:f.available===o.v?700:400,
+                  color:f.available===o.v?T.accent:T.muted,
+                  transition:"all .15s",
+                }}>{o.l}</div>
+              ))}
+            </div>
+          </FRow>
+
+          <div style={{paddingTop:20}}>
+            <Btn full onClick={salvar} disabled={saving||!f.name.trim()} size="lg">
+              {saving?<><Spinner/>Salvando…</>:"Salvar alterações"}
+            </Btn>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Screen: Perfil ──────────────────────────────────────────
+function Perfil({user,onLogout,onCadastrar,onUpdateUser,onLogin}){
+  const [editando,setEditando]=useState(false);
   if(!user)return(
     <div style={{padding:"80px 20px",textAlign:"center"}}>
       <Logo size="lg"/>
-      <div style={{marginTop:24,fontSize:15,color:T.sub,lineHeight:1.8,marginBottom:28}}>Seu lugar no tempo está aqui.</div>
-      <Btn full onClick={onCadastrar} size="lg">Criar meu perfil</Btn>
+      <div style={{marginTop:24,fontSize:15,color:T.sub,lineHeight:1.8,marginBottom:28}}>O seu lugar no tempo.</div>
+      <div style={{display:"flex",flexDirection:"column",gap:10}}>
+        <Btn full onClick={onCadastrar} size="lg">Criar meu perfil</Btn>
+        <Btn full variant="outline" onClick={onLogin} size="lg">Já tenho conta — Entrar</Btn>
+      </div>
     </div>
   );
   const era=eraInfo(user.era||"passado");
 
   async function handleNewAvatar(e){
-    const file=e.target.files[0]; if(!file) return;
+    const file=e.target.files[0]; if(!file)return;
     const b64=await fileToB64(file);
     const updated={...user,avatar_url:b64};
     onUpdateUser(updated);
@@ -778,16 +1696,33 @@ function Perfil({user,onLogout,onCadastrar,onUpdateUser}){
     try{await db.from("profiles").update({photos:newPhotos}).eq("id",user.id);}catch{}
   }
 
+  const availableLabel={sim:"Relembrar",mensagem:"Só mensagem",nao:"Por enquanto não"};
+  const availableColor={sim:T.green,mensagem:T.accent,nao:T.muted};
+
   return(
     <div style={{padding:"0 18px 100px"}}>
-      <div style={{paddingTop:52,paddingBottom:24}}>
+      <div style={{paddingTop:52,paddingBottom:20}}>
         <Logo/>
-        <div style={{fontSize:20,fontWeight:700,color:T.text,marginTop:16}}>Meu perfil</div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:16}}>
+          <div>
+            <div style={{fontSize:20,fontWeight:700,color:T.text}}>Meu perfil</div>
+          </div>
+          <button onClick={()=>setEditando(true)} style={{
+            display:"flex",alignItems:"center",gap:6,
+            background:T.accentBg,border:`1px solid ${T.accent}`,
+            borderRadius:20,padding:"8px 16px",cursor:"pointer",
+            fontSize:13,fontWeight:700,color:T.accent,fontFamily:"inherit",
+            transition:"all .15s",
+          }}>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M9 1.5l2.5 2.5-7 7L2 12l.5-2.5 7-7z" stroke={T.accent} strokeWidth="1.4" strokeLinejoin="round"/></svg>
+            Editar
+          </button>
+        </div>
       </div>
 
-      <div style={{background:T.surface,borderRadius:18,overflow:"hidden",border:`1px solid ${T.border}`,marginBottom:12}}>
-        {/* Banner/foto grande */}
-        <div style={{height:100,background:`linear-gradient(135deg,${T.accentBg},rgba(21,101,192,0.1))`,position:"relative"}}>
+      {/* Banner + Avatar */}
+      <div style={{background:"#fff",borderRadius:18,overflow:"hidden",border:`1px solid ${T.border}`,marginBottom:12}}>
+        <div style={{height:90,background:`linear-gradient(135deg,${T.accentBg},rgba(21,101,192,0.1))`,position:"relative"}}>
           <div style={{position:"absolute",bottom:-28,left:20}}>
             <div style={{position:"relative"}}>
               <Avatar name={user.name} src={user.avatar_url} size={72}/>
@@ -798,30 +1733,185 @@ function Perfil({user,onLogout,onCadastrar,onUpdateUser}){
             </div>
           </div>
         </div>
-        <div style={{padding:"40px 20px 20px"}}>
-          <div style={{fontSize:20,fontWeight:700,color:T.text}}>{user.name}</div>
-          {user.nick&&<div style={{color:T.muted,fontSize:13,marginTop:2}}>"{user.nick}"</div>}
-          <span style={{fontSize:10,fontWeight:700,color:era.color,background:`${era.color}15`,padding:"2px 10px",borderRadius:20,textTransform:"uppercase",letterSpacing:"0.05em",display:"inline-block",marginTop:8}}>{era.label}</span>
+        <div style={{padding:"36px 20px 18px"}}>
+          {/* Nome limpo */}
+          <div style={{display:"flex",alignItems:"baseline",gap:12,flexWrap:"wrap"}}>
+            <div style={{fontSize:20,fontWeight:700,color:T.text}}>{user.name}</div>
+          </div>
+
+
         </div>
       </div>
 
-      <div style={{background:T.surface,borderRadius:18,overflow:"hidden",border:`1px solid ${T.border}`,marginBottom:12}}>
-        {[["Local",user.place_name],["Município",`${user.city} – ${user.state}`],["Período",`${user.year_start} – ${user.year_end}`],["Tipo",placeLabel(user.place_type)]].map(([l,v],i,arr)=>(
-          <div key={l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"13px 18px",borderBottom:i<arr.length-1?`1px solid ${T.border}`:"none"}}>
+      {/* Status — como estou / disponível / conectado ao */}
+      {/* Connections count */}
+      <div style={{background:"#fff",borderRadius:18,padding:"12px 18px",border:`1px solid ${T.border}`,marginBottom:12,display:"flex",gap:16}}>
+        {[
+          {label:"Conexões",value:String(user._connections||0)},
+          {label:"Lugares",value:String(user.lugares?.length||1)},
+          {label:"Momentos",value:String(user._moments||0)},
+        ].map(({label,value},i,arr)=>(
+          <div key={label} style={{flex:1,textAlign:"center",borderRight:i<arr.length-1?`1px solid ${T.border}`:"none"}}>
+            <div style={{fontSize:18,fontWeight:800,color:T.text,letterSpacing:"-0.5px"}}>{value}</div>
+            <div style={{fontSize:10,color:T.muted,marginTop:2,textTransform:"uppercase",letterSpacing:"0.06em",fontWeight:600}}>{label}</div>
+          </div>
+        ))}
+      </div>
+
+      {(user.available||user.era)&&(
+        <div style={{background:"#fff",borderRadius:18,padding:"14px 18px",border:`1px solid ${T.border}`,marginBottom:12,display:"flex",flexDirection:"column",gap:10}}>
+          {user.era&&(
+            <div style={{display:"flex",alignItems:"center",gap:10}}>
+              <span style={{fontSize:11,fontWeight:600,color:T.muted,minWidth:100}}>Conectado ao</span>
+              <span style={{fontSize:11,fontWeight:700,color:era.color,background:`${era.color}15`,padding:"4px 12px",borderRadius:20,textTransform:"uppercase",letterSpacing:"0.05em"}}>{era.label}</span>
+            </div>
+          )}
+          {user.available&&(
+            <div style={{display:"flex",alignItems:"center",gap:10}}>
+              <span style={{fontSize:11,fontWeight:600,color:T.muted,minWidth:100}}>Disponível para</span>
+              <span style={{fontSize:11,fontWeight:700,color:availableColor[user.available]||T.muted,background:`${availableColor[user.available]||T.muted}15`,padding:"4px 12px",borderRadius:20}}>{availableLabel[user.available]||user.available}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {user.lugares?.length>0&&(()=>{
+        const passado=user.lugares.filter(l=>(l.era||detectarEra(l.y1,l.y2))==="passado");
+        const presente=user.lugares.filter(l=>(l.era||detectarEra(l.y1,l.y2))==="presente");
+        const futuro=user.lugares.filter(l=>(l.era||detectarEra(l.y1,l.y2))==="futuro");
+        const grupos=[
+          {label:"Lugares do passado",list:passado,color:"#7B5EA7"},
+          {label:"Lugares do presente",list:presente,color:T.blue},
+          {label:"Lugares do futuro",list:futuro,color:T.green},
+        ].filter(g=>g.list.length>0);
+        return grupos.map(grupo=>(
+          <div key={grupo.label} style={{background:"#fff",borderRadius:18,padding:"16px 18px",border:`1px solid ${T.border}`,marginBottom:12}}>
+            <div style={{fontSize:11,fontWeight:700,color:grupo.color,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:10}}>{grupo.label}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              {grupo.list.map((loc,i)=>(
+                <div key={i} style={{padding:"10px 12px",background:T.faint,borderRadius:10,border:`1px solid ${T.border}`}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                    <div style={{fontWeight:600,fontSize:14,color:T.text}}>{loc.placeName}</div>
+                    {(()=>{const e=eraInfo(loc.era||detectarEra(loc.y1,loc.y2));return <span style={{fontSize:10,fontWeight:700,color:e.color,background:`${e.color}15`,padding:"2px 8px",borderRadius:20,textTransform:"uppercase"}}>{e.label}</span>})()}
+                  </div>
+                  <div style={{fontSize:12,color:T.muted,marginTop:2}}>{loc.city} – {loc.uf} · {loc.y1}–{loc.y2} · {placeLabel(loc.placeType)}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ));
+      })()}
+
+      {/* Sobre você */}
+      <div style={{background:"#fff",borderRadius:18,overflow:"hidden",border:`1px solid ${T.border}`,marginBottom:12}}>
+        {[
+          ["Município",`${user.city} – ${user.state}`],
+          ["Local",user.place_name],
+          ["Lugar",placeLabel(user.place_type)],
+          ["Período",`${user.year_start} – ${user.year_end}`],
+          (user.current_city||user.current_state)&&["Atualmente estou em",[user.current_city,user.current_state,user.current_country&&user.current_country!=="Brasil"?user.current_country:null].filter(Boolean).join(", ")],
+        ].filter(Boolean).map(([l,v],i,arr)=>(
+          <div key={l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 18px",borderBottom:i<arr.length-1?`1px solid ${T.border}`:"none"}}>
             <span style={{fontSize:12,color:T.muted,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.08em"}}>{l}</span>
             <span style={{fontSize:13,color:T.text,fontWeight:500,textAlign:"right",maxWidth:"60%"}}>{v}</span>
           </div>
         ))}
       </div>
 
+      {/* Memória */}
       {user.note&&(
-        <div style={{background:T.surface,borderRadius:18,padding:"16px 18px",border:`1px solid ${T.border}`,marginBottom:12}}>
+        <div style={{background:"#fff",borderRadius:18,padding:"16px 18px",border:`1px solid ${T.border}`,marginBottom:12}}>
           <Lbl>Memória</Lbl>
-          <div style={{fontSize:14,color:T.sub,lineHeight:1.6,fontStyle:"italic"}}>"{user.note}"</div>
+          <div style={{fontSize:14,color:T.sub,lineHeight:1.6,fontStyle:"italic",marginTop:4}}>"{user.note}"</div>
         </div>
       )}
 
-      <div style={{background:T.surface,borderRadius:18,padding:"16px 18px",border:`1px solid ${T.border}`,marginBottom:16}}>
+      {/* Família + fato marcante */}
+      {(user.family_ref||user.how_iam)&&(
+        <div style={{background:"#fff",borderRadius:18,overflow:"hidden",border:`1px solid ${T.border}`,marginBottom:12}}>
+          {user.family_ref&&(
+            <div style={{padding:"12px 18px",borderBottom:user.how_iam?`1px solid ${T.border}`:"none"}}>
+              <Lbl>Nomes na família</Lbl>
+              <div style={{fontSize:14,color:T.sub,marginTop:4}}>{user.family_ref}</div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Do que mais gosta hoje? */}
+      {(user.interests?.length>0||user.curtia?.length>0)&&(
+        <div style={{background:"#fff",borderRadius:18,padding:"16px 18px",border:`1px solid ${T.border}`,marginBottom:12}}>
+          {/* Comparação dinâmica antes x agora */}
+          {user.curtia?.length>0&&user.interests?.length>0?(
+            <div>
+              <div style={{fontSize:13,fontWeight:700,color:T.text,marginBottom:14,display:"flex",alignItems:"center",gap:8}}>
+                <span>Antes</span>
+                <div style={{flex:1,height:1,background:T.border}}/>
+                <span>Agora</span>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+                <div>
+                  <div style={{fontSize:10,fontWeight:700,color:"#7B5EA7",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:8}}>Gostava de</div>
+                  <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                    {user.curtia.map((item,i)=>{
+                      const ainda=user.interests?.includes(item);
+                      return <span key={i} style={{padding:"4px 10px",borderRadius:20,background:ainda?"rgba(123,94,167,0.15)":"rgba(123,94,167,0.06)",color:ainda?"#7B5EA7":"#9B7DB7",fontSize:11,fontWeight:600,border:`1px solid ${ainda?"#7B5EA7":"rgba(123,94,167,0.2)"}`,position:"relative"}}>{item}{ainda&&<span style={{fontSize:8,marginLeft:3}}>✓</span>}</span>;
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <div style={{fontSize:10,fontWeight:700,color:T.accent,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:8}}>Gosto de</div>
+                  <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                    {user.interests.map((item,i)=>{
+                      const novo=!user.curtia?.includes(item);
+                      return <span key={i} style={{padding:"4px 10px",borderRadius:20,background:novo?T.accentBg:"rgba(193,126,58,0.06)",color:novo?T.accent:"#C9946A",fontSize:11,fontWeight:600,border:`1px solid ${novo?T.accent:"rgba(193,126,58,0.2)"}`}}>{item}{novo&&<span style={{fontSize:8,marginLeft:3}}>novo</span>}</span>;
+                    })}
+                  </div>
+                </div>
+              </div>
+              {/* Interesses em comum */}
+              {user.curtia.filter(i=>user.interests?.includes(i)).length>0&&(
+                <div style={{marginTop:12,padding:"10px 12px",background:"rgba(46,125,94,0.06)",borderRadius:10,border:"1px solid rgba(46,125,94,0.15)"}}>
+                  <div style={{fontSize:11,fontWeight:700,color:T.green,marginBottom:6}}>Sempre curtiu</div>
+                  <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                    {user.curtia.filter(i=>user.interests?.includes(i)).map((item,i)=>(
+                      <span key={i} style={{padding:"4px 10px",borderRadius:20,background:"rgba(46,125,94,0.1)",color:T.green,fontSize:11,fontWeight:600}}>
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ):(
+            <div>
+              {user.curtia?.length>0&&(
+                <div style={{marginBottom:user.interests?.length>0?12:0}}>
+                  <Lbl>O que curtia</Lbl>
+                  <div style={{display:"flex",gap:6,flexWrap:"wrap",marginTop:8}}>
+                    {user.curtia.map((item,i)=><span key={i} style={{padding:"5px 12px",borderRadius:20,background:"rgba(123,94,167,0.1)",color:"#7B5EA7",fontSize:12,fontWeight:600}}>{item}</span>)}
+                  </div>
+                </div>
+              )}
+              {user.interests?.length>0&&(
+                <div>
+                  <Lbl>Do que mais gosta hoje?</Lbl>
+                  <div style={{display:"flex",gap:6,flexWrap:"wrap",marginTop:8}}>
+                    {user.interests.map((item,i)=><span key={i} style={{padding:"5px 12px",borderRadius:20,background:T.accentBg,color:T.accent,fontSize:12,fontWeight:600}}>{item}</span>)}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Redes sociais */}
+
+
+      {/* Múltiplos lugares */}
+      {/* Fotos */}
+      <div style={{background:"#fff",borderRadius:18,padding:"16px 18px",border:`1px solid ${T.border}`,marginBottom:16}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
           <Lbl>Fotos da época</Lbl>
           <label style={{cursor:"pointer",fontSize:13,color:T.accent,fontWeight:700,textDecoration:"underline",textUnderlineOffset:3}}>
@@ -832,6 +1922,7 @@ function Perfil({user,onLogout,onCadastrar,onUpdateUser}){
         {(!user.photos||user.photos.length===0)
           ?<label style={{display:"block",border:`1.5px dashed ${T.borderMd}`,borderRadius:12,padding:"24px",cursor:"pointer",textAlign:"center",background:T.faint}}>
             <div style={{fontSize:13,color:T.sub,fontWeight:600}}>Adicionar fotos daquela época</div>
+            <div style={{fontSize:11,color:T.muted,marginTop:3}}>Ajuda as pessoas a te reconhecerem</div>
             <input type="file" accept="image/*" multiple onChange={handleMorePhotos} style={{display:"none"}}/>
           </label>
           :<div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
@@ -851,12 +1942,18 @@ function Perfil({user,onLogout,onCadastrar,onUpdateUser}){
       </div>
 
       <Btn variant="danger" full onClick={onLogout}>Sair da conta</Btn>
+
+      {editando&&<ModalEditarPerfil
+        user={user}
+        onClose={()=>setEditando(false)}
+        onSave={p=>{onUpdateUser(p);setEditando(false);}}
+      />}
     </div>
   );
 }
 
 
-// ── Componente: Foto com curtida e comentário ─────────────────
+// ── Foto com curtida e comentário ────────────────────────────
 function FotoInterativa({src,user}){
   const [likes,setLikes]=useState(0);
   const [liked,setLiked]=useState(false);
@@ -864,23 +1961,18 @@ function FotoInterativa({src,user}){
   const [comments,setComments]=useState([]);
   const [newComment,setNewComment]=useState("");
 
-  function toggleLike(){
-    setLiked(v=>!v);
-    setLikes(v=>liked?v-1:v+1);
-  }
+  function toggleLike(){setLiked(v=>!v);setLikes(v=>liked?v-1:v+1);}
   function addComment(){
     if(!newComment.trim()||!user)return;
     setComments(v=>[...v,{name:user.name,text:newComment.trim(),ts:Date.now()}]);
     setNewComment("");
   }
-
   return(
     <div style={{marginBottom:12}}>
       <div style={{borderRadius:12,overflow:"hidden",border:`1px solid ${T.border}`,background:"#fff"}}>
         <img src={src} alt="" style={{width:"100%",aspectRatio:"1",objectFit:"cover",display:"block"}}/>
-        {/* Ações */}
         <div style={{padding:"10px 12px 6px",display:"flex",alignItems:"center",gap:16}}>
-          <button onClick={toggleLike} style={{background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:5,color:liked?T.red:T.muted,fontFamily:"inherit",fontSize:13,fontWeight:600,padding:0,transition:"color .15s"}}>
+          <button onClick={toggleLike} style={{background:"none",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:5,color:liked?T.red:T.muted,fontFamily:"inherit",fontSize:13,fontWeight:600,padding:0}}>
             <svg width="18" height="17" viewBox="0 0 18 17" fill={liked?"#e74c3c":"none"}><path d="M9 15.5S1.5 10.5 1.5 5.5a4 4 0 017.5-2 4 4 0 017.5 2C16.5 10.5 9 15.5 9 15.5z" stroke={liked?"#e74c3c":T.muted} strokeWidth="1.5" strokeLinejoin="round"/></svg>
             {likes>0&&<span>{likes}</span>}
           </button>
@@ -889,21 +1981,18 @@ function FotoInterativa({src,user}){
             {comments.length>0&&<span>{comments.length}</span>}
           </button>
         </div>
-        {/* Comentários */}
         {showComments&&(
           <div style={{padding:"0 12px 12px",borderTop:`1px solid ${T.border}`}}>
-            {comments.length===0
-              ?<div style={{fontSize:12,color:T.muted,padding:"8px 0"}}>Nenhum comentário ainda.</div>
+            {comments.length===0?<div style={{fontSize:12,color:T.muted,padding:"8px 0"}}>Nenhum comentário ainda.</div>
               :comments.map((c,i)=>(
                 <div key={i} style={{padding:"6px 0",borderBottom:i<comments.length-1?`1px solid ${T.faint}`:"none"}}>
                   <span style={{fontWeight:700,fontSize:12,color:T.text}}>{c.name} </span>
                   <span style={{fontSize:12,color:T.sub}}>{c.text}</span>
                 </div>
-              ))
-            }
+              ))}
             {user&&(
               <div style={{display:"flex",gap:8,marginTop:8}}>
-                <input placeholder="Adicionar comentário…" value={newComment} onChange={e=>setNewComment(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addComment()} style={{flex:1,padding:"8px 12px",fontSize:13,borderRadius:20}}/>
+                <input placeholder="Comentário…" value={newComment} onChange={e=>setNewComment(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addComment()} style={{flex:1,padding:"8px 12px",fontSize:13,borderRadius:20}}/>
                 <button onClick={addComment} style={{background:T.accent,border:"none",borderRadius:20,padding:"8px 14px",color:"#fff",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"inherit"}}>Ok</button>
               </div>
             )}
@@ -931,9 +2020,24 @@ function ModalPerfil({p,onClose,onAdd,onChat,user,isContact}){
           </div>
         </div>
         <div style={{padding:"40px 20px 0"}}>
-          <div style={{fontSize:22,fontWeight:700,color:T.text}}>{p.name}</div>
-          {p.nick&&<div style={{color:T.muted,fontSize:14,marginTop:2}}>"{p.nick}"</div>}
+          <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+            <div style={{fontSize:22,fontWeight:700,color:T.text}}>{p.name}</div>
+            {p.how_iam&&(
+              <div style={{display:"inline-flex",alignItems:"center",gap:5,background:T.accentBg,border:`1px solid ${T.accent}`,borderRadius:20,padding:"3px 12px"}}>
+                <span style={{fontSize:11,fontWeight:700,color:T.accent}}>Estou</span>
+                <span style={{fontSize:11,color:T.sub}}>{p.how_iam}</span>
+              </div>
+            )}
+          </div>
           <span style={{fontSize:10,fontWeight:700,color:era.color,background:`${era.color}15`,padding:"2px 10px",borderRadius:20,textTransform:"uppercase",letterSpacing:"0.05em",display:"inline-block",marginTop:8}}>{era.label}</span>
+          {/* Apelido e como era conhecido — visível apenas para contatos */}
+          {isContact&&(p.nick||p.known_as)&&(
+            <div style={{marginTop:10,padding:"10px 14px",background:T.faint,borderRadius:10,border:`1px solid ${T.border}`}}>
+              <div style={{fontSize:10,fontWeight:700,color:T.muted,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:6}}>Informações dos contatos</div>
+              {p.nick&&<div style={{fontSize:13,color:T.sub,marginBottom:2}}>Apelido: <strong>"{p.nick}"</strong></div>}
+              {p.known_as&&<div style={{fontSize:13,color:T.sub,fontStyle:"italic"}}>Conhecido como: <strong>{p.known_as}</strong></div>}
+            </div>
+          )}
         </div>
         <div style={{padding:"16px 20px 32px",display:"flex",flexDirection:"column",gap:12}}>
           <div style={{background:T.surface,borderRadius:14,overflow:"hidden",border:`1px solid ${T.border}`}}>
@@ -1109,10 +2213,64 @@ function ModalChat({user,dest,type="msg",msgs,onSend,onClose}){
   );
 }
 
+
+// ── Componente: Adicionar Outros ─────────────────────────────
+function AddOutro({placeholder,onAdd,onRemove,extras=[],color,bgColor}){
+  const [val,setVal]=useState("");
+  const activeColor=color||T.accent;
+  const activeBg=bgColor||T.accentBg;
+
+  function add(){
+    const v=val.trim();
+    if(!v)return;
+    onAdd(v);
+    setVal("");
+  }
+
+  return(
+    <div>
+      {extras.length>0&&(
+        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
+          {extras.map((item,i)=>(
+            <div key={i} style={{
+              display:"flex",alignItems:"center",gap:4,
+              padding:"5px 10px 5px 12px",borderRadius:20,fontSize:13,
+              border:`1.5px solid ${activeColor}`,
+              background:activeBg,color:activeColor,fontWeight:600,
+            }}>
+              {item}
+              <button onClick={()=>onRemove(item)} style={{
+                background:"none",border:"none",cursor:"pointer",
+                color:activeColor,fontSize:14,lineHeight:1,padding:0,
+                display:"flex",alignItems:"center",opacity:.7,
+              }}>×</button>
+            </div>
+          ))}
+        </div>
+      )}
+      <div style={{display:"flex",gap:8}}>
+        <input
+          placeholder={placeholder}
+          value={val}
+          onChange={e=>setVal(e.target.value)}
+          onKeyDown={e=>e.key==="Enter"&&add()}
+          style={{flex:1,fontSize:13,padding:"9px 14px"}}
+        />
+        <button onClick={add} style={{
+          background:activeColor,border:"none",borderRadius:10,
+          padding:"9px 16px",color:"#fff",cursor:val.trim()?"pointer":"default",
+          fontSize:13,fontWeight:700,fontFamily:"inherit",
+          opacity:val.trim()?1:0.4,transition:"opacity .15s",flexShrink:0,
+        }}>+ Adicionar</button>
+      </div>
+    </div>
+  );
+}
+
 // ── Helpers layout ────────────────────────────────────────────
-function STitle({children}){
+function STitle({children,style={}}){
   return <div style={{paddingTop:24,paddingBottom:10,borderBottom:`1px solid ${T.border}`}}>
-    <div style={{fontSize:12,fontWeight:700,color:T.accent,letterSpacing:"0.08em",textTransform:"uppercase"}}>{children}</div>
+    <div style={{fontSize:12,fontWeight:700,color:T.accent,textTransform:"uppercase",letterSpacing:"0.08em",...style}}>{children}</div>
   </div>;
 }
 function FRow({label,children}){
@@ -1123,4 +2281,900 @@ function FRow({label,children}){
 }
 
 
-// ── Sistema de Al
+// ── Sistema de Alertas por Região ────────────────────────────
+function useRegionAlerts(user){
+  const [alerts,setAlerts]=useState([]);
+  const [showAlert,setShowAlert]=useState(false);
+  const lastCheck=useRef(null);
+
+  useEffect(()=>{
+    if(!user||!user.lugares||user.lugares.length===0)return;
+
+    // Check for new profiles in same region every 30 seconds
+    async function checkNewProfiles(){
+      const since=lastCheck.current||new Date(Date.now()-86400000).toISOString(); // last 24h on first load
+      const userCities=user.lugares.map(l=>l.city).filter(Boolean);
+      const userStates=user.lugares.map(l=>l.uf).filter(Boolean);
+
+      if(userCities.length===0&&userStates.length===0)return;
+
+      try{
+        // Build OR query for all user cities/states
+        const cityFilters=userCities.map(c=>`city.ilike.%${c}%`).join(",");
+        const stateFilters=userStates.map(s=>`state.eq.${s}`).join(",");
+        const orFilter=[cityFilters,stateFilters].filter(Boolean).join(",");
+
+        const {data}=await db.from("profiles")
+          .select("id,name,nick,place_name,city,state,avatar_url")
+          .neq("id",user.id)
+          .gt("created_at",since)
+          .or(orFilter)
+          .limit(5);
+
+        if(data&&data.length>0){
+          setAlerts(data);
+          setShowAlert(true);
+          lastCheck.current=new Date().toISOString();
+        }
+      }catch(e){console.log("Alert check error:",e);}
+    }
+
+    checkNewProfiles();
+    const interval=setInterval(checkNewProfiles,30000);
+    return()=>clearInterval(interval);
+  },[user?.id]);
+
+  return{alerts,showAlert,dismiss:()=>setShowAlert(false)};
+}
+
+// ── Componente: Banner de Alerta ──────────────────────────────
+function AlertaBanner({alerts,onDismiss,onView}){
+  if(!alerts||alerts.length===0)return null;
+  const first=alerts[0];
+  const others=alerts.length-1;
+  return(
+    <div className="fu" style={{
+      position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",
+      width:"100%",maxWidth:430,zIndex:200,
+      padding:"52px 16px 0",
+    }}>
+      <div style={{
+        background:`linear-gradient(135deg,${T.accent},${T.accentDk})`,
+        borderRadius:16,padding:"14px 16px",
+        boxShadow:"0 8px 32px rgba(193,126,58,0.4)",
+        display:"flex",gap:12,alignItems:"center",
+      }}>
+        <div style={{width:40,height:40,borderRadius:"50%",background:"rgba(255,255,255,0.2)",flexShrink:0,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:700,color:"#fff"}}>
+          {first.avatar_url
+            ?<img src={first.avatar_url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+            :initials(first.name)}
+        </div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#fff"}}>
+            {first.name}{others>0?` e mais ${others} pessoa${others>1?"s":""}`:""} se cadastrou
+          </div>
+          <div style={{fontSize:12,color:"rgba(255,255,255,0.8)",marginTop:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+            na sua região — {first.city}, {first.state}
+          </div>
+        </div>
+        <div style={{display:"flex",gap:8,flexShrink:0}}>
+          <button onClick={()=>onView(first)} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:8,padding:"6px 12px",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Ver</button>
+          <button onClick={onDismiss} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,0.7)",fontSize:18,lineHeight:1,fontFamily:"inherit"}}>×</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
+// ── Modal: Adicionar Lugar ────────────────────────────────────
+function ModalAdicionarLugar({user,onClose,onSave}){
+  const [d,setD]=useState({placeType:"escola",placeName:"",addrSearch:"",addrSugs:[],addrLoading:false,city:"",uf:"MT",pais:"Brasil",cep:"",y1:"",y2:"",era:"passado"});
+  const [saving,setSaving]=useState(false);
+  const [done,setDone]=useState(false);
+  const timer=useRef();
+
+  async function searchAddr(q){
+    if(q.length<3){setD(v=>({...v,addrSugs:[]}));return;}
+    setD(v=>({...v,addrLoading:true}));
+    try{
+      const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+", Brasil")}&format=json&addressdetails=1&limit=4&accept-language=pt-BR`);
+      const data=await r.json();
+      setD(v=>({...v,addrSugs:data,addrLoading:false}));
+    }catch{setD(v=>({...v,addrLoading:false}));}
+  }
+
+  function handleInput(e){
+    const val=e.target.value;
+    setD(v=>({...v,addrSearch:val,placeName:val}));
+    clearTimeout(timer.current);
+    timer.current=setTimeout(()=>searchAddr(val),500);
+  }
+
+  function selectAddr(s){
+    const addr=s.address;
+    const city=addr.city||addr.town||addr.village||addr.municipality||addr.county||"";
+    const SM={"Acre":"AC","Alagoas":"AL","Amapá":"AP","Amazonas":"AM","Bahia":"BA","Ceará":"CE","Distrito Federal":"DF","Espírito Santo":"ES","Goiás":"GO","Maranhão":"MA","Mato Grosso":"MT","Mato Grosso do Sul":"MS","Minas Gerais":"MG","Pará":"PA","Paraíba":"PB","Paraná":"PR","Pernambuco":"PE","Piauí":"PI","Rio de Janeiro":"RJ","Rio Grande do Norte":"RN","Rio Grande do Sul":"RS","Rondônia":"RO","Roraima":"RR","Santa Catarina":"SC","São Paulo":"SP","Sergipe":"SE","Tocantins":"TO"};
+    setD(v=>({...v,addrSearch:s.display_name.split(",")[0],placeName:s.display_name.split(",")[0],city,uf:SM[addr.state]||v.uf,addrSugs:[]}));
+  }
+
+  const canSave=!!(d.placeName.trim()&&d.city.trim()&&d.y1&&d.y2);
+
+  async function salvar(){
+    if(!canSave||!user)return;
+    setSaving(true);
+    const novoLugar={placeType:d.placeType,placeName:d.placeName.trim(),city:d.city.trim(),uf:d.uf,pais:d.pais,cep:d.cep,y1:d.y1,y2:d.y2,era:d.era||detectarEra(d.y1,d.y2)};
+    const lugaresAtuais=user.lugares||[];
+    const novosLugares=[...lugaresAtuais,novoLugar];
+    try{
+      await db.from("profiles").update({lugares:novosLugares}).eq("id",user.id);
+    }catch(e){console.log("erro:",e);}
+    onSave({...user,lugares:novosLugares});
+    setSaving(false);
+    setDone(true);
+  }
+
+  if(done)return(
+    <div className="fi" style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}}>
+      <div className="su" style={{background:"#FAF7F2",borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,padding:"32px 24px 52px",textAlign:"center"}}>
+        <div style={{width:56,height:56,borderRadius:"50%",background:`linear-gradient(135deg,${T.accent},${T.accentDk})`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",boxShadow:"0 6px 20px rgba(193,126,58,0.3)"}}>
+          <svg width="22" height="16" viewBox="0 0 22 16" fill="none"><path d="M1 8l7 7L21 1" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </div>
+        <div style={{fontSize:17,fontWeight:700,color:T.text,marginBottom:8}}>Lugar adicionado!</div>
+        <div style={{fontSize:14,color:T.muted,marginBottom:24}}>{d.placeName} · {d.city}</div>
+        <Btn full onClick={onClose} size="lg">Fechar</Btn>
+      </div>
+    </div>
+  );
+
+  return(
+    <div className="fi" onClick={e=>{if(e.target===e.currentTarget)onClose();}} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}}>
+      <div className="su" onClick={e=>e.stopPropagation()} style={{background:"#FAF7F2",borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,maxHeight:"92vh",overflowY:"auto",padding:"0 20px 52px"}}>
+        {/* Handle */}
+        <div style={{padding:"14px 0 0",display:"flex",justifyContent:"center"}}>
+          <div style={{width:36,height:4,borderRadius:2,background:"#DDD8D0"}}/>
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 0 20px"}}>
+          <div>
+            <div style={{fontSize:18,fontWeight:700,color:T.text}}>Adicionar lugar</div>
+            <div style={{fontSize:13,color:T.muted,marginTop:3}}>Novo local ou período da sua vida</div>
+          </div>
+          <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:24,lineHeight:1}}>×</button>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+          {/* Tipo */}
+          <div>
+            <Lbl>Tipo de lugar</Lbl>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+              {PLACES.map(p=>(
+                <div key={p.value} onClick={()=>setD({...d,placeType:p.value})} style={{padding:"7px 12px",borderRadius:20,cursor:"pointer",fontSize:12,border:`1.5px solid ${d.placeType===p.value?T.accent:T.border}`,background:d.placeType===p.value?T.accentBg:"#fff",color:d.placeType===p.value?T.accent:T.muted,fontWeight:d.placeType===p.value?600:400,transition:"all .15s"}}>{p.label}</div>
+              ))}
+            </div>
+          </div>
+
+          {/* Nome com busca */}
+          <div>
+            <Lbl>Nome do lugar *</Lbl>
+            <div style={{position:"relative"}}>
+              <input placeholder="Ex: Fazenda Santa Cruz, Escola Dom Bosco…" value={d.addrSearch} onChange={handleInput} style={{paddingRight:d.addrLoading?36:14}}/>
+              {d.addrLoading&&<div style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)"}}><Spinner/></div>}
+            </div>
+            {d.addrSugs.length>0&&(
+              <div style={{border:`1px solid ${T.border}`,borderRadius:10,marginTop:6,overflow:"hidden",background:"#fff",boxShadow:"0 4px 16px rgba(0,0,0,.08)"}}>
+                {d.addrSugs.map((s,i)=>(
+                  <div key={i} onClick={()=>selectAddr(s)} style={{padding:"11px 14px",cursor:"pointer",fontSize:13,borderBottom:i<d.addrSugs.length-1?`1px solid ${T.border}`:"none"}}
+                  onMouseEnter={e=>e.currentTarget.style.background=T.faint}
+                  onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                    <span style={{fontWeight:600}}>{s.display_name.split(",")[0]}</span>
+                    <span style={{color:T.muted,fontSize:12}}>, {s.display_name.split(",").slice(1,2).join(",")}</span>
+                  </div>
+                ))}
+                <div onClick={()=>setD(v=>({...v,addrSugs:[]}))} style={{padding:"8px",fontSize:12,color:T.muted,cursor:"pointer",textAlign:"center",background:T.faint}}>Fechar</div>
+              </div>
+            )}
+          </div>
+
+          {/* Cidade / Estado */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 90px",gap:10}}>
+            <div><Lbl>Município *</Lbl><input placeholder="Ex: Campo Verde" value={d.city} onChange={e=>setD({...d,city:e.target.value})}/></div>
+            <div><Lbl>Estado</Lbl><select value={d.uf} onChange={e=>setD({...d,uf:e.target.value})}>{STATES.map(s=><option key={s} value={s}>{s}</option>)}</select></div>
+          </div>
+
+          {/* Período */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div>
+              <Lbl>De (ano) *</Lbl>
+              <input type="number" placeholder="1990" value={d.y1}
+                onChange={e=>{const v=e.target.value.slice(0,4);setD(prev=>({...prev,y1:v,era:detectarEra(v,prev.y2)}));}}
+              />
+            </div>
+            <div>
+              <Lbl>Até (ano) *</Lbl>
+              <input type="number" placeholder="2025" value={d.y2}
+                onChange={e=>{const v=e.target.value.slice(0,4);setD(prev=>({...prev,y2:v,era:detectarEra(prev.y1,v)}));}}
+                onBlur={()=>{if(d.y1&&d.y2&&parseInt(d.y2)<parseInt(d.y1))setD(prev=>({...prev,y2:String(parseInt(prev.y1)+1)}));}}
+                style={{borderColor:d.y1&&d.y2&&parseInt(d.y2)<parseInt(d.y1)?"#e74c3c":undefined}}
+              />
+              {d.y1&&d.y2&&parseInt(d.y2)<parseInt(d.y1)&&(
+                <div style={{fontSize:11,color:"#e74c3c",marginTop:3}}>Deve ser maior que {d.y1}</div>
+              )}
+            </div>
+          </div>
+          {/* Era detectada */}
+          {d.y1&&d.y2&&(()=>{
+            const era=eraInfo(d.era||detectarEra(d.y1,d.y2));
+            return(
+              <div style={{padding:"10px 14px",background:`${era.color}10`,border:`1.5px solid ${era.color}`,borderRadius:10}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
+                  <div>
+                    <div style={{fontSize:11,color:T.muted,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.06em"}}>Detectado como</div>
+                    <div style={{fontSize:14,fontWeight:700,color:era.color}}>{era.label} · {era.desc}</div>
+                  </div>
+                  <div style={{display:"flex",gap:4}}>
+                    {ERAS.map(e=>(
+                      <div key={e.value} onClick={()=>setD(prev=>({...prev,era:e.value}))} style={{
+                        padding:"4px 10px",borderRadius:16,cursor:"pointer",fontSize:11,fontWeight:700,
+                        background:d.era===e.value?e.color:"transparent",
+                        color:d.era===e.value?"#fff":e.color,
+                        border:`1.5px solid ${e.color}`,
+                        transition:"all .15s",
+                      }}>{e.label}</div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {!canSave&&(d.addrSearch||d.city)&&(
+            <div style={{fontSize:12,color:T.muted,padding:"8px 12px",background:T.faint,borderRadius:8}}>
+              Preencha nome, município e período para salvar.
+            </div>
+          )}
+
+          <Btn full onClick={salvar} disabled={!canSave||saving} size="lg">
+            {saving?<><Spinner/>Salvando…</>:"Salvar lugar"}
+          </Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Modal: Menu Rápido (+) ────────────────────────────────────
+function MenuRapido({onClose,onNovoLugar,onNovaConversa,onMomento,onCompartilhar,user}){
+  const acoes=[
+    {
+      icon:<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 4C7.1 4 4 7.1 4 11c0 5 7 11 7 11s7-6 7-11c0-3.9-3.1-7-7-7z" stroke={T.accent} strokeWidth="1.8" fill={T.accentBg}/><circle cx="11" cy="11" r="2.5" fill={T.accent}/></svg>,
+      label:"Adicionar lugar",
+      desc:"Inclua mais um lugar onde você viveu",
+      color:T.accent,
+      action:onNovoLugar,
+      needsUser:true,
+    },
+    {
+      icon:<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 2h18v13H12l-4 3.5V15H2V2z" stroke={T.blue} strokeWidth="1.8" strokeLinejoin="round" fill={T.blueBg}/></svg>,
+      label:"Nova conversa",
+      desc:"Envie uma mensagem para alguém",
+      color:T.blue,
+      action:onNovaConversa,
+      needsUser:true,
+    },
+    {
+      icon:<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke={T.green} strokeWidth="1.8" fill={T.greenBg}/><path d="M11 7v4l3 3" stroke={T.green} strokeWidth="1.8" strokeLinecap="round"/></svg>,
+      label:"Registrar momento",
+      desc:"Estou aqui agora — quem mais está?",
+      color:T.green,
+      action:onMomento,
+      needsUser:true,
+    },
+    {
+      icon:<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="17" cy="5" r="3" stroke={T.muted} strokeWidth="1.8"/><circle cx="5" cy="11" r="3" stroke={T.muted} strokeWidth="1.8"/><circle cx="17" cy="17" r="3" stroke={T.muted} strokeWidth="1.8"/><path d="M8 9.5l6-3M8 12.5l6 3" stroke={T.muted} strokeWidth="1.5" strokeLinecap="round"/></svg>,
+      label:"Compartilhar perfil",
+      desc:"Envie seu perfil para alguém",
+      color:T.muted,
+      action:onCompartilhar,
+      needsUser:true,
+    },
+  ];
+
+  return(
+    <div className="fi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",zIndex:90,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}}>
+      <div className="su" onClick={e=>e.stopPropagation()} style={{background:"#FAF7F2",borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,padding:"0 20px 48px"}}>
+        <div style={{padding:"14px 0 0",display:"flex",justifyContent:"center",marginBottom:16}}>
+          <div style={{width:36,height:4,borderRadius:2,background:"#DDD8D0"}}/>
+        </div>
+        <div style={{fontSize:18,fontWeight:700,color:T.text,marginBottom:4}}>O que deseja fazer?</div>
+        <div style={{fontSize:13,color:T.muted,marginBottom:20}}>Escolha uma ação</div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {acoes.map((a,i)=>(
+            <div key={i} onClick={()=>{
+              if(a.needsUser&&!user){onClose();return;}
+              a.action();onClose();
+            }} style={{
+              display:"flex",gap:14,alignItems:"center",
+              background:"#fff",borderRadius:14,padding:"14px 16px",
+              border:`1px solid ${T.border}`,cursor:"pointer",
+              transition:"all .15s",
+              opacity:a.needsUser&&!user?.id?0.45:1,
+            }}
+            onMouseEnter={e=>e.currentTarget.style.borderColor=a.color}
+            onMouseLeave={e=>e.currentTarget.style.borderColor=T.border}>
+              <div style={{width:44,height:44,borderRadius:12,background:`${a.color}12`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                {a.icon}
+              </div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:15,fontWeight:600,color:T.text}}>{a.label}</div>
+                <div style={{fontSize:12,color:T.muted,marginTop:2}}>{a.desc}</div>
+              </div>
+              <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke={T.muted} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>
+          ))}
+        </div>
+
+        {!user&&(
+          <div style={{marginTop:16,padding:"12px 16px",background:T.accentBg,borderRadius:12,fontSize:13,color:T.accent,textAlign:"center",fontWeight:600}}>
+            Crie seu perfil para usar essas funções
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Modal: Registrar Momento ──────────────────────────────────
+function ModalMomento({user,onClose,onSave,onUpdateUser}){
+  const [texto,setTexto]=useState("");
+  const [lugar,setLugar]=useState("");
+  const [fotos,setFotos]=useState([]);
+  const [fotosB64,setFotosB64]=useState([]);
+  const [saving,setSaving]=useState(false);
+
+  async function handleFotos(e){
+    const files=Array.from(e.target.files).slice(0,30);
+    const previews=files.map(f=>URL.createObjectURL(f));
+    const b64s=await Promise.all(files.map(fileToB64));
+    setFotos(prev=>[...prev,...previews].slice(0,30));
+    setFotosB64(prev=>[...prev,...b64s].slice(0,30));
+  }
+
+  function removePhoto(i){
+    setFotos(v=>v.filter((_,j)=>j!==i));
+    setFotosB64(v=>v.filter((_,j)=>j!==i));
+  }
+
+  async function salvar(){
+    if(!texto.trim()&&fotos.length===0)return;
+    setSaving(true);
+    const momento={
+      id:crypto.randomUUID?crypto.randomUUID():Date.now().toString(),
+      user_id:user.id,
+      user_name:user.name,
+      avatar:user.avatar_url,
+      texto:texto.trim(),
+      lugar:lugar.trim(),
+      fotos:fotosB64,
+      ts:new Date().toISOString(),
+    };
+    // Salva no banco de momentos
+    try{await db.from("momentos").insert(momento);}catch{}
+    // Se tiver fotos, salva também no perfil do usuário para contatos verem
+    if(fotosB64.length>0){
+      try{
+        const fotosAtuais=user.photos||[];
+        const novasFotos=[...fotosAtuais,...fotosB64].slice(0,50);
+        await db.from("profiles").update({photos:novasFotos}).eq("id",user.id);
+        // Atualiza localmente
+        if(onUpdateUser) onUpdateUser({...user,photos:novasFotos});
+      }catch(e){console.log("Erro ao salvar fotos no perfil:",e);}
+    }
+    onSave(momento);
+    setSaving(false);
+    onClose();
+  }
+
+  const canSave=(texto.trim().length>0||fotos.length>0)&&!saving;
+
+  return(
+    <div className="fi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",zIndex:95,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}}>
+      <div className="su" onClick={e=>e.stopPropagation()} style={{background:"#FAF7F2",borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,padding:"0 20px 48px",maxHeight:"92vh",overflowY:"auto"}}>
+        <div style={{padding:"14px 0 0",display:"flex",justifyContent:"center",marginBottom:16}}>
+          <div style={{width:36,height:4,borderRadius:2,background:"#DDD8D0"}}/>
+        </div>
+
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+          <div style={{display:"flex",gap:12,alignItems:"center"}}>
+            <Avatar name={user.name} src={user.avatar_url} size={44}/>
+            <div>
+              <div style={{fontSize:15,fontWeight:700,color:T.text}}>{user.name}</div>
+              <div style={{fontSize:12,color:T.green,fontWeight:600}}>Registrando um momento</div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",color:T.muted,fontSize:22,lineHeight:1}}>×</button>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+
+          {/* Texto */}
+          <div>
+            <Lbl>Seu momento</Lbl>
+            <textarea
+              rows={3}
+              placeholder="Ex: Passei por Campo Verde depois de 15 anos. Que saudade! Quem mais está por aqui?"
+              value={texto}
+              onChange={e=>setTexto(e.target.value)}
+              autoFocus
+              style={{resize:"vertical"}}
+            />
+          </div>
+
+          {/* Fotos */}
+          <div>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+              <Lbl>Fotos do momento</Lbl>
+              <span style={{fontSize:11,color:T.muted}}>Até 30 fotos</span>
+            </div>
+
+            {fotos.length>0&&(
+              <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:10}}>
+                {fotos.map((src,i)=>(
+                  <div key={i} style={{aspectRatio:"1",borderRadius:12,overflow:"hidden",position:"relative",border:`1px solid ${T.border}`}}>
+                    <img src={src} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                    <button onClick={()=>removePhoto(i)} style={{position:"absolute",top:6,right:6,width:24,height:24,borderRadius:"50%",background:"rgba(0,0,0,.6)",border:"none",color:"#fff",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,lineHeight:1}}>×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {fotos.length<30&&(
+              <div style={{display:"flex",gap:8}}>
+                {/* Câmera — tirar foto */}
+                <label style={{
+                  flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:6,
+                  border:`1.5px dashed ${T.accent}`,borderRadius:12,padding:"16px 10px",
+                  cursor:"pointer",background:T.accentBg,transition:"all .15s",
+                }}>
+                  <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
+                    <path d="M9 2L7 5H3a2 2 0 00-2 2v12a2 2 0 002 2h18a2 2 0 002-2V7a2 2 0 00-2-2h-4l-2-3H9z" stroke={T.accent} strokeWidth="1.6" strokeLinejoin="round"/>
+                    <circle cx="12" cy="12" r="4" stroke={T.accent} strokeWidth="1.6"/>
+                  </svg>
+                  <span style={{fontSize:12,fontWeight:700,color:T.accent}}>Câmera</span>
+                  <input type="file" accept="image/*" capture="environment" multiple onChange={handleFotos} style={{display:"none"}}/>
+                </label>
+
+                {/* Galeria — escolher foto */}
+                <label style={{
+                  flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:6,
+                  border:`1.5px dashed ${T.border}`,borderRadius:12,padding:"16px 10px",
+                  cursor:"pointer",background:"#fff",transition:"all .15s",
+                }}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor=T.accent;e.currentTarget.style.background=T.accentBg;}}
+                onMouseLeave={e=>{e.currentTarget.style.borderColor=T.border;e.currentTarget.style.background="#fff";}}>
+                  <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
+                    <rect x="2" y="2" width="20" height="18" rx="3" stroke={T.muted} strokeWidth="1.6"/>
+                    <circle cx="8" cy="8" r="2" stroke={T.muted} strokeWidth="1.4"/>
+                    <path d="M2 14l5-4 4 4 3-3 8 6" stroke={T.muted} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span style={{fontSize:12,fontWeight:700,color:T.muted}}>Galeria</span>
+                  <input type="file" accept="image/*" multiple onChange={handleFotos} style={{display:"none"}}/>
+                </label>
+              </div>
+            )}
+          </div>
+
+          {/* Localização */}
+          <div>
+            <Lbl>Onde você está? (opcional)</Lbl>
+            <input
+              placeholder="Ex: Campo Verde, MT · Fazenda Santa Cruz…"
+              value={lugar}
+              onChange={e=>setLugar(e.target.value)}
+            />
+          </div>
+
+          <Btn full onClick={salvar} disabled={!canSave} size="lg">
+            {saving?<><Spinner/>Registrando…</>:"Registrar momento"}
+          </Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+// ── Tela de Login / Auth ──────────────────────────────────────
+function TelaLogin({onClose,onLoggedIn}){
+  const [modo,setModo]=useState("opcoes"); // opcoes | email
+  const [email,setEmail]=useState("");
+  const [loading,setLoading]=useState(false);
+  const [enviado,setEnviado]=useState(false);
+  const [erro,setErro]=useState("");
+
+  async function loginGoogle(){
+    setLoading(true);setErro("");
+    try{
+      const {error}=await db.auth.signInWithOAuth({
+        provider:"google",
+        options:{redirectTo:window.location.href}
+      });
+      if(error)throw error;
+    }catch(e){
+      setErro("Erro ao conectar com Google: "+e.message);
+      setLoading(false);
+    }
+  }
+
+  async function loginEmail(){
+    if(!email.trim()||!email.includes("@")){setErro("Digite um email válido");return;}
+    setLoading(true);setErro("");
+    try{
+      const {error}=await db.auth.signInWithOtp({
+        email:email.trim(),
+        options:{emailRedirectTo:window.location.href}
+      });
+      if(error)throw error;
+      setEnviado(true);
+    }catch(e){
+      setErro("Erro: "+e.message);
+    }
+    setLoading(false);
+  }
+
+  return(
+    <div className="fi" onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:500,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}}>
+      <div className="su" onClick={e=>e.stopPropagation()} style={{background:"#FAF7F2",borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,padding:"0 24px 52px"}}>
+        <div style={{padding:"14px 0 0",display:"flex",justifyContent:"center",marginBottom:4}}>
+          <div style={{width:36,height:4,borderRadius:2,background:"#DDD8D0"}}/>
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 0 24px"}}>
+          <Logo size="lg"/>
+          <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",color:"#8C8478",fontSize:22}}>×</button>
+        </div>
+
+        {enviado?(
+          <div style={{textAlign:"center",padding:"20px 0 10px"}}>
+            <div style={{fontSize:48,marginBottom:16}}>📧</div>
+            <div style={{fontSize:18,fontWeight:700,color:"#1C1C1E",marginBottom:8}}>Verifique seu email</div>
+            <div style={{fontSize:14,color:"#8C8478",lineHeight:1.7,marginBottom:24}}>
+              Enviamos um link de acesso para<br/>
+              <strong style={{color:"#1C1C1E"}}>{email}</strong><br/>
+              Clique no link para entrar.
+            </div>
+            <Btn variant="outline" full onClick={()=>{setEnviado(false);setModo("opcoes");}}>Usar outro método</Btn>
+          </div>
+        ):modo==="opcoes"?(
+          <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            <div style={{fontSize:16,fontWeight:700,color:"#1C1C1E",marginBottom:4}}>Entre ou crie sua conta</div>
+            <div style={{fontSize:13,color:"#8C8478",marginBottom:8}}>Acesse de qualquer dispositivo e nunca perca seus contatos</div>
+
+            {/* Google */}
+            <button onClick={loginGoogle} disabled={loading} style={{
+              width:"100%",padding:"14px",borderRadius:12,
+              background:"#fff",border:"1.5px solid #E8E4DE",
+              display:"flex",alignItems:"center",justifyContent:"center",gap:12,
+              cursor:"pointer",fontSize:15,fontWeight:600,color:"#1C1C1E",
+              fontFamily:"inherit",transition:"all .15s",
+              boxShadow:"0 1px 6px rgba(0,0,0,0.06)",
+            }}>
+              <svg width="20" height="20" viewBox="0 0 20 20"><path d="M19.6 10.23c0-.68-.06-1.36-.18-2H10v3.79h5.4a4.6 4.6 0 01-2 3.03v2.5h3.24c1.9-1.75 3-4.33 3-7.32z" fill="#4285F4"/><path d="M10 20c2.7 0 4.97-.9 6.63-2.44l-3.24-2.51c-.9.6-2.04.95-3.39.95-2.6 0-4.81-1.76-5.6-4.12H1.06v2.6A10 10 0 0010 20z" fill="#34A853"/><path d="M4.4 11.88A6.03 6.03 0 014.08 10c0-.65.11-1.29.32-1.88V5.52H1.06A10 10 0 000 10c0 1.61.39 3.14 1.06 4.48l3.34-2.6z" fill="#FBBC05"/><path d="M10 3.96c1.47 0 2.79.51 3.83 1.5l2.86-2.86C14.96.99 12.7 0 10 0A10 10 0 001.06 5.52l3.34 2.6C5.19 5.72 7.4 3.96 10 3.96z" fill="#EA4335"/></svg>
+              {loading?"Conectando…":"Continuar com Google"}
+            </button>
+
+            {/* Divider */}
+            <div style={{display:"flex",alignItems:"center",gap:12}}>
+              <div style={{flex:1,height:1,background:"#E8E4DE"}}/>
+              <span style={{fontSize:12,color:"#8C8478"}}>ou</span>
+              <div style={{flex:1,height:1,background:"#E8E4DE"}}/>
+            </div>
+
+            {/* Email */}
+            <button onClick={()=>setModo("email")} style={{
+              width:"100%",padding:"14px",borderRadius:12,
+              background:"#FAF7F2",border:"1.5px solid #E8E4DE",
+              display:"flex",alignItems:"center",justifyContent:"center",gap:12,
+              cursor:"pointer",fontSize:15,fontWeight:600,color:"#1C1C1E",
+              fontFamily:"inherit",
+            }}>
+              <svg width="20" height="16" viewBox="0 0 20 16" fill="none"><rect x="1" y="1" width="18" height="14" rx="2" stroke="#8C8478" strokeWidth="1.5"/><path d="M1 4l9 6 9-6" stroke="#8C8478" strokeWidth="1.5" strokeLinecap="round"/></svg>
+              Continuar com Email
+            </button>
+
+            {erro&&<div style={{fontSize:13,color:"#C0392B",padding:"10px 14px",background:"rgba(192,57,43,0.06)",borderRadius:8}}>{erro}</div>}
+          </div>
+        ):(
+          <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            <button onClick={()=>setModo("opcoes")} style={{background:"none",border:"none",cursor:"pointer",color:"#8C8478",fontSize:13,fontFamily:"inherit",textAlign:"left",marginBottom:4,display:"flex",alignItems:"center",gap:4}}>
+              ← Voltar
+            </button>
+            <div style={{fontSize:16,fontWeight:700,color:"#1C1C1E"}}>Entre com seu email</div>
+            <div style={{fontSize:13,color:"#8C8478"}}>Você receberá um link mágico para entrar sem senha</div>
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              autoFocus
+              onChange={e=>setEmail(e.target.value)}
+              onKeyDown={e=>e.key==="Enter"&&loginEmail()}
+              style={{fontSize:15}}
+            />
+            {erro&&<div style={{fontSize:13,color:"#C0392B",padding:"10px 14px",background:"rgba(192,57,43,0.06)",borderRadius:8}}>{erro}</div>}
+            <Btn full onClick={loginEmail} disabled={loading||!email.trim()} size="lg">
+              {loading?<><Spinner/>Enviando…</>:"Enviar link de acesso"}
+            </Btn>
+          </div>
+        )}
+
+        <div style={{marginTop:20,fontSize:11,color:"#B0A898",textAlign:"center",lineHeight:1.6}}>
+          Ao entrar você concorda com os termos de uso.<br/>Seus dados ficam seguros no Tempnext.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Hook: Notificações de Região ──────────────────────────────
+function useRegionNotifications(user,contacts){
+  const [notif,setNotif]=useState(null); // {type,profile,message}
+  const lastCheck=useRef(null);
+  const checked=useRef(new Set());
+
+  useEffect(()=>{
+    if(!user)return;
+
+    async function check(){
+      const since=lastCheck.current||new Date(Date.now()-3600000).toISOString();
+      const lugares=user.lugares||[];
+      const cidades=[...new Set([
+        user.city,
+        ...lugares.map(l=>l.city)
+      ].filter(Boolean))];
+      const estados=[...new Set([
+        user.state,
+        ...lugares.map(l=>l.uf)
+      ].filter(Boolean))];
+
+      if(cidades.length===0&&estados.length===0)return;
+
+      try{
+        const orFilter=[
+          ...cidades.map(c=>`city.ilike.%${c}%`),
+          ...estados.map(s=>`state.eq.${s}`)
+        ].join(",");
+
+        const {data}=await db.from("profiles")
+          .select("id,name,first_name,last_name,nick,place_name,city,state,year_start,year_end,avatar_url,era")
+          .neq("id",user.id)
+          .gt("created_at",since)
+          .or(orFilter)
+          .limit(3);
+
+        if(data&&data.length>0){
+          const novo=data.find(p=>!checked.current.has(p.id));
+          if(novo){
+            checked.current.add(novo.id);
+            // Check if same last name
+            const meuSobrenome=user.last_name||user.name?.split(" ").slice(-1)[0];
+            const sobrenomeIgual=meuSobrenome&&novo.last_name&&
+              novo.last_name.toLowerCase()===meuSobrenome.toLowerCase();
+            setNotif({
+              type:sobrenomeIgual?"mesmo_sobrenome":"novo_usuario",
+              profile:novo,
+              message:sobrenomeIgual
+                ?`${novo.name} (família ${novo.last_name}) se cadastrou em ${novo.city}!`
+                :`${novo.name} se cadastrou em ${novo.city}, ${novo.state}`
+            });
+          }
+        }
+        lastCheck.current=new Date().toISOString();
+      }catch(e){console.log("notif error:",e);}
+    }
+
+    check();
+    const interval=setInterval(check,30000);
+    return()=>clearInterval(interval);
+  },[user?.id]);
+
+
+
+  return{notif,dismiss:()=>setNotif(null)};
+}
+
+// ── Banner de Notificação ─────────────────────────────────────
+function BannerNotificacao({notif,onDismiss,onView}){
+  if(!notif)return null;
+  const isAniv=notif.type==="aniversario";
+  const bgColor=isAniv?"linear-gradient(135deg,#7B5EA7,#5a3d8a)":"linear-gradient(135deg,#C17E3A,#9A5F22)";
+  const icon=isAniv?"🎂":"👋";
+
+  return(
+    <div className="fu" style={{
+      position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",
+      width:"100%",maxWidth:430,zIndex:300,padding:"52px 14px 0",
+    }}>
+      <div style={{
+        background:bgColor,borderRadius:16,padding:"14px 16px",
+        boxShadow:"0 8px 32px rgba(0,0,0,0.2)",
+        display:"flex",gap:12,alignItems:"center",
+      }}>
+        <div style={{width:42,height:42,borderRadius:"50%",background:"rgba(255,255,255,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>
+          {notif.profile?.avatar_url
+            ?<img src={notif.profile.avatar_url} alt="" style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>
+            :icon}
+        </div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#fff",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+            {notif.type==="mesmo_sobrenome"&&<span style={{background:"rgba(255,255,255,0.25)",borderRadius:10,padding:"1px 8px",marginRight:6,fontSize:11}}>Família</span>}
+            {notif.message}
+          </div>
+          {!isAniv&&notif.profile&&(
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.75)",marginTop:2}}>
+              {notif.profile.place_name} · {notif.profile.year_start}–{notif.profile.year_end}
+            </div>
+          )}
+        </div>
+        <div style={{display:"flex",gap:8,flexShrink:0}}>
+          {!isAniv&&<button onClick={()=>{onView(notif.profile);onDismiss();}} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:8,padding:"6px 12px",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Ver</button>}
+          {isAniv&&<button onClick={()=>{onView(notif.profile);onDismiss();}} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:8,padding:"6px 12px",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Parabenizar</button>}
+          <button onClick={onDismiss} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,0.7)",fontSize:20,lineHeight:1}}>×</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Root App ──────────────────────────────────────────────────
+function App(){
+  const [tela,setTela]=useState("inicio");
+  const [msgs,setMsgs]=useState({});
+  const [contacts,setContacts]=useState([]);
+  const [showLogin,setShowLogin]=useState(false);
+  const [user,setUser]=useState(()=>{try{const s=localStorage.getItem("tn_user");return s?JSON.parse(s):null;}catch{return null;}});
+  const [modal,setModal]=useState(null);
+  const [chat,setChat]=useState(null);
+  const [showReencontrar,setShowReencontrar]=useState(false);
+  const [filtroReencontrar,setFiltroReencontrar]=useState(null);
+  const [showMenuRapido,setShowMenuRapido]=useState(false);
+  const [showAdicionarLugar,setShowAdicionarLugar]=useState(false);
+  const [showMomento,setShowMomento]=useState(false);
+  const {alerts,showAlert,dismiss:dismissAlert}=useRegionAlerts(user);
+
+const {notif,dismiss:dismissNotif}=useRegionNotifications(user,contacts);
+
+  // Supabase auth listener
+  useEffect(()=>{
+    db.auth.getSession().then(({data:{session}})=>{
+      if(session?.user&&!user){
+        db.from("profiles").select("*").eq("auth_id",session.user.id).maybeSingle()
+          .then(({data})=>{
+            if(data){setUser(data);try{localStorage.setItem("tn_user",JSON.stringify(data));}catch{}}
+          });
+      }
+    });
+    const {data:{subscription}}=db.auth.onAuthStateChange((_event,session)=>{
+      if(!session)setUser(null);
+    });
+    return()=>subscription.unsubscribe();
+  },[]);
+
+    // Load contacts from localStorage
+  useEffect(()=>{
+    try{const c=localStorage.getItem("tn_contacts");if(c)setContacts(JSON.parse(c));}catch{}
+  },[]);
+
+  function salvar(p){
+    setUser(p);
+    try{localStorage.setItem("tn_user",JSON.stringify(p));}catch{}
+    setTela("perfil");
+  }
+
+  function addContact(p, rel="conhecido"){
+    if(contacts.find(c=>c.id===p.id))return;
+    const updated=[...contacts,{...p,_rel:rel}];
+    setContacts(updated);
+    try{localStorage.setItem("tn_contacts",JSON.stringify(updated));}catch{}
+  }
+
+  function updateContactRel(id, rel){
+    const updated=contacts.map(c=>c.id===id?{...c,_rel:rel}:c);
+    setContacts(updated);
+    try{localStorage.setItem("tn_contacts",JSON.stringify(updated));}catch{}
+  }
+
+  function enviar(cid,msg){setMsgs(prev=>({...prev,[cid]:[...(prev[cid]||[]),msg]}));}
+
+  function abrirChat(p,type="msg"){
+    setModal(null);
+    if(!user){setTela("cadastrar");return;}
+    setChat({dest:p,type});
+  }
+
+  function logout(){
+    setUser(null);
+    setAuthSession(null);
+    try{localStorage.removeItem("tn_user");}catch{}
+    db.auth.signOut();
+  }
+
+  function updateUser(p){
+    setUser(p);
+    try{localStorage.setItem("tn_user",JSON.stringify(p));}catch{}
+  }
+
+  const isContact=(p)=>!!contacts.find(c=>c.id===p.id);
+
+  const unreadCount=Object.entries(msgs).filter(([id,ms])=>
+    user&&id.split("_").includes(String(user.id))&&ms.some(m=>m.from!==user.id)
+  ).length;
+
+  const NAV=[
+    {id:"inicio",    icon:<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10L10 3l7 7v7H13v-4H7v4H3v-7z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/></svg>, label:"Início"},
+    {id:"buscar",    icon:<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.6"/><path d="M14 14l4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>, label:"Buscar"},
+    {id:"cadastrar", icon:null, label:""},  // botão +
+    {id:"conexoes",  icon:<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M14 17v-1a4 4 0 00-8 0v1M10 10a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><path d="M17 17v-1a4 4 0 00-3-3.87M3 17v-1a4 4 0 013-3.87" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>, label:"Conexões", badge:contacts.length},
+    {id:"perfil",    icon:<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="4" stroke="currentColor" strokeWidth="1.6"/><path d="M3 18a7 7 0 0114 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>, label:user?"Perfil":"Entrar"},
+  ];
+
+  return(
+    <div style={{maxWidth:430,margin:"0 auto",minHeight:"100vh",background:T.bg,position:"relative"}}>
+      {tela==="inicio"    &&<Inicio     user={user} onCadastrar={()=>setTela("cadastrar")} onBuscar={()=>setTela("buscar")} onReencontrar={()=>setShowReencontrar(true)} onPerfil={()=>setTela("perfil")} onView={setModal} onAdd={p=>{addContact(p);}} contacts={contacts}/>}
+      {tela==="buscar"    &&<Buscar     onView={setModal} onAdd={p=>{addContact(p);}} contacts={contacts}/>}
+      {tela==="cadastrar" &&<Cadastrar  onSave={salvar}/>}
+      {tela==="conexoes"  &&<Contatos   user={user} contacts={contacts} onChat={abrirChat} onAdd={addContact} onUpdateRel={updateContactRel} onRemove={()=>{}} onCadastrar={()=>setTela("cadastrar")} onBuscar={()=>setTela("buscar")}/>}
+      {tela==="perfil"    &&<Perfil     user={user} onLogout={logout} onCadastrar={()=>setTela("cadastrar")} onUpdateUser={updateUser} onLogin={()=>setShowLogin(true)}/>}
+
+      {/* Bottom Nav */}
+      <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:"rgba(250,247,242,0.96)",backdropFilter:"blur(16px)",borderTop:`1px solid ${T.border}`,display:"flex",alignItems:"center",padding:"8px 0 22px",zIndex:50}}>
+        {NAV.map((t,i)=>{
+          if(t.id==="cadastrar")return(
+            <div key="add" style={{flex:1,display:"flex",justifyContent:"center"}}>
+              <button onClick={()=>setShowMenuRapido(true)} style={{width:52,height:52,borderRadius:"50%",background:`linear-gradient(135deg,${T.accent},${T.accentDk})`,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 16px rgba(193,126,58,0.4)",marginBottom:4}}>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 4v14M4 11h14" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/></svg>
+              </button>
+            </div>
+          );
+          const active=tela===t.id;
+          return(
+            <button key={t.id} onClick={()=>setTela(t.id)} style={{flex:1,background:"none",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"4px 2px",position:"relative",color:active?T.accent:T.muted,transition:"color .15s"}}>
+              {t.icon}
+              <span style={{fontSize:10,fontWeight:active?700:400,fontFamily:"inherit",whiteSpace:"nowrap"}}>{t.label}</span>
+              {t.badge>0&&<div style={{position:"absolute",top:2,right:"18%",minWidth:16,height:16,borderRadius:8,background:T.accent,color:"#fff",fontSize:9,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 4px"}}>{t.badge}</div>}
+            </button>
+          );
+        })}
+      </div>
+
+      {showLogin&&<TelaLogin onClose={()=>setShowLogin(false)} onLoggedIn={p=>{setUser(p);setShowLogin(false);}}/>}
+      {notif&&<BannerNotificacao notif={notif} onDismiss={dismissNotif} onView={p=>{setModal(p);dismissNotif();}}/>}
+      {showMenuRapido&&<MenuRapido
+        user={user}
+        onClose={()=>setShowMenuRapido(false)}
+        onNovoLugar={()=>{setShowMenuRapido(false);setShowAdicionarLugar(true);}}
+        onNovaConversa={()=>setTela("conexoes")}
+        onMomento={()=>setShowMomento(true)}
+        onCompartilhar={()=>{
+          if(navigator.share&&user){
+            navigator.share({title:"Tempnext",text:`Encontre ${user.name} no Tempnext!`,url:window.location.href});
+          }
+        }}
+      />}
+      {showAdicionarLugar&&user&&<ModalAdicionarLugar
+        user={user}
+        onClose={()=>setShowAdicionarLugar(false)}
+        onSave={p=>{setUser(p);try{localStorage.setItem("tn_user",JSON.stringify(p));}catch{};setShowAdicionarLugar(false);}}
+      />}
+      {showMomento&&user&&<ModalMomento user={user} onClose={()=>setShowMomento(false)} onSave={()=>{}} onUpdateUser={p=>{setUser(p);try{localStorage.setItem("tn_user",JSON.stringify(p));}catch{}}}/>}
+      {showReencontrar&&<ModalReencontrar onClose={()=>setShowReencontrar(false)} onBuscar={f=>{setFiltroReencontrar(f);setTela("buscar");}}/>}
+      {showAlert&&<AlertaBanner alerts={alerts} onDismiss={dismissAlert} onView={p=>{dismissAlert();setModal(p);}}/>}
+      {modal&&<ModalPerfil p={modal} onClose={()=>setModal(null)} onAdd={p=>{addContact(p);setModal(null);}} onChat={abrirChat} user={user} isContact={isContact(modal)}/>}
+      {chat&&user&&<ModalChat user={user} dest={chat.dest} type={chat.type||"msg"} msgs={msgs} onSend={enviar} onClose={()=>setChat(null)}/>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
