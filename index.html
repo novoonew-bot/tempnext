@@ -6,7 +6,7 @@
 <title>Tempnext</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -38,6 +38,99 @@ input:focus,select:focus,textarea:focus{
 </head>
 <body>
 <div id="root"></div>
+<div id="loading" style="position:fixed;inset:0;background:#ffffff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:-apple-system,sans-serif">
+  <!-- Logo -->
+  <div style="text-align:center;margin-bottom:40px">
+    <svg width="140" height="16" viewBox="0 0 140 16" fill="none" style="display:block;margin:0 auto 8px">
+      <path d="M 6 14 C 22 2 42 2 58 8" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M 58 8 C 74 14 94 14 110 2" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    </svg>
+    <div style="font-family:Georgia,serif;font-size:44px;font-weight:800;letter-spacing:-2px;line-height:1">
+      <span style="color:#1565C0">T</span><span style="color:#1C1C1E">emp</span><span style="color:#C17E3A">next</span>
+    </div>
+  </div>
+  <!-- Bolinhas -->
+  <div style="display:flex;gap:10px;margin-bottom:28px">
+    <div style="width:10px;height:10px;border-radius:50%;background:#1565C0;animation:pulse 1.2s ease-in-out infinite"></div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#1C1C1E;animation:pulse 1.2s ease-in-out 0.4s infinite"></div>
+    <div style="width:10px;height:10px;border-radius:50%;background:#C17E3A;animation:pulse 1.2s ease-in-out 0.8s infinite"></div>
+  </div>
+  <!-- Frase animada -->
+  <div style="font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;animation:waveText 2.4s ease-in-out infinite">O SEU LUGAR NO TEMPO</div>
+  <!-- Barra de progresso -->
+  <div style="position:fixed;bottom:0;left:0;right:0;height:3px;background:rgba(193,126,58,0.15)">
+    <div style="height:100%;background:linear-gradient(90deg,#1565C0,#C17E3A);animation:progress 3s ease-in-out infinite;transform-origin:left"></div>
+  </div>
+</div>
+<style>
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}
+@keyframes waveText{
+  0%,100%{color:#8C8478}
+  33%{color:#1565C0}
+  66%{color:#1C1C1E}
+  83%{color:#C17E3A}
+}
+@keyframes progress{
+  0%{width:0%}
+  70%{width:85%}
+  100%{width:100%}
+}
+</style>
+<script>
+// Som harmônico suave ao carregar
+function tocarSomEntrada(){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    // Acorde Cm9 — rico, envolvente, melancólico bonito
+    const vozes = [
+      { freq: 130.81, delay: 0.00, vol: 0.10 },
+      { freq: 155.56, delay: 0.08, vol: 0.08 },
+      { freq: 196.00, delay: 0.16, vol: 0.07 },
+      { freq: 233.08, delay: 0.24, vol: 0.06 },
+      { freq: 293.66, delay: 0.32, vol: 0.05 },
+    ];
+    vozes.forEach(({ freq, delay, vol }) => {
+      [freq, freq * 1.002, freq * 0.998].forEach((f, li) => {
+        const osc    = ctx.createOscillator();
+        const gain   = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 1200;
+        filter.Q.value = 0.5;
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = f;
+        const s = ctx.currentTime + delay + li * 0.01;
+        const v = vol * (li === 0 ? 1 : 0.4);
+        gain.gain.setValueAtTime(0, s);
+        gain.gain.linearRampToValueAtTime(v, s + 0.18);
+        gain.gain.setValueAtTime(v, s + 0.55);
+        gain.gain.exponentialRampToValueAtTime(0.0001, s + 1.4);
+        osc.start(s);
+        osc.stop(s + 1.6);
+      });
+    });
+  } catch(e){}
+}
+
+// Remove loading screen quando React renderiza
+const _observer = new MutationObserver(()=>{
+  const root = document.getElementById('root');
+  if(root && root.children.length > 0){
+    const loader = document.getElementById('loading');
+    if(loader){
+      tocarSomEntrada();
+      loader.style.transition = 'opacity 0.5s';
+      loader.style.opacity = '0';
+      setTimeout(()=>loader.remove(), 500);
+    }
+    _observer.disconnect();
+  }
+});
+_observer.observe(document.getElementById('root'), {childList:true});
+</script>
 <script type="text/babel">
 const {useState,useRef,useEffect} = React;
 
