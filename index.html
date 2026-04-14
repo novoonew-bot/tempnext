@@ -272,7 +272,7 @@ var LABELS = {
     nota: "Uma memória",
     moro: "Onde morava",
     profissao: "O que fazia",
-    disponivel: "Disponível para relembrar",
+    disponivel: "Disponível para?",
     placeHolder_nome: "Como era conhecido no passado? Ex: O filho do Seu Zé…",
     placeHolder_memoria: "Ex: Morei perto do córrego, vizinho da família Silva…"
   },
@@ -362,10 +362,27 @@ var fmtTime = function fmtTime(ts) {
   });
 };
 var fileToB64 = function fileToB64(f) {
+  var maxW = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 400;
+  var quality = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.75;
   return new Promise(function (res, rej) {
     var r = new FileReader();
     r.onload = function () {
-      return res(r.result);
+      var img = new Image();
+      img.onload = function () {
+        var canvas = document.createElement('canvas');
+        var w = img.width,
+          h = img.height;
+        if (w > maxW) {
+          h = Math.round(h * maxW / w);
+          w = maxW;
+        }
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        res(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = rej;
+      img.src = r.result;
     };
     r.onerror = rej;
     r.readAsDataURL(f);
@@ -4775,7 +4792,7 @@ function Perfil(_ref17) {
             return _context9.a(2);
           case 1:
             _context9.n = 2;
-            return fileToB64(file);
+            return fileToB64(file, 300, 0.7);
           case 2:
             b64 = _context9.v;
             updated = _objectSpread(_objectSpread({}, user), {}, {
@@ -9114,7 +9131,7 @@ function CadastroSimples(_ref36) {
             return _context19.a(2);
           case 1:
             _context19.n = 2;
-            return fileToB64(file);
+            return fileToB64(file, 300, 0.7);
           case 2:
             b64 = _context19.v;
             setF(_objectSpread(_objectSpread({}, f), {}, {
@@ -9132,7 +9149,7 @@ function CadastroSimples(_ref36) {
   }
   function _salvar5() {
     _salvar5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20() {
-      var nome, payload, saved, _yield$db$from$insert, data, _t16;
+      var nome, payload, saved, _yield$db$from$insert, data, error, _yield$db$from$upsert, _data, _saved$id, _t16, _t17;
       return _regenerator().w(function (_context20) {
         while (1) switch (_context20.p = _context20.n) {
           case 0:
@@ -9181,27 +9198,53 @@ function CadastroSimples(_ref36) {
           case 3:
             _yield$db$from$insert = _context20.v;
             data = _yield$db$from$insert.data;
-            saved = data;
-            _context20.n = 5;
-            break;
+            error = _yield$db$from$insert.error;
+            if (!error) {
+              _context20.n = 4;
+              break;
+            }
+            throw error;
           case 4:
-            _context20.p = 4;
-            _t16 = _context20.v;
-            saved = _objectSpread(_objectSpread({}, payload), {}, {
-              id: Date.now()
-            });
+            saved = data;
+            _context20.n = 9;
+            break;
           case 5:
+            _context20.p = 5;
+            _t16 = _context20.v;
+            console.error("Erro ao salvar perfil:", _t16);
+            // Tenta upsert como fallback
+            _context20.p = 6;
+            _context20.n = 7;
+            return db.from("profiles").upsert(payload).select().single();
+          case 7:
+            _yield$db$from$upsert = _context20.v;
+            _data = _yield$db$from$upsert.data;
+            saved = _data;
+            _context20.n = 9;
+            break;
+          case 8:
+            _context20.p = 8;
+            _t17 = _context20.v;
+            console.error("Erro no upsert:", _t17);
+            // Salva localmente como último recurso
+            saved = _objectSpread(_objectSpread({}, payload), {}, {
+              id: "local_" + Date.now()
+            });
+          case 9:
             if (saved) {
               try {
                 localStorage.setItem("tn_user", JSON.stringify(saved));
               } catch (_unused0) {}
+              try {
+                localStorage.setItem("tn_user_id", (_saved$id = saved.id) === null || _saved$id === void 0 ? void 0 : _saved$id.toString());
+              } catch (_unused1) {}
             }
             setSaving(false);
             onDone(saved || payload);
-          case 6:
+          case 10:
             return _context20.a(2);
         }
-      }, _callee20, null, [[2, 4]]);
+      }, _callee20, null, [[6, 8], [2, 5]]);
     }));
     return _salvar5.apply(this, arguments);
   }
@@ -10099,7 +10142,7 @@ function PerguntaComunidade(_ref42) {
   }
   function _responder() {
     _responder = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21() {
-      var _t17;
+      var _t18;
       return _regenerator().w(function (_context21) {
         while (1) switch (_context21.p = _context21.n) {
           case 0:
@@ -10130,7 +10173,7 @@ function PerguntaComunidade(_ref42) {
             break;
           case 4:
             _context21.p = 4;
-            _t17 = _context21.v;
+            _t18 = _context21.v;
             setRespondeu(true);
           case 5:
             setSaving(false);
@@ -10264,7 +10307,7 @@ function AgendaVisita(_ref44) {
   }
   function _salvar6() {
     _salvar6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22() {
-      var _t18;
+      var _t19;
       return _regenerator().w(function (_context22) {
         while (1) switch (_context22.p = _context22.n) {
           case 0:
@@ -10303,7 +10346,7 @@ function AgendaVisita(_ref44) {
             break;
           case 4:
             _context22.p = 4;
-            _t18 = _context22.v;
+            _t19 = _context22.v;
             setSaved(true);
           case 5:
             setSaving(false);
@@ -10764,7 +10807,7 @@ function AlertaRegiao(_ref45) {
           var _meta$cidade;
           var meta = JSON.parse(m.meta || "{}");
           return ((_meta$cidade = meta.cidade) === null || _meta$cidade === void 0 ? void 0 : _meta$cidade.toLowerCase()) === (cidade === null || cidade === void 0 ? void 0 : cidade.toLowerCase()) || meta.estado === estado;
-        } catch (_unused1) {
+        } catch (_unused10) {
           return false;
         }
       });
@@ -10855,7 +10898,7 @@ function useSeguirLugar(lugarNome, userId) {
     try {
       var saved = JSON.parse(localStorage.getItem("tn_lugares_seguidos") || "[]");
       setSeguindo(saved.includes(lugarNome));
-    } catch (_unused10) {}
+    } catch (_unused11) {}
   }, [lugarNome, userId]);
   function toggleSeguir() {
     return _toggleSeguir.apply(this, arguments);
@@ -10880,7 +10923,7 @@ function useSeguirLugar(lugarNome, userId) {
               }) : [].concat(_toConsumableArray(saved), [lugarNome]);
               localStorage.setItem("tn_lugares_seguidos", JSON.stringify(novo));
               setSeguindo(!seguindo);
-            } catch (_unused11) {}
+            } catch (_unused12) {}
             setLoading(false);
           case 2:
             return _context23.a(2);
@@ -10918,7 +10961,7 @@ function CapsulaPerfil(_ref47) {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas[index] = _objectSpread(_objectSpread({}, capsulas[index]), f);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused12) {}
+    } catch (_unused13) {}
     setEditando(false);
   }
   function cancelarCapsula() {
@@ -10926,7 +10969,7 @@ function CapsulaPerfil(_ref47) {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas.splice(index, 1);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused13) {}
+    } catch (_unused14) {}
   }
   return /*#__PURE__*/React.createElement("div", {
     style: {
@@ -11211,9 +11254,10 @@ function PerfilLugar(_ref48) {
       fontSize: 10,
       color: T.muted,
       marginTop: 8,
-      textAlign: "center"
+      textAlign: "center",
+      lineHeight: 1.6
     }
-  }, "Receba notifica\xE7\xF5es de momentos, pessoas e visitas")), agendas.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, "Qualquer pessoa pode seguir este lugar \u2014 receba notifica\xE7\xF5es de momentos, pessoas e visitas")), agendas.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       background: T.greenBg,
       borderRadius: 14,
@@ -11233,7 +11277,7 @@ function PerfilLugar(_ref48) {
     var meta = {};
     try {
       meta = JSON.parse(a.meta || "{}");
-    } catch (_unused14) {}
+    } catch (_unused15) {}
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       style: {
@@ -11432,7 +11476,7 @@ function App() {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
-      } catch (_unused15) {
+      } catch (_unused16) {
         return null;
       }
     }),
@@ -11479,25 +11523,148 @@ function App() {
     notif = _useRegionNotificatio.notif,
     dismissNotif = _useRegionNotificatio.dismiss;
 
-  // Supabase auth listener
+  // Supabase auth listener + perfil persistence
   useEffect(function () {
-    db.auth.getSession().then(function (_ref53) {
-      var session = _ref53.data.session;
-      if (session !== null && session !== void 0 && session.user && !user) {
-        db.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle().then(function (_ref54) {
-          var data = _ref54.data;
-          if (data) {
-            setUser(data);
-            try {
-              localStorage.setItem("tn_user", JSON.stringify(data));
-            } catch (_unused16) {}
+    function init() {
+      return _init.apply(this, arguments);
+    }
+    function _init() {
+      _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25() {
+        var _yield$db$auth$getSes, session, _yield$db$from$select4, data, local, u, updated, _local, _u, _yield$db$from$select5, _data2, _t20, _t21;
+        return _regenerator().w(function (_context25) {
+          while (1) switch (_context25.p = _context25.n) {
+            case 0:
+              _context25.n = 1;
+              return db.auth.getSession();
+            case 1:
+              _yield$db$auth$getSes = _context25.v;
+              session = _yield$db$auth$getSes.data.session;
+              if (!(session !== null && session !== void 0 && session.user)) {
+                _context25.n = 9;
+                break;
+              }
+              _context25.n = 2;
+              return db.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle();
+            case 2:
+              _yield$db$from$select4 = _context25.v;
+              data = _yield$db$from$select4.data;
+              if (!data) {
+                _context25.n = 3;
+                break;
+              }
+              setUser(data);
+              try {
+                localStorage.setItem("tn_user", JSON.stringify(data));
+              } catch (_unused19) {}
+              return _context25.a(2);
+            case 3:
+              // Vincula perfil local ao auth se existir
+              local = localStorage.getItem("tn_user");
+              if (!local) {
+                _context25.n = 8;
+                break;
+              }
+              _context25.p = 4;
+              u = JSON.parse(local);
+              if (!(u.id && !u.id.toString().startsWith("local_"))) {
+                _context25.n = 6;
+                break;
+              }
+              _context25.n = 5;
+              return db.from("profiles").update({
+                auth_id: session.user.id
+              }).eq("id", u.id);
+            case 5:
+              updated = _objectSpread(_objectSpread({}, u), {}, {
+                auth_id: session.user.id
+              });
+              setUser(updated);
+              try {
+                localStorage.setItem("tn_user", JSON.stringify(updated));
+              } catch (_unused20) {}
+            case 6:
+              _context25.n = 8;
+              break;
+            case 7:
+              _context25.p = 7;
+              _t20 = _context25.v;
+            case 8:
+              _context25.n = 14;
+              break;
+            case 9:
+              // Sem sessão — verifica se perfil local ainda existe no banco
+              _local = localStorage.getItem("tn_user");
+              if (!_local) {
+                _context25.n = 14;
+                break;
+              }
+              _context25.p = 10;
+              _u = JSON.parse(_local);
+              if (!(_u.id && !_u.id.toString().startsWith("local_"))) {
+                _context25.n = 12;
+                break;
+              }
+              _context25.n = 11;
+              return db.from("profiles").select("*").eq("id", _u.id).maybeSingle();
+            case 11:
+              _yield$db$from$select5 = _context25.v;
+              _data2 = _yield$db$from$select5.data;
+              if (_data2) {
+                setUser(_data2);
+                try {
+                  localStorage.setItem("tn_user", JSON.stringify(_data2));
+                } catch (_unused22) {}
+              }
+            case 12:
+              _context25.n = 14;
+              break;
+            case 13:
+              _context25.p = 13;
+              _t21 = _context25.v;
+            case 14:
+              return _context25.a(2);
           }
-        });
-      }
-    });
-    var _db$auth$onAuthStateC = db.auth.onAuthStateChange(function (_event, session) {
-        if (!session) setUser(null);
-      }),
+        }, _callee25, null, [[10, 13], [4, 7]]);
+      }));
+      return _init.apply(this, arguments);
+    }
+    init();
+    var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
+        var _ref53 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(event, session) {
+          var _yield$db$from$select3, data;
+          return _regenerator().w(function (_context24) {
+            while (1) switch (_context24.n) {
+              case 0:
+                if (event === "SIGNED_OUT") {
+                  setUser(null);
+                  try {
+                    localStorage.removeItem("tn_user");
+                  } catch (_unused17) {}
+                }
+                if (!(event === "SIGNED_IN" && session !== null && session !== void 0 && session.user)) {
+                  _context24.n = 2;
+                  break;
+                }
+                _context24.n = 1;
+                return db.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle();
+              case 1:
+                _yield$db$from$select3 = _context24.v;
+                data = _yield$db$from$select3.data;
+                if (data) {
+                  setUser(data);
+                  try {
+                    localStorage.setItem("tn_user", JSON.stringify(data));
+                  } catch (_unused18) {}
+                }
+              case 2:
+                return _context24.a(2);
+            }
+          }, _callee24);
+        }));
+        return function (_x10, _x11) {
+          return _ref53.apply(this, arguments);
+        };
+      }()),
       subscription = _db$auth$onAuthStateC.data.subscription;
     return function () {
       return subscription.unsubscribe();
@@ -11509,13 +11676,13 @@ function App() {
     try {
       var c = localStorage.getItem("tn_contacts");
       if (c) setContacts(JSON.parse(c));
-    } catch (_unused17) {}
+    } catch (_unused24) {}
   }, []);
   function salvar(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused18) {}
+    } catch (_unused25) {}
     setTela("perfil");
   }
   function addContact(p) {
@@ -11529,7 +11696,7 @@ function App() {
     setContacts(updated);
     try {
       localStorage.setItem("tn_contacts", JSON.stringify(updated));
-    } catch (_unused19) {}
+    } catch (_unused26) {}
   }
   function updateContactRel(id, rel) {
     var updated = contacts.map(function (c) {
@@ -11540,7 +11707,7 @@ function App() {
     setContacts(updated);
     try {
       localStorage.setItem("tn_contacts", JSON.stringify(updated));
-    } catch (_unused20) {}
+    } catch (_unused27) {}
   }
   function enviar(cid, msg) {
     setMsgs(function (prev) {
@@ -11564,24 +11731,24 @@ function App() {
     setAuthSession(null);
     try {
       localStorage.removeItem("tn_user");
-    } catch (_unused21) {}
+    } catch (_unused28) {}
     db.auth.signOut();
   }
   function updateUser(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused22) {}
+    } catch (_unused29) {}
   }
   var isContact = function isContact(p) {
     return !!contacts.find(function (c) {
       return c.id === p.id;
     });
   };
-  var unreadCount = Object.entries(msgs).filter(function (_ref55) {
-    var _ref56 = _slicedToArray(_ref55, 2),
-      id = _ref56[0],
-      ms = _ref56[1];
+  var unreadCount = Object.entries(msgs).filter(function (_ref54) {
+    var _ref55 = _slicedToArray(_ref54, 2),
+      id = _ref55[0],
+      ms = _ref55[1];
     return user && id.split("_").includes(String(user.id)) && ms.some(function (m) {
       return m.from !== user.id;
     });
@@ -11892,7 +12059,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused23) {}
+      } catch (_unused30) {}
       ;
       setShowAdicionarLugar(false);
     }
@@ -11906,7 +12073,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused24) {}
+      } catch (_unused31) {}
     }
   }), showReencontrar && /*#__PURE__*/React.createElement(ModalReencontrar, {
     onClose: function onClose() {
