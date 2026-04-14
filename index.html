@@ -11947,15 +11947,6 @@ function App() {
   }));
 }
 ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));
-// Salva código compilado para próximas visitas
-try {
-  if (window.Babel && !localStorage.getItem('tn_compiled_v3')) {
-    var compiled = Babel.transform(document.querySelector('script[type="text/babel"]').textContent, {
-      presets: ['react', 'env']
-    }).code;
-    localStorage.setItem('tn_compiled_v3', compiled);
-  }
-} catch (e) {}
 </script>
 </body>
 </html>
