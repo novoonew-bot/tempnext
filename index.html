@@ -137,8 +137,6 @@ _observer.observe(document.getElementById('root'), {childList:true});
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
@@ -154,6 +152,8 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 var _React = React,
   useState = _React.useState,
   useRef = _React.useRef,
@@ -391,7 +391,83 @@ var fileToB64 = function fileToB64(f) {
   });
 };
 
-// ── Logo ──────────────────────────────────────────────────────
+// ── fileToBlob: redimensiona no canvas e devolve um Blob JPEG ──
+var fileToBlob = function fileToBlob(f) {
+  var maxW = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 800;
+  var quality = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.82;
+  return new Promise(function (res, rej) {
+    var r = new FileReader();
+    r.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var canvas = document.createElement('canvas');
+        var w = img.width,
+          h = img.height;
+        if (w > maxW) {
+          h = Math.round(h * maxW / w);
+          w = maxW;
+        }
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob(function (b) {
+          if (b) res(b);else rej(new Error("toBlob retornou null"));
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = rej;
+      img.src = r.result;
+    };
+    r.onerror = rej;
+    r.readAsDataURL(f);
+  });
+};
+
+// ── uploadImage: redimensiona + sobe pro bucket + retorna URL pública ──
+// bucket: "avatars" ou "photos"
+// userId: string usada no nome do arquivo (pode ser qualquer coisa, só pra evitar colisões)
+// maxW e quality opcionais (avatars ficam 400px, photos 1000px por padrão)
+function uploadImage(_x, _x2, _x3, _x4, _x5) {
+  return _uploadImage.apply(this, arguments);
+} // ── Logo ──────────────────────────────────────────────────────
+function _uploadImage() {
+  _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26(file, bucket, userId, maxW, quality) {
+    var defaultW, defaultQ, blob, ts, rand, filename, _yield$db$storage$fro, error, _db$storage$from$getP, data;
+    return _regenerator().w(function (_context26) {
+      while (1) switch (_context26.n) {
+        case 0:
+          defaultW = bucket === "avatars" ? 400 : 1000;
+          defaultQ = bucket === "avatars" ? 0.82 : 0.85;
+          _context26.n = 1;
+          return fileToBlob(file, maxW || defaultW, quality || defaultQ);
+        case 1:
+          blob = _context26.v;
+          // Nome único — userId + timestamp + random
+          ts = Date.now();
+          rand = Math.random().toString(36).slice(2, 8);
+          filename = "".concat(userId || "anon", "_").concat(ts, "_").concat(rand, ".jpg");
+          _context26.n = 2;
+          return db.storage.from(bucket).upload(filename, blob, {
+            contentType: "image/jpeg",
+            cacheControl: "3600",
+            upsert: false
+          });
+        case 2:
+          _yield$db$storage$fro = _context26.v;
+          error = _yield$db$storage$fro.error;
+          if (!error) {
+            _context26.n = 3;
+            break;
+          }
+          console.error("Upload erro:", error);
+          throw error;
+        case 3:
+          _db$storage$from$getP = db.storage.from(bucket).getPublicUrl(filename), data = _db$storage$from$getP.data;
+          return _context26.a(2, data.publicUrl);
+      }
+    }, _callee26);
+  }));
+  return _uploadImage.apply(this, arguments);
+}
 function Logo(_ref) {
   var _ref$size = _ref.size,
     size = _ref$size === void 0 ? "sm" : _ref$size;
@@ -2310,7 +2386,7 @@ function NovoLugar(_ref12) {
     d = _useState26[0],
     setD = _useState26[1];
   var timer = useRef();
-  function searchAddr(_x) {
+  function searchAddr(_x6) {
     return _searchAddr.apply(this, arguments);
   }
   function _searchAddr() {
@@ -2772,7 +2848,7 @@ function NovoLugar(_ref12) {
           }
         }, _callee2, null, [[1, 4]]);
       }));
-      return function (_x2) {
+      return function (_x7) {
         return _ref13.apply(this, arguments);
       };
     }())
@@ -2917,9 +2993,9 @@ function Cadastrar(_ref14) {
       nick: "",
       note: "",
       avatarPreview: null,
-      avatarB64: null,
+      avatarFile: null,
       photos: [],
-      photoB64s: [],
+      photoFiles: [],
       lugares: [],
       placeType: "escola",
       placeName: "",
@@ -2951,12 +3027,12 @@ function Cadastrar(_ref14) {
     _useState34 = _slicedToArray(_useState33, 2),
     f = _useState34[0],
     setF = _useState34[1];
-  function handleAvatar(_x3) {
+  function handleAvatar(_x8) {
     return _handleAvatar.apply(this, arguments);
   }
   function _handleAvatar() {
     _handleAvatar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(e) {
-      var file, b64;
+      var file;
       return _regenerator().w(function (_context4) {
         while (1) switch (_context4.n) {
           case 0:
@@ -2967,29 +3043,25 @@ function Cadastrar(_ref14) {
             }
             return _context4.a(2);
           case 1:
-            _context4.n = 2;
-            return fileToB64(file);
-          case 2:
-            b64 = _context4.v;
             setF(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 avatarPreview: URL.createObjectURL(file),
-                avatarB64: b64
+                avatarFile: file
               });
             });
-          case 3:
+          case 2:
             return _context4.a(2);
         }
       }, _callee4);
     }));
     return _handleAvatar.apply(this, arguments);
   }
-  function handlePhotos(_x4) {
+  function handlePhotos(_x9) {
     return _handlePhotos.apply(this, arguments);
   }
   function _handlePhotos() {
     _handlePhotos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(e) {
-      var files, previews, b64s;
+      var files, previews;
       return _regenerator().w(function (_context5) {
         while (1) switch (_context5.n) {
           case 0:
@@ -2997,17 +3069,13 @@ function Cadastrar(_ref14) {
             previews = files.map(function (f) {
               return URL.createObjectURL(f);
             });
-            _context5.n = 1;
-            return Promise.all(files.map(fileToB64));
-          case 1:
-            b64s = _context5.v;
             setF(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 photos: [].concat(_toConsumableArray(v.photos), _toConsumableArray(previews)).slice(0, 6),
-                photoB64s: [].concat(_toConsumableArray(v.photoB64s), _toConsumableArray(b64s)).slice(0, 6)
+                photoFiles: [].concat(_toConsumableArray(v.photoFiles), _toConsumableArray(files)).slice(0, 6)
               });
             });
-          case 2:
+          case 1:
             return _context5.a(2);
         }
       }, _callee5);
@@ -3020,13 +3088,13 @@ function Cadastrar(_ref14) {
         photos: v.photos.filter(function (_, j) {
           return j !== i;
         }),
-        photoB64s: v.photoB64s.filter(function (_, j) {
+        photoFiles: v.photoFiles.filter(function (_, j) {
           return j !== i;
         })
       });
     });
   }
-  function searchAddr(_x5) {
+  function searchAddr(_x0) {
     return _searchAddr2.apply(this, arguments);
   }
   function _searchAddr2() {
@@ -3147,7 +3215,7 @@ function Cadastrar(_ref14) {
   function _salvar() {
     _salvar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
       var _f$lugares$, _f$lugares$2, _f$lugares$3, _f$lugares$4, _f$lugares$5, _f$lugares$6;
-      var profile, _t5;
+      var newId, avatarUrl, photoUrls, profile, _t5, _t6, _t7;
       return _regenerator().w(function (_context7) {
         while (1) switch (_context7.p = _context7.n) {
           case 0:
@@ -3160,8 +3228,54 @@ function Cadastrar(_ref14) {
           case 1:
             setSaving(true);
             setErr("");
+
+            // Gera o ID antes pra usar nos nomes de arquivo
+            newId = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(); // Upload do avatar (se houver)
+            avatarUrl = null;
+            if (!f.avatarFile) {
+              _context7.n = 5;
+              break;
+            }
+            _context7.p = 2;
+            _context7.n = 3;
+            return uploadImage(f.avatarFile, "avatars", newId);
+          case 3:
+            avatarUrl = _context7.v;
+            _context7.n = 5;
+            break;
+          case 4:
+            _context7.p = 4;
+            _t5 = _context7.v;
+            console.error("Erro no upload do avatar:", _t5);
+            setErr("Não consegui enviar sua foto de perfil. Tente novamente.");
+            setSaving(false);
+            return _context7.a(2);
+          case 5:
+            // Upload das fotos da galeria (se houver)
+            photoUrls = [];
+            if (!(f.photoFiles && f.photoFiles.length > 0)) {
+              _context7.n = 9;
+              break;
+            }
+            _context7.p = 6;
+            _context7.n = 7;
+            return Promise.all(f.photoFiles.map(function (file) {
+              return uploadImage(file, "photos", newId);
+            }));
+          case 7:
+            photoUrls = _context7.v;
+            _context7.n = 9;
+            break;
+          case 8:
+            _context7.p = 8;
+            _t6 = _context7.v;
+            console.error("Erro no upload das fotos:", _t6);
+            setErr("Não consegui enviar suas fotos. Tente novamente.");
+            setSaving(false);
+            return _context7.a(2);
+          case 9:
             profile = {
-              id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
+              id: newId,
               created_at: new Date().toISOString(),
               name: (f.firstName.trim() + " " + f.lastName.trim()).trim(),
               first_name: f.firstName.trim(),
@@ -3177,8 +3291,8 @@ function Cadastrar(_ref14) {
               note: f.note.trim() || null,
               era: f.era,
               future_date: f.era === "futuro" && f.futureDate ? f.futureDate : null,
-              avatar_url: f.avatarB64 || null,
-              photos: f.photoB64s || [],
+              avatar_url: avatarUrl,
+              photos: photoUrls,
               birth_day: f.birthDay ? parseInt(f.birthDay) : null,
               birth_month: f.birthMonth ? parseInt(f.birthMonth) : null,
               birth_year: f.birthYear ? parseInt(f.birthYear) : null,
@@ -3193,24 +3307,24 @@ function Cadastrar(_ref14) {
               available: f.available || "sim",
               intencao: f.intencao.length > 0 ? f.intencao : null
             };
-            _context7.p = 2;
-            _context7.n = 3;
+            _context7.p = 10;
+            _context7.n = 11;
             return db.from("profiles").insert(profile);
-          case 3:
-            _context7.n = 5;
+          case 11:
+            _context7.n = 13;
             break;
-          case 4:
-            _context7.p = 4;
-            _t5 = _context7.v;
-            console.log("Supabase:", _t5 === null || _t5 === void 0 ? void 0 : _t5.message);
-          case 5:
+          case 12:
+            _context7.p = 12;
+            _t7 = _context7.v;
+            console.log("Supabase:", _t7 === null || _t7 === void 0 ? void 0 : _t7.message);
+          case 13:
             onSave(profile);
             setSaving(false);
             setDone(true);
-          case 6:
+          case 14:
             return _context7.a(2);
         }
-      }, _callee7, null, [[2, 4]]);
+      }, _callee7, null, [[10, 12], [6, 8], [2, 4]]);
     }));
     return _salvar.apply(this, arguments);
   }
@@ -4611,7 +4725,7 @@ function ModalEditarPerfil(_ref17) {
   function _salvar2() {
     _salvar2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
       var _objectSpread3;
-      var updated, _t6;
+      var updated, _t8;
       return _regenerator().w(function (_context8) {
         while (1) switch (_context8.p = _context8.n) {
           case 0:
@@ -4650,8 +4764,8 @@ function ModalEditarPerfil(_ref17) {
             break;
           case 4:
             _context8.p = 4;
-            _t6 = _context8.v;
-            console.log("Erro:", _t6);
+            _t8 = _context8.v;
+            console.log("Erro:", _t8);
           case 5:
             onSave(updated);
             setSaving(false);
@@ -5169,12 +5283,12 @@ function Perfil(_ref18) {
     size: "lg"
   }, "J\xE1 tenho conta \u2014 Entrar")));
   var era = eraInfo(user.era || "passado");
-  function handleNewAvatar(_x6) {
+  function handleNewAvatar(_x1) {
     return _handleNewAvatar.apply(this, arguments);
   }
   function _handleNewAvatar() {
     _handleNewAvatar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(e) {
-      var file, b64, updated, _t7;
+      var file, url, updated, _t9, _t0;
       return _regenerator().w(function (_context9) {
         while (1) switch (_context9.p = _context9.n) {
           case 0:
@@ -5185,65 +5299,93 @@ function Perfil(_ref18) {
             }
             return _context9.a(2);
           case 1:
+            _context9.p = 1;
             _context9.n = 2;
-            return fileToB64(file, 300, 0.7);
+            return uploadImage(file, "avatars", user.id);
           case 2:
-            b64 = _context9.v;
+            url = _context9.v;
             updated = _objectSpread(_objectSpread({}, user), {}, {
-              avatar_url: b64
+              avatar_url: url
             });
             onUpdateUser(updated);
             _context9.p = 3;
             _context9.n = 4;
             return db.from("profiles").update({
-              avatar_url: b64
+              avatar_url: url
             }).eq("id", user.id);
           case 4:
             _context9.n = 6;
             break;
           case 5:
             _context9.p = 5;
-            _t7 = _context9.v;
+            _t9 = _context9.v;
+            console.error("update profile avatar:", _t9);
           case 6:
+            _context9.n = 8;
+            break;
+          case 7:
+            _context9.p = 7;
+            _t0 = _context9.v;
+            console.error("Falha no upload do avatar:", _t0);
+            alert("Não consegui enviar a foto. Tente novamente ou escolha outra imagem.");
+          case 8:
             return _context9.a(2);
         }
-      }, _callee9, null, [[3, 5]]);
+      }, _callee9, null, [[3, 5], [1, 7]]);
     }));
     return _handleNewAvatar.apply(this, arguments);
   }
-  function handleMorePhotos(_x7) {
+  function handleMorePhotos(_x10) {
     return _handleMorePhotos.apply(this, arguments);
   }
   function _handleMorePhotos() {
     _handleMorePhotos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0(e) {
-      var files, b64s, newPhotos, _t8;
+      var files, urls, newPhotos, _t1, _t10;
       return _regenerator().w(function (_context0) {
         while (1) switch (_context0.p = _context0.n) {
           case 0:
             files = Array.from(e.target.files).slice(0, 6);
-            _context0.n = 1;
-            return Promise.all(files.map(fileToB64));
+            if (!(files.length === 0)) {
+              _context0.n = 1;
+              break;
+            }
+            return _context0.a(2);
           case 1:
-            b64s = _context0.v;
-            newPhotos = [].concat(_toConsumableArray(user.photos || []), _toConsumableArray(b64s)).slice(0, 6);
+            _context0.p = 1;
+            _context0.n = 2;
+            return Promise.all(files.map(function (f) {
+              return uploadImage(f, "photos", user.id);
+            }));
+          case 2:
+            urls = _context0.v;
+            newPhotos = [].concat(_toConsumableArray(user.photos || []), _toConsumableArray(urls)).slice(0, 6);
             onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
               photos: newPhotos
             }));
-            _context0.p = 2;
-            _context0.n = 3;
+            _context0.p = 3;
+            _context0.n = 4;
             return db.from("profiles").update({
               photos: newPhotos
             }).eq("id", user.id);
-          case 3:
-            _context0.n = 5;
-            break;
           case 4:
-            _context0.p = 4;
-            _t8 = _context0.v;
+            _context0.n = 6;
+            break;
           case 5:
+            _context0.p = 5;
+            _t1 = _context0.v;
+            console.error("update profile photos:", _t1);
+          case 6:
+            _context0.n = 8;
+            break;
+          case 7:
+            _context0.p = 7;
+            _t10 = _context0.v;
+            console.error("Falha no upload das fotos:", _t10);
+            alert("Não consegui enviar alguma das fotos. Tente novamente.");
+          case 8:
             return _context0.a(2);
         }
-      }, _callee0, null, [[2, 4]]);
+      }, _callee0, null, [[3, 5], [1, 7]]);
     }));
     return _handleMorePhotos.apply(this, arguments);
   }
@@ -6648,7 +6790,7 @@ function ModalChat(_ref26) {
   }
   function _send() {
     _send = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10() {
-      var msg, _t9;
+      var msg, _t11;
       return _regenerator().w(function (_context10) {
         while (1) switch (_context10.p = _context10.n) {
           case 0:
@@ -6684,7 +6826,7 @@ function ModalChat(_ref26) {
             break;
           case 4:
             _context10.p = 4;
-            _t9 = _context10.v;
+            _t11 = _context10.v;
           case 5:
             return _context10.a(2);
         }
@@ -7101,7 +7243,7 @@ function ModalChat(_ref26) {
           }
         }, _callee1);
       }));
-      return function (_x8) {
+      return function (_x11) {
         return _ref27.apply(this, arguments);
       };
     }()),
@@ -7346,7 +7488,7 @@ function useRegionAlerts(user) {
     }
     function _checkNewProfiles() {
       _checkNewProfiles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11() {
-        var since, userCities, userStates, cityFilters, stateFilters, orFilter, _yield$db$from$select, data, _t0;
+        var since, userCities, userStates, cityFilters, stateFilters, orFilter, _yield$db$from$select, data, _t12;
         return _regenerator().w(function (_context11) {
           while (1) switch (_context11.p = _context11.n) {
             case 0:
@@ -7386,8 +7528,8 @@ function useRegionAlerts(user) {
               break;
             case 3:
               _context11.p = 3;
-              _t0 = _context11.v;
-              console.log("Alert check error:", _t0);
+              _t12 = _context11.v;
+              console.log("Alert check error:", _t12);
             case 4:
               return _context11.a(2);
           }
@@ -7549,12 +7691,12 @@ function ModalAdicionarLugar(_ref32) {
     done = _useState85[0],
     setDone = _useState85[1];
   var timer = useRef();
-  function searchAddr(_x9) {
+  function searchAddr(_x12) {
     return _searchAddr3.apply(this, arguments);
   }
   function _searchAddr3() {
     _searchAddr3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(q) {
-      var r, data, _t1;
+      var r, data, _t13;
       return _regenerator().w(function (_context12) {
         while (1) switch (_context12.p = _context12.n) {
           case 0:
@@ -7593,7 +7735,7 @@ function ModalAdicionarLugar(_ref32) {
             break;
           case 5:
             _context12.p = 5;
-            _t1 = _context12.v;
+            _t13 = _context12.v;
             setD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 addrLoading: false
@@ -7667,7 +7809,7 @@ function ModalAdicionarLugar(_ref32) {
   }
   function _salvar3() {
     _salvar3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13() {
-      var novoLugar, lugaresAtuais, novosLugares, _t10;
+      var novoLugar, lugaresAtuais, novosLugares, _t14;
       return _regenerator().w(function (_context13) {
         while (1) switch (_context13.p = _context13.n) {
           case 0:
@@ -7701,8 +7843,8 @@ function ModalAdicionarLugar(_ref32) {
             break;
           case 4:
             _context13.p = 4;
-            _t10 = _context13.v;
-            console.log("erro:", _t10);
+            _t14 = _context13.v;
+            console.log("erro:", _t14);
           case 5:
             onSave(_objectSpread(_objectSpread({}, user), {}, {
               lugares: novosLugares
@@ -8398,8 +8540,8 @@ function ModalMomento(_ref34) {
     setFotos = _useState91[1];
   var _useState92 = useState([]),
     _useState93 = _slicedToArray(_useState92, 2),
-    fotosB64 = _useState93[0],
-    setFotosB64 = _useState93[1];
+    fotosFiles = _useState93[0],
+    setFotosFiles = _useState93[1];
   var _useState94 = useState(false),
     _useState95 = _slicedToArray(_useState94, 2),
     saving = _useState95[0],
@@ -8416,12 +8558,12 @@ function ModalMomento(_ref34) {
     _useState101 = _slicedToArray(_useState100, 2),
     revelarEm = _useState101[0],
     setRevelarEm = _useState101[1];
-  function handleFotos(_x0) {
+  function handleFotos(_x13) {
     return _handleFotos.apply(this, arguments);
   }
   function _handleFotos() {
     _handleFotos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14(e) {
-      var files, previews, b64s;
+      var files, previews;
       return _regenerator().w(function (_context14) {
         while (1) switch (_context14.n) {
           case 0:
@@ -8429,17 +8571,13 @@ function ModalMomento(_ref34) {
             previews = files.map(function (f) {
               return URL.createObjectURL(f);
             });
-            _context14.n = 1;
-            return Promise.all(files.map(fileToB64));
-          case 1:
-            b64s = _context14.v;
             setFotos(function (prev) {
               return [].concat(_toConsumableArray(prev), _toConsumableArray(previews)).slice(0, 30);
             });
-            setFotosB64(function (prev) {
-              return [].concat(_toConsumableArray(prev), _toConsumableArray(b64s)).slice(0, 30);
+            setFotosFiles(function (prev) {
+              return [].concat(_toConsumableArray(prev), _toConsumableArray(files)).slice(0, 30);
             });
-          case 2:
+          case 1:
             return _context14.a(2);
         }
       }, _callee14);
@@ -8452,7 +8590,7 @@ function ModalMomento(_ref34) {
         return j !== i;
       });
     });
-    setFotosB64(function (v) {
+    setFotosFiles(function (v) {
       return v.filter(function (_, j) {
         return j !== i;
       });
@@ -8463,7 +8601,7 @@ function ModalMomento(_ref34) {
   }
   function _salvar4() {
     _salvar4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15() {
-      var momento, fotosAtuais, novasFotos, _t11, _t12;
+      var photoUrls, momento, fotosAtuais, novasFotos, _t15, _t16, _t17;
       return _regenerator().w(function (_context15) {
         while (1) switch (_context15.p = _context15.n) {
           case 0:
@@ -8474,6 +8612,30 @@ function ModalMomento(_ref34) {
             return _context15.a(2);
           case 1:
             setSaving(true);
+
+            // Upload das fotos do momento antes do insert
+            photoUrls = [];
+            if (!(fotosFiles.length > 0)) {
+              _context15.n = 5;
+              break;
+            }
+            _context15.p = 2;
+            _context15.n = 3;
+            return Promise.all(fotosFiles.map(function (file) {
+              return uploadImage(file, "photos", user.id);
+            }));
+          case 3:
+            photoUrls = _context15.v;
+            _context15.n = 5;
+            break;
+          case 4:
+            _context15.p = 4;
+            _t15 = _context15.v;
+            console.error("Falha no upload das fotos do momento:", _t15);
+            alert("Não consegui enviar as fotos. Tente novamente.");
+            setSaving(false);
+            return _context15.a(2);
+          case 5:
             momento = {
               id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
               user_id: user.id,
@@ -8481,49 +8643,49 @@ function ModalMomento(_ref34) {
               avatar: user.avatar_url,
               texto: texto.trim(),
               lugar: lugar.trim(),
-              fotos: fotosB64,
+              fotos: photoUrls,
               ts: new Date().toISOString()
             }; // Salva no banco de momentos
-            _context15.p = 2;
-            _context15.n = 3;
-            return db.from("momentos").insert(momento);
-          case 3:
-            _context15.n = 5;
-            break;
-          case 4:
-            _context15.p = 4;
-            _t11 = _context15.v;
-          case 5:
-            if (!(fotosB64.length > 0)) {
-              _context15.n = 9;
-              break;
-            }
             _context15.p = 6;
-            fotosAtuais = user.photos || [];
-            novasFotos = [].concat(_toConsumableArray(fotosAtuais), _toConsumableArray(fotosB64)).slice(0, 50);
             _context15.n = 7;
-            return db.from("profiles").update({
-              photos: novasFotos
-            }).eq("id", user.id);
+            return db.from("momentos").insert(momento);
           case 7:
-            // Atualiza localmente
-            if (onUpdateUser) onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
-              photos: novasFotos
-            }));
             _context15.n = 9;
             break;
           case 8:
             _context15.p = 8;
-            _t12 = _context15.v;
-            console.log("Erro ao salvar fotos no perfil:", _t12);
+            _t16 = _context15.v;
           case 9:
+            if (!(photoUrls.length > 0)) {
+              _context15.n = 13;
+              break;
+            }
+            _context15.p = 10;
+            fotosAtuais = user.photos || [];
+            novasFotos = [].concat(_toConsumableArray(fotosAtuais), _toConsumableArray(photoUrls)).slice(0, 50);
+            _context15.n = 11;
+            return db.from("profiles").update({
+              photos: novasFotos
+            }).eq("id", user.id);
+          case 11:
+            // Atualiza localmente
+            if (onUpdateUser) onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
+              photos: novasFotos
+            }));
+            _context15.n = 13;
+            break;
+          case 12:
+            _context15.p = 12;
+            _t17 = _context15.v;
+            console.log("Erro ao salvar fotos no perfil:", _t17);
+          case 13:
             onSave(momento);
             setSaving(false);
             onClose();
-          case 10:
+          case 14:
             return _context15.a(2);
         }
-      }, _callee15, null, [[6, 8], [2, 4]]);
+      }, _callee15, null, [[10, 12], [6, 8], [2, 4]]);
     }));
     return _salvar4.apply(this, arguments);
   }
@@ -8839,7 +9001,7 @@ function TelaLogin(_ref35) {
   }
   function _loginGoogle() {
     _loginGoogle = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16() {
-      var _yield$db$auth$signIn, error, _t13;
+      var _yield$db$auth$signIn, error, _t18;
       return _regenerator().w(function (_context16) {
         while (1) switch (_context16.p = _context16.n) {
           case 0:
@@ -8866,8 +9028,8 @@ function TelaLogin(_ref35) {
             break;
           case 4:
             _context16.p = 4;
-            _t13 = _context16.v;
-            setErro("Erro ao conectar com Google: " + _t13.message);
+            _t18 = _context16.v;
+            setErro("Erro ao conectar com Google: " + _t18.message);
             setLoading(false);
           case 5:
             return _context16.a(2);
@@ -8881,7 +9043,7 @@ function TelaLogin(_ref35) {
   }
   function _loginEmail() {
     _loginEmail = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17() {
-      var _yield$db$auth$signIn2, error, _t14;
+      var _yield$db$auth$signIn2, error, _t19;
       return _regenerator().w(function (_context17) {
         while (1) switch (_context17.p = _context17.n) {
           case 0:
@@ -8916,8 +9078,8 @@ function TelaLogin(_ref35) {
             break;
           case 5:
             _context17.p = 5;
-            _t14 = _context17.v;
-            setErro("Erro: " + _t14.message);
+            _t19 = _context17.v;
+            setErro("Erro: " + _t19.message);
           case 6:
             setLoading(false);
           case 7:
@@ -9231,7 +9393,7 @@ function useRegionNotifications(user, contacts) {
     }
     function _check() {
       _check = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18() {
-        var since, lugares, cidades, estados, orFilter, _yield$db$from$select2, data, novo, _user$name, meuSobrenome, sobrenomeIgual, _t15;
+        var since, lugares, cidades, estados, orFilter, _yield$db$from$select2, data, novo, _user$name, meuSobrenome, sobrenomeIgual, _t20;
         return _regenerator().w(function (_context18) {
           while (1) switch (_context18.p = _context18.n) {
             case 0:
@@ -9281,8 +9443,8 @@ function useRegionNotifications(user, contacts) {
               break;
             case 3:
               _context18.p = 3;
-              _t15 = _context18.v;
-              console.log("notif error:", _t15);
+              _t20 = _context18.v;
+              console.log("notif error:", _t20);
             case 4:
               return _context18.a(2);
           }
@@ -9461,7 +9623,8 @@ function CadastroSimples(_ref37) {
       country: "Brasil",
       y1: "",
       y2: "",
-      avatarB64: null
+      avatarFile: null,
+      avatarPreview: null
     }),
     _useState119 = _slicedToArray(_useState118, 2),
     f = _useState119[0],
@@ -9508,12 +9671,12 @@ function CadastroSimples(_ref37) {
       name: "Como se chama?"
     }
   }[ageGroup];
-  function handleAvatar(_x1) {
+  function handleAvatar(_x14) {
     return _handleAvatar2.apply(this, arguments);
   }
   function _handleAvatar2() {
     _handleAvatar2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19(e) {
-      var file, b64;
+      var file;
       return _regenerator().w(function (_context19) {
         while (1) switch (_context19.n) {
           case 0:
@@ -9524,14 +9687,11 @@ function CadastroSimples(_ref37) {
             }
             return _context19.a(2);
           case 1:
-            _context19.n = 2;
-            return fileToB64(file, 300, 0.7);
-          case 2:
-            b64 = _context19.v;
             setF(_objectSpread(_objectSpread({}, f), {}, {
-              avatarB64: b64
+              avatarFile: file,
+              avatarPreview: URL.createObjectURL(file)
             }));
-          case 3:
+          case 2:
             return _context19.a(2);
         }
       }, _callee19);
@@ -9543,7 +9703,7 @@ function CadastroSimples(_ref37) {
   }
   function _salvar5() {
     _salvar5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20() {
-      var nome, payload, saved, _yield$db$from$insert, data, error, _yield$db$from$upsert, _data, _saved$id, _t16, _t17;
+      var nome, avatarUrl, tempId, payload, saved, _yield$db$from$insert, data, error, _yield$db$from$upsert, _data, _saved$id, _t21, _t22, _t23;
       return _regenerator().w(function (_context20) {
         while (1) switch (_context20.p = _context20.n) {
           case 0:
@@ -9554,7 +9714,27 @@ function CadastroSimples(_ref37) {
             return _context20.a(2);
           case 1:
             setSaving(true);
-            nome = "".concat(f.firstName.trim(), " ").concat(f.lastName.trim()).trim();
+            nome = "".concat(f.firstName.trim(), " ").concat(f.lastName.trim()).trim(); // Upload do avatar antes do insert, se houver
+            avatarUrl = null;
+            if (!f.avatarFile) {
+              _context20.n = 5;
+              break;
+            }
+            _context20.p = 2;
+            // Usa um ID temporário — depois sobrescrevemos com o ID real do perfil, mas o arquivo já está no bucket
+            tempId = crypto.randomUUID ? crypto.randomUUID() : "tmp_" + Date.now();
+            _context20.n = 3;
+            return uploadImage(f.avatarFile, "avatars", tempId);
+          case 3:
+            avatarUrl = _context20.v;
+            _context20.n = 5;
+            break;
+          case 4:
+            _context20.p = 4;
+            _t21 = _context20.v;
+            console.error("Falha no upload do avatar:", _t21);
+            // Continua sem avatar em vez de travar
+          case 5:
             payload = {
               name: nome,
               first_name: f.firstName.trim(),
@@ -9572,7 +9752,7 @@ function CadastroSimples(_ref37) {
               birth_day: f.birthDay ? parseInt(f.birthDay) : null,
               birth_month: f.birthMonth ? parseInt(f.birthMonth) : null,
               birth_year: f.birthYear ? parseInt(f.birthYear) : null,
-              avatar_url: f.avatarB64 || null,
+              avatar_url: avatarUrl,
               available: "sim",
               lugares: [{
                 placeType: f.placeType,
@@ -9586,59 +9766,59 @@ function CadastroSimples(_ref37) {
               }]
             };
             saved = null;
-            _context20.p = 2;
-            _context20.n = 3;
+            _context20.p = 6;
+            _context20.n = 7;
             return db.from("profiles").insert(payload).select().single();
-          case 3:
+          case 7:
             _yield$db$from$insert = _context20.v;
             data = _yield$db$from$insert.data;
             error = _yield$db$from$insert.error;
             if (!error) {
-              _context20.n = 4;
+              _context20.n = 8;
               break;
             }
             throw error;
-          case 4:
+          case 8:
             saved = data;
-            _context20.n = 9;
+            _context20.n = 13;
             break;
-          case 5:
-            _context20.p = 5;
-            _t16 = _context20.v;
-            console.error("Erro ao salvar perfil:", _t16);
+          case 9:
+            _context20.p = 9;
+            _t22 = _context20.v;
+            console.error("Erro ao salvar perfil:", _t22);
             // Tenta upsert como fallback
-            _context20.p = 6;
-            _context20.n = 7;
+            _context20.p = 10;
+            _context20.n = 11;
             return db.from("profiles").upsert(payload).select().single();
-          case 7:
+          case 11:
             _yield$db$from$upsert = _context20.v;
             _data = _yield$db$from$upsert.data;
             saved = _data;
-            _context20.n = 9;
+            _context20.n = 13;
             break;
-          case 8:
-            _context20.p = 8;
-            _t17 = _context20.v;
-            console.error("Erro no upsert:", _t17);
+          case 12:
+            _context20.p = 12;
+            _t23 = _context20.v;
+            console.error("Erro no upsert:", _t23);
             // Salva localmente como último recurso
             saved = _objectSpread(_objectSpread({}, payload), {}, {
               id: "local_" + Date.now()
             });
-          case 9:
+          case 13:
             if (saved) {
               try {
                 localStorage.setItem("tn_user", JSON.stringify(saved));
-              } catch (_unused0) {}
+              } catch (_unused8) {}
               try {
                 localStorage.setItem("tn_user_id", (_saved$id = saved.id) === null || _saved$id === void 0 ? void 0 : _saved$id.toString());
-              } catch (_unused1) {}
+              } catch (_unused9) {}
             }
             setSaving(false);
             onDone(saved || payload);
-          case 10:
+          case 14:
             return _context20.a(2);
         }
-      }, _callee20, null, [[6, 8], [2, 5]]);
+      }, _callee20, null, [[10, 12], [6, 9], [2, 4]]);
     }));
     return _salvar5.apply(this, arguments);
   }
@@ -9692,8 +9872,8 @@ function CadastroSimples(_ref37) {
       justifyContent: "center",
       overflow: "hidden"
     }
-  }, f.avatarB64 ? /*#__PURE__*/React.createElement("img", {
-    src: f.avatarB64,
+  }, f.avatarPreview ? /*#__PURE__*/React.createElement("img", {
+    src: f.avatarPreview,
     alt: "",
     style: {
       width: "100%",
@@ -10536,7 +10716,7 @@ function PerguntaComunidade(_ref43) {
   }
   function _responder() {
     _responder = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21() {
-      var _t18;
+      var _t24;
       return _regenerator().w(function (_context21) {
         while (1) switch (_context21.p = _context21.n) {
           case 0:
@@ -10567,7 +10747,7 @@ function PerguntaComunidade(_ref43) {
             break;
           case 4:
             _context21.p = 4;
-            _t18 = _context21.v;
+            _t24 = _context21.v;
             setRespondeu(true);
           case 5:
             setSaving(false);
@@ -10701,7 +10881,7 @@ function AgendaVisita(_ref45) {
   }
   function _salvar6() {
     _salvar6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22() {
-      var _t19;
+      var _t25;
       return _regenerator().w(function (_context22) {
         while (1) switch (_context22.p = _context22.n) {
           case 0:
@@ -10740,7 +10920,7 @@ function AgendaVisita(_ref45) {
             break;
           case 4:
             _context22.p = 4;
-            _t19 = _context22.v;
+            _t25 = _context22.v;
             setSaved(true);
           case 5:
             setSaving(false);
@@ -11201,7 +11381,7 @@ function AlertaRegiao(_ref46) {
           var _meta$cidade;
           var meta = JSON.parse(m.meta || "{}");
           return ((_meta$cidade = meta.cidade) === null || _meta$cidade === void 0 ? void 0 : _meta$cidade.toLowerCase()) === (cidade === null || cidade === void 0 ? void 0 : cidade.toLowerCase()) || meta.estado === estado;
-        } catch (_unused10) {
+        } catch (_unused0) {
           return false;
         }
       });
@@ -11292,7 +11472,7 @@ function useSeguirLugar(lugarNome, userId) {
     try {
       var saved = JSON.parse(localStorage.getItem("tn_lugares_seguidos") || "[]");
       setSeguindo(saved.includes(lugarNome));
-    } catch (_unused11) {}
+    } catch (_unused1) {}
   }, [lugarNome, userId]);
   function toggleSeguir() {
     return _toggleSeguir.apply(this, arguments);
@@ -11317,7 +11497,7 @@ function useSeguirLugar(lugarNome, userId) {
               }) : [].concat(_toConsumableArray(saved), [lugarNome]);
               localStorage.setItem("tn_lugares_seguidos", JSON.stringify(novo));
               setSeguindo(!seguindo);
-            } catch (_unused12) {}
+            } catch (_unused10) {}
             setLoading(false);
           case 2:
             return _context23.a(2);
@@ -11355,7 +11535,7 @@ function CapsulaPerfil(_ref48) {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas[index] = _objectSpread(_objectSpread({}, capsulas[index]), f);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused13) {}
+    } catch (_unused11) {}
     setEditando(false);
   }
   function cancelarCapsula() {
@@ -11363,7 +11543,7 @@ function CapsulaPerfil(_ref48) {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas.splice(index, 1);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused14) {}
+    } catch (_unused12) {}
   }
   return /*#__PURE__*/React.createElement("div", {
     style: {
@@ -11671,7 +11851,7 @@ function PerfilLugar(_ref49) {
     var meta = {};
     try {
       meta = JSON.parse(a.meta || "{}");
-    } catch (_unused15) {}
+    } catch (_unused13) {}
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       style: {
@@ -11870,7 +12050,7 @@ function App() {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
-      } catch (_unused16) {
+      } catch (_unused14) {
         return null;
       }
     }),
@@ -11924,7 +12104,7 @@ function App() {
     }
     function _init() {
       _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25() {
-        var _yield$db$auth$getSes, session, _yield$db$from$select4, data, local, u, updated, _local, _u, _yield$db$from$select5, _data2, _t20, _t21;
+        var _yield$db$auth$getSes, session, _yield$db$from$select4, data, local, u, updated, _local, _u, _yield$db$from$select5, _data2, _t26, _t27;
         return _regenerator().w(function (_context25) {
           while (1) switch (_context25.p = _context25.n) {
             case 0:
@@ -11949,7 +12129,7 @@ function App() {
               setUser(data);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(data));
-              } catch (_unused19) {}
+              } catch (_unused17) {}
               return _context25.a(2);
             case 3:
               // Vincula perfil local ao auth se existir
@@ -11975,13 +12155,13 @@ function App() {
               setUser(updated);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(updated));
-              } catch (_unused20) {}
+              } catch (_unused18) {}
             case 6:
               _context25.n = 8;
               break;
             case 7:
               _context25.p = 7;
-              _t20 = _context25.v;
+              _t26 = _context25.v;
             case 8:
               _context25.n = 14;
               break;
@@ -12007,14 +12187,14 @@ function App() {
                 setUser(_data2);
                 try {
                   localStorage.setItem("tn_user", JSON.stringify(_data2));
-                } catch (_unused22) {}
+                } catch (_unused20) {}
               }
             case 12:
               _context25.n = 14;
               break;
             case 13:
               _context25.p = 13;
-              _t21 = _context25.v;
+              _t27 = _context25.v;
             case 14:
               return _context25.a(2);
           }
@@ -12033,7 +12213,7 @@ function App() {
                   setUser(null);
                   try {
                     localStorage.removeItem("tn_user");
-                  } catch (_unused17) {}
+                  } catch (_unused15) {}
                 }
                 if (!(event === "SIGNED_IN" && session !== null && session !== void 0 && session.user)) {
                   _context24.n = 2;
@@ -12048,14 +12228,14 @@ function App() {
                   setUser(data);
                   try {
                     localStorage.setItem("tn_user", JSON.stringify(data));
-                  } catch (_unused18) {}
+                  } catch (_unused16) {}
                 }
               case 2:
                 return _context24.a(2);
             }
           }, _callee24);
         }));
-        return function (_x10, _x11) {
+        return function (_x15, _x16) {
           return _ref54.apply(this, arguments);
         };
       }()),
@@ -12070,13 +12250,13 @@ function App() {
     try {
       var c = localStorage.getItem("tn_contacts");
       if (c) setContacts(JSON.parse(c));
-    } catch (_unused24) {}
+    } catch (_unused22) {}
   }, []);
   function salvar(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused25) {}
+    } catch (_unused23) {}
     setTela("perfil");
   }
   function addContact(p) {
@@ -12090,7 +12270,7 @@ function App() {
     setContacts(updated);
     try {
       localStorage.setItem("tn_contacts", JSON.stringify(updated));
-    } catch (_unused26) {}
+    } catch (_unused24) {}
   }
   function updateContactRel(id, rel) {
     var updated = contacts.map(function (c) {
@@ -12101,7 +12281,7 @@ function App() {
     setContacts(updated);
     try {
       localStorage.setItem("tn_contacts", JSON.stringify(updated));
-    } catch (_unused27) {}
+    } catch (_unused25) {}
   }
   function enviar(cid, msg) {
     setMsgs(function (prev) {
@@ -12125,14 +12305,14 @@ function App() {
     setAuthSession(null);
     try {
       localStorage.removeItem("tn_user");
-    } catch (_unused28) {}
+    } catch (_unused26) {}
     db.auth.signOut();
   }
   function updateUser(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused29) {}
+    } catch (_unused27) {}
   }
   var isContact = function isContact(p) {
     return !!contacts.find(function (c) {
@@ -12456,7 +12636,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused30) {}
+      } catch (_unused28) {}
       ;
       setShowAdicionarLugar(false);
     }
@@ -12470,7 +12650,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused31) {}
+      } catch (_unused29) {}
     }
   }), showReencontrar && /*#__PURE__*/React.createElement(ModalReencontrar, {
     onClose: function onClose() {
