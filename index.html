@@ -179,6 +179,8 @@ var T = {
   accentBg: "rgba(193,126,58,0.1)",
   blue: "#42A5F5",
   blueBg: "rgba(66,165,245,0.08)",
+  blueStrong: "#1E88E5",
+  blueDk: "#0C447C",
   green: "#66BB6A",
   greenBg: "rgba(102,187,106,0.08)",
   purple: "#9575CD",
@@ -470,18 +472,73 @@ function Logo(_ref) {
   }, "O tempo no seu lugar")));
 }
 
+// ── Logo Nova: [T]empnex[T] ────────────────────────────────────
+function LogoNova(_ref2) {
+  var _ref2$size = _ref2.size,
+    size = _ref2$size === void 0 ? 120 : _ref2$size;
+  var H = size * 0.28;
+  var boxW = size * 0.28,
+    boxH = size * 0.28;
+  var rx = size * 0.067;
+  var tSize = size * 0.20;
+  var nameSize = size * 0.175;
+  return /*#__PURE__*/React.createElement("svg", {
+    width: size,
+    height: H,
+    viewBox: "0 0 ".concat(size, " ").concat(H),
+    style: {
+      display: "block"
+    }
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "0",
+    y: "0",
+    width: boxW,
+    height: boxH,
+    rx: rx,
+    fill: T.accent
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: size - boxW,
+    y: "0",
+    width: boxW,
+    height: boxH,
+    rx: rx,
+    fill: T.blueStrong
+  }), /*#__PURE__*/React.createElement("text", {
+    x: boxW * 0.2,
+    y: boxH * 0.78,
+    fontFamily: "Georgia,serif",
+    fontSize: tSize,
+    fontWeight: "500",
+    fill: "#FFFFFF"
+  }, "T"), /*#__PURE__*/React.createElement("text", {
+    x: size - boxW + boxW * 0.22,
+    y: boxH * 0.78,
+    fontFamily: "Georgia,serif",
+    fontSize: tSize,
+    fontWeight: "500",
+    fill: "#FFFFFF"
+  }, "T"), /*#__PURE__*/React.createElement("text", {
+    x: boxW * 0.78,
+    y: boxH * 0.78,
+    fontFamily: "Georgia,serif",
+    fontSize: nameSize,
+    fontWeight: "400",
+    fill: T.text
+  }, "empnex"));
+}
+
 // ── Base UI ───────────────────────────────────────────────────
-function Btn(_ref2) {
-  var children = _ref2.children,
-    _onClick = _ref2.onClick,
-    _ref2$variant = _ref2.variant,
-    variant = _ref2$variant === void 0 ? "primary" : _ref2$variant,
-    full = _ref2.full,
-    disabled = _ref2.disabled,
-    _ref2$size = _ref2.size,
-    size = _ref2$size === void 0 ? "md" : _ref2$size,
-    _ref2$style = _ref2.style,
-    style = _ref2$style === void 0 ? {} : _ref2$style;
+function Btn(_ref3) {
+  var children = _ref3.children,
+    _onClick = _ref3.onClick,
+    _ref3$variant = _ref3.variant,
+    variant = _ref3$variant === void 0 ? "primary" : _ref3$variant,
+    full = _ref3.full,
+    disabled = _ref3.disabled,
+    _ref3$size = _ref3.size,
+    size = _ref3$size === void 0 ? "md" : _ref3$size,
+    _ref3$style = _ref3.style,
+    style = _ref3$style === void 0 ? {} : _ref3$style;
   var s = {
     primary: {
       background: "linear-gradient(135deg,".concat(T.accent, ",").concat(T.accentDk, ")"),
@@ -543,11 +600,11 @@ function Btn(_ref2) {
     }, style)
   }, children);
 }
-function Avatar(_ref3) {
-  var name = _ref3.name,
-    src = _ref3.src,
-    _ref3$size = _ref3.size,
-    size = _ref3$size === void 0 ? 46 : _ref3$size;
+function Avatar(_ref4) {
+  var name = _ref4.name,
+    src = _ref4.src,
+    _ref4$size = _ref4.size,
+    size = _ref4$size === void 0 ? 46 : _ref4$size;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       width: size,
@@ -574,8 +631,8 @@ function Avatar(_ref3) {
     }
   }) : initials(name || "?"));
 }
-function Lbl(_ref4) {
-  var children = _ref4.children;
+function Lbl(_ref5) {
+  var children = _ref5.children;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 11,
@@ -587,9 +644,9 @@ function Lbl(_ref4) {
     }
   }, children);
 }
-function Spinner(_ref5) {
-  var _ref5$size = _ref5.size,
-    size = _ref5$size === void 0 ? 18 : _ref5$size;
+function Spinner(_ref6) {
+  var _ref6$size = _ref6.size,
+    size = _ref6$size === void 0 ? 18 : _ref6$size;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       width: size,
@@ -604,13 +661,13 @@ function Spinner(_ref5) {
 }
 
 // ── Big Profile Card (like mockup) ────────────────────────────
-function BigCard(_ref6) {
-  var p = _ref6.p,
-    onView = _ref6.onView,
-    onAdd = _ref6.onAdd,
-    isContact = _ref6.isContact,
-    _ref6$delay = _ref6.delay,
-    delay = _ref6$delay === void 0 ? 0 : _ref6$delay;
+function BigCard(_ref7) {
+  var p = _ref7.p,
+    onView = _ref7.onView,
+    onAdd = _ref7.onAdd,
+    isContact = _ref7.isContact,
+    _ref7$delay = _ref7.delay,
+    delay = _ref7$delay === void 0 ? 0 : _ref7$delay;
   var era = eraInfo(p.era || "passado");
   var hasPhoto = !!p.avatar_url;
   return /*#__PURE__*/React.createElement("div", {
@@ -809,9 +866,9 @@ function BigCard(_ref6) {
 }
 
 // ── Modal: Reencontrar ────────────────────────────────────────
-function ModalReencontrar(_ref7) {
-  var onClose = _ref7.onClose,
-    onBuscar = _ref7.onBuscar;
+function ModalReencontrar(_ref8) {
+  var onClose = _ref8.onClose,
+    onBuscar = _ref8.onBuscar;
   var _useState = useState("pessoas"),
     _useState2 = _slicedToArray(_useState, 2),
     tipo = _useState2[0],
@@ -1005,9 +1062,9 @@ function ModalReencontrar(_ref7) {
 }
 
 // ── Feed de Momentos ─────────────────────────────────────────
-function MomentosFeed(_ref8) {
-  var user = _ref8.user,
-    onView = _ref8.onView;
+function MomentosFeed(_ref9) {
+  var user = _ref9.user,
+    onView = _ref9.onView;
   var _useState7 = useState([]),
     _useState8 = _slicedToArray(_useState7, 2),
     momentos = _useState8[0],
@@ -1019,8 +1076,8 @@ function MomentosFeed(_ref8) {
   useEffect(function () {
     db.from("momentos").select("*").order("ts", {
       ascending: false
-    }).limit(10).then(function (_ref9) {
-      var data = _ref9.data;
+    }).limit(10).then(function (_ref0) {
+      var data = _ref0.data;
       setMomentos(data || []);
       setLoading(false);
     })["catch"](function () {
@@ -1113,16 +1170,17 @@ function MomentosFeed(_ref8) {
 }
 
 // ── Screen: Início ────────────────────────────────────────────
-function Inicio(_ref0) {
+function Inicio(_ref1) {
   var _user$intencao;
-  var user = _ref0.user,
-    onCadastrar = _ref0.onCadastrar,
-    onBuscar = _ref0.onBuscar,
-    onOlhar = _ref0.onOlhar,
-    onPerfil = _ref0.onPerfil,
-    onView = _ref0.onView,
-    onAdd = _ref0.onAdd,
-    contacts = _ref0.contacts;
+  var user = _ref1.user,
+    onCadastrar = _ref1.onCadastrar,
+    onBuscar = _ref1.onBuscar,
+    onOlhar = _ref1.onOlhar,
+    onPerfil = _ref1.onPerfil,
+    onMomento = _ref1.onMomento,
+    onView = _ref1.onView,
+    onAdd = _ref1.onAdd,
+    contacts = _ref1.contacts;
   var _useState1 = useState([]),
     _useState10 = _slicedToArray(_useState1, 2),
     profiles = _useState10[0],
@@ -1134,8 +1192,8 @@ function Inicio(_ref0) {
   useEffect(function () {
     db.from("profiles").select("*").order("created_at", {
       ascending: false
-    }).limit(20).then(function (_ref1) {
-      var data = _ref1.data;
+    }).limit(40).then(function (_ref10) {
+      var data = _ref10.data;
       setProfiles(data || []);
       setLoading(false);
     })["catch"](function () {
@@ -1146,79 +1204,133 @@ function Inicio(_ref0) {
     return c.id;
   }));
 
-  // Ordena perfis por relevância baseado na intenção do usuário
-  var profilesOrdenados = (user === null || user === void 0 || (_user$intencao = user.intencao) === null || _user$intencao === void 0 ? void 0 : _user$intencao.length) > 0 ? _toConsumableArray(profiles).sort(function (a, b) {
+  // ── Derivações a partir de dados reais ────────────────────
+  // Número de conexões do usuário
+  var totalConexoes = contacts.length;
+
+  // Lugares conectados: cidade principal + lugares extras do user, únicos
+  var lugaresDoUser = user ? function () {
+    var lista = [];
+    if (user.city) lista.push({
+      city: user.city,
+      uf: user.state || ""
+    });
+    (user.lugares || []).forEach(function (l) {
+      if (l.city) lista.push({
+        city: l.city,
+        uf: l.uf || ""
+      });
+    });
+    // dedupe por cidade+uf
+    var seen = new Set();
+    return lista.filter(function (l) {
+      var k = (l.city + "|" + l.uf).toLowerCase();
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }() : [];
+  var totalLugares = lugaresDoUser.length;
+
+  // Pessoas em alta: ordena perfis por relevância (se user tem intenção) ou recência, pega top 8, exclui o próprio user
+  var profilesSemUser = profiles.filter(function (p) {
+    return !user || p.id !== user.id;
+  });
+  var pessoasEmAlta = ((user === null || user === void 0 || (_user$intencao = user.intencao) === null || _user$intencao === void 0 ? void 0 : _user$intencao.length) > 0 ? _toConsumableArray(profilesSemUser).sort(function (a, b) {
     return calcularRelevancia(b, user) - calcularRelevancia(a, user);
-  }) : profiles;
-  var futuros = profilesOrdenados.filter(function (p) {
-    return p.era === "futuro";
-  });
-  var recentes = profilesOrdenados.filter(function (p) {
-    return p.era !== "futuro";
-  });
+  }) : profilesSemUser).slice(0, 8);
+
+  // Lugares em alta: agrupa profiles por cidade, conta e ordena
+  var lugaresEmAlta = function () {
+    var mapa = {};
+    profiles.forEach(function (p) {
+      if (!p.city) return;
+      var k = (p.city + "|" + (p.state || "")).toLowerCase();
+      if (!mapa[k]) mapa[k] = {
+        city: p.city,
+        uf: p.state || "",
+        total: 0
+      };
+      mapa[k].total++;
+    });
+    return Object.values(mapa).sort(function (a, b) {
+      return b.total - a.total;
+    }).slice(0, 6);
+  }();
+
+  // ── Primeiros avatares de conexões para empilhar no card ──
+  var miniConexoes = contacts.slice(0, 3);
   return /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "0 18px 100px"
+      padding: "0 0 120px"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      paddingTop: 52,
-      paddingBottom: 24
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
+      padding: "48px 18px 16px",
       display: "flex",
-      justifyContent: "space-between",
-      alignItems: "flex-start"
+      alignItems: "center",
+      justifyContent: "space-between"
     }
-  }, /*#__PURE__*/React.createElement(Logo, {
-    size: "lg"
+  }, /*#__PURE__*/React.createElement(LogoNova, {
+    size: 126
   }), user ? /*#__PURE__*/React.createElement("div", {
     onClick: onPerfil,
     style: {
-      display: "flex",
-      alignItems: "center",
-      gap: 8,
-      background: "#fff",
-      border: "1px solid ".concat(T.border),
-      borderRadius: 40,
-      padding: "7px 12px 7px 7px",
+      position: "relative",
       cursor: "pointer",
-      boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
-      transition: "box-shadow .15s",
-      flexShrink: 0,
-      marginLeft: 12
-    },
-    onMouseEnter: function onMouseEnter(e) {
-      return e.currentTarget.style.boxShadow = "0 4px 16px rgba(193,126,58,0.18)";
-    },
-    onMouseLeave: function onMouseLeave(e) {
-      return e.currentTarget.style.boxShadow = "0 2px 10px rgba(0,0,0,0.06)";
-    }
-  }, /*#__PURE__*/React.createElement(Avatar, {
-    name: user.name,
-    src: user.avatar_url,
-    size: 30
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 80
+      flexShrink: 0
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 12,
-      fontWeight: 700,
-      color: T.text,
+      width: 42,
+      height: 42,
+      borderRadius: "50%",
       overflow: "hidden",
-      textOverflow: "ellipsis",
-      whiteSpace: "nowrap"
+      border: "2px solid #fff",
+      boxShadow: "0 0 0 1.5px ".concat(T.accent),
+      background: "linear-gradient(135deg,".concat(T.accentBg, ",rgba(193,126,58,0.25))"),
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: 16,
+      fontWeight: 700,
+      color: T.accentDk,
+      fontFamily: "Georgia,serif"
     }
-  }, user.name.split(" ")[0]), /*#__PURE__*/React.createElement("div", {
+  }, user.avatar_url ? /*#__PURE__*/React.createElement("img", {
+    src: user.avatar_url,
+    alt: "",
     style: {
-      fontSize: 10,
-      color: T.muted,
-      marginTop: 1
+      width: "100%",
+      height: "100%",
+      objectFit: "cover"
     }
-  }, "Ver perfil"))) : /*#__PURE__*/React.createElement("button", {
+  }) : initials(user.name || "?")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      bottom: -3,
+      right: -3,
+      width: 18,
+      height: 18,
+      borderRadius: "50%",
+      background: "#fff",
+      border: "1.3px solid ".concat(T.accent),
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    },
+    title: "C\xE1psula do tempo"
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "9",
+    height: "11",
+    viewBox: "0 0 11 13",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M2 1h7M2 12h7M3 1v2.5c0 1.2 2 2 2 2.5s-2 1.3-2 2.5V12M8 1v2.5c0 1.2-2 2-2 2.5s2 1.3 2 2.5V12",
+    stroke: T.accent,
+    strokeWidth: "1.3",
+    strokeLinecap: "round"
+  })))) : /*#__PURE__*/React.createElement("button", {
     onClick: onCadastrar,
     style: {
       background: "linear-gradient(135deg,".concat(T.accent, ",").concat(T.accentDk, ")"),
@@ -1232,243 +1344,525 @@ function Inicio(_ref0) {
       fontFamily: "inherit",
       boxShadow: "0 2px 10px rgba(193,126,58,0.3)",
       flexShrink: 0,
-      whiteSpace: "nowrap",
-      marginLeft: 12
+      whiteSpace: "nowrap"
     }
-  }, "Criar perfil")), /*#__PURE__*/React.createElement("div", {
+  }, "Criar perfil")), user && /*#__PURE__*/React.createElement("div", {
+    onClick: onPerfil,
     style: {
-      marginTop: 20
-    }
-  }, user ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 17,
-      fontWeight: 600,
-      color: T.text
-    }
-  }, "Ol\xE1, ", user.name.split(" ")[0]) : /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 20,
-      fontWeight: 700,
-      color: T.text
-    }
-  }, "Bem-vindo"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 14,
-      color: T.muted,
-      marginTop: 3
-    }
-  }, "O tempo que aproxima")), /*#__PURE__*/React.createElement("div", {
-    style: {
+      margin: "0 16px 16px",
+      padding: "14px 16px",
       background: "#fff",
-      borderRadius: 16,
+      borderRadius: 18,
       border: "1px solid ".concat(T.border),
-      padding: "12px 14px",
-      marginTop: 16,
-      marginBottom: 4
+      cursor: "pointer",
+      transition: "box-shadow .15s"
+    },
+    onMouseEnter: function onMouseEnter(e) {
+      return e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.06)";
+    },
+    onMouseLeave: function onMouseLeave(e) {
+      return e.currentTarget.style.boxShadow = "none";
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
+      fontSize: 10,
+      color: T.muted,
+      letterSpacing: "0.12em",
+      textTransform: "uppercase",
+      marginBottom: 10,
+      fontWeight: 700
+    }
+  }, "Suas conex\xF5es"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "baseline",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "Georgia,serif",
+      fontSize: 34,
+      fontWeight: 400,
+      color: T.accent,
+      lineHeight: 1,
+      letterSpacing: "-0.02em"
+    }
+  }, totalConexoes), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: T.muted
+    }
+  }, "pessoas")), miniConexoes.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      marginTop: 8,
+      alignItems: "center"
+    }
+  }, miniConexoes.map(function (c, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: c.id || i,
+      style: {
+        width: 18,
+        height: 18,
+        borderRadius: "50%",
+        border: "1.5px solid #fff",
+        marginLeft: i === 0 ? 0 : -6,
+        overflow: "hidden",
+        background: "linear-gradient(135deg,".concat(T.accentBg, ",rgba(193,126,58,0.25))"),
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 8,
+        fontWeight: 700,
+        color: T.accentDk
+      }
+    }, c.avatar_url ? /*#__PURE__*/React.createElement("img", {
+      src: c.avatar_url,
+      alt: "",
+      style: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover"
+      }
+    }) : initials(c.name || "?"));
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 1,
+      height: 48,
+      background: T.border,
+      margin: "0 6px"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      paddingLeft: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "baseline",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "Georgia,serif",
+      fontSize: 34,
+      fontWeight: 400,
+      color: T.blueStrong,
+      lineHeight: 1,
+      letterSpacing: "-0.02em"
+    }
+  }, totalLugares), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "#8CA8C4"
+    }
+  }, totalLugares === 1 ? "lugar" : "lugares")), lugaresDoUser.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      display: "flex",
+      gap: 4,
+      flexWrap: "wrap",
+      alignItems: "center"
+    }
+  }, lugaresDoUser.slice(0, 2).map(function (l, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        fontSize: 9,
+        color: T.blueStrong,
+        background: "#E6F1FB",
+        padding: "2px 6px",
+        borderRadius: 4,
+        whiteSpace: "nowrap",
+        maxWidth: 80,
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+      }
+    }, l.city);
+  }), lugaresDoUser.length > 2 && /*#__PURE__*/React.createElement("div", {
+    style: {
       fontSize: 9,
+      color: "#8CA8C4"
+    }
+  }, "+", lugaresDoUser.length - 2))))), !user && /*#__PURE__*/React.createElement("div", {
+    style: {
+      margin: "0 16px 16px",
+      padding: "20px 16px",
+      background: "#fff",
+      borderRadius: 18,
+      border: "1px solid ".concat(T.border),
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 15,
+      fontWeight: 600,
+      color: T.text,
+      marginBottom: 4
+    }
+  }, "Bem-vindo ao Tempnext"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: T.muted,
+      marginBottom: 14
+    }
+  }, "Crie seu perfil e encontre quem viveu onde voc\xEA viveu."), /*#__PURE__*/React.createElement(Btn, {
+    onClick: onCadastrar,
+    full: true
+  }, "Criar meu perfil")), pessoasEmAlta.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
       fontWeight: 700,
       color: T.muted,
+      letterSpacing: "0.14em",
       textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      marginBottom: 10
-    }
-  }, "A\xE7\xF5es r\xE1pidas"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
+      margin: "0 20px 10px",
+      display: "flex",
+      alignItems: "center",
       gap: 8
     }
   }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 14,
+      height: 1,
+      background: T.borderMd
+    }
+  }), "Pessoas em alta"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      padding: "0 16px",
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch"
+    }
+  }, pessoasEmAlta.map(function (p, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: p.id || i,
+      onClick: function onClick() {
+        return onView && onView(p);
+      },
+      style: {
+        flexShrink: 0,
+        textAlign: "center",
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 72,
+        height: 72,
+        borderRadius: 18,
+        overflow: "hidden",
+        position: "relative",
+        boxShadow: i === 0 ? "0 0 0 1.5px ".concat(T.accent) : "none",
+        background: "linear-gradient(135deg,".concat(T.accentBg, ",rgba(193,126,58,0.25))"),
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 22,
+        fontWeight: 700,
+        color: T.accentDk,
+        fontFamily: "Georgia,serif"
+      }
+    }, p.avatar_url ? /*#__PURE__*/React.createElement("img", {
+      src: p.avatar_url,
+      alt: "",
+      style: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover"
+      }
+    }) : initials(p.name || "?"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        inset: 0,
+        background: "linear-gradient(to top,rgba(0,0,0,0.6) 0%,transparent 55%)"
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        bottom: 4,
+        left: 5,
+        right: 5,
+        fontSize: 9,
+        color: "#fff",
+        fontWeight: 600,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+      }
+    }, (p.name || "").split(" ")[0])), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        color: T.muted,
+        marginTop: 3,
+        maxWidth: 72,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+      }
+    }, p.city || "—"));
+  }))), lugaresEmAlta.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontWeight: 700,
+      color: T.muted,
+      letterSpacing: "0.14em",
+      textTransform: "uppercase",
+      margin: "0 20px 10px",
+      display: "flex",
+      alignItems: "center",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 14,
+      height: 1,
+      background: T.borderMd
+    }
+  }), "Lugares em alta"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      padding: "0 16px",
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch"
+    }
+  }, lugaresEmAlta.map(function (l, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        flexShrink: 0,
+        textAlign: "center",
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 110,
+        height: 72,
+        borderRadius: 14,
+        position: "relative",
+        overflow: "hidden",
+        background: "linear-gradient(135deg,#C9E2F8,".concat(T.blueStrong, ")"),
+        boxShadow: i === 0 ? "0 0 0 1.5px ".concat(T.blueStrong) : "none",
+        display: "flex",
+        alignItems: "flex-end",
+        padding: 8
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      style: {
+        position: "absolute",
+        top: 8,
+        left: 8,
+        opacity: 0.85
+      }
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M12 2a8 8 0 018 8c0 6-8 12-8 12S4 16 4 10a8 8 0 018-8z",
+      stroke: "#fff",
+      strokeWidth: "1.8"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "12",
+      cy: "10",
+      r: "3",
+      stroke: "#fff",
+      strokeWidth: "1.8"
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        inset: 0,
+        background: "linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 55%)"
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "relative",
+        zIndex: 1,
+        color: "#fff",
+        fontSize: 11,
+        fontWeight: 600,
+        lineHeight: 1.2,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        width: "100%"
+      }
+    }, l.city)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        color: T.muted,
+        marginTop: 3
+      }
+    }, l.total, " ", l.total === 1 ? "pessoa" : "pessoas"));
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0 16px"
+    }
+  }, /*#__PURE__*/React.createElement(MomentosFeed, {
+    user: user,
+    onView: onView
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "12px 14px 0",
+      display: "flex",
+      gap: 8,
+      alignItems: "stretch"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: onBuscar,
+    style: {
+      flex: 1,
+      height: 62,
+      borderRadius: 18,
+      background: "#fff",
+      border: "1px solid ".concat(T.border),
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 3,
+      fontFamily: "inherit"
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "22",
+    height: "22",
+    viewBox: "0 0 24 24",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "7",
+    stroke: T.accent,
+    strokeWidth: "1.8"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 16l5 5",
+    stroke: T.accent,
+    strokeWidth: "1.8",
+    strokeLinecap: "round"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontWeight: 700,
+      color: T.sub
+    }
+  }, "Buscar")), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       if (!user) {
         onCadastrar();
         return;
       }
+      if (onMomento) onMomento();
     },
     style: {
-      background: "linear-gradient(135deg,".concat(T.accent, ",").concat(T.accentDk, ")"),
-      borderRadius: 12,
-      padding: "12px",
-      textAlign: "center",
-      cursor: "pointer"
+      flex: 1,
+      height: 62,
+      borderRadius: 18,
+      background: "#fff",
+      border: "1px solid ".concat(T.border),
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 3,
+      fontFamily: "inherit"
     }
   }, /*#__PURE__*/React.createElement("svg", {
-    width: "22",
-    height: "22",
-    viewBox: "0 0 22 22",
-    fill: "none",
-    style: {
-      display: "block",
-      margin: "0 auto 4px"
-    }
+    width: "24",
+    height: "24",
+    viewBox: "0 0 24 24",
+    fill: "none"
   }, /*#__PURE__*/React.createElement("rect", {
-    x: "2",
-    y: "5",
+    x: "3",
+    y: "6",
     width: "18",
     height: "14",
     rx: "3",
-    stroke: "#fff",
-    strokeWidth: "1.6"
+    stroke: T.accent,
+    strokeWidth: "1.8"
   }), /*#__PURE__*/React.createElement("circle", {
-    cx: "11",
-    cy: "12",
+    cx: "12",
+    cy: "13",
     r: "3.5",
-    stroke: "#fff",
-    strokeWidth: "1.6"
+    stroke: T.accent,
+    strokeWidth: "1.8"
   }), /*#__PURE__*/React.createElement("path", {
-    d: "M8 5l1.5-2h3L14 5",
-    stroke: "#fff",
-    strokeWidth: "1.4",
+    d: "M8 6l1.5-2h5L16 6",
+    stroke: T.accent,
+    strokeWidth: "1.6",
     strokeLinecap: "round"
   })), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 11,
+      fontSize: 10,
       fontWeight: 700,
-      color: "#fff"
+      color: T.sub
     }
-  }, "Novo momento")), /*#__PURE__*/React.createElement("div", {
+  }, "Momento")), /*#__PURE__*/React.createElement("button", {
     onClick: onOlhar,
     style: {
-      background: "linear-gradient(135deg,".concat(T.blue, ",#1565C0)"),
-      borderRadius: 12,
-      padding: "12px",
-      textAlign: "center",
-      cursor: "pointer"
+      flex: 1.6,
+      height: 62,
+      borderRadius: 20,
+      background: "linear-gradient(135deg,".concat(T.accent, ",").concat(T.accentDk, ")"),
+      border: "none",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      boxShadow: "0 4px 14px rgba(193,126,58,0.35)",
+      fontFamily: "inherit"
     }
   }, /*#__PURE__*/React.createElement("svg", {
     width: "22",
     height: "22",
-    viewBox: "0 0 22 22",
-    fill: "none",
-    style: {
-      display: "block",
-      margin: "0 auto 4px"
-    }
+    viewBox: "0 0 24 24",
+    fill: "none"
   }, /*#__PURE__*/React.createElement("circle", {
-    cx: "8",
-    cy: "8",
-    r: "4",
+    cx: "12",
+    cy: "12",
+    r: "8",
     stroke: "#fff",
-    strokeWidth: "1.6"
+    strokeWidth: "2"
   }), /*#__PURE__*/React.createElement("circle", {
-    cx: "15",
-    cy: "8",
-    r: "4",
-    stroke: "#fff",
-    strokeWidth: "1.6"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M2 19a6 6 0 0112 0",
-    stroke: "#fff",
-    strokeWidth: "1.6",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M13 16a6 6 0 016 6",
-    stroke: "#fff",
-    strokeWidth: "1.6",
-    strokeLinecap: "round"
-  })), /*#__PURE__*/React.createElement("div", {
+    cx: "12",
+    cy: "12",
+    r: "3",
+    fill: "#fff"
+  })), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 11,
+      fontSize: 14,
       fontWeight: 700,
       color: "#fff"
     }
-  }, "Olhar"))))), user && /*#__PURE__*/React.createElement(MemoriaDoDia, {
-    user: user,
-    contacts: contacts,
-    onView: onView
-  }), user && /*#__PURE__*/React.createElement(QuemPassouPorAqui, {
-    user: user
-  }), (user === null || user === void 0 ? void 0 : user.city) && /*#__PURE__*/React.createElement(AlertaRegiao, {
-    cidade: user.city,
-    estado: user.state,
-    user: user
-  }), user && /*#__PURE__*/React.createElement(PerguntaComunidade, {
-    user: user
-  }), /*#__PURE__*/React.createElement(MomentosFeed, {
-    user: user,
-    onView: onView
-  }), futuros.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, "Olhar"))), loading && profiles.length === 0 && /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 8
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      fontWeight: 700,
-      color: T.green,
-      letterSpacing: "0.06em",
-      textTransform: "uppercase",
-      marginBottom: 14,
-      display: "flex",
-      alignItems: "center",
-      gap: 6
-    }
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCC5"), " Reencontros planejados"), futuros.map(function (p, i) {
-    return /*#__PURE__*/React.createElement(BigCard, {
-      key: p.id,
-      p: p,
-      onView: onView,
-      onAdd: onAdd,
-      isContact: contactIds.has(p.id),
-      delay: i * 40
-    });
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      fontWeight: 700,
-      color: T.muted,
-      letterSpacing: "0.06em",
-      textTransform: "uppercase",
-      marginBottom: 14,
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement("span", null, "Perfis recentes"), !loading && /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontWeight: 500,
-      fontSize: 12
-    }
-  }, profiles.length, " pessoas")), loading ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "40px",
+      padding: "24px",
       textAlign: "center"
     }
   }, /*#__PURE__*/React.createElement(Spinner, {
-    size: 28
-  })) : recentes.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: T.surface,
-      borderRadius: 18,
-      padding: "40px 20px",
-      textAlign: "center",
-      border: "1px solid ".concat(T.border)
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 14,
-      color: T.muted,
-      lineHeight: 1.9
-    }
-  }, "Nenhum perfil ainda.", /*#__PURE__*/React.createElement("br", null), "Seja o primeiro!"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 16
-    }
-  }, /*#__PURE__*/React.createElement(Btn, {
-    onClick: onCadastrar
-  }, "Criar meu perfil"))) : recentes.map(function (p, i) {
-    return /*#__PURE__*/React.createElement(BigCard, {
-      key: p.id,
-      p: p,
-      onView: onView,
-      onAdd: onAdd,
-      isContact: contactIds.has(p.id),
-      delay: i * 50
-    });
-  }));
+    size: 24
+  })));
 }
 
 // ── Calcula relevância por intenção ──────────────────────────
@@ -1564,11 +1958,11 @@ function calcularRelevancia(perfil, user) {
 }
 
 // ── Screen: Buscar ────────────────────────────────────────────
-function Buscar(_ref10) {
+function Buscar(_ref11) {
   var _user;
-  var onView = _ref10.onView,
-    onAdd = _ref10.onAdd,
-    contacts = _ref10.contacts;
+  var onView = _ref11.onView,
+    onAdd = _ref11.onAdd,
+    contacts = _ref11.contacts;
   var _useState13 = useState(""),
     _useState14 = _slicedToArray(_useState13, 2),
     q = _useState14[0],
@@ -1891,9 +2285,9 @@ function Buscar(_ref10) {
 }
 
 // ── Componente: Adicionar Lugar ───────────────────────────────
-function NovoLugar(_ref11) {
-  var onAdd = _ref11.onAdd,
-    addrTimer = _ref11.addrTimer;
+function NovoLugar(_ref12) {
+  var onAdd = _ref12.onAdd,
+    addrTimer = _ref12.addrTimer;
   var _useState23 = useState(false),
     _useState24 = _slicedToArray(_useState23, 2),
     open = _useState24[0],
@@ -2303,7 +2697,7 @@ function NovoLugar(_ref11) {
     placeholder: "00000-000",
     value: d.cep,
     onChange: (/*#__PURE__*/function () {
-      var _ref12 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(e) {
+      var _ref13 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(e) {
         var val, digits, r, data, SM, logradouro, _t2;
         return _regenerator().w(function (_context2) {
           while (1) switch (_context2.p = _context2.n) {
@@ -2379,7 +2773,7 @@ function NovoLugar(_ref11) {
         }, _callee2, null, [[1, 4]]);
       }));
       return function (_x2) {
-        return _ref12.apply(this, arguments);
+        return _ref13.apply(this, arguments);
       };
     }())
   }))), /*#__PURE__*/React.createElement("div", {
@@ -2502,8 +2896,8 @@ function NovoLugar(_ref11) {
 }
 
 // ── Screen: Cadastrar ─────────────────────────────────────────
-function Cadastrar(_ref13) {
-  var onSave = _ref13.onSave;
+function Cadastrar(_ref14) {
+  var onSave = _ref14.onSave;
   var _useState27 = useState(false),
     _useState28 = _slicedToArray(_useState27, 2),
     saving = _useState28[0],
@@ -3606,16 +4000,16 @@ function Cadastrar(_ref13) {
 }
 
 // ── Screen: Contatos ─────────────────────────────────────────
-function Contatos(_ref14) {
+function Contatos(_ref15) {
   var _user$lugares;
-  var user = _ref14.user,
-    contacts = _ref14.contacts,
-    onChat = _ref14.onChat,
-    onAdd = _ref14.onAdd,
-    onUpdateRel = _ref14.onUpdateRel,
-    onRemove = _ref14.onRemove,
-    onCadastrar = _ref14.onCadastrar,
-    onBuscar = _ref14.onBuscar;
+  var user = _ref15.user,
+    contacts = _ref15.contacts,
+    onChat = _ref15.onChat,
+    onAdd = _ref15.onAdd,
+    onUpdateRel = _ref15.onUpdateRel,
+    onRemove = _ref15.onRemove,
+    onCadastrar = _ref15.onCadastrar,
+    onBuscar = _ref15.onBuscar;
   var _useState35 = useState("conectados"),
     _useState36 = _slicedToArray(_useState35, 2),
     aba = _useState36[0],
@@ -3659,8 +4053,8 @@ function Contatos(_ref14) {
     }))).join(",");
     db.from("profiles").select("*").neq("id", user.id).or(orFilter).order("created_at", {
       ascending: false
-    }).limit(50).then(function (_ref15) {
-      var data = _ref15.data;
+    }).limit(50).then(function (_ref16) {
+      var data = _ref16.data;
       setRegiaoProfiles(data || []);
       setLoadingRegiao(false);
     })["catch"](function () {
@@ -4184,10 +4578,10 @@ function Contatos(_ref14) {
 }
 
 // ── Modal: Editar Perfil ─────────────────────────────────────
-function ModalEditarPerfil(_ref16) {
-  var user = _ref16.user,
-    onClose = _ref16.onClose,
-    onSave = _ref16.onSave;
+function ModalEditarPerfil(_ref17) {
+  var user = _ref17.user,
+    onClose = _ref17.onClose,
+    onSave = _ref17.onSave;
   var _useState45 = useState(false),
     _useState46 = _slicedToArray(_useState45, 2),
     saving = _useState46[0],
@@ -4732,13 +5126,13 @@ function ModalEditarPerfil(_ref16) {
 }
 
 // ── Screen: Perfil ──────────────────────────────────────────
-function Perfil(_ref17) {
+function Perfil(_ref18) {
   var _user$lugares2, _user$intencao4, _user$intencao5, _user$lugares3, _user$interests, _user$curtia, _user$curtia2, _user$interests2, _user$curtia4, _user$interests6, _user$interests7;
-  var user = _ref17.user,
-    onLogout = _ref17.onLogout,
-    onCadastrar = _ref17.onCadastrar,
-    onUpdateUser = _ref17.onUpdateUser,
-    onLogin = _ref17.onLogin;
+  var user = _ref18.user,
+    onLogout = _ref18.onLogout,
+    onCadastrar = _ref18.onCadastrar,
+    onUpdateUser = _ref18.onUpdateUser,
+    onLogin = _ref18.onLogin;
   var _useState50 = useState(false),
     _useState51 = _slicedToArray(_useState50, 2),
     editando = _useState51[0],
@@ -5010,9 +5404,9 @@ function Perfil(_ref17) {
   }, {
     label: "Momentos",
     value: String(user._moments || 0)
-  }].map(function (_ref18, i, arr) {
-    var label = _ref18.label,
-      value = _ref18.value;
+  }].map(function (_ref19, i, arr) {
+    var label = _ref19.label,
+      value = _ref19.value;
     return /*#__PURE__*/React.createElement("div", {
       key: label,
       style: {
@@ -5347,10 +5741,10 @@ function Perfil(_ref17) {
       border: "1px solid ".concat(T.border),
       marginBottom: 12
     }
-  }, [["Município", "".concat(user.city, " \u2013 ").concat(user.state)], ["Local", user.place_name], ["Lugar", placeLabel(user.place_type)], ["Período", "".concat(user.year_start, " \u2013 ").concat(user.year_end)], (user.current_city || user.current_state) && ["Atualmente estou em", [user.current_city, user.current_state, user.current_country && user.current_country !== "Brasil" ? user.current_country : null].filter(Boolean).join(", ")]].filter(Boolean).map(function (_ref19, i, arr) {
-    var _ref20 = _slicedToArray(_ref19, 2),
-      l = _ref20[0],
-      v = _ref20[1];
+  }, [["Município", "".concat(user.city, " \u2013 ").concat(user.state)], ["Local", user.place_name], ["Lugar", placeLabel(user.place_type)], ["Período", "".concat(user.year_start, " \u2013 ").concat(user.year_end)], (user.current_city || user.current_state) && ["Atualmente estou em", [user.current_city, user.current_state, user.current_country && user.current_country !== "Brasil" ? user.current_country : null].filter(Boolean).join(", ")]].filter(Boolean).map(function (_ref20, i, arr) {
+    var _ref21 = _slicedToArray(_ref20, 2),
+      l = _ref21[0],
+      v = _ref21[1];
     return /*#__PURE__*/React.createElement("div", {
       key: l,
       style: {
@@ -5721,9 +6115,9 @@ function Perfil(_ref17) {
 }
 
 // ── Foto com curtida e comentário ────────────────────────────
-function FotoInterativa(_ref21) {
-  var src = _ref21.src,
-    user = _ref21.user;
+function FotoInterativa(_ref22) {
+  var src = _ref22.src,
+    user = _ref22.user;
   var _useState52 = useState(0),
     _useState53 = _slicedToArray(_useState52, 2),
     likes = _useState53[0],
@@ -5912,14 +6306,14 @@ function FotoInterativa(_ref21) {
 }
 
 // ── Modal: Ver Perfil ─────────────────────────────────────────
-function ModalPerfil(_ref22) {
+function ModalPerfil(_ref23) {
   var _p$photos;
-  var p = _ref22.p,
-    onClose = _ref22.onClose,
-    onAdd = _ref22.onAdd,
-    onChat = _ref22.onChat,
-    user = _ref22.user,
-    isContact = _ref22.isContact;
+  var p = _ref23.p,
+    onClose = _ref23.onClose,
+    onAdd = _ref23.onAdd,
+    onChat = _ref23.onChat,
+    user = _ref23.user,
+    isContact = _ref23.isContact;
   var era = eraInfo(p.era || "passado");
   return /*#__PURE__*/React.createElement("div", {
     className: "fi",
@@ -6080,10 +6474,10 @@ function ModalPerfil(_ref22) {
       overflow: "hidden",
       border: "1px solid ".concat(T.border)
     }
-  }, [["Local", p.place_name], ["Município", "".concat(p.city, " \u2013 ").concat(p.state)], ["Período", "".concat(p.year_start, " \u2013 ").concat(p.year_end)], ["Tipo", placeLabel(p.place_type)]].map(function (_ref23, i, arr) {
-    var _ref24 = _slicedToArray(_ref23, 2),
-      l = _ref24[0],
-      v = _ref24[1];
+  }, [["Local", p.place_name], ["Município", "".concat(p.city, " \u2013 ").concat(p.state)], ["Período", "".concat(p.year_start, " \u2013 ").concat(p.year_end)], ["Tipo", placeLabel(p.place_type)]].map(function (_ref24, i, arr) {
+    var _ref25 = _slicedToArray(_ref24, 2),
+      l = _ref25[0],
+      v = _ref25[1];
     return /*#__PURE__*/React.createElement("div", {
       key: l,
       style: {
@@ -6175,14 +6569,14 @@ function ModalPerfil(_ref22) {
 }
 
 // ── Modal: Chat ───────────────────────────────────────────────
-function ModalChat(_ref25) {
-  var user = _ref25.user,
-    dest = _ref25.dest,
-    _ref25$type = _ref25.type,
-    type = _ref25$type === void 0 ? "msg" : _ref25$type,
-    msgs = _ref25.msgs,
-    onSend = _ref25.onSend,
-    onClose = _ref25.onClose;
+function ModalChat(_ref26) {
+  var user = _ref26.user,
+    dest = _ref26.dest,
+    _ref26$type = _ref26.type,
+    type = _ref26$type === void 0 ? "msg" : _ref26$type,
+    msgs = _ref26.msgs,
+    onSend = _ref26.onSend,
+    onClose = _ref26.onClose;
   var _useState62 = useState(""),
     _useState63 = _slicedToArray(_useState62, 2),
     txt = _useState63[0],
@@ -6682,7 +7076,7 @@ function ModalChat(_ref25) {
     type: "file",
     accept: "image/*,video/*",
     onChange: (/*#__PURE__*/function () {
-      var _ref26 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1(e) {
+      var _ref27 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1(e) {
         var file, t, b64;
         return _regenerator().w(function (_context1) {
           while (1) switch (_context1.n) {
@@ -6708,7 +7102,7 @@ function ModalChat(_ref25) {
         }, _callee1);
       }));
       return function (_x8) {
-        return _ref26.apply(this, arguments);
+        return _ref27.apply(this, arguments);
       };
     }()),
     style: {
@@ -6803,14 +7197,14 @@ function ModalChat(_ref25) {
 }
 
 // ── Componente: Adicionar Outros ─────────────────────────────
-function AddOutro(_ref27) {
-  var placeholder = _ref27.placeholder,
-    onAdd = _ref27.onAdd,
-    onRemove = _ref27.onRemove,
-    _ref27$extras = _ref27.extras,
-    extras = _ref27$extras === void 0 ? [] : _ref27$extras,
-    color = _ref27.color,
-    bgColor = _ref27.bgColor;
+function AddOutro(_ref28) {
+  var placeholder = _ref28.placeholder,
+    onAdd = _ref28.onAdd,
+    onRemove = _ref28.onRemove,
+    _ref28$extras = _ref28.extras,
+    extras = _ref28$extras === void 0 ? [] : _ref28$extras,
+    color = _ref28.color,
+    bgColor = _ref28.bgColor;
   var _useState74 = useState(""),
     _useState75 = _slicedToArray(_useState74, 2),
     val = _useState75[0],
@@ -6901,10 +7295,10 @@ function AddOutro(_ref27) {
 }
 
 // ── Helpers layout ────────────────────────────────────────────
-function STitle(_ref28) {
-  var children = _ref28.children,
-    _ref28$style = _ref28.style,
-    style = _ref28$style === void 0 ? {} : _ref28$style;
+function STitle(_ref29) {
+  var children = _ref29.children,
+    _ref29$style = _ref29.style,
+    style = _ref29$style === void 0 ? {} : _ref29$style;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       paddingTop: 24,
@@ -6921,9 +7315,9 @@ function STitle(_ref28) {
     }, style)
   }, children));
 }
-function FRow(_ref29) {
-  var label = _ref29.label,
-    children = _ref29.children;
+function FRow(_ref30) {
+  var label = _ref30.label,
+    children = _ref30.children;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "14px 0",
@@ -7017,10 +7411,10 @@ function useRegionAlerts(user) {
 }
 
 // ── Componente: Banner de Alerta ──────────────────────────────
-function AlertaBanner(_ref30) {
-  var alerts = _ref30.alerts,
-    onDismiss = _ref30.onDismiss,
-    onView = _ref30.onView;
+function AlertaBanner(_ref31) {
+  var alerts = _ref31.alerts,
+    onDismiss = _ref31.onDismiss,
+    onView = _ref31.onView;
   if (!alerts || alerts.length === 0) return null;
   var first = alerts[0];
   var others = alerts.length - 1;
@@ -7125,10 +7519,10 @@ function AlertaBanner(_ref30) {
 }
 
 // ── Modal: Adicionar Lugar ────────────────────────────────────
-function ModalAdicionarLugar(_ref31) {
-  var user = _ref31.user,
-    onClose = _ref31.onClose,
-    onSave = _ref31.onSave;
+function ModalAdicionarLugar(_ref32) {
+  var user = _ref32.user,
+    onClose = _ref32.onClose,
+    onSave = _ref32.onSave;
   var _useState80 = useState({
       placeType: "escola",
       placeName: "",
@@ -7709,14 +8103,14 @@ function ModalAdicionarLugar(_ref31) {
 }
 
 // ── Modal: Menu Rápido (+) ────────────────────────────────────
-function MenuRapido(_ref32) {
-  var onClose = _ref32.onClose,
-    onNovoLugar = _ref32.onNovoLugar,
-    onNovaConversa = _ref32.onNovaConversa,
-    onMomento = _ref32.onMomento,
-    onCompartilhar = _ref32.onCompartilhar,
-    onAgendaVisita = _ref32.onAgendaVisita,
-    user = _ref32.user;
+function MenuRapido(_ref33) {
+  var onClose = _ref33.onClose,
+    onNovoLugar = _ref33.onNovoLugar,
+    onNovaConversa = _ref33.onNovaConversa,
+    onMomento = _ref33.onMomento,
+    onCompartilhar = _ref33.onCompartilhar,
+    onAgendaVisita = _ref33.onAgendaVisita,
+    user = _ref33.user;
   var acoes = [{
     icon: /*#__PURE__*/React.createElement("svg", {
       width: "22",
@@ -7985,11 +8379,11 @@ function MenuRapido(_ref32) {
 }
 
 // ── Modal: Registrar Momento ──────────────────────────────────
-function ModalMomento(_ref33) {
-  var user = _ref33.user,
-    onClose = _ref33.onClose,
-    onSave = _ref33.onSave,
-    onUpdateUser = _ref33.onUpdateUser;
+function ModalMomento(_ref34) {
+  var user = _ref34.user,
+    onClose = _ref34.onClose,
+    onSave = _ref34.onSave,
+    onUpdateUser = _ref34.onUpdateUser;
   var _useState86 = useState(""),
     _useState87 = _slicedToArray(_useState86, 2),
     texto = _useState87[0],
@@ -8417,9 +8811,9 @@ function ModalMomento(_ref33) {
 }
 
 // ── Tela de Login / Auth ──────────────────────────────────────
-function TelaLogin(_ref34) {
-  var onClose = _ref34.onClose,
-    onLoggedIn = _ref34.onLoggedIn;
+function TelaLogin(_ref35) {
+  var onClose = _ref35.onClose,
+    onLoggedIn = _ref35.onLoggedIn;
   var _useState102 = useState("opcoes"),
     _useState103 = _slicedToArray(_useState102, 2),
     modo = _useState103[0],
@@ -8911,11 +9305,11 @@ function useRegionNotifications(user, contacts) {
 }
 
 // ── Banner de Notificação ─────────────────────────────────────
-function BannerNotificacao(_ref35) {
+function BannerNotificacao(_ref36) {
   var _notif$profile;
-  var notif = _ref35.notif,
-    onDismiss = _ref35.onDismiss,
-    onView = _ref35.onView;
+  var notif = _ref36.notif,
+    onDismiss = _ref36.onDismiss,
+    onView = _ref36.onView;
   if (!notif) return null;
   var isAniv = notif.type === "aniversario";
   var bgColor = isAniv ? "linear-gradient(135deg,#7B5EA7,#5a3d8a)" : "linear-gradient(135deg,#C17E3A,#9A5F22)";
@@ -9043,9 +9437,9 @@ function BannerNotificacao(_ref35) {
 }
 
 // ── Cadastro Simples (3 passos) ──────────────────────────────
-function CadastroSimples(_ref36) {
-  var onDone = _ref36.onDone,
-    onLogin = _ref36.onLogin;
+function CadastroSimples(_ref37) {
+  var onDone = _ref37.onDone,
+    onLogin = _ref37.onLogin;
   var _useState114 = useState(0),
     _useState115 = _slicedToArray(_useState114, 2),
     step = _useState115[0],
@@ -9668,10 +10062,10 @@ function CadastroSimples(_ref36) {
 }
 
 // ── Tela de Curiosidade (antes do cadastro) ───────────────────
-function TelaCuriosidade(_ref37) {
-  var onCadastrar = _ref37.onCadastrar,
-    onLogin = _ref37.onLogin,
-    cidade = _ref37.cidade;
+function TelaCuriosidade(_ref38) {
+  var onCadastrar = _ref38.onCadastrar,
+    onLogin = _ref38.onLogin,
+    cidade = _ref38.cidade;
   var _useState120 = useState([]),
     _useState121 = _slicedToArray(_useState120, 2),
     profiles = _useState121[0],
@@ -9684,8 +10078,8 @@ function TelaCuriosidade(_ref37) {
     // Show teaser profiles - blurred
     db.from("profiles").select("id,name,first_name,avatar_url,city,state,year_start,year_end,era").order("created_at", {
       ascending: false
-    }).limit(6).then(function (_ref38) {
-      var data = _ref38.data;
+    }).limit(6).then(function (_ref39) {
+      var data = _ref39.data;
       setProfiles(data || []);
       setCount((data === null || data === void 0 ? void 0 : data.length) || 0);
     })["catch"](function () {});
@@ -9842,11 +10236,11 @@ function TelaCuriosidade(_ref37) {
 }
 
 // ── Memória do Dia (Stories 24h) ─────────────────────────────
-function MemoriaDoDia(_ref39) {
+function MemoriaDoDia(_ref40) {
   var _user$name2;
-  var user = _ref39.user,
-    contacts = _ref39.contacts,
-    onView = _ref39.onView;
+  var user = _ref40.user,
+    contacts = _ref40.contacts,
+    onView = _ref40.onView;
   var _useState124 = useState([]),
     _useState125 = _slicedToArray(_useState124, 2),
     memorias = _useState125[0],
@@ -10003,8 +10397,8 @@ function MemoriaDoDia(_ref39) {
 }
 
 // ── Quem Passou Por Aqui ──────────────────────────────────────
-function QuemPassouPorAqui(_ref40) {
-  var user = _ref40.user;
+function QuemPassouPorAqui(_ref41) {
+  var user = _ref41.user;
   var _useState126 = useState(0),
     _useState127 = _slicedToArray(_useState126, 2),
     count = _useState127[0],
@@ -10016,8 +10410,8 @@ function QuemPassouPorAqui(_ref40) {
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.city) && !(user !== null && user !== void 0 && user.state)) return;
     var filtro = user.city ? "city.ilike.%".concat(user.city, "%") : "state.eq.".concat(user.state);
-    db.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref41) {
-      var data = _ref41.data;
+    db.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref42) {
+      var data = _ref42.data;
       setCount((data === null || data === void 0 ? void 0 : data.length) || 0);
       setExemplos((data === null || data === void 0 ? void 0 : data.slice(0, 4)) || []);
     })["catch"](function () {});
@@ -10103,9 +10497,9 @@ function QuemPassouPorAqui(_ref40) {
 }
 
 // ── Pergunta da Comunidade ────────────────────────────────────
-function PerguntaComunidade(_ref42) {
+function PerguntaComunidade(_ref43) {
   var _user$intencao6, _user$intencao7, _user$intencao8, _user$intencao9;
-  var user = _ref42.user;
+  var user = _ref43.user;
   var _useState130 = useState(""),
     _useState131 = _slicedToArray(_useState130, 2),
     resposta = _useState131[0],
@@ -10132,8 +10526,8 @@ function PerguntaComunidade(_ref42) {
     if (!pergunta) return;
     db.from("momentos").select("id", {
       count: "exact"
-    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref43) {
-      var count = _ref43.count;
+    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref44) {
+      var count = _ref44.count;
       return setTotalRespostas(count || 0);
     })["catch"](function () {});
   }, [pergunta]);
@@ -10276,9 +10670,9 @@ function PerguntaComunidade(_ref42) {
 }
 
 // ── Agenda de Visita (Futuro) ─────────────────────────────────
-function AgendaVisita(_ref44) {
-  var user = _ref44.user,
-    onSave = _ref44.onSave;
+function AgendaVisita(_ref45) {
+  var user = _ref45.user,
+    onSave = _ref45.onSave;
   var _useState138 = useState({
       data: "",
       hora: "",
@@ -10785,10 +11179,10 @@ function AgendaVisita(_ref44) {
 }
 
 // ── Alerta de Região ──────────────────────────────────────────
-function AlertaRegiao(_ref45) {
-  var cidade = _ref45.cidade,
-    estado = _ref45.estado,
-    user = _ref45.user;
+function AlertaRegiao(_ref46) {
+  var cidade = _ref46.cidade,
+    estado = _ref46.estado,
+    user = _ref46.user;
   var _useState144 = useState(0),
     _useState145 = _slicedToArray(_useState144, 2),
     count = _useState145[0],
@@ -10800,8 +11194,8 @@ function AlertaRegiao(_ref45) {
   useEffect(function () {
     if (!cidade && !estado) return;
     // Busca agendas de visita para essa região
-    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref46) {
-      var data = _ref46.data;
+    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref47) {
+      var data = _ref47.data;
       var filtrados = (data || []).filter(function (m) {
         try {
           var _meta$cidade;
@@ -10940,10 +11334,10 @@ function useSeguirLugar(lugarNome, userId) {
 }
 
 // ── Cápsula no Perfil (individual) ───────────────────────────
-function CapsulaPerfil(_ref47) {
-  var capsula = _ref47.capsula,
-    index = _ref47.index,
-    userId = _ref47.userId;
+function CapsulaPerfil(_ref48) {
+  var capsula = _ref48.capsula,
+    index = _ref48.index,
+    userId = _ref48.userId;
   var _useState152 = useState(false),
     _useState153 = _slicedToArray(_useState152, 2),
     editando = _useState153[0],
@@ -11120,10 +11514,10 @@ function CapsulaPerfil(_ref47) {
 }
 
 // ── Perfil do Lugar ───────────────────────────────────────────
-function PerfilLugar(_ref48) {
-  var lugar = _ref48.lugar,
-    user = _ref48.user,
-    onBack = _ref48.onBack;
+function PerfilLugar(_ref49) {
+  var lugar = _ref49.lugar,
+    user = _ref49.user,
+    onBack = _ref49.onBack;
   var _useState156 = useState([]),
     _useState157 = _slicedToArray(_useState156, 2),
     profiles = _useState157[0],
@@ -11148,11 +11542,11 @@ function PerfilLugar(_ref48) {
     setLoading(true);
     Promise.all([db.from("profiles").select("*").or("city.ilike.%".concat(lugar, "%,place_name.ilike.%").concat(lugar, "%")).limit(20), db.from("momentos").select("*").ilike("lugar", "%".concat(lugar, "%")).order("ts", {
       ascending: false
-    }).limit(10), db.from("momentos").select("*").eq("tipo", "agenda_visita").ilike("lugar", "%".concat(lugar, "%")).limit(5)]).then(function (_ref49) {
-      var _ref50 = _slicedToArray(_ref49, 3),
-        p = _ref50[0],
-        m = _ref50[1],
-        a = _ref50[2];
+    }).limit(10), db.from("momentos").select("*").eq("tipo", "agenda_visita").ilike("lugar", "%".concat(lugar, "%")).limit(5)]).then(function (_ref50) {
+      var _ref51 = _slicedToArray(_ref50, 3),
+        p = _ref51[0],
+        m = _ref51[1],
+        a = _ref51[2];
       setProfiles(p.data || []);
       setMomentos(m.data || []);
       setAgendas(a.data || []);
@@ -11216,10 +11610,10 @@ function PerfilLugar(_ref48) {
       flexWrap: "wrap",
       marginBottom: 12
     }
-  }, Object.entries(porEra).map(function (_ref51) {
-    var _ref52 = _slicedToArray(_ref51, 2),
-      era = _ref52[0],
-      ps = _ref52[1];
+  }, Object.entries(porEra).map(function (_ref52) {
+    var _ref53 = _slicedToArray(_ref52, 2),
+      era = _ref53[0],
+      ps = _ref53[1];
     var e = eraInfo(era);
     return /*#__PURE__*/React.createElement("span", {
       key: era,
@@ -11630,7 +12024,7 @@ function App() {
     }
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
-        var _ref53 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(event, session) {
+        var _ref54 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(event, session) {
           var _yield$db$from$select3, data;
           return _regenerator().w(function (_context24) {
             while (1) switch (_context24.n) {
@@ -11662,7 +12056,7 @@ function App() {
           }, _callee24);
         }));
         return function (_x10, _x11) {
-          return _ref53.apply(this, arguments);
+          return _ref54.apply(this, arguments);
         };
       }()),
       subscription = _db$auth$onAuthStateC.data.subscription;
@@ -11745,10 +12139,10 @@ function App() {
       return c.id === p.id;
     });
   };
-  var unreadCount = Object.entries(msgs).filter(function (_ref54) {
-    var _ref55 = _slicedToArray(_ref54, 2),
-      id = _ref55[0],
-      ms = _ref55[1];
+  var unreadCount = Object.entries(msgs).filter(function (_ref55) {
+    var _ref56 = _slicedToArray(_ref55, 2),
+      id = _ref56[0],
+      ms = _ref56[1];
     return user && id.split("_").includes(String(user.id)) && ms.some(function (m) {
       return m.from !== user.id;
     });
@@ -11856,6 +12250,9 @@ function App() {
     },
     onPerfil: function onPerfil() {
       return setTela("perfil");
+    },
+    onMomento: function onMomento() {
+      return setShowMomento(true);
     },
     onView: setModal,
     onAdd: function onAdd(p) {
