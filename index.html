@@ -430,41 +430,41 @@ function uploadImage(_x, _x2, _x3, _x4, _x5) {
   return _uploadImage.apply(this, arguments);
 } // ── Logo ──────────────────────────────────────────────────────
 function _uploadImage() {
-  _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26(file, bucket, userId, maxW, quality) {
+  _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29(file, bucket, userId, maxW, quality) {
     var defaultW, defaultQ, blob, ts, rand, filename, _yield$db$storage$fro, error, _db$storage$from$getP, data;
-    return _regenerator().w(function (_context26) {
-      while (1) switch (_context26.n) {
+    return _regenerator().w(function (_context29) {
+      while (1) switch (_context29.n) {
         case 0:
           defaultW = bucket === "avatars" ? 400 : 1000;
           defaultQ = bucket === "avatars" ? 0.82 : 0.85;
-          _context26.n = 1;
+          _context29.n = 1;
           return fileToBlob(file, maxW || defaultW, quality || defaultQ);
         case 1:
-          blob = _context26.v;
+          blob = _context29.v;
           // Nome único — userId + timestamp + random
           ts = Date.now();
           rand = Math.random().toString(36).slice(2, 8);
           filename = "".concat(userId || "anon", "_").concat(ts, "_").concat(rand, ".jpg");
-          _context26.n = 2;
+          _context29.n = 2;
           return db.storage.from(bucket).upload(filename, blob, {
             contentType: "image/jpeg",
             cacheControl: "3600",
             upsert: false
           });
         case 2:
-          _yield$db$storage$fro = _context26.v;
+          _yield$db$storage$fro = _context29.v;
           error = _yield$db$storage$fro.error;
           if (!error) {
-            _context26.n = 3;
+            _context29.n = 3;
             break;
           }
           console.error("Upload erro:", error);
           throw error;
         case 3:
           _db$storage$from$getP = db.storage.from(bucket).getPublicUrl(filename), data = _db$storage$from$getP.data;
-          return _context26.a(2, data.publicUrl);
+          return _context29.a(2, data.publicUrl);
       }
-    }, _callee26);
+    }, _callee29);
   }));
   return _uploadImage.apply(this, arguments);
 }
@@ -12245,43 +12245,178 @@ function App() {
     };
   }, []);
 
-  // Load contacts from localStorage
+  // Load contacts from Supabase (with localStorage fallback)
   useEffect(function () {
-    try {
-      var c = localStorage.getItem("tn_contacts");
-      if (c) setContacts(JSON.parse(c));
-    } catch (_unused22) {}
-  }, []);
+    if (!(user !== null && user !== void 0 && user.id)) return;
+    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26() {
+      var _yield$db$from$select6, data, error, loaded, c, local, rows, _t28;
+      return _regenerator().w(function (_context26) {
+        while (1) switch (_context26.p = _context26.n) {
+          case 0:
+            _context26.p = 0;
+            _context26.n = 1;
+            return db.from("contacts").select("contact_id, rel, profiles!contacts_contact_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type)").eq("user_id", user.id);
+          case 1:
+            _yield$db$from$select6 = _context26.v;
+            data = _yield$db$from$select6.data;
+            error = _yield$db$from$select6.error;
+            if (!(!error && data && data.length > 0)) {
+              _context26.n = 2;
+              break;
+            }
+            loaded = data.map(function (c) {
+              return _objectSpread(_objectSpread({}, c.profiles), {}, {
+                _rel: c.rel || "conhecido"
+              });
+            }).filter(Boolean);
+            setContacts(loaded);
+            try {
+              localStorage.setItem("tn_contacts", JSON.stringify(loaded));
+            } catch (_unused22) {}
+            return _context26.a(2);
+          case 2:
+            _context26.n = 4;
+            break;
+          case 3:
+            _context26.p = 3;
+            _t28 = _context26.v;
+            console.log("Erro ao carregar contatos do Supabase:", _t28);
+          case 4:
+            // Fallback: localStorage (migra pro Supabase se tiver dados locais)
+            try {
+              c = localStorage.getItem("tn_contacts");
+              if (c) {
+                local = JSON.parse(c);
+                setContacts(local);
+                // Migra contatos locais pro Supabase em background
+                if (local.length > 0) {
+                  rows = local.map(function (ct) {
+                    return {
+                      user_id: user.id,
+                      contact_id: ct.id,
+                      rel: ct._rel || "conhecido"
+                    };
+                  });
+                  db.from("contacts").upsert(rows, {
+                    onConflict: "user_id,contact_id"
+                  }).then(function () {
+                    console.log("Contatos migrados pro Supabase:", rows.length);
+                  })["catch"](function () {});
+                }
+              }
+            } catch (_unused23) {}
+          case 5:
+            return _context26.a(2);
+        }
+      }, _callee26, null, [[0, 3]]);
+    }))();
+  }, [user === null || user === void 0 ? void 0 : user.id]);
   function salvar(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused23) {}
+    } catch (_unused24) {}
     setTela("perfil");
   }
-  function addContact(p) {
-    var rel = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "conhecido";
-    if (contacts.find(function (c) {
-      return c.id === p.id;
-    })) return;
-    var updated = [].concat(_toConsumableArray(contacts), [_objectSpread(_objectSpread({}, p), {}, {
-      _rel: rel
-    })]);
-    setContacts(updated);
-    try {
-      localStorage.setItem("tn_contacts", JSON.stringify(updated));
-    } catch (_unused24) {}
+  function addContact(_x17) {
+    return _addContact.apply(this, arguments);
   }
-  function updateContactRel(id, rel) {
-    var updated = contacts.map(function (c) {
-      return c.id === id ? _objectSpread(_objectSpread({}, c), {}, {
-        _rel: rel
-      }) : c;
-    });
-    setContacts(updated);
-    try {
-      localStorage.setItem("tn_contacts", JSON.stringify(updated));
-    } catch (_unused25) {}
+  function _addContact() {
+    _addContact = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27(p) {
+      var rel,
+        updated,
+        _args27 = arguments,
+        _t29;
+      return _regenerator().w(function (_context27) {
+        while (1) switch (_context27.p = _context27.n) {
+          case 0:
+            rel = _args27.length > 1 && _args27[1] !== undefined ? _args27[1] : "conhecido";
+            if (user !== null && user !== void 0 && user.id) {
+              _context27.n = 1;
+              break;
+            }
+            return _context27.a(2);
+          case 1:
+            if (!contacts.find(function (c) {
+              return c.id === p.id;
+            })) {
+              _context27.n = 2;
+              break;
+            }
+            return _context27.a(2);
+          case 2:
+            updated = [].concat(_toConsumableArray(contacts), [_objectSpread(_objectSpread({}, p), {}, {
+              _rel: rel
+            })]);
+            setContacts(updated);
+            try {
+              localStorage.setItem("tn_contacts", JSON.stringify(updated));
+            } catch (_unused29) {}
+            // Persiste no Supabase
+            _context27.p = 3;
+            _context27.n = 4;
+            return db.from("contacts").upsert({
+              user_id: user.id,
+              contact_id: p.id,
+              rel: rel
+            }, {
+              onConflict: "user_id,contact_id"
+            });
+          case 4:
+            _context27.n = 6;
+            break;
+          case 5:
+            _context27.p = 5;
+            _t29 = _context27.v;
+            console.error("Erro ao salvar contato:", _t29);
+          case 6:
+            return _context27.a(2);
+        }
+      }, _callee27, null, [[3, 5]]);
+    }));
+    return _addContact.apply(this, arguments);
+  }
+  function updateContactRel(_x18, _x19) {
+    return _updateContactRel.apply(this, arguments);
+  }
+  function _updateContactRel() {
+    _updateContactRel = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(id, rel) {
+      var updated, _t30;
+      return _regenerator().w(function (_context28) {
+        while (1) switch (_context28.p = _context28.n) {
+          case 0:
+            updated = contacts.map(function (c) {
+              return c.id === id ? _objectSpread(_objectSpread({}, c), {}, {
+                _rel: rel
+              }) : c;
+            });
+            setContacts(updated);
+            try {
+              localStorage.setItem("tn_contacts", JSON.stringify(updated));
+            } catch (_unused30) {}
+            // Atualiza no Supabase
+            if (!(user !== null && user !== void 0 && user.id)) {
+              _context28.n = 4;
+              break;
+            }
+            _context28.p = 1;
+            _context28.n = 2;
+            return db.from("contacts").update({
+              rel: rel
+            }).eq("user_id", user.id).eq("contact_id", id);
+          case 2:
+            _context28.n = 4;
+            break;
+          case 3:
+            _context28.p = 3;
+            _t30 = _context28.v;
+            console.error("Erro ao atualizar rel:", _t30);
+          case 4:
+            return _context28.a(2);
+        }
+      }, _callee28, null, [[1, 3]]);
+    }));
+    return _updateContactRel.apply(this, arguments);
   }
   function enviar(cid, msg) {
     setMsgs(function (prev) {
@@ -12305,24 +12440,24 @@ function App() {
     setAuthSession(null);
     try {
       localStorage.removeItem("tn_user");
-    } catch (_unused26) {}
+    } catch (_unused25) {}
     db.auth.signOut();
   }
   function updateUser(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused27) {}
+    } catch (_unused26) {}
   }
   var isContact = function isContact(p) {
     return !!contacts.find(function (c) {
       return c.id === p.id;
     });
   };
-  var unreadCount = Object.entries(msgs).filter(function (_ref55) {
-    var _ref56 = _slicedToArray(_ref55, 2),
-      id = _ref56[0],
-      ms = _ref56[1];
+  var unreadCount = Object.entries(msgs).filter(function (_ref56) {
+    var _ref57 = _slicedToArray(_ref56, 2),
+      id = _ref57[0],
+      ms = _ref57[1];
     return user && id.split("_").includes(String(user.id)) && ms.some(function (m) {
       return m.from !== user.id;
     });
@@ -12636,7 +12771,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused28) {}
+      } catch (_unused27) {}
       ;
       setShowAdicionarLugar(false);
     }
@@ -12650,7 +12785,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused29) {}
+      } catch (_unused28) {}
     }
   }), showReencontrar && /*#__PURE__*/React.createElement(ModalReencontrar, {
     onClose: function onClose() {
