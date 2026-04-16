@@ -12351,7 +12351,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused29) {}
+            } catch (_unused30) {}
             // Persiste no Supabase
             _context27.p = 3;
             _context27.n = 4;
@@ -12393,7 +12393,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused30) {}
+            } catch (_unused31) {}
             // Atualiza no Supabase
             if (!(user !== null && user !== void 0 && user.id)) {
               _context28.n = 4;
@@ -12437,17 +12437,20 @@ function App() {
   }
   function logout() {
     setUser(null);
-    setAuthSession(null);
+    setContacts([]);
     try {
       localStorage.removeItem("tn_user");
     } catch (_unused25) {}
+    try {
+      localStorage.removeItem("tn_contacts");
+    } catch (_unused26) {}
     db.auth.signOut();
   }
   function updateUser(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused26) {}
+    } catch (_unused27) {}
   }
   var isContact = function isContact(p) {
     return !!contacts.find(function (c) {
@@ -12771,7 +12774,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused27) {}
+      } catch (_unused28) {}
       ;
       setShowAdicionarLugar(false);
     }
@@ -12785,7 +12788,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused28) {}
+      } catch (_unused29) {}
     }
   }), showReencontrar && /*#__PURE__*/React.createElement(ModalReencontrar, {
     onClose: function onClose() {
