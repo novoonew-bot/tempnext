@@ -9928,37 +9928,38 @@ function BannerNotificacao(_ref41) {
     className: "fu",
     style: {
       position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      display: "flex",
-      justifyContent: "center",
-      zIndex: 300,
-      padding: "52px 14px 0"
+      top: 48,
+      left: "50%",
+      transform: "translateX(-50%)",
+      width: "calc(100% - 28px)",
+      maxWidth: 400,
+      zIndex: 300
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      width: "100%",
-      maxWidth: 402,
       background: bgColor,
-      borderRadius: 16,
-      padding: "14px 16px",
-      boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+      borderRadius: 14,
+      padding: "12px 14px",
+      boxShadow: "0 6px 24px rgba(0,0,0,0.25)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
       display: "flex",
-      gap: 12,
+      gap: 10,
       alignItems: "center"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      width: 42,
-      height: 42,
+      width: 36,
+      height: 36,
       borderRadius: "50%",
       background: "rgba(255,255,255,0.2)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      fontSize: 20,
-      flexShrink: 0
+      fontSize: 16,
+      flexShrink: 0,
+      overflow: "hidden"
     }
   }, (_notif$profile = notif.profile) !== null && _notif$profile !== void 0 && _notif$profile.avatar_url ? /*#__PURE__*/React.createElement("img", {
     src: notif.profile.avatar_url,
@@ -9976,76 +9977,77 @@ function BannerNotificacao(_ref41) {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
+      fontSize: 12,
       fontWeight: 700,
       color: "#fff",
       overflow: "hidden",
       textOverflow: "ellipsis",
       whiteSpace: "nowrap"
     }
-  }, notif.type === "mesmo_sobrenome" && /*#__PURE__*/React.createElement("span", {
+  }, notif.message), !isAniv && notif.profile && /*#__PURE__*/React.createElement("div", {
     style: {
-      background: "rgba(255,255,255,0.25)",
-      borderRadius: 10,
-      padding: "1px 8px",
-      marginRight: 6,
-      fontSize: 11
+      fontSize: 10,
+      color: "rgba(255,255,255,0.7)",
+      marginTop: 1,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap"
     }
-  }, "Fam\xEDlia"), notif.message), !isAniv && notif.profile && /*#__PURE__*/React.createElement("div", {
+  }, notif.profile.place_name, " \xB7 ", notif.profile.year_start, "\u2013", notif.profile.year_end)), /*#__PURE__*/React.createElement("button", {
+    onClick: onDismiss,
     style: {
-      fontSize: 11,
-      color: "rgba(255,255,255,0.75)",
-      marginTop: 2
+      background: "rgba(255,255,255,0.2)",
+      border: "none",
+      cursor: "pointer",
+      color: "#fff",
+      fontSize: 16,
+      lineHeight: 1,
+      borderRadius: "50%",
+      width: 28,
+      height: 28,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0
     }
-  }, notif.profile.place_name, " \xB7 ", notif.profile.year_start, "\u2013", notif.profile.year_end)), /*#__PURE__*/React.createElement("div", {
+  }, "\xD7")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 8,
-      flexShrink: 0
+      marginTop: 10
     }
-  }, !isAniv && /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       onView(notif.profile);
       onDismiss();
     },
     style: {
+      flex: 1,
       background: "rgba(255,255,255,0.2)",
       border: "none",
       borderRadius: 8,
-      padding: "6px 12px",
+      padding: "7px 0",
       color: "#fff",
       fontSize: 12,
       fontWeight: 700,
       cursor: "pointer",
       fontFamily: "inherit"
     }
-  }, "Ver"), isAniv && /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      onView(notif.profile);
-      onDismiss();
-    },
-    style: {
-      background: "rgba(255,255,255,0.2)",
-      border: "none",
-      borderRadius: 8,
-      padding: "6px 12px",
-      color: "#fff",
-      fontSize: 12,
-      fontWeight: 700,
-      cursor: "pointer",
-      fontFamily: "inherit"
-    }
-  }, "Parabenizar"), /*#__PURE__*/React.createElement("button", {
+  }, isAniv ? "Parabenizar" : "Ver perfil"), /*#__PURE__*/React.createElement("button", {
     onClick: onDismiss,
     style: {
+      flex: 1,
       background: "none",
-      border: "none",
+      border: "1px solid rgba(255,255,255,0.3)",
+      borderRadius: 8,
+      padding: "7px 0",
+      color: "rgba(255,255,255,0.8)",
+      fontSize: 12,
+      fontWeight: 600,
       cursor: "pointer",
-      color: "rgba(255,255,255,0.7)",
-      fontSize: 20,
-      lineHeight: 1
+      fontFamily: "inherit"
     }
-  }, "\xD7"))));
+  }, "Fechar"))));
 }
 
 // ── Cadastro Simples (3 passos) ──────────────────────────────
