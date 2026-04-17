@@ -395,77 +395,110 @@ var fileToB64 = function fileToB64(f) {
 // ── fileToBlob: redimensiona no canvas e devolve um Blob JPEG ──
 var fileToBlob = function fileToBlob(f) {
   var maxW = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 800;
-  var quality = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.82;
+  var quality = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.75;
   return new Promise(function (res, rej) {
+    // Timeout de 10s pra não travar
+    var timer = setTimeout(function () {
+      return rej(new Error("fileToBlob timeout"));
+    }, 10000);
     var r = new FileReader();
     r.onload = function () {
       var img = new Image();
       img.onload = function () {
-        var canvas = document.createElement('canvas');
-        var w = img.width,
-          h = img.height;
-        if (w > maxW) {
-          h = Math.round(h * maxW / w);
-          w = maxW;
+        try {
+          var canvas = document.createElement('canvas');
+          var w = img.width,
+            h = img.height;
+          if (w > maxW) {
+            h = Math.round(h * maxW / w);
+            w = maxW;
+          }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.toBlob(function (b) {
+            clearTimeout(timer);
+            if (b) res(b);else rej(new Error("toBlob retornou null"));
+          }, 'image/jpeg', quality);
+        } catch (err) {
+          clearTimeout(timer);
+          rej(err);
         }
-        canvas.width = w;
-        canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        canvas.toBlob(function (b) {
-          if (b) res(b);else rej(new Error("toBlob retornou null"));
-        }, 'image/jpeg', quality);
       };
-      img.onerror = rej;
+      img.onerror = function () {
+        clearTimeout(timer);
+        rej(new Error("Erro ao carregar imagem"));
+      };
       img.src = r.result;
     };
-    r.onerror = rej;
+    r.onerror = function () {
+      clearTimeout(timer);
+      rej(new Error("Erro ao ler arquivo"));
+    };
     r.readAsDataURL(f);
   });
 };
 
 // ── uploadImage: redimensiona + sobe pro bucket + retorna URL pública ──
-// bucket: "avatars" ou "photos"
-// userId: string usada no nome do arquivo (pode ser qualquer coisa, só pra evitar colisões)
-// maxW e quality opcionais (avatars ficam 400px, photos 1000px por padrão)
 function uploadImage(_x, _x2, _x3, _x4, _x5) {
   return _uploadImage.apply(this, arguments);
 } // ── Sincroniza lugares de um perfil pras tabelas places + place_profiles ──
 function _uploadImage() {
   _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee31(file, bucket, userId, maxW, quality) {
-    var defaultW, defaultQ, blob, ts, rand, filename, _yield$db$storage$fro, error, _db$storage$from$getP, data;
+    var _blob$type;
+    var defaultW, defaultQ, blob, ts, rand, ext, filename, _yield$db$storage$fro, error, _db$storage$from$getP, data, _t39;
     return _regenerator().w(function (_context31) {
-      while (1) switch (_context31.n) {
+      while (1) switch (_context31.p = _context31.n) {
         case 0:
-          defaultW = bucket === "avatars" ? 400 : 1000;
-          defaultQ = bucket === "avatars" ? 0.82 : 0.85;
-          _context31.n = 1;
+          defaultW = bucket === "avatars" ? 400 : 800;
+          defaultQ = bucket === "avatars" ? 0.75 : 0.78;
+          _context31.p = 1;
+          _context31.n = 2;
           return fileToBlob(file, maxW || defaultW, quality || defaultQ);
-        case 1:
+        case 2:
           blob = _context31.v;
-          // Nome único — userId + timestamp + random
+          _context31.n = 5;
+          break;
+        case 3:
+          _context31.p = 3;
+          _t39 = _context31.v;
+          console.log("fileToBlob falhou, tentando upload direto:", _t39);
+          // Fallback: sobe o arquivo original se for menor que 2MB
+          if (!(file.size <= 2 * 1024 * 1024)) {
+            _context31.n = 4;
+            break;
+          }
+          blob = file;
+          _context31.n = 5;
+          break;
+        case 4:
+          throw new Error("Imagem muito grande e não foi possível redimensionar");
+        case 5:
+          // Nome único
           ts = Date.now();
           rand = Math.random().toString(36).slice(2, 8);
-          filename = "".concat(userId || "anon", "_").concat(ts, "_").concat(rand, ".jpg");
-          _context31.n = 2;
+          ext = (_blob$type = blob.type) !== null && _blob$type !== void 0 && _blob$type.includes("png") ? "png" : "jpg";
+          filename = "".concat(userId || "anon", "_").concat(ts, "_").concat(rand, ".").concat(ext);
+          _context31.n = 6;
           return db.storage.from(bucket).upload(filename, blob, {
-            contentType: "image/jpeg",
+            contentType: blob.type || "image/jpeg",
             cacheControl: "3600",
             upsert: false
           });
-        case 2:
+        case 6:
           _yield$db$storage$fro = _context31.v;
           error = _yield$db$storage$fro.error;
           if (!error) {
-            _context31.n = 3;
+            _context31.n = 7;
             break;
           }
           console.error("Upload erro:", error);
           throw error;
-        case 3:
+        case 7:
           _db$storage$from$getP = db.storage.from(bucket).getPublicUrl(filename), data = _db$storage$from$getP.data;
           return _context31.a(2, data.publicUrl);
       }
-    }, _callee31);
+    }, _callee31, null, [[1, 3]]);
   }));
   return _uploadImage.apply(this, arguments);
 }
@@ -474,7 +507,7 @@ function syncLugaresToPlaces(_x6, _x7) {
 } // ── Logo ──────────────────────────────────────────────────────
 function _syncLugaresToPlaces() {
   _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32(profileId, lugares) {
-    var _iterator3, _step3, l, nome, cidade, estado, _yield$db$from$select1, existing, placeId, _yield$db$from$insert2, created, error, _t39, _t40;
+    var _iterator3, _step3, l, nome, cidade, estado, _yield$db$from$select1, existing, placeId, _yield$db$from$insert2, created, error, _t40, _t41;
     return _regenerator().w(function (_context32) {
       while (1) switch (_context32.p = _context32.n) {
         case 0:
@@ -559,8 +592,8 @@ function _syncLugaresToPlaces() {
           break;
         case 11:
           _context32.p = 11;
-          _t39 = _context32.v;
-          console.error("Erro syncLugares:", _t39);
+          _t40 = _context32.v;
+          console.error("Erro syncLugares:", _t40);
         case 12:
           _context32.n = 3;
           break;
@@ -569,8 +602,8 @@ function _syncLugaresToPlaces() {
           break;
         case 14:
           _context32.p = 14;
-          _t40 = _context32.v;
-          _iterator3.e(_t40);
+          _t41 = _context32.v;
+          _iterator3.e(_t41);
         case 15:
           _context32.p = 15;
           _iterator3.f();
