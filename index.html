@@ -163,7 +163,36 @@ var _React = React,
 // ── Supabase ──────────────────────────────────────────────────
 var SUPA_URL = "https://ahvmyhxromworlysqsam.supabase.co";
 var SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFodm15aHhyb213b3JseXNxc2FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDg3MjAsImV4cCI6MjA5MTQyNDcyMH0.oSUCpEMK2i8d7siCadDy4kfTOmJwFz9gydxjniq75iE";
-var db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// Storage wrapper — usa localStorage se disponível, senão memória
+var memStorage = {
+  _data: {},
+  getItem: function getItem(k) {
+    return this._data[k] || null;
+  },
+  setItem: function setItem(k, v) {
+    this._data[k] = v;
+  },
+  removeItem: function removeItem(k) {
+    delete this._data[k];
+  }
+};
+var safeStorage = memStorage;
+try {
+  localStorage.setItem("_test", "1");
+  localStorage.removeItem("_test");
+  safeStorage = localStorage;
+} catch (_unused) {
+  console.log("localStorage bloqueado, usando memória");
+}
+var db = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
+  auth: {
+    storage: safeStorage,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});
 
 // ── Tokens ────────────────────────────────────────────────────
 var T = {
@@ -5605,7 +5634,7 @@ function Perfil(_ref22) {
     var capsulas = [];
     try {
       capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + (user === null || user === void 0 ? void 0 : user.id)) || "[]");
-    } catch (_unused5) {}
+    } catch (_unused6) {}
     if (!capsulas.length) return null;
     return /*#__PURE__*/React.createElement("div", {
       style: {
@@ -10541,7 +10570,7 @@ function CadastroSimples(_ref43) {
             if (saved) {
               try {
                 localStorage.setItem("tn_user", JSON.stringify(saved));
-              } catch (_unused1) {}
+              } catch (_unused10) {}
               if (saved.id && !saved.id.toString().startsWith("local_")) {
                 syncLugaresToPlaces(saved.id, saved.lugares || payload.lugares || [])["catch"](function (e) {
                   return console.log("Sync:", e);
@@ -12239,7 +12268,7 @@ function AlertaRegiao(_ref53) {
           var _meta$cidade;
           var meta = JSON.parse(m.meta || "{}");
           return ((_meta$cidade = meta.cidade) === null || _meta$cidade === void 0 ? void 0 : _meta$cidade.toLowerCase()) === (cidade === null || cidade === void 0 ? void 0 : cidade.toLowerCase()) || meta.estado === estado;
-        } catch (_unused10) {
+        } catch (_unused11) {
           return false;
         }
       });
@@ -12432,7 +12461,7 @@ function CapsulaPerfil(_ref57) {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas[index] = _objectSpread(_objectSpread({}, capsulas[index]), f);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused11) {}
+    } catch (_unused12) {}
     setEditando(false);
   }
   function cancelarCapsula() {
@@ -12440,7 +12469,7 @@ function CapsulaPerfil(_ref57) {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas.splice(index, 1);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused12) {}
+    } catch (_unused13) {}
   }
   return /*#__PURE__*/React.createElement("div", {
     style: {
@@ -13122,7 +13151,7 @@ function PerfilLugar(_ref58) {
     var meta = {};
     try {
       meta = JSON.parse(a.meta || "{}");
-    } catch (_unused13) {}
+    } catch (_unused14) {}
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       style: {
@@ -13206,7 +13235,7 @@ function App() {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
-      } catch (_unused14) {
+      } catch (_unused15) {
         return null;
       }
     }),
@@ -13261,7 +13290,7 @@ function App() {
     function _init() {
       _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29() {
         var _session;
-        var localUser, s, session, _res$data, res, _yield$db$from$select8, data, _yield$db$from$select9, _data2, updated, _yield$db$from$select0, _data3, _t34, _t35, _t36, _t37;
+        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, _yield$db$from$select8, data, _yield$db$from$select9, _data2, updated, _yield$db$from$select0, _data3, _t34, _t35, _t36, _t37;
         return _regenerator().w(function (_context29) {
           while (1) switch (_context29.p = _context29.n) {
             case 0:
@@ -13270,13 +13299,22 @@ function App() {
               try {
                 s = localStorage.getItem("tn_user");
                 if (s) localUser = JSON.parse(s);
-              } catch (_unused21) {}
+              } catch (_unused22) {}
 
-              // 2. Verifica sessão Google
+              // IMEDIATO: se tem user local, seta agora (não espera nada async)
+              if (localUser) setUser(localUser);
+
+              // 2. Verifica sessão Google (com timeout de 5s)
               session = null;
               _context29.p = 1;
+              sessionPromise = db.auth.getSession();
+              timeoutPromise = new Promise(function (_, reject) {
+                return setTimeout(function () {
+                  return reject(new Error("getSession timeout"));
+                }, 5000);
+              });
               _context29.n = 2;
-              return db.auth.getSession();
+              return Promise.race([sessionPromise, timeoutPromise]);
             case 2:
               res = _context29.v;
               session = (_res$data = res.data) === null || _res$data === void 0 ? void 0 : _res$data.session;
@@ -13285,9 +13323,8 @@ function App() {
             case 3:
               _context29.p = 3;
               _t34 = _context29.v;
-              console.log("Erro ao buscar sessão:", _t34);
-              // Se falhar, mantém o user local
-              if (localUser && !user) setUser(localUser);
+              console.log("Sessão Google indisponível:", _t34.message || _t34);
+              // Já setou localUser acima, continua sem sessão
               return _context29.a(2);
             case 4:
               if (!((_session = session) !== null && _session !== void 0 && _session.user)) {
@@ -13307,7 +13344,7 @@ function App() {
               setUser(data);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(data));
-              } catch (_unused22) {}
+              } catch (_unused23) {}
               return _context29.a(2);
             case 7:
               _context29.n = 9;
@@ -13346,7 +13383,7 @@ function App() {
               setUser(updated);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(updated));
-              } catch (_unused23) {}
+              } catch (_unused24) {}
               return _context29.a(2);
             case 13:
               _context29.n = 15;
@@ -13387,7 +13424,7 @@ function App() {
               setUser(_data3);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(_data3));
-              } catch (_unused24) {}
+              } catch (_unused25) {}
               return _context29.a(2);
             case 20:
               _context29.n = 22;
@@ -13418,10 +13455,10 @@ function App() {
                   setContacts([]);
                   try {
                     localStorage.removeItem("tn_user");
-                  } catch (_unused15) {}
+                  } catch (_unused16) {}
                   try {
                     localStorage.removeItem("tn_contacts");
-                  } catch (_unused16) {}
+                  } catch (_unused17) {}
                 }
                 if (!(event === "SIGNED_IN" && session !== null && session !== void 0 && session.user)) {
                   _context28.n = 9;
@@ -13440,7 +13477,7 @@ function App() {
                 setUser(data);
                 try {
                   localStorage.setItem("tn_user", JSON.stringify(data));
-                } catch (_unused17) {}
+                } catch (_unused18) {}
                 _context28.n = 7;
                 break;
               case 3:
@@ -13449,7 +13486,7 @@ function App() {
                 try {
                   s = localStorage.getItem("tn_user");
                   if (s) localU = JSON.parse(s);
-                } catch (_unused18) {}
+                } catch (_unused19) {}
                 if (!(localU && localU.id && !localU.id.toString().startsWith("local_"))) {
                   _context28.n = 7;
                   break;
@@ -13466,7 +13503,7 @@ function App() {
                 setUser(updated);
                 try {
                   localStorage.setItem("tn_user", JSON.stringify(updated));
-                } catch (_unused19) {}
+                } catch (_unused20) {}
                 console.log("Perfil local vinculado ao Google:", localU.id);
                 _context28.n = 7;
                 break;
@@ -13487,7 +13524,7 @@ function App() {
                 try {
                   _s = localStorage.getItem("tn_user");
                   if (_s) setUser(JSON.parse(_s));
-                } catch (_unused20) {}
+                } catch (_unused21) {}
               case 9:
                 return _context28.a(2);
             }
@@ -13530,7 +13567,7 @@ function App() {
             setContacts(loaded);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(loaded));
-            } catch (_unused25) {}
+            } catch (_unused26) {}
             return _context30.a(2);
           case 2:
             _context30.n = 4;
@@ -13562,7 +13599,7 @@ function App() {
                   })["catch"](function () {});
                 }
               }
-            } catch (_unused26) {}
+            } catch (_unused27) {}
           case 5:
             return _context30.a(2);
         }
@@ -13573,7 +13610,7 @@ function App() {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused27) {}
+    } catch (_unused28) {}
     setTela("perfil");
   }
   function addContact(_x20) {
@@ -13609,7 +13646,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused33) {}
+            } catch (_unused34) {}
             // Persiste no Supabase
             _context31.p = 3;
             _context31.n = 4;
@@ -13651,7 +13688,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused34) {}
+            } catch (_unused35) {}
             // Atualiza no Supabase
             if (!(user !== null && user !== void 0 && user.id)) {
               _context32.n = 4;
@@ -13698,17 +13735,17 @@ function App() {
     setContacts([]);
     try {
       localStorage.removeItem("tn_user");
-    } catch (_unused28) {}
+    } catch (_unused29) {}
     try {
       localStorage.removeItem("tn_contacts");
-    } catch (_unused29) {}
+    } catch (_unused30) {}
     db.auth.signOut();
   }
   function updateUser(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused30) {}
+    } catch (_unused31) {}
     // Sincroniza com Supabase em background — só campos seguros
     if (p !== null && p !== void 0 && p.id && !p.id.toString().startsWith("local_")) {
       var safe = {
@@ -14232,7 +14269,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused31) {}
+      } catch (_unused32) {}
       ;
       setShowAdicionarLugar(false);
     }
@@ -14246,7 +14283,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused32) {}
+      } catch (_unused33) {}
     }
   }), showReencontrar && /*#__PURE__*/React.createElement(ModalReencontrar, {
     onClose: function onClose() {
