@@ -662,59 +662,34 @@ function Logo(_ref) {
   }, "O tempo no seu lugar")));
 }
 
-// ── Logo Nova: [T]empnex[T] ────────────────────────────────────
+// ── Logo Nova: Tempnext limpa ────────────────────────────────────
 function LogoNova(_ref2) {
   var _ref2$size = _ref2.size,
     size = _ref2$size === void 0 ? 120 : _ref2$size;
-  var H = size * 0.28;
-  var boxW = size * 0.28,
-    boxH = size * 0.28;
-  var rx = size * 0.067;
-  var tSize = size * 0.20;
-  var nameSize = size * 0.175;
-  return /*#__PURE__*/React.createElement("svg", {
-    width: size,
-    height: H,
-    viewBox: "0 0 ".concat(size, " ").concat(H),
+  var fs = size * 0.22;
+  return /*#__PURE__*/React.createElement("div", {
     style: {
-      display: "block"
+      display: "inline-block"
     }
-  }, /*#__PURE__*/React.createElement("rect", {
-    x: "0",
-    y: "0",
-    width: boxW,
-    height: boxH,
-    rx: rx,
-    fill: T.accent
-  }), /*#__PURE__*/React.createElement("rect", {
-    x: size - boxW,
-    y: "0",
-    width: boxW,
-    height: boxH,
-    rx: rx,
-    fill: T.blueStrong
-  }), /*#__PURE__*/React.createElement("text", {
-    x: boxW * 0.2,
-    y: boxH * 0.78,
-    fontFamily: "Georgia,serif",
-    fontSize: tSize,
-    fontWeight: "500",
-    fill: "#FFFFFF"
-  }, "T"), /*#__PURE__*/React.createElement("text", {
-    x: size - boxW + boxW * 0.22,
-    y: boxH * 0.78,
-    fontFamily: "Georgia,serif",
-    fontSize: tSize,
-    fontWeight: "500",
-    fill: "#FFFFFF"
-  }, "T"), /*#__PURE__*/React.createElement("text", {
-    x: boxW * 0.78,
-    y: boxH * 0.78,
-    fontFamily: "Georgia,serif",
-    fontSize: nameSize,
-    fontWeight: "400",
-    fill: T.text
-  }, "empnex"));
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: fs,
+      fontWeight: 300,
+      letterSpacing: "-0.5px",
+      lineHeight: 1,
+      fontFamily: "Georgia,serif"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: T.accent,
+      fontWeight: 700
+    }
+  }, "Temp"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: T.blueStrong,
+      fontWeight: 700
+    }
+  }, "next")));
 }
 
 // ── Base UI ───────────────────────────────────────────────────
@@ -5696,11 +5671,18 @@ function Perfil(_ref21) {
     style: {
       position: "relative"
     }
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      if (user.avatar_url) setFotoExpandida(user.avatar_url);
+    },
+    style: {
+      cursor: user.avatar_url ? "zoom-in" : "default"
+    }
   }, /*#__PURE__*/React.createElement(Avatar, {
     name: user.name,
     src: user.avatar_url,
     size: 72
-  }), /*#__PURE__*/React.createElement("label", {
+  })), /*#__PURE__*/React.createElement("label", {
     style: {
       position: "absolute",
       bottom: 2,
@@ -9947,15 +9929,17 @@ function BannerNotificacao(_ref41) {
     style: {
       position: "fixed",
       top: 0,
-      left: "50%",
-      transform: "translateX(-50%)",
-      width: "100%",
-      maxWidth: 430,
+      left: 0,
+      right: 0,
+      display: "flex",
+      justifyContent: "center",
       zIndex: 300,
       padding: "52px 14px 0"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
+      width: "100%",
+      maxWidth: 402,
       background: bgColor,
       borderRadius: 16,
       padding: "14px 16px",
@@ -13331,6 +13315,22 @@ function App() {
       })["catch"](function () {});
     }
   }
+
+  // Estado de loading inicial
+  var _useState210 = useState(false),
+    _useState211 = _slicedToArray(_useState210, 2),
+    appReady = _useState211[0],
+    setAppReady = _useState211[1];
+
+  // Marca app como pronto após init
+  useEffect(function () {
+    var timer = setTimeout(function () {
+      return setAppReady(true);
+    }, 1500);
+    return function () {
+      return clearTimeout(timer);
+    };
+  }, []);
   var isContact = function isContact(p) {
     return !!contacts.find(function (c) {
       return c.id === p.id;
@@ -13344,6 +13344,174 @@ function App() {
       return m.from !== user.id;
     });
   }).length;
+
+  // ── Splash Screen ──
+  if (!appReady) {
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        maxWidth: 430,
+        margin: "0 auto",
+        minHeight: "100vh",
+        background: T.bg,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 32,
+        fontWeight: 300,
+        color: T.text,
+        letterSpacing: "-0.5px",
+        fontFamily: "Georgia,serif"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: T.accent,
+        fontWeight: 700
+      }
+    }, "Temp"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: T.blueStrong,
+        fontWeight: 700
+      }
+    }, "next")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        color: T.muted,
+        marginTop: 6,
+        letterSpacing: "0.15em",
+        textTransform: "uppercase"
+      }
+    }, "O tempo no seu lugar"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 6,
+        marginTop: 28
+      }
+    }, [0, 1, 2].map(function (i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: {
+          width: 8,
+          height: 8,
+          borderRadius: "50%",
+          background: i === 0 ? T.accent : i === 1 ? T.blueStrong : "#9575CD",
+          animation: "pulse 1.2s ease-in-out ".concat(i * 0.2, "s infinite")
+        }
+      });
+    })), /*#__PURE__*/React.createElement("style", null, "@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}"));
+  }
+
+  // ── Tela de Login (se não tem user) ──
+  if (!user) {
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        maxWidth: 430,
+        margin: "0 auto",
+        minHeight: "100vh",
+        background: T.bg,
+        display: "flex",
+        flexDirection: "column"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0 32px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 36,
+        fontWeight: 300,
+        color: T.text,
+        letterSpacing: "-0.5px",
+        fontFamily: "Georgia,serif",
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: T.accent,
+        fontWeight: 700
+      }
+    }, "Temp"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: T.blueStrong,
+        fontWeight: 700
+      }
+    }, "next")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: T.muted,
+        letterSpacing: "0.12em",
+        textTransform: "uppercase",
+        marginBottom: 40
+      }
+    }, "O tempo no seu lugar"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 15,
+        color: T.sub,
+        textAlign: "center",
+        lineHeight: 1.7,
+        marginBottom: 32
+      }
+    }, "Encontre quem viveu onde voc\xEA viveu,", /*#__PURE__*/React.createElement("br", null), "na mesma \xE9poca."), /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        db.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: window.location.origin
+          }
+        });
+      },
+      style: {
+        width: "100%",
+        padding: "14px 20px",
+        borderRadius: 14,
+        border: "1.5px solid ".concat(T.border),
+        background: "#fff",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 12,
+        fontSize: 15,
+        fontWeight: 600,
+        color: T.text,
+        fontFamily: "inherit",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+        transition: "all .15s"
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "20",
+      height: "20",
+      viewBox: "0 0 48 48"
+    }, /*#__PURE__*/React.createElement("path", {
+      fill: "#EA4335",
+      d: "M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+    }), /*#__PURE__*/React.createElement("path", {
+      fill: "#4285F4",
+      d: "M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+    }), /*#__PURE__*/React.createElement("path", {
+      fill: "#34A853",
+      d: "M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+    }), /*#__PURE__*/React.createElement("path", {
+      fill: "#FBBC05",
+      d: "M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+    })), "Continuar com Google"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        color: T.muted,
+        textAlign: "center",
+        marginTop: 20,
+        lineHeight: 1.6
+      }
+    }, "Ao entrar voc\xEA concorda com os termos de uso.", /*#__PURE__*/React.createElement("br", null), "Seus dados ficam seguros no Tempnext.")));
+  }
   var NAV = [{
     id: "inicio",
     icon: /*#__PURE__*/React.createElement("svg", {
