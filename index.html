@@ -474,7 +474,7 @@ function syncLugaresToPlaces(_x6, _x7) {
 } // ── Logo ──────────────────────────────────────────────────────
 function _syncLugaresToPlaces() {
   _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34(profileId, lugares) {
-    var _iterator3, _step3, l, nome, cidade, estado, _yield$db$from$select11, existing, placeId, _yield$db$from$insert2, created, error, _t36, _t37;
+    var _iterator3, _step3, l, nome, cidade, estado, _yield$db$from$select11, existing, placeId, _yield$db$from$insert2, created, error, _t39, _t40;
     return _regenerator().w(function (_context34) {
       while (1) switch (_context34.p = _context34.n) {
         case 0:
@@ -559,8 +559,8 @@ function _syncLugaresToPlaces() {
           break;
         case 11:
           _context34.p = 11;
-          _t36 = _context34.v;
-          console.error("Erro syncLugares:", _t36);
+          _t39 = _context34.v;
+          console.error("Erro syncLugares:", _t39);
         case 12:
           _context34.n = 3;
           break;
@@ -569,8 +569,8 @@ function _syncLugaresToPlaces() {
           break;
         case 14:
           _context34.p = 14;
-          _t37 = _context34.v;
-          _iterator3.e(_t37);
+          _t40 = _context34.v;
+          _iterator3.e(_t40);
         case 15:
           _context34.p = 15;
           _iterator3.f();
@@ -3413,7 +3413,7 @@ function Cadastrar(_ref17) {
   function _salvar() {
     _salvar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9() {
       var _f$lugares$, _f$lugares$2, _f$lugares$3, _f$lugares$4, _f$lugares$5, _f$lugares$6;
-      var newId, avatarUrl, photoUrls, profile, _t5, _t6, _t7;
+      var newId, authId, _yield$db$auth$getSes, session, avatarUrl, photoUrls, profile, _t5, _t6, _t7, _t8;
       return _regenerator().w(function (_context9) {
         while (1) switch (_context9.p = _context9.n) {
           case 0:
@@ -3428,52 +3428,68 @@ function Cadastrar(_ref17) {
             setErr("");
 
             // Gera o ID antes pra usar nos nomes de arquivo
-            newId = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(); // Upload do avatar (se houver)
-            avatarUrl = null;
-            if (!f.avatarFile) {
-              _context9.n = 5;
-              break;
-            }
+            newId = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(); // Busca auth_id da sessão Google (se estiver logado)
+            authId = null;
             _context9.p = 2;
             _context9.n = 3;
-            return uploadImage(f.avatarFile, "avatars", newId);
+            return db.auth.getSession();
           case 3:
-            avatarUrl = _context9.v;
+            _yield$db$auth$getSes = _context9.v;
+            session = _yield$db$auth$getSes.data.session;
+            if (session !== null && session !== void 0 && session.user) authId = session.user.id;
             _context9.n = 5;
             break;
           case 4:
             _context9.p = 4;
             _t5 = _context9.v;
-            console.error("Erro no upload do avatar:", _t5);
-            setErr("Não consegui enviar sua foto de perfil. Tente novamente.");
-            setSaving(false);
-            return _context9.a(2);
           case 5:
-            // Upload das fotos da galeria (se houver)
-            photoUrls = [];
-            if (!(f.photoFiles && f.photoFiles.length > 0)) {
+            // Upload do avatar (se houver)
+            avatarUrl = null;
+            if (!f.avatarFile) {
               _context9.n = 9;
               break;
             }
             _context9.p = 6;
             _context9.n = 7;
-            return Promise.all(f.photoFiles.map(function (file) {
-              return uploadImage(file, "photos", newId);
-            }));
+            return uploadImage(f.avatarFile, "avatars", newId);
           case 7:
-            photoUrls = _context9.v;
+            avatarUrl = _context9.v;
             _context9.n = 9;
             break;
           case 8:
             _context9.p = 8;
             _t6 = _context9.v;
-            console.error("Erro no upload das fotos:", _t6);
-            setErr("Não consegui enviar suas fotos. Tente novamente.");
+            console.error("Erro no upload do avatar:", _t6);
+            setErr("Não consegui enviar sua foto de perfil. Tente novamente.");
             setSaving(false);
             return _context9.a(2);
           case 9:
+            // Upload das fotos da galeria (se houver)
+            photoUrls = [];
+            if (!(f.photoFiles && f.photoFiles.length > 0)) {
+              _context9.n = 13;
+              break;
+            }
+            _context9.p = 10;
+            _context9.n = 11;
+            return Promise.all(f.photoFiles.map(function (file) {
+              return uploadImage(file, "photos", newId);
+            }));
+          case 11:
+            photoUrls = _context9.v;
+            _context9.n = 13;
+            break;
+          case 12:
+            _context9.p = 12;
+            _t7 = _context9.v;
+            console.error("Erro no upload das fotos:", _t7);
+            setErr("Não consegui enviar suas fotos. Tente novamente.");
+            setSaving(false);
+            return _context9.a(2);
+          case 13:
             profile = {
               id: newId,
+              auth_id: authId,
               created_at: new Date().toISOString(),
               name: (f.firstName.trim() + " " + f.lastName.trim()).trim(),
               first_name: f.firstName.trim(),
@@ -3505,17 +3521,17 @@ function Cadastrar(_ref17) {
               available: f.available || "sim",
               intencao: f.intencao.length > 0 ? f.intencao : null
             };
-            _context9.p = 10;
-            _context9.n = 11;
+            _context9.p = 14;
+            _context9.n = 15;
             return db.from("profiles").insert(profile);
-          case 11:
-            _context9.n = 13;
+          case 15:
+            _context9.n = 17;
             break;
-          case 12:
-            _context9.p = 12;
-            _t7 = _context9.v;
-            console.log("Supabase:", _t7 === null || _t7 === void 0 ? void 0 : _t7.message);
-          case 13:
+          case 16:
+            _context9.p = 16;
+            _t8 = _context9.v;
+            console.log("Supabase:", _t8 === null || _t8 === void 0 ? void 0 : _t8.message);
+          case 17:
             // Sincroniza lugares pra tabela places + place_profiles
             syncLugaresToPlaces(profile.id, f.lugares)["catch"](function (e) {
               return console.log("Sync lugares:", e);
@@ -3523,10 +3539,10 @@ function Cadastrar(_ref17) {
             onSave(profile);
             setSaving(false);
             setDone(true);
-          case 14:
+          case 18:
             return _context9.a(2);
         }
-      }, _callee9, null, [[10, 12], [6, 8], [2, 4]]);
+      }, _callee9, null, [[14, 16], [10, 12], [6, 8], [2, 4]]);
     }));
     return _salvar.apply(this, arguments);
   }
@@ -4927,7 +4943,7 @@ function ModalEditarPerfil(_ref20) {
   function _salvar2() {
     _salvar2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0() {
       var _objectSpread3;
-      var updated, _t8;
+      var updated, _t9;
       return _regenerator().w(function (_context0) {
         while (1) switch (_context0.p = _context0.n) {
           case 0:
@@ -4966,8 +4982,8 @@ function ModalEditarPerfil(_ref20) {
             break;
           case 4:
             _context0.p = 4;
-            _t8 = _context0.v;
-            console.log("Erro:", _t8);
+            _t9 = _context0.v;
+            console.log("Erro:", _t9);
           case 5:
             onSave(updated);
             setSaving(false);
@@ -5494,7 +5510,7 @@ function Perfil(_ref21) {
   }
   function _handleNewAvatar() {
     _handleNewAvatar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(e) {
-      var file, url, updated, _t0, _t1;
+      var file, url, updated, _t1, _t10;
       return _regenerator().w(function (_context10) {
         while (1) switch (_context10.p = _context10.n) {
           case 0:
@@ -5524,15 +5540,15 @@ function Perfil(_ref21) {
             break;
           case 5:
             _context10.p = 5;
-            _t0 = _context10.v;
-            console.error("update profile avatar:", _t0);
+            _t1 = _context10.v;
+            console.error("update profile avatar:", _t1);
           case 6:
             _context10.n = 8;
             break;
           case 7:
             _context10.p = 7;
-            _t1 = _context10.v;
-            console.error("Falha no upload do avatar:", _t1);
+            _t10 = _context10.v;
+            console.error("Falha no upload do avatar:", _t10);
             alert("Não consegui enviar a foto. Tente novamente ou escolha outra imagem.");
           case 8:
             return _context10.a(2);
@@ -5546,7 +5562,7 @@ function Perfil(_ref21) {
   }
   function _handleMorePhotos() {
     _handleMorePhotos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11(e) {
-      var files, urls, newPhotos, _t10, _t11;
+      var files, urls, newPhotos, _t11, _t12;
       return _regenerator().w(function (_context11) {
         while (1) switch (_context11.p = _context11.n) {
           case 0:
@@ -5578,15 +5594,15 @@ function Perfil(_ref21) {
             break;
           case 5:
             _context11.p = 5;
-            _t10 = _context11.v;
-            console.error("update profile photos:", _t10);
+            _t11 = _context11.v;
+            console.error("update profile photos:", _t11);
           case 6:
             _context11.n = 8;
             break;
           case 7:
             _context11.p = 7;
-            _t11 = _context11.v;
-            console.error("Falha no upload das fotos:", _t11);
+            _t12 = _context11.v;
+            console.error("Falha no upload das fotos:", _t12);
             alert("Não consegui enviar alguma das fotos. Tente novamente.");
           case 8:
             return _context11.a(2);
@@ -5783,7 +5799,7 @@ function Perfil(_ref21) {
     var capsulas = [];
     try {
       capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + (user === null || user === void 0 ? void 0 : user.id)) || "[]");
-    } catch (_unused4) {}
+    } catch (_unused5) {}
     if (!capsulas.length) return null;
     return /*#__PURE__*/React.createElement("div", {
       style: {
@@ -6436,7 +6452,7 @@ function Perfil(_ref21) {
       }
     })), /*#__PURE__*/React.createElement("button", {
       onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
-        var novas, _t9;
+        var novas, _t0;
         return _regenerator().w(function (_context1) {
           while (1) switch (_context1.p = _context1.n) {
             case 0:
@@ -6456,7 +6472,7 @@ function Perfil(_ref21) {
               break;
             case 3:
               _context1.p = 3;
-              _t9 = _context1.v;
+              _t0 = _context1.v;
             case 4:
               return _context1.a(2);
           }
@@ -7236,7 +7252,7 @@ function ModalChat(_ref31) {
   }
   function _send() {
     _send = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13() {
-      var msg, _t12;
+      var msg, _t13;
       return _regenerator().w(function (_context13) {
         while (1) switch (_context13.p = _context13.n) {
           case 0:
@@ -7272,7 +7288,7 @@ function ModalChat(_ref31) {
             break;
           case 4:
             _context13.p = 4;
-            _t12 = _context13.v;
+            _t13 = _context13.v;
           case 5:
             return _context13.a(2);
         }
@@ -7934,7 +7950,7 @@ function useRegionAlerts(user) {
     }
     function _checkNewProfiles() {
       _checkNewProfiles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14() {
-        var since, userCities, userStates, cityFilters, stateFilters, orFilter, _yield$db$from$select3, data, _t13;
+        var since, userCities, userStates, cityFilters, stateFilters, orFilter, _yield$db$from$select3, data, _t14;
         return _regenerator().w(function (_context14) {
           while (1) switch (_context14.p = _context14.n) {
             case 0:
@@ -7974,8 +7990,8 @@ function useRegionAlerts(user) {
               break;
             case 3:
               _context14.p = 3;
-              _t13 = _context14.v;
-              console.log("Alert check error:", _t13);
+              _t14 = _context14.v;
+              console.log("Alert check error:", _t14);
             case 4:
               return _context14.a(2);
           }
@@ -8142,7 +8158,7 @@ function ModalAdicionarLugar(_ref37) {
   }
   function _searchAddr3() {
     _searchAddr3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(q) {
-      var r, data, _t14;
+      var r, data, _t15;
       return _regenerator().w(function (_context15) {
         while (1) switch (_context15.p = _context15.n) {
           case 0:
@@ -8181,7 +8197,7 @@ function ModalAdicionarLugar(_ref37) {
             break;
           case 5:
             _context15.p = 5;
-            _t14 = _context15.v;
+            _t15 = _context15.v;
             setD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 addrLoading: false
@@ -8255,7 +8271,7 @@ function ModalAdicionarLugar(_ref37) {
   }
   function _salvar3() {
     _salvar3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16() {
-      var novoLugar, lugaresAtuais, novosLugares, _t15;
+      var novoLugar, lugaresAtuais, novosLugares, _t16;
       return _regenerator().w(function (_context16) {
         while (1) switch (_context16.p = _context16.n) {
           case 0:
@@ -8289,8 +8305,8 @@ function ModalAdicionarLugar(_ref37) {
             break;
           case 4:
             _context16.p = 4;
-            _t15 = _context16.v;
-            console.log("erro:", _t15);
+            _t16 = _context16.v;
+            console.log("erro:", _t16);
           case 5:
             // Sincroniza o novo lugar pra tabela places + place_profiles
             syncLugaresToPlaces(user.id, [novoLugar])["catch"](function (e) {
@@ -9051,7 +9067,7 @@ function ModalMomento(_ref39) {
   }
   function _salvar4() {
     _salvar4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18() {
-      var photoUrls, momento, fotosAtuais, novasFotos, _t16, _t17, _t18;
+      var photoUrls, momento, fotosAtuais, novasFotos, _t17, _t18, _t19;
       return _regenerator().w(function (_context18) {
         while (1) switch (_context18.p = _context18.n) {
           case 0:
@@ -9080,8 +9096,8 @@ function ModalMomento(_ref39) {
             break;
           case 4:
             _context18.p = 4;
-            _t16 = _context18.v;
-            console.error("Falha no upload das fotos do momento:", _t16);
+            _t17 = _context18.v;
+            console.error("Falha no upload das fotos do momento:", _t17);
             alert("Não consegui enviar as fotos. Tente novamente.");
             setSaving(false);
             return _context18.a(2);
@@ -9104,7 +9120,7 @@ function ModalMomento(_ref39) {
             break;
           case 8:
             _context18.p = 8;
-            _t17 = _context18.v;
+            _t18 = _context18.v;
           case 9:
             if (!(photoUrls.length > 0)) {
               _context18.n = 13;
@@ -9126,8 +9142,8 @@ function ModalMomento(_ref39) {
             break;
           case 12:
             _context18.p = 12;
-            _t18 = _context18.v;
-            console.log("Erro ao salvar fotos no perfil:", _t18);
+            _t19 = _context18.v;
+            console.log("Erro ao salvar fotos no perfil:", _t19);
           case 13:
             onSave(momento);
             setSaving(false);
@@ -9451,7 +9467,7 @@ function TelaLogin(_ref40) {
   }
   function _loginGoogle() {
     _loginGoogle = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19() {
-      var _yield$db$auth$signIn, error, _t19;
+      var _yield$db$auth$signIn, error, _t20;
       return _regenerator().w(function (_context19) {
         while (1) switch (_context19.p = _context19.n) {
           case 0:
@@ -9478,8 +9494,8 @@ function TelaLogin(_ref40) {
             break;
           case 4:
             _context19.p = 4;
-            _t19 = _context19.v;
-            setErro("Erro ao conectar com Google: " + _t19.message);
+            _t20 = _context19.v;
+            setErro("Erro ao conectar com Google: " + _t20.message);
             setLoading(false);
           case 5:
             return _context19.a(2);
@@ -9493,7 +9509,7 @@ function TelaLogin(_ref40) {
   }
   function _loginEmail() {
     _loginEmail = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20() {
-      var _yield$db$auth$signIn2, error, _t20;
+      var _yield$db$auth$signIn2, error, _t21;
       return _regenerator().w(function (_context20) {
         while (1) switch (_context20.p = _context20.n) {
           case 0:
@@ -9528,8 +9544,8 @@ function TelaLogin(_ref40) {
             break;
           case 5:
             _context20.p = 5;
-            _t20 = _context20.v;
-            setErro("Erro: " + _t20.message);
+            _t21 = _context20.v;
+            setErro("Erro: " + _t21.message);
           case 6:
             setLoading(false);
           case 7:
@@ -9843,7 +9859,7 @@ function useRegionNotifications(user, contacts) {
     }
     function _check() {
       _check = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21() {
-        var since, lugares, cidades, estados, orFilter, _yield$db$from$select4, data, novo, _user$name, meuSobrenome, sobrenomeIgual, _t21;
+        var since, lugares, cidades, estados, orFilter, _yield$db$from$select4, data, novo, _user$name, meuSobrenome, sobrenomeIgual, _t22;
         return _regenerator().w(function (_context21) {
           while (1) switch (_context21.p = _context21.n) {
             case 0:
@@ -9893,8 +9909,8 @@ function useRegionNotifications(user, contacts) {
               break;
             case 3:
               _context21.p = 3;
-              _t21 = _context21.v;
-              console.log("notif error:", _t21);
+              _t22 = _context21.v;
+              console.log("notif error:", _t22);
             case 4:
               return _context21.a(2);
           }
@@ -10153,7 +10169,7 @@ function CadastroSimples(_ref42) {
   }
   function _salvar5() {
     _salvar5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee23() {
-      var nome, avatarUrl, tempId, payload, saved, _yield$db$from$insert, data, error, _yield$db$from$upsert, _data, _saved$id, _t22, _t23, _t24;
+      var nome, authId, _yield$db$auth$getSes2, session, avatarUrl, tempId, payload, saved, _yield$db$from$insert, data, error, _yield$db$from$upsert, _data, _saved$id, _t23, _t24, _t25, _t26;
       return _regenerator().w(function (_context23) {
         while (1) switch (_context23.p = _context23.n) {
           case 0:
@@ -10164,28 +10180,44 @@ function CadastroSimples(_ref42) {
             return _context23.a(2);
           case 1:
             setSaving(true);
-            nome = "".concat(f.firstName.trim(), " ").concat(f.lastName.trim()).trim(); // Upload do avatar antes do insert, se houver
-            avatarUrl = null;
-            if (!f.avatarFile) {
-              _context23.n = 5;
-              break;
-            }
+            nome = "".concat(f.firstName.trim(), " ").concat(f.lastName.trim()).trim(); // Busca auth_id da sessão Google (se estiver logado)
+            authId = null;
             _context23.p = 2;
-            // Usa um ID temporário — depois sobrescrevemos com o ID real do perfil, mas o arquivo já está no bucket
-            tempId = crypto.randomUUID ? crypto.randomUUID() : "tmp_" + Date.now();
             _context23.n = 3;
-            return uploadImage(f.avatarFile, "avatars", tempId);
+            return db.auth.getSession();
           case 3:
-            avatarUrl = _context23.v;
+            _yield$db$auth$getSes2 = _context23.v;
+            session = _yield$db$auth$getSes2.data.session;
+            if (session !== null && session !== void 0 && session.user) authId = session.user.id;
             _context23.n = 5;
             break;
           case 4:
             _context23.p = 4;
-            _t22 = _context23.v;
-            console.error("Falha no upload do avatar:", _t22);
-            // Continua sem avatar em vez de travar
+            _t23 = _context23.v;
           case 5:
+            // Upload do avatar antes do insert, se houver
+            avatarUrl = null;
+            if (!f.avatarFile) {
+              _context23.n = 9;
+              break;
+            }
+            _context23.p = 6;
+            // Usa um ID temporário — depois sobrescrevemos com o ID real do perfil, mas o arquivo já está no bucket
+            tempId = crypto.randomUUID ? crypto.randomUUID() : "tmp_" + Date.now();
+            _context23.n = 7;
+            return uploadImage(f.avatarFile, "avatars", tempId);
+          case 7:
+            avatarUrl = _context23.v;
+            _context23.n = 9;
+            break;
+          case 8:
+            _context23.p = 8;
+            _t24 = _context23.v;
+            console.error("Falha no upload do avatar:", _t24);
+            // Continua sem avatar em vez de travar
+          case 9:
             payload = {
+              auth_id: authId,
               name: nome,
               first_name: f.firstName.trim(),
               last_name: f.lastName.trim(),
@@ -10216,52 +10248,52 @@ function CadastroSimples(_ref42) {
               }]
             };
             saved = null;
-            _context23.p = 6;
-            _context23.n = 7;
+            _context23.p = 10;
+            _context23.n = 11;
             return db.from("profiles").insert(payload).select().single();
-          case 7:
+          case 11:
             _yield$db$from$insert = _context23.v;
             data = _yield$db$from$insert.data;
             error = _yield$db$from$insert.error;
             if (!error) {
-              _context23.n = 8;
+              _context23.n = 12;
               break;
             }
             throw error;
-          case 8:
+          case 12:
             saved = data;
-            _context23.n = 13;
+            _context23.n = 17;
             break;
-          case 9:
-            _context23.p = 9;
-            _t23 = _context23.v;
-            console.error("Erro ao salvar perfil:", _t23);
+          case 13:
+            _context23.p = 13;
+            _t25 = _context23.v;
+            console.error("Erro ao salvar perfil:", _t25);
             // Tenta upsert como fallback
-            _context23.p = 10;
-            _context23.n = 11;
+            _context23.p = 14;
+            _context23.n = 15;
             return db.from("profiles").upsert(payload).select().single();
-          case 11:
+          case 15:
             _yield$db$from$upsert = _context23.v;
             _data = _yield$db$from$upsert.data;
             saved = _data;
-            _context23.n = 13;
+            _context23.n = 17;
             break;
-          case 12:
-            _context23.p = 12;
-            _t24 = _context23.v;
-            console.error("Erro no upsert:", _t24);
+          case 16:
+            _context23.p = 16;
+            _t26 = _context23.v;
+            console.error("Erro no upsert:", _t26);
             // Salva localmente como último recurso
             saved = _objectSpread(_objectSpread({}, payload), {}, {
               id: "local_" + Date.now()
             });
-          case 13:
+          case 17:
             if (saved) {
               try {
                 localStorage.setItem("tn_user", JSON.stringify(saved));
-              } catch (_unused9) {}
+              } catch (_unused1) {}
               try {
                 localStorage.setItem("tn_user_id", (_saved$id = saved.id) === null || _saved$id === void 0 ? void 0 : _saved$id.toString());
-              } catch (_unused0) {}
+              } catch (_unused10) {}
               // Sincroniza lugares pra tabela places + place_profiles
               if (saved.id && !saved.id.toString().startsWith("local_")) {
                 syncLugaresToPlaces(saved.id, saved.lugares || payload.lugares || [])["catch"](function (e) {
@@ -10271,10 +10303,10 @@ function CadastroSimples(_ref42) {
             }
             setSaving(false);
             onDone(saved || payload);
-          case 14:
+          case 18:
             return _context23.a(2);
         }
-      }, _callee23, null, [[10, 12], [6, 9], [2, 4]]);
+      }, _callee23, null, [[14, 16], [10, 13], [6, 8], [2, 4]]);
     }));
     return _salvar5.apply(this, arguments);
   }
@@ -11172,7 +11204,7 @@ function PerguntaComunidade(_ref48) {
   }
   function _responder() {
     _responder = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24() {
-      var _t25;
+      var _t27;
       return _regenerator().w(function (_context24) {
         while (1) switch (_context24.p = _context24.n) {
           case 0:
@@ -11203,7 +11235,7 @@ function PerguntaComunidade(_ref48) {
             break;
           case 4:
             _context24.p = 4;
-            _t25 = _context24.v;
+            _t27 = _context24.v;
             setRespondeu(true);
           case 5:
             setSaving(false);
@@ -11337,7 +11369,7 @@ function AgendaVisita(_ref50) {
   }
   function _salvar6() {
     _salvar6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25() {
-      var _t26;
+      var _t28;
       return _regenerator().w(function (_context25) {
         while (1) switch (_context25.p = _context25.n) {
           case 0:
@@ -11376,7 +11408,7 @@ function AgendaVisita(_ref50) {
             break;
           case 4:
             _context25.p = 4;
-            _t26 = _context25.v;
+            _t28 = _context25.v;
             setSaved(true);
           case 5:
             setSaving(false);
@@ -11837,7 +11869,7 @@ function AlertaRegiao(_ref51) {
           var _meta$cidade;
           var meta = JSON.parse(m.meta || "{}");
           return ((_meta$cidade = meta.cidade) === null || _meta$cidade === void 0 ? void 0 : _meta$cidade.toLowerCase()) === (cidade === null || cidade === void 0 ? void 0 : cidade.toLowerCase()) || meta.estado === estado;
-        } catch (_unused1) {
+        } catch (_unused11) {
           return false;
         }
       });
@@ -11948,7 +11980,7 @@ function useSeguirLugar(placeId, userId) {
   }
   function _toggleSeguir() {
     _toggleSeguir = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26() {
-      var _t27;
+      var _t29;
       return _regenerator().w(function (_context26) {
         while (1) switch (_context26.p = _context26.n) {
           case 0:
@@ -11989,8 +12021,8 @@ function useSeguirLugar(placeId, userId) {
             break;
           case 7:
             _context26.p = 7;
-            _t27 = _context26.v;
-            console.error("Erro ao seguir/deseguir lugar:", _t27);
+            _t29 = _context26.v;
+            console.error("Erro ao seguir/deseguir lugar:", _t29);
           case 8:
             setLoading(false);
           case 9:
@@ -12030,7 +12062,7 @@ function CapsulaPerfil(_ref55) {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas[index] = _objectSpread(_objectSpread({}, capsulas[index]), f);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused10) {}
+    } catch (_unused12) {}
     setEditando(false);
   }
   function cancelarCapsula() {
@@ -12038,7 +12070,7 @@ function CapsulaPerfil(_ref55) {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas.splice(index, 1);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused11) {}
+    } catch (_unused13) {}
   }
   return /*#__PURE__*/React.createElement("div", {
     style: {
@@ -12720,7 +12752,7 @@ function PerfilLugar(_ref56) {
     var meta = {};
     try {
       meta = JSON.parse(a.meta || "{}");
-    } catch (_unused12) {}
+    } catch (_unused14) {}
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       style: {
@@ -12804,7 +12836,7 @@ function App() {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
-      } catch (_unused13) {
+      } catch (_unused15) {
         return null;
       }
     }),
@@ -12859,7 +12891,7 @@ function App() {
     function _init() {
       _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29() {
         var _session;
-        var localUser, s, session, _res$data, res, _yield$db$from$select0, data, updated, _yield$db$from$select1, _data2, _t29, _t30, _t31, _t32;
+        var localUser, s, session, _res$data, res, _yield$db$from$select0, data, updated, _yield$db$from$select1, _data2, _t32, _t33, _t34, _t35;
         return _regenerator().w(function (_context29) {
           while (1) switch (_context29.p = _context29.n) {
             case 0:
@@ -12868,7 +12900,7 @@ function App() {
               try {
                 s = localStorage.getItem("tn_user");
                 if (s) localUser = JSON.parse(s);
-              } catch (_unused17) {}
+              } catch (_unused22) {}
 
               // 2. Verifica sessão Google
               session = null;
@@ -12882,8 +12914,8 @@ function App() {
               break;
             case 3:
               _context29.p = 3;
-              _t29 = _context29.v;
-              console.log("Erro ao buscar sessão:", _t29);
+              _t32 = _context29.v;
+              console.log("Erro ao buscar sessão:", _t32);
               // Se falhar, mantém o user local
               if (localUser && !user) setUser(localUser);
               return _context29.a(2);
@@ -12905,15 +12937,15 @@ function App() {
               setUser(data);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(data));
-              } catch (_unused18) {}
+              } catch (_unused23) {}
               return _context29.a(2);
             case 7:
               _context29.n = 9;
               break;
             case 8:
               _context29.p = 8;
-              _t30 = _context29.v;
-              console.log("Erro ao buscar perfil por auth_id:", _t30);
+              _t33 = _context29.v;
+              console.log("Erro ao buscar perfil por auth_id:", _t33);
             case 9:
               if (!(localUser && localUser.id && !localUser.id.toString().startsWith("local_"))) {
                 _context29.n = 13;
@@ -12931,12 +12963,12 @@ function App() {
               setUser(updated);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(updated));
-              } catch (_unused19) {}
+              } catch (_unused24) {}
               return _context29.a(2);
             case 12:
               _context29.p = 12;
-              _t31 = _context29.v;
-              console.log("Erro ao vincular perfil:", _t31);
+              _t34 = _context29.v;
+              console.log("Erro ao vincular perfil:", _t34);
             case 13:
               if (!(localUser && !user)) {
                 _context29.n = 14;
@@ -12969,15 +13001,15 @@ function App() {
               setUser(_data2);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(_data2));
-              } catch (_unused20) {}
+              } catch (_unused25) {}
               return _context29.a(2);
             case 18:
               _context29.n = 20;
               break;
             case 19:
               _context29.p = 19;
-              _t32 = _context29.v;
-              console.log("Erro ao buscar perfil do banco:", _t32);
+              _t35 = _context29.v;
+              console.log("Erro ao buscar perfil do banco:", _t35);
             case 20:
               // Se não conseguiu buscar do banco, usa o local mesmo
               if (!user) setUser(localUser);
@@ -12991,7 +13023,7 @@ function App() {
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
         var _ref61 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(event, session) {
-          var _yield$db$from$select9, data, _t28;
+          var _yield$db$from$select9, data, localU, s, updated, _s, _t30, _t31;
           return _regenerator().w(function (_context28) {
             while (1) switch (_context28.p = _context28.n) {
               case 0:
@@ -13000,13 +13032,13 @@ function App() {
                   setContacts([]);
                   try {
                     localStorage.removeItem("tn_user");
-                  } catch (_unused14) {}
+                  } catch (_unused16) {}
                   try {
                     localStorage.removeItem("tn_contacts");
-                  } catch (_unused15) {}
+                  } catch (_unused17) {}
                 }
                 if (!(event === "SIGNED_IN" && session !== null && session !== void 0 && session.user)) {
-                  _context28.n = 4;
+                  _context28.n = 9;
                   break;
                 }
                 _context28.p = 1;
@@ -13015,22 +13047,65 @@ function App() {
               case 2:
                 _yield$db$from$select9 = _context28.v;
                 data = _yield$db$from$select9.data;
-                if (data) {
-                  setUser(data);
-                  try {
-                    localStorage.setItem("tn_user", JSON.stringify(data));
-                  } catch (_unused16) {}
+                if (!data) {
+                  _context28.n = 3;
+                  break;
                 }
-                _context28.n = 4;
+                setUser(data);
+                try {
+                  localStorage.setItem("tn_user", JSON.stringify(data));
+                } catch (_unused18) {}
+                _context28.n = 7;
                 break;
               case 3:
-                _context28.p = 3;
-                _t28 = _context28.v;
-                console.log("Erro no auth state change:", _t28);
-              case 4:
+                // Não tem perfil vinculado — tenta vincular perfil local
+                localU = null;
+                try {
+                  s = localStorage.getItem("tn_user");
+                  if (s) localU = JSON.parse(s);
+                } catch (_unused19) {}
+                if (!(localU && localU.id && !localU.id.toString().startsWith("local_"))) {
+                  _context28.n = 7;
+                  break;
+                }
+                _context28.p = 4;
+                _context28.n = 5;
+                return db.from("profiles").update({
+                  auth_id: session.user.id
+                }).eq("id", localU.id);
+              case 5:
+                updated = _objectSpread(_objectSpread({}, localU), {}, {
+                  auth_id: session.user.id
+                });
+                setUser(updated);
+                try {
+                  localStorage.setItem("tn_user", JSON.stringify(updated));
+                } catch (_unused20) {}
+                console.log("Perfil local vinculado ao Google:", localU.id);
+                _context28.n = 7;
+                break;
+              case 6:
+                _context28.p = 6;
+                _t30 = _context28.v;
+                console.log("Erro ao vincular perfil local:", _t30);
+                // Mantém o perfil local mesmo sem vincular
+                setUser(localU);
+              case 7:
+                _context28.n = 9;
+                break;
+              case 8:
+                _context28.p = 8;
+                _t31 = _context28.v;
+                console.log("Erro no auth state change:", _t31);
+                // Fallback: usa perfil local se existir
+                try {
+                  _s = localStorage.getItem("tn_user");
+                  if (_s) setUser(JSON.parse(_s));
+                } catch (_unused21) {}
+              case 9:
                 return _context28.a(2);
             }
-          }, _callee28, null, [[1, 3]]);
+          }, _callee28, null, [[4, 6], [1, 8]]);
         }));
         return function (_x19, _x20) {
           return _ref61.apply(this, arguments);
@@ -13046,7 +13121,7 @@ function App() {
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30() {
-      var _yield$db$from$select10, data, error, loaded, c, local, rows, _t33;
+      var _yield$db$from$select10, data, error, loaded, c, local, rows, _t36;
       return _regenerator().w(function (_context30) {
         while (1) switch (_context30.p = _context30.n) {
           case 0:
@@ -13069,15 +13144,15 @@ function App() {
             setContacts(loaded);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(loaded));
-            } catch (_unused21) {}
+            } catch (_unused26) {}
             return _context30.a(2);
           case 2:
             _context30.n = 4;
             break;
           case 3:
             _context30.p = 3;
-            _t33 = _context30.v;
-            console.log("Erro ao carregar contatos do Supabase:", _t33);
+            _t36 = _context30.v;
+            console.log("Erro ao carregar contatos do Supabase:", _t36);
           case 4:
             // Fallback: localStorage (migra pro Supabase se tiver dados locais)
             try {
@@ -13101,7 +13176,7 @@ function App() {
                   })["catch"](function () {});
                 }
               }
-            } catch (_unused22) {}
+            } catch (_unused27) {}
           case 5:
             return _context30.a(2);
         }
@@ -13112,7 +13187,7 @@ function App() {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused23) {}
+    } catch (_unused28) {}
     setTela("perfil");
   }
   function addContact(_x21) {
@@ -13123,7 +13198,7 @@ function App() {
       var rel,
         updated,
         _args31 = arguments,
-        _t34;
+        _t37;
       return _regenerator().w(function (_context31) {
         while (1) switch (_context31.p = _context31.n) {
           case 0:
@@ -13148,7 +13223,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused29) {}
+            } catch (_unused34) {}
             // Persiste no Supabase
             _context31.p = 3;
             _context31.n = 4;
@@ -13164,8 +13239,8 @@ function App() {
             break;
           case 5:
             _context31.p = 5;
-            _t34 = _context31.v;
-            console.error("Erro ao salvar contato:", _t34);
+            _t37 = _context31.v;
+            console.error("Erro ao salvar contato:", _t37);
           case 6:
             return _context31.a(2);
         }
@@ -13178,7 +13253,7 @@ function App() {
   }
   function _updateContactRel() {
     _updateContactRel = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32(id, rel) {
-      var updated, _t35;
+      var updated, _t38;
       return _regenerator().w(function (_context32) {
         while (1) switch (_context32.p = _context32.n) {
           case 0:
@@ -13190,7 +13265,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused30) {}
+            } catch (_unused35) {}
             // Atualiza no Supabase
             if (!(user !== null && user !== void 0 && user.id)) {
               _context32.n = 4;
@@ -13206,8 +13281,8 @@ function App() {
             break;
           case 3:
             _context32.p = 3;
-            _t35 = _context32.v;
-            console.error("Erro ao atualizar rel:", _t35);
+            _t38 = _context32.v;
+            console.error("Erro ao atualizar rel:", _t38);
           case 4:
             return _context32.a(2);
         }
@@ -13237,17 +13312,17 @@ function App() {
     setContacts([]);
     try {
       localStorage.removeItem("tn_user");
-    } catch (_unused24) {}
+    } catch (_unused29) {}
     try {
       localStorage.removeItem("tn_contacts");
-    } catch (_unused25) {}
+    } catch (_unused30) {}
     db.auth.signOut();
   }
   function updateUser(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused26) {}
+    } catch (_unused31) {}
     // Sincroniza com Supabase em background
     if (p !== null && p !== void 0 && p.id && !p.id.toString().startsWith("local_")) {
       db.from("profiles").upsert(p).then(function (_ref63) {
@@ -13584,7 +13659,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused27) {}
+      } catch (_unused32) {}
       ;
       setShowAdicionarLugar(false);
     }
@@ -13598,7 +13673,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused28) {}
+      } catch (_unused33) {}
     }
   }), showReencontrar && /*#__PURE__*/React.createElement(ModalReencontrar, {
     onClose: function onClose() {
