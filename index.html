@@ -194,6 +194,16 @@ var db = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
   }
 });
 
+// Client sem auth — pra queries que não precisam de sessão (feed, busca, etc)
+var dbRead = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
+  auth: {
+    storage: memStorage,
+    autoRefreshToken: false,
+    persistSession: false,
+    detectSessionInUrl: false
+  }
+});
+
 // ── Tokens ────────────────────────────────────────────────────
 var T = {
   bg: "#FAF7F2",
@@ -536,7 +546,7 @@ function syncLugaresToPlaces(_x6, _x7) {
 } // ── Logo ──────────────────────────────────────────────────────
 function _syncLugaresToPlaces() {
   _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34(profileId, lugares) {
-    var _iterator3, _step3, l, nome, cidade, estado, _yield$db$from$select10, existing, placeId, _yield$db$from$insert2, created, error, _t42, _t43;
+    var _iterator3, _step3, l, nome, cidade, estado, _yield$db$from$select3, existing, placeId, _yield$db$from$insert2, created, error, _t42, _t43;
     return _regenerator().w(function (_context34) {
       while (1) switch (_context34.p = _context34.n) {
         case 0:
@@ -568,8 +578,8 @@ function _syncLugaresToPlaces() {
           _context34.n = 5;
           return db.from("places").select("id").eq("name", nome).eq("city", cidade).maybeSingle();
         case 5:
-          _yield$db$from$select10 = _context34.v;
-          existing = _yield$db$from$select10.data;
+          _yield$db$from$select3 = _context34.v;
+          existing = _yield$db$from$select3.data;
           placeId = void 0;
           if (!existing) {
             _context34.n = 6;
@@ -835,7 +845,7 @@ function SocialProof() {
     count = _useState2[0],
     setCount = _useState2[1];
   useEffect(function () {
-    db.from("profiles").select("id", {
+    dbRead.from("profiles").select("id", {
       count: "exact",
       head: true
     }).then(function (_ref4) {
@@ -902,7 +912,7 @@ function CommunityStats() {
     total = _useState4[0],
     setTotal = _useState4[1];
   useEffect(function () {
-    db.from("profiles").select("id", {
+    dbRead.from("profiles").select("id", {
       count: "exact",
       head: true
     }).then(function (_ref5) {
@@ -913,7 +923,7 @@ function CommunityStats() {
         });
       });
     })["catch"](function () {});
-    db.from("places").select("id", {
+    dbRead.from("places").select("id", {
       count: "exact",
       head: true
     }).then(function (_ref6) {
@@ -1441,7 +1451,7 @@ function MomentosFeed(_ref10) {
     loading = _useState12[0],
     setLoading = _useState12[1];
   useEffect(function () {
-    db.from("momentos").select("*").order("ts", {
+    dbRead.from("momentos").select("*").order("ts", {
       ascending: false
     }).limit(10).then(function (_ref11) {
       var data = _ref11.data;
@@ -1568,7 +1578,7 @@ function Inicio(_ref12) {
     }, 5000);
 
     // Busca perfis
-    db.from("profiles").select("id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type,intencao").order("created_at", {
+    dbRead.from("profiles").select("id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type,intencao").order("created_at", {
       ascending: false
     }).limit(40).then(function (_ref13) {
       var data = _ref13.data;
@@ -1581,7 +1591,7 @@ function Inicio(_ref12) {
     });
 
     // Busca lugares da tabela places (sem sub-queries pesadas)
-    db.from("places").select("id,name,city,state,type,photo_url").order("created_at", {
+    dbRead.from("places").select("id,name,city,state,type,photo_url").order("created_at", {
       ascending: false
     }).limit(10).then(function (_ref14) {
       var places = _ref14.data;
@@ -2116,7 +2126,7 @@ function Buscar(_ref15) {
           case 0:
             setLoading(true);
             _context.p = 1;
-            query = db.from("profiles").select("*");
+            query = dbRead.from("profiles").select("*");
             if (q.trim()) query = query.or("name.ilike.%".concat(q.trim(), "%,nick.ilike.%").concat(q.trim(), "%,first_name.ilike.%").concat(q.trim(), "%,last_name.ilike.%").concat(q.trim(), "%"));
             if (lugar.trim()) query = query.or("place_name.ilike.%".concat(lugar.trim(), "%,city.ilike.%").concat(lugar.trim(), "%,state.ilike.%").concat(lugar.trim(), "%"));
             _context.n = 2;
@@ -4211,7 +4221,7 @@ function Contatos(_ref19) {
     })), _toConsumableArray(estados.map(function (s) {
       return "state.eq.".concat(s);
     }))).join(",");
-    db.from("profiles").select("*").neq("id", user.id).or(orFilter).order("created_at", {
+    dbRead.from("profiles").select("*").neq("id", user.id).or(orFilter).order("created_at", {
       ascending: false
     }).limit(50).then(function (_ref20) {
       var data = _ref20.data;
@@ -11143,7 +11153,7 @@ function TelaCuriosidade(_ref45) {
     setCount = _useState143[1];
   useEffect(function () {
     // Show teaser profiles - blurred
-    db.from("profiles").select("id,name,first_name,avatar_url,city,state,year_start,year_end,era").order("created_at", {
+    dbRead.from("profiles").select("id,name,first_name,avatar_url,city,state,year_start,year_end,era").order("created_at", {
       ascending: false
     }).limit(6).then(function (_ref46) {
       var data = _ref46.data;
@@ -11477,7 +11487,7 @@ function QuemPassouPorAqui(_ref48) {
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.city) && !(user !== null && user !== void 0 && user.state)) return;
     var filtro = user.city ? "city.ilike.%".concat(user.city, "%") : "state.eq.".concat(user.state);
-    db.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref49) {
+    dbRead.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref49) {
       var data = _ref49.data;
       setCount((data === null || data === void 0 ? void 0 : data.length) || 0);
       setExemplos((data === null || data === void 0 ? void 0 : data.slice(0, 4)) || []);
@@ -12361,7 +12371,7 @@ function useSeguirLugar(placeId, userId) {
   useEffect(function () {
     if (!placeId) return;
     // Busca total de seguidores deste lugar
-    db.from("followed_places").select("id", {
+    dbRead.from("followed_places").select("id", {
       count: "exact"
     }).eq("place_id", placeId).then(function (_ref55) {
       var count = _ref55.count;
@@ -12369,7 +12379,7 @@ function useSeguirLugar(placeId, userId) {
     })["catch"](function () {});
     // Verifica se o user segue
     if (!userId) return;
-    db.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref56) {
+    dbRead.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref56) {
       var data = _ref56.data;
       return setSeguindo(!!data);
     })["catch"](function () {});
@@ -12663,7 +12673,7 @@ function PerfilLugar(_ref58) {
     }
     if (!lugar) return;
     // Busca place pelo nome
-    db.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref59) {
+    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref59) {
       var data = _ref59.data;
       if (data) {
         setPlace(data);
@@ -12680,7 +12690,7 @@ function PerfilLugar(_ref58) {
     setLoading(true);
     var buscarDados = /*#__PURE__*/function () {
       var _ref60 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27() {
-        var _yield$db$from$select3, p, _yield$db$from$select4, pp, vinculados, lugarNome, _yield$db$from$select5, m, _yield$db$from$select6, a;
+        var _yield$dbRead$from$se, p, _yield$dbRead$from$se2, pp, vinculados, lugarNome, _yield$dbRead$from$se3, m, _yield$dbRead$from$se4, a;
         return _regenerator().w(function (_context27) {
           while (1) switch (_context27.n) {
             case 0:
@@ -12689,19 +12699,19 @@ function PerfilLugar(_ref58) {
                 break;
               }
               _context27.n = 1;
-              return db.from("places").select("*").eq("id", resolvedId).maybeSingle();
+              return dbRead.from("places").select("*").eq("id", resolvedId).maybeSingle();
             case 1:
-              _yield$db$from$select3 = _context27.v;
-              p = _yield$db$from$select3.data;
+              _yield$dbRead$from$se = _context27.v;
+              p = _yield$dbRead$from$se.data;
               if (p) setPlace(p);
             case 2:
               _context27.n = 3;
-              return db.from("place_profiles").select("year_start, year_end, place_type, era, profiles!place_profiles_profile_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era)").eq("place_id", resolvedId).order("year_start", {
+              return dbRead.from("place_profiles").select("year_start, year_end, place_type, era, profiles!place_profiles_profile_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era)").eq("place_id", resolvedId).order("year_start", {
                 ascending: true
               });
             case 3:
-              _yield$db$from$select4 = _context27.v;
-              pp = _yield$db$from$select4.data;
+              _yield$dbRead$from$se2 = _context27.v;
+              pp = _yield$dbRead$from$se2.data;
               vinculados = (pp || []).map(function (r) {
                 return _objectSpread(_objectSpread({}, r.profiles), {}, {
                   pp_year_start: r.year_start,
@@ -12719,18 +12729,18 @@ function PerfilLugar(_ref58) {
                 break;
               }
               _context27.n = 4;
-              return db.from("momentos").select("*").ilike("lugar", "%".concat(lugarNome, "%")).order("ts", {
+              return dbRead.from("momentos").select("*").ilike("lugar", "%".concat(lugarNome, "%")).order("ts", {
                 ascending: false
               }).limit(20);
             case 4:
-              _yield$db$from$select5 = _context27.v;
-              m = _yield$db$from$select5.data;
+              _yield$dbRead$from$se3 = _context27.v;
+              m = _yield$dbRead$from$se3.data;
               setMomentos(m || []);
               _context27.n = 5;
-              return db.from("momentos").select("*").eq("tipo", "agenda_visita").ilike("lugar", "%".concat(lugarNome, "%")).limit(5);
+              return dbRead.from("momentos").select("*").eq("tipo", "agenda_visita").ilike("lugar", "%".concat(lugarNome, "%")).limit(5);
             case 5:
-              _yield$db$from$select6 = _context27.v;
-              a = _yield$db$from$select6.data;
+              _yield$dbRead$from$se4 = _context27.v;
+              a = _yield$dbRead$from$se4.data;
               setAgendas(a || []);
             case 6:
               setLoading(false);
@@ -13290,7 +13300,7 @@ function App() {
     function _init() {
       _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29() {
         var _session;
-        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, _yield$db$from$select8, data, _yield$db$from$select9, _data2, updated, _yield$db$from$select0, _data3, _t34, _t35, _t36, _t37;
+        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, _yield$dbRead$from$se6, data, _yield$dbRead$from$se7, _data2, updated, _yield$dbRead$from$se8, _data3, _t34, _t35, _t36, _t37;
         return _regenerator().w(function (_context29) {
           while (1) switch (_context29.p = _context29.n) {
             case 0:
@@ -13333,10 +13343,10 @@ function App() {
               }
               _context29.p = 5;
               _context29.n = 6;
-              return db.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle();
+              return dbRead.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle();
             case 6:
-              _yield$db$from$select8 = _context29.v;
-              data = _yield$db$from$select8.data;
+              _yield$dbRead$from$se6 = _context29.v;
+              data = _yield$dbRead$from$se6.data;
               if (!data) {
                 _context29.n = 7;
                 break;
@@ -13360,10 +13370,10 @@ function App() {
               }
               _context29.p = 10;
               _context29.n = 11;
-              return db.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
+              return dbRead.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
             case 11:
-              _yield$db$from$select9 = _context29.v;
-              _data2 = _yield$db$from$select9.data;
+              _yield$dbRead$from$se7 = _context29.v;
+              _data2 = _yield$dbRead$from$se7.data;
               if (!_data2) {
                 _context29.n = 13;
                 break;
@@ -13413,10 +13423,10 @@ function App() {
               }
               _context29.p = 18;
               _context29.n = 19;
-              return db.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
+              return dbRead.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
             case 19:
-              _yield$db$from$select0 = _context29.v;
-              _data3 = _yield$db$from$select0.data;
+              _yield$dbRead$from$se8 = _context29.v;
+              _data3 = _yield$dbRead$from$se8.data;
               if (!_data3) {
                 _context29.n = 20;
                 break;
@@ -13446,7 +13456,7 @@ function App() {
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
         var _ref63 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(event, session) {
-          var _yield$db$from$select7, data, localU, s, updated, _s, _t32, _t33;
+          var _yield$dbRead$from$se5, data, localU, s, updated, _s, _t32, _t33;
           return _regenerator().w(function (_context28) {
             while (1) switch (_context28.p = _context28.n) {
               case 0:
@@ -13466,10 +13476,10 @@ function App() {
                 }
                 _context28.p = 1;
                 _context28.n = 2;
-                return db.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle();
+                return dbRead.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle();
               case 2:
-                _yield$db$from$select7 = _context28.v;
-                data = _yield$db$from$select7.data;
+                _yield$dbRead$from$se5 = _context28.v;
+                data = _yield$dbRead$from$se5.data;
                 if (!data) {
                   _context28.n = 3;
                   break;
@@ -13544,17 +13554,17 @@ function App() {
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30() {
-      var _yield$db$from$select1, data, error, loaded, c, local, rows, _t38;
+      var _yield$dbRead$from$se9, data, error, loaded, c, local, rows, _t38;
       return _regenerator().w(function (_context30) {
         while (1) switch (_context30.p = _context30.n) {
           case 0:
             _context30.p = 0;
             _context30.n = 1;
-            return db.from("contacts").select("contact_id, rel, profiles!contacts_contact_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type)").eq("user_id", user.id);
+            return dbRead.from("contacts").select("contact_id, rel, profiles!contacts_contact_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type)").eq("user_id", user.id);
           case 1:
-            _yield$db$from$select1 = _context30.v;
-            data = _yield$db$from$select1.data;
-            error = _yield$db$from$select1.error;
+            _yield$dbRead$from$se9 = _context30.v;
+            data = _yield$dbRead$from$se9.data;
+            error = _yield$dbRead$from$se9.error;
             if (!(!error && data && data.length > 0)) {
               _context30.n = 2;
               break;
