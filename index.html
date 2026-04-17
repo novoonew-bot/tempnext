@@ -507,7 +507,7 @@ function syncLugaresToPlaces(_x6, _x7) {
 } // ── Logo ──────────────────────────────────────────────────────
 function _syncLugaresToPlaces() {
   _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34(profileId, lugares) {
-    var _iterator3, _step3, l, nome, cidade, estado, _yield$db$from$select1, existing, placeId, _yield$db$from$insert2, created, error, _t42, _t43;
+    var _iterator3, _step3, l, nome, cidade, estado, _yield$db$from$select10, existing, placeId, _yield$db$from$insert2, created, error, _t42, _t43;
     return _regenerator().w(function (_context34) {
       while (1) switch (_context34.p = _context34.n) {
         case 0:
@@ -539,8 +539,8 @@ function _syncLugaresToPlaces() {
           _context34.n = 5;
           return db.from("places").select("id").eq("name", nome).eq("city", cidade).maybeSingle();
         case 5:
-          _yield$db$from$select1 = _context34.v;
-          existing = _yield$db$from$select1.data;
+          _yield$db$from$select10 = _context34.v;
+          existing = _yield$db$from$select10.data;
           placeId = void 0;
           if (!existing) {
             _context34.n = 6;
@@ -13261,7 +13261,7 @@ function App() {
     function _init() {
       _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29() {
         var _session;
-        var localUser, s, session, _res$data, res, _yield$db$from$select8, data, updated, _yield$db$from$select9, _data2, _t34, _t35, _t36, _t37;
+        var localUser, s, session, _res$data, res, _yield$db$from$select8, data, _yield$db$from$select9, _data2, updated, _yield$db$from$select0, _data3, _t34, _t35, _t36, _t37;
         return _regenerator().w(function (_context29) {
           while (1) switch (_context29.p = _context29.n) {
             case 0:
@@ -13291,7 +13291,7 @@ function App() {
               return _context29.a(2);
             case 4:
               if (!((_session = session) !== null && _session !== void 0 && _session.user)) {
-                _context29.n = 15;
+                _context29.n = 17;
                 break;
               }
               _context29.p = 5;
@@ -13318,16 +13318,29 @@ function App() {
               console.log("Erro ao buscar perfil por auth_id:", _t35);
             case 9:
               if (!(localUser && localUser.id && !localUser.id.toString().startsWith("local_"))) {
-                _context29.n = 13;
+                _context29.n = 15;
                 break;
               }
               _context29.p = 10;
               _context29.n = 11;
+              return db.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
+            case 11:
+              _yield$db$from$select9 = _context29.v;
+              _data2 = _yield$db$from$select9.data;
+              if (!_data2) {
+                _context29.n = 13;
+                break;
+              }
+              if (_data2.auth_id) {
+                _context29.n = 12;
+                break;
+              }
+              _context29.n = 12;
               return db.from("profiles").update({
                 auth_id: session.user.id
-              }).eq("id", localUser.id);
-            case 11:
-              updated = _objectSpread(_objectSpread({}, localUser), {}, {
+              }).eq("id", _data2.id)["catch"](function () {});
+            case 12:
+              updated = _objectSpread(_objectSpread({}, _data2), {}, {
                 auth_id: session.user.id
               });
               setUser(updated);
@@ -13335,58 +13348,61 @@ function App() {
                 localStorage.setItem("tn_user", JSON.stringify(updated));
               } catch (_unused23) {}
               return _context29.a(2);
-            case 12:
-              _context29.p = 12;
-              _t36 = _context29.v;
-              console.log("Erro ao vincular perfil:", _t36);
             case 13:
-              if (!(localUser && !user)) {
-                _context29.n = 14;
+              _context29.n = 15;
+              break;
+            case 14:
+              _context29.p = 14;
+              _t36 = _context29.v;
+              console.log("Erro ao buscar perfil por id:", _t36);
+            case 15:
+              if (!localUser) {
+                _context29.n = 16;
                 break;
               }
               setUser(localUser);
               return _context29.a(2);
-            case 14:
-              _context29.n = 21;
+            case 16:
+              _context29.n = 23;
               break;
-            case 15:
+            case 17:
               if (!localUser) {
-                _context29.n = 21;
+                _context29.n = 23;
                 break;
               }
               if (!(localUser.id && !localUser.id.toString().startsWith("local_"))) {
+                _context29.n = 22;
+                break;
+              }
+              _context29.p = 18;
+              _context29.n = 19;
+              return db.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
+            case 19:
+              _yield$db$from$select0 = _context29.v;
+              _data3 = _yield$db$from$select0.data;
+              if (!_data3) {
                 _context29.n = 20;
                 break;
               }
-              _context29.p = 16;
-              _context29.n = 17;
-              return db.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
-            case 17:
-              _yield$db$from$select9 = _context29.v;
-              _data2 = _yield$db$from$select9.data;
-              if (!_data2) {
-                _context29.n = 18;
-                break;
-              }
-              setUser(_data2);
+              setUser(_data3);
               try {
-                localStorage.setItem("tn_user", JSON.stringify(_data2));
+                localStorage.setItem("tn_user", JSON.stringify(_data3));
               } catch (_unused24) {}
               return _context29.a(2);
-            case 18:
-              _context29.n = 20;
+            case 20:
+              _context29.n = 22;
               break;
-            case 19:
-              _context29.p = 19;
+            case 21:
+              _context29.p = 21;
               _t37 = _context29.v;
               console.log("Erro ao buscar perfil do banco:", _t37);
-            case 20:
+            case 22:
               // Se não conseguiu buscar do banco, usa o local mesmo
               if (!user) setUser(localUser);
-            case 21:
+            case 23:
               return _context29.a(2);
           }
-        }, _callee29, null, [[16, 19], [10, 12], [5, 8], [1, 3]]);
+        }, _callee29, null, [[18, 21], [10, 14], [5, 8], [1, 3]]);
       }));
       return _init.apply(this, arguments);
     }
@@ -13491,7 +13507,7 @@ function App() {
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30() {
-      var _yield$db$from$select0, data, error, loaded, c, local, rows, _t38;
+      var _yield$db$from$select1, data, error, loaded, c, local, rows, _t38;
       return _regenerator().w(function (_context30) {
         while (1) switch (_context30.p = _context30.n) {
           case 0:
@@ -13499,9 +13515,9 @@ function App() {
             _context30.n = 1;
             return db.from("contacts").select("contact_id, rel, profiles!contacts_contact_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type)").eq("user_id", user.id);
           case 1:
-            _yield$db$from$select0 = _context30.v;
-            data = _yield$db$from$select0.data;
-            error = _yield$db$from$select0.error;
+            _yield$db$from$select1 = _context30.v;
+            data = _yield$db$from$select1.data;
+            error = _yield$db$from$select1.error;
             if (!(!error && data && data.length > 0)) {
               _context30.n = 2;
               break;
@@ -13693,11 +13709,41 @@ function App() {
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
     } catch (_unused30) {}
-    // Sincroniza com Supabase em background
+    // Sincroniza com Supabase em background — só campos seguros
     if (p !== null && p !== void 0 && p.id && !p.id.toString().startsWith("local_")) {
-      db.from("profiles").upsert(p).then(function (_ref65) {
+      var safe = {
+        id: p.id,
+        auth_id: p.auth_id || null,
+        name: p.name,
+        first_name: p.first_name,
+        last_name: p.last_name,
+        nick: p.nick || null,
+        note: p.note || null,
+        place_type: p.place_type || null,
+        place_name: p.place_name || null,
+        city: p.city || null,
+        state: p.state || null,
+        country: p.country || "Brasil",
+        year_start: p.year_start || null,
+        year_end: p.year_end || null,
+        era: p.era || null,
+        birth_day: p.birth_day || null,
+        birth_month: p.birth_month || null,
+        birth_year: p.birth_year || null,
+        avatar_url: p.avatar_url || null,
+        photos: p.photos || [],
+        available: p.available || "sim",
+        lugares: p.lugares || [],
+        interests: p.interests || null,
+        curtia: p.curtia || null,
+        intencao: p.intencao || null,
+        known_as: p.known_as || null,
+        family_ref: p.family_ref || null,
+        how_iam: p.how_iam || null
+      };
+      db.from("profiles").upsert(safe).then(function (_ref65) {
         var error = _ref65.error;
-        if (error) console.log("Erro ao sincronizar perfil:", error);
+        if (error) console.log("Erro ao sincronizar perfil:", error.message);
       })["catch"](function () {});
     }
   }
