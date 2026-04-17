@@ -5434,7 +5434,7 @@ function ModalEditarPerfil(_ref20) {
 
 // ── Screen: Perfil ──────────────────────────────────────────
 function Perfil(_ref21) {
-  var _user$lugares2, _user$intencao4, _user$intencao5, _user$lugares3, _user$interests, _user$curtia, _user$curtia2, _user$interests2, _user$curtia4, _user$interests6, _user$interests7, _user$photos;
+  var _user$lugares2, _user$intencao4, _user$intencao5, _user$lugares3, _user$interests, _user$curtia, _user$curtia2, _user$interests2, _user$curtia4, _user$interests6, _user$interests7, _user$photos, _user$lugares5;
   var user = _ref21.user,
     onLogout = _ref21.onLogout,
     onCadastrar = _ref21.onCadastrar,
@@ -6399,30 +6399,37 @@ function Perfil(_ref21) {
   })) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
-      gap: 8,
+      gap: 10,
       overflowX: "auto",
       WebkitOverflowScrolling: "touch",
-      paddingBottom: 8
+      paddingBottom: 4,
+      scrollSnapType: "x mandatory"
     }
   }, user.photos.map(function (src, i) {
+    var _user$lugares4;
+    var lugar = ((_user$lugares4 = user.lugares) === null || _user$lugares4 === void 0 || (_user$lugares4 = _user$lugares4[0]) === null || _user$lugares4 === void 0 ? void 0 : _user$lugares4.placeName) || user.place_name || "";
+    var periodo = user.year_start ? "".concat(user.year_start, "\u2013").concat(user.year_end || "") : "";
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       style: {
         flexShrink: 0,
-        width: 110,
-        position: "relative"
+        width: 140,
+        scrollSnapAlign: "start"
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        width: 110,
-        height: 110,
-        borderRadius: 10,
+        width: 140,
+        height: 140,
+        borderRadius: 12,
         overflow: "hidden",
         border: "1px solid ".concat(T.border),
         cursor: "zoom-in"
       },
       onClick: function onClick() {
-        return setFotoExpandida(src);
+        return setFotoExpandida({
+          src: src,
+          index: i
+        });
       }
     }, /*#__PURE__*/React.createElement("img", {
       src: src,
@@ -6432,71 +6439,56 @@ function Perfil(_ref21) {
         height: "100%",
         objectFit: "cover"
       }
-    })), /*#__PURE__*/React.createElement("button", {
-      onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
-        var novas, _t0;
-        return _regenerator().w(function (_context1) {
-          while (1) switch (_context1.p = _context1.n) {
-            case 0:
-              novas = user.photos.filter(function (_, j) {
-                return j !== i;
-              });
-              onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
-                photos: novas
-              }));
-              _context1.p = 1;
-              _context1.n = 2;
-              return db.from("profiles").update({
-                photos: novas
-              }).eq("id", user.id);
-            case 2:
-              _context1.n = 4;
-              break;
-            case 3:
-              _context1.p = 3;
-              _t0 = _context1.v;
-            case 4:
-              return _context1.a(2);
-          }
-        }, _callee1, null, [[1, 3]]);
-      })),
+    })), /*#__PURE__*/React.createElement("div", {
       style: {
-        position: "absolute",
-        top: 4,
-        right: 4,
-        width: 22,
-        height: 22,
-        borderRadius: "50%",
-        background: "rgba(0,0,0,0.6)",
-        border: "none",
-        color: "#fff",
-        fontSize: 13,
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        lineHeight: 1
+        marginTop: 4,
+        padding: "0 2px"
       }
-    }, "\xD7"));
+    }, lugar && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        color: T.muted,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap"
+      }
+    }, "\uD83D\uDCCD ", lugar), periodo && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        color: T.blueStrong,
+        fontWeight: 600
+      }
+    }, periodo)));
   }), user.photos.length < 6 && /*#__PURE__*/React.createElement("label", {
     style: {
       flexShrink: 0,
-      width: 110,
-      height: 110,
-      borderRadius: 10,
+      width: 140,
+      height: 140,
+      borderRadius: 12,
       border: "1.5px dashed ".concat(T.borderMd),
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       cursor: "pointer",
-      background: T.faint
+      background: T.faint,
+      scrollSnapAlign: "start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center"
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 26,
+      fontSize: 28,
       color: T.accent
     }
-  }, "+"), /*#__PURE__*/React.createElement("input", {
+  }, "+"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: T.muted,
+      marginTop: 2
+    }
+  }, "Adicionar")), /*#__PURE__*/React.createElement("input", {
     type: "file",
     accept: "image/*",
     multiple: true,
@@ -6504,11 +6496,61 @@ function Perfil(_ref21) {
     style: {
       display: "none"
     }
-  }))))), fotoExpandida && /*#__PURE__*/React.createElement(ModalFoto, {
-    src: fotoExpandida,
+  }))), user.photos.length > 1 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      gap: 4,
+      marginTop: 8
+    }
+  }, user.photos.map(function (_, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        width: 6,
+        height: 6,
+        borderRadius: "50%",
+        background: i === 0 ? T.accent : T.borderMd
+      }
+    });
+  })))), fotoExpandida && /*#__PURE__*/React.createElement(ModalFoto, {
+    src: fotoExpandida.src || fotoExpandida,
     onClose: function onClose() {
       return setFotoExpandida(null);
-    }
+    },
+    user: user,
+    lugar: ((_user$lugares5 = user.lugares) === null || _user$lugares5 === void 0 || (_user$lugares5 = _user$lugares5[0]) === null || _user$lugares5 === void 0 ? void 0 : _user$lugares5.placeName) || user.place_name || "",
+    data: user.year_start ? "".concat(user.year_start, "\u2013").concat(user.year_end || "") : "",
+    onRemove: fotoExpandida.index !== undefined ? /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
+      var idx, novas, _t0;
+      return _regenerator().w(function (_context1) {
+        while (1) switch (_context1.p = _context1.n) {
+          case 0:
+            idx = fotoExpandida.index;
+            novas = user.photos.filter(function (_, j) {
+              return j !== idx;
+            });
+            onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
+              photos: novas
+            }));
+            _context1.p = 1;
+            _context1.n = 2;
+            return db.from("profiles").update({
+              photos: novas
+            }).eq("id", user.id);
+          case 2:
+            _context1.n = 4;
+            break;
+          case 3:
+            _context1.p = 3;
+            _t0 = _context1.v;
+          case 4:
+            setFotoExpandida(null);
+          case 5:
+            return _context1.a(2);
+        }
+      }, _callee1, null, [[1, 3]]);
+    })) : null
   }), /*#__PURE__*/React.createElement(Btn, {
     variant: "danger",
     full: true,
@@ -6525,23 +6567,47 @@ function Perfil(_ref21) {
   }));
 }
 
-// ── Modal: Foto Fullscreen ────────────────────────────────────
+// ── Modal: Foto Fullscreen com interações ────────────────────
 function ModalFoto(_ref26) {
   var src = _ref26.src,
-    onClose = _ref26.onClose;
+    onClose = _ref26.onClose,
+    onRemove = _ref26.onRemove,
+    user = _ref26.user,
+    lugar = _ref26.lugar,
+    data = _ref26.data;
   if (!src) return null;
+  var _useState56 = useState(false),
+    _useState57 = _slicedToArray(_useState56, 2),
+    liked = _useState57[0],
+    setLiked = _useState57[1];
+  var _useState58 = useState(0),
+    _useState59 = _slicedToArray(_useState58, 2),
+    likes = _useState59[0],
+    setLikes = _useState59[1];
+  var _useState60 = useState(false),
+    _useState61 = _slicedToArray(_useState60, 2),
+    showMsg = _useState61[0],
+    setShowMsg = _useState61[1];
+  var _useState62 = useState(""),
+    _useState63 = _slicedToArray(_useState62, 2),
+    msg = _useState63[0],
+    setMsg = _useState63[1];
+  var _useState64 = useState(false),
+    _useState65 = _slicedToArray(_useState64, 2),
+    confirmRemove = _useState65[0],
+    setConfirmRemove = _useState65[1];
   return /*#__PURE__*/React.createElement("div", {
     className: "fi",
     onClick: onClose,
     style: {
       position: "fixed",
       inset: 0,
-      background: "rgba(0,0,0,0.92)",
+      background: "rgba(0,0,0,0.94)",
       zIndex: 300,
       display: "flex",
+      flexDirection: "column",
       alignItems: "center",
-      justifyContent: "center",
-      cursor: "zoom-out"
+      justifyContent: "center"
     }
   }, /*#__PURE__*/React.createElement("button", {
     onClick: onClose,
@@ -6552,7 +6618,7 @@ function ModalFoto(_ref26) {
       width: 40,
       height: 40,
       borderRadius: "50%",
-      background: "rgba(255,255,255,0.15)",
+      background: "rgba(255,255,255,0.12)",
       border: "none",
       color: "#fff",
       fontSize: 22,
@@ -6567,44 +6633,325 @@ function ModalFoto(_ref26) {
     alt: "",
     style: {
       maxWidth: "95vw",
-      maxHeight: "90vh",
+      maxHeight: "70vh",
       objectFit: "contain",
-      borderRadius: 4
+      borderRadius: 6
     },
     onClick: function onClick(e) {
       return e.stopPropagation();
     }
-  }));
+  }), (lugar || data) && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 10,
+      fontSize: 11,
+      color: "rgba(255,255,255,0.6)",
+      textAlign: "center"
+    }
+  }, lugar && /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCCD ", lugar), lugar && data && /*#__PURE__*/React.createElement("span", null, " \xB7 "), data && /*#__PURE__*/React.createElement("span", null, data)), /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    },
+    style: {
+      display: "flex",
+      gap: 24,
+      marginTop: 16,
+      padding: "12px 24px",
+      background: "rgba(255,255,255,0.08)",
+      borderRadius: 30
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      setLiked(function (v) {
+        return !v;
+      });
+      setLikes(function (v) {
+        return liked ? v - 1 : v + 1;
+      });
+    },
+    style: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 3,
+      color: liked ? "#e74c3c" : "rgba(255,255,255,0.8)",
+      padding: 0
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "22",
+    height: "21",
+    viewBox: "0 0 18 17",
+    fill: liked ? "#e74c3c" : "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M9 15.5S1.5 10.5 1.5 5.5a4 4 0 017.5-2 4 4 0 017.5 2C16.5 10.5 9 15.5 9 15.5z",
+    stroke: liked ? "#e74c3c" : "rgba(255,255,255,0.8)",
+    strokeWidth: "1.5",
+    strokeLinejoin: "round"
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      fontWeight: 600
+    }
+  }, likes > 0 ? likes : "Curtir")), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setShowMsg(function (v) {
+        return !v;
+      });
+    },
+    style: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 3,
+      color: "rgba(255,255,255,0.8)",
+      padding: 0
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "22",
+    height: "20",
+    viewBox: "0 0 17 16",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M1 1h15v10H9.5l-3 3V11H1V1z",
+    stroke: "rgba(255,255,255,0.8)",
+    strokeWidth: "1.5",
+    strokeLinejoin: "round"
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      fontWeight: 600
+    }
+  }, "Mensagem")), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      if (navigator.share) navigator.share({
+        title: "Tempnext",
+        text: "Olha essa foto no Tempnext!",
+        url: window.location.href
+      });
+    },
+    style: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 3,
+      color: "rgba(255,255,255,0.8)",
+      padding: 0
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "22",
+    height: "20",
+    viewBox: "0 0 20 20",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "15",
+    cy: "4",
+    r: "2.5",
+    stroke: "rgba(255,255,255,0.8)",
+    strokeWidth: "1.4"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "5",
+    cy: "10",
+    r: "2.5",
+    stroke: "rgba(255,255,255,0.8)",
+    strokeWidth: "1.4"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "15",
+    cy: "16",
+    r: "2.5",
+    stroke: "rgba(255,255,255,0.8)",
+    strokeWidth: "1.4"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7.3 8.8l5.4-3.6M7.3 11.2l5.4 3.6",
+    stroke: "rgba(255,255,255,0.8)",
+    strokeWidth: "1.3"
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      fontWeight: 600
+    }
+  }, "Enviar")), onRemove && /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setConfirmRemove(true);
+    },
+    style: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 3,
+      color: "rgba(255,255,255,0.5)",
+      padding: 0
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "22",
+    height: "20",
+    viewBox: "0 0 20 20",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M3 5h14M8 5V3h4v2M5 5l1 12h8l1-12",
+    stroke: "rgba(255,255,255,0.5)",
+    strokeWidth: "1.4",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      fontWeight: 600
+    }
+  }, "Remover"))), showMsg && /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    },
+    style: {
+      marginTop: 12,
+      display: "flex",
+      gap: 8,
+      width: "90%",
+      maxWidth: 380
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    value: msg,
+    onChange: function onChange(e) {
+      return setMsg(e.target.value);
+    },
+    placeholder: "Escreva sobre essa foto...",
+    style: {
+      flex: 1,
+      padding: "10px 16px",
+      borderRadius: 24,
+      border: "none",
+      fontSize: 13,
+      background: "rgba(255,255,255,0.12)",
+      color: "#fff"
+    },
+    onKeyDown: function onKeyDown(e) {
+      if (e.key === "Enter" && msg.trim()) {
+        setMsg("");
+        setShowMsg(false);
+      }
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      if (msg.trim()) {
+        setMsg("");
+        setShowMsg(false);
+      }
+    },
+    style: {
+      background: T.accent,
+      border: "none",
+      borderRadius: 24,
+      padding: "10px 18px",
+      color: "#fff",
+      fontSize: 12,
+      fontWeight: 700,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Enviar")), confirmRemove && /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    },
+    style: {
+      position: "absolute",
+      bottom: 60,
+      background: "rgba(0,0,0,0.85)",
+      borderRadius: 16,
+      padding: "20px 24px",
+      textAlign: "center",
+      maxWidth: 300
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: "#fff",
+      fontWeight: 600,
+      marginBottom: 12
+    }
+  }, "Remover esta foto?"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: "rgba(255,255,255,0.6)",
+      marginBottom: 16
+    }
+  }, "Essa a\xE7\xE3o n\xE3o pode ser desfeita"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setConfirmRemove(false);
+    },
+    style: {
+      padding: "8px 20px",
+      borderRadius: 10,
+      background: "rgba(255,255,255,0.15)",
+      border: "none",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Cancelar"), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      onRemove();
+      onClose();
+    },
+    style: {
+      padding: "8px 20px",
+      borderRadius: 10,
+      background: "#e74c3c",
+      border: "none",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Remover"))));
 }
 
 // ── Foto com curtida e comentário ────────────────────────────
 function FotoInterativa(_ref27) {
   var src = _ref27.src,
     user = _ref27.user;
-  var _useState56 = useState(0),
-    _useState57 = _slicedToArray(_useState56, 2),
-    likes = _useState57[0],
-    setLikes = _useState57[1];
-  var _useState58 = useState(false),
-    _useState59 = _slicedToArray(_useState58, 2),
-    liked = _useState59[0],
-    setLiked = _useState59[1];
-  var _useState60 = useState(false),
-    _useState61 = _slicedToArray(_useState60, 2),
-    showComments = _useState61[0],
-    setShowComments = _useState61[1];
-  var _useState62 = useState([]),
-    _useState63 = _slicedToArray(_useState62, 2),
-    comments = _useState63[0],
-    setComments = _useState63[1];
-  var _useState64 = useState(""),
-    _useState65 = _slicedToArray(_useState64, 2),
-    newComment = _useState65[0],
-    setNewComment = _useState65[1];
-  var _useState66 = useState(false),
+  var _useState66 = useState(0),
     _useState67 = _slicedToArray(_useState66, 2),
-    fullscreen = _useState67[0],
-    setFullscreen = _useState67[1];
+    likes = _useState67[0],
+    setLikes = _useState67[1];
+  var _useState68 = useState(false),
+    _useState69 = _slicedToArray(_useState68, 2),
+    liked = _useState69[0],
+    setLiked = _useState69[1];
+  var _useState70 = useState(false),
+    _useState71 = _slicedToArray(_useState70, 2),
+    showComments = _useState71[0],
+    setShowComments = _useState71[1];
+  var _useState72 = useState([]),
+    _useState73 = _slicedToArray(_useState72, 2),
+    comments = _useState73[0],
+    setComments = _useState73[1];
+  var _useState74 = useState(""),
+    _useState75 = _slicedToArray(_useState74, 2),
+    newComment = _useState75[0],
+    setNewComment = _useState75[1];
+  var _useState76 = useState(false),
+    _useState77 = _slicedToArray(_useState76, 2),
+    fullscreen = _useState77[0],
+    setFullscreen = _useState77[1];
   function toggleLike() {
     setLiked(function (v) {
       return !v;
@@ -6777,7 +7124,8 @@ function FotoInterativa(_ref27) {
     src: src,
     onClose: function onClose() {
       return setFullscreen(false);
-    }
+    },
+    user: user
   }));
 }
 
@@ -7163,30 +7511,30 @@ function ModalChat(_ref31) {
     msgs = _ref31.msgs,
     onSend = _ref31.onSend,
     onClose = _ref31.onClose;
-  var _useState68 = useState(""),
-    _useState69 = _slicedToArray(_useState68, 2),
-    txt = _useState69[0],
-    setTxt = _useState69[1];
-  var _useState70 = useState(null),
-    _useState71 = _slicedToArray(_useState70, 2),
-    mediaPreview = _useState71[0],
-    setMediaPreview = _useState71[1];
-  var _useState72 = useState(null),
-    _useState73 = _slicedToArray(_useState72, 2),
-    mediaFile = _useState73[0],
-    setMediaFile = _useState73[1];
-  var _useState74 = useState(null),
-    _useState75 = _slicedToArray(_useState74, 2),
-    mediaType = _useState75[0],
-    setMediaType = _useState75[1];
-  var _useState76 = useState(false),
-    _useState77 = _slicedToArray(_useState76, 2),
-    isRecording = _useState77[0],
-    setIsRecording = _useState77[1];
-  var _useState78 = useState(null),
+  var _useState78 = useState(""),
     _useState79 = _slicedToArray(_useState78, 2),
-    audioBlob = _useState79[0],
-    setAudioBlob = _useState79[1];
+    txt = _useState79[0],
+    setTxt = _useState79[1];
+  var _useState80 = useState(null),
+    _useState81 = _slicedToArray(_useState80, 2),
+    mediaPreview = _useState81[0],
+    setMediaPreview = _useState81[1];
+  var _useState82 = useState(null),
+    _useState83 = _slicedToArray(_useState82, 2),
+    mediaFile = _useState83[0],
+    setMediaFile = _useState83[1];
+  var _useState84 = useState(null),
+    _useState85 = _slicedToArray(_useState84, 2),
+    mediaType = _useState85[0],
+    setMediaType = _useState85[1];
+  var _useState86 = useState(false),
+    _useState87 = _slicedToArray(_useState86, 2),
+    isRecording = _useState87[0],
+    setIsRecording = _useState87[1];
+  var _useState88 = useState(null),
+    _useState89 = _slicedToArray(_useState88, 2),
+    audioBlob = _useState89[0],
+    setAudioBlob = _useState89[1];
   var recorderRef = useRef(null);
   var endRef = useRef();
   function toggleRecord() {
@@ -7791,10 +8139,10 @@ function AddOutro(_ref33) {
     extras = _ref33$extras === void 0 ? [] : _ref33$extras,
     color = _ref33.color,
     bgColor = _ref33.bgColor;
-  var _useState80 = useState(""),
-    _useState81 = _slicedToArray(_useState80, 2),
-    val = _useState81[0],
-    setVal = _useState81[1];
+  var _useState90 = useState(""),
+    _useState91 = _slicedToArray(_useState90, 2),
+    val = _useState91[0],
+    setVal = _useState91[1];
   var activeColor = color || T.accent;
   var activeBg = bgColor || T.accentBg;
   function add() {
@@ -7914,14 +8262,14 @@ function FRow(_ref35) {
 
 // ── Sistema de Alertas por Região ────────────────────────────
 function useRegionAlerts(user) {
-  var _useState82 = useState([]),
-    _useState83 = _slicedToArray(_useState82, 2),
-    alerts = _useState83[0],
-    setAlerts = _useState83[1];
-  var _useState84 = useState(false),
-    _useState85 = _slicedToArray(_useState84, 2),
-    showAlert = _useState85[0],
-    setShowAlert = _useState85[1];
+  var _useState92 = useState([]),
+    _useState93 = _slicedToArray(_useState92, 2),
+    alerts = _useState93[0],
+    setAlerts = _useState93[1];
+  var _useState94 = useState(false),
+    _useState95 = _slicedToArray(_useState94, 2),
+    showAlert = _useState95[0],
+    setShowAlert = _useState95[1];
   var lastCheck = useRef(null);
   useEffect(function () {
     if (!user || !user.lugares || user.lugares.length === 0) return;
@@ -8109,7 +8457,7 @@ function ModalAdicionarLugar(_ref37) {
   var user = _ref37.user,
     onClose = _ref37.onClose,
     onSave = _ref37.onSave;
-  var _useState86 = useState({
+  var _useState96 = useState({
       placeType: "escola",
       placeName: "",
       addrSearch: "",
@@ -8123,17 +8471,17 @@ function ModalAdicionarLugar(_ref37) {
       y2: "",
       era: "passado"
     }),
-    _useState87 = _slicedToArray(_useState86, 2),
-    d = _useState87[0],
-    setD = _useState87[1];
-  var _useState88 = useState(false),
-    _useState89 = _slicedToArray(_useState88, 2),
-    saving = _useState89[0],
-    setSaving = _useState89[1];
-  var _useState90 = useState(false),
-    _useState91 = _slicedToArray(_useState90, 2),
-    done = _useState91[0],
-    setDone = _useState91[1];
+    _useState97 = _slicedToArray(_useState96, 2),
+    d = _useState97[0],
+    setD = _useState97[1];
+  var _useState98 = useState(false),
+    _useState99 = _slicedToArray(_useState98, 2),
+    saving = _useState99[0],
+    setSaving = _useState99[1];
+  var _useState100 = useState(false),
+    _useState101 = _slicedToArray(_useState100, 2),
+    done = _useState101[0],
+    setDone = _useState101[1];
   var timer = useRef();
   function searchAddr(_x16) {
     return _searchAddr3.apply(this, arguments);
@@ -8974,38 +9322,38 @@ function ModalMomento(_ref39) {
     onClose = _ref39.onClose,
     onSave = _ref39.onSave,
     onUpdateUser = _ref39.onUpdateUser;
-  var _useState92 = useState(""),
-    _useState93 = _slicedToArray(_useState92, 2),
-    texto = _useState93[0],
-    setTexto = _useState93[1];
-  var _useState94 = useState(""),
-    _useState95 = _slicedToArray(_useState94, 2),
-    lugar = _useState95[0],
-    setLugar = _useState95[1];
-  var _useState96 = useState([]),
-    _useState97 = _slicedToArray(_useState96, 2),
-    fotos = _useState97[0],
-    setFotos = _useState97[1];
-  var _useState98 = useState([]),
-    _useState99 = _slicedToArray(_useState98, 2),
-    fotosFiles = _useState99[0],
-    setFotosFiles = _useState99[1];
-  var _useState100 = useState(false),
-    _useState101 = _slicedToArray(_useState100, 2),
-    saving = _useState101[0],
-    setSaving = _useState101[1];
-  var _useState102 = useState("contatos"),
+  var _useState102 = useState(""),
     _useState103 = _slicedToArray(_useState102, 2),
-    privMomento = _useState103[0],
-    setPrivMomento = _useState103[1];
-  var _useState104 = useState(false),
+    texto = _useState103[0],
+    setTexto = _useState103[1];
+  var _useState104 = useState(""),
     _useState105 = _slicedToArray(_useState104, 2),
-    capsulaAtiva = _useState105[0],
-    setCapsulaAtiva = _useState105[1];
-  var _useState106 = useState(""),
+    lugar = _useState105[0],
+    setLugar = _useState105[1];
+  var _useState106 = useState([]),
     _useState107 = _slicedToArray(_useState106, 2),
-    revelarEm = _useState107[0],
-    setRevelarEm = _useState107[1];
+    fotos = _useState107[0],
+    setFotos = _useState107[1];
+  var _useState108 = useState([]),
+    _useState109 = _slicedToArray(_useState108, 2),
+    fotosFiles = _useState109[0],
+    setFotosFiles = _useState109[1];
+  var _useState110 = useState(false),
+    _useState111 = _slicedToArray(_useState110, 2),
+    saving = _useState111[0],
+    setSaving = _useState111[1];
+  var _useState112 = useState("contatos"),
+    _useState113 = _slicedToArray(_useState112, 2),
+    privMomento = _useState113[0],
+    setPrivMomento = _useState113[1];
+  var _useState114 = useState(false),
+    _useState115 = _slicedToArray(_useState114, 2),
+    capsulaAtiva = _useState115[0],
+    setCapsulaAtiva = _useState115[1];
+  var _useState116 = useState(""),
+    _useState117 = _slicedToArray(_useState116, 2),
+    revelarEm = _useState117[0],
+    setRevelarEm = _useState117[1];
   function handleFotos(_x17) {
     return _handleFotos.apply(this, arguments);
   }
@@ -9424,26 +9772,26 @@ function ModalMomento(_ref39) {
 function TelaLogin(_ref40) {
   var onClose = _ref40.onClose,
     onLoggedIn = _ref40.onLoggedIn;
-  var _useState108 = useState("opcoes"),
-    _useState109 = _slicedToArray(_useState108, 2),
-    modo = _useState109[0],
-    setModo = _useState109[1]; // opcoes | email
-  var _useState110 = useState(""),
-    _useState111 = _slicedToArray(_useState110, 2),
-    email = _useState111[0],
-    setEmail = _useState111[1];
-  var _useState112 = useState(false),
-    _useState113 = _slicedToArray(_useState112, 2),
-    loading = _useState113[0],
-    setLoading = _useState113[1];
-  var _useState114 = useState(false),
-    _useState115 = _slicedToArray(_useState114, 2),
-    enviado = _useState115[0],
-    setEnviado = _useState115[1];
-  var _useState116 = useState(""),
-    _useState117 = _slicedToArray(_useState116, 2),
-    erro = _useState117[0],
-    setErro = _useState117[1];
+  var _useState118 = useState("opcoes"),
+    _useState119 = _slicedToArray(_useState118, 2),
+    modo = _useState119[0],
+    setModo = _useState119[1]; // opcoes | email
+  var _useState120 = useState(""),
+    _useState121 = _slicedToArray(_useState120, 2),
+    email = _useState121[0],
+    setEmail = _useState121[1];
+  var _useState122 = useState(false),
+    _useState123 = _slicedToArray(_useState122, 2),
+    loading = _useState123[0],
+    setLoading = _useState123[1];
+  var _useState124 = useState(false),
+    _useState125 = _slicedToArray(_useState124, 2),
+    enviado = _useState125[0],
+    setEnviado = _useState125[1];
+  var _useState126 = useState(""),
+    _useState127 = _slicedToArray(_useState126, 2),
+    erro = _useState127[0],
+    setErro = _useState127[1];
   function loginGoogle() {
     return _loginGoogle.apply(this, arguments);
   }
@@ -9828,10 +10176,10 @@ function TelaLogin(_ref40) {
 
 // ── Hook: Notificações de Região ──────────────────────────────
 function useRegionNotifications(user, contacts) {
-  var _useState118 = useState(null),
-    _useState119 = _slicedToArray(_useState118, 2),
-    notif = _useState119[0],
-    setNotif = _useState119[1]; // {type,profile,message}
+  var _useState128 = useState(null),
+    _useState129 = _slicedToArray(_useState128, 2),
+    notif = _useState129[0],
+    setNotif = _useState129[1]; // {type,profile,message}
   var lastCheck = useRef(null);
   var checked = useRef(new Set());
   useEffect(function () {
@@ -10054,15 +10402,15 @@ function BannerNotificacao(_ref41) {
 function CadastroSimples(_ref42) {
   var onDone = _ref42.onDone,
     onLogin = _ref42.onLogin;
-  var _useState120 = useState(0),
-    _useState121 = _slicedToArray(_useState120, 2),
-    step = _useState121[0],
-    setStep = _useState121[1];
-  var _useState122 = useState(false),
-    _useState123 = _slicedToArray(_useState122, 2),
-    saving = _useState123[0],
-    setSaving = _useState123[1];
-  var _useState124 = useState({
+  var _useState130 = useState(0),
+    _useState131 = _slicedToArray(_useState130, 2),
+    step = _useState131[0],
+    setStep = _useState131[1];
+  var _useState132 = useState(false),
+    _useState133 = _slicedToArray(_useState132, 2),
+    saving = _useState133[0],
+    setSaving = _useState133[1];
+  var _useState134 = useState({
       firstName: "",
       lastName: "",
       birthYear: "",
@@ -10078,9 +10426,9 @@ function CadastroSimples(_ref42) {
       avatarFile: null,
       avatarPreview: null
     }),
-    _useState125 = _slicedToArray(_useState124, 2),
-    f = _useState125[0],
-    setF = _useState125[1];
+    _useState135 = _slicedToArray(_useState134, 2),
+    f = _useState135[0],
+    setF = _useState135[1];
 
   // Detect age group for adaptive UI
   var ageGroup = function () {
@@ -10720,14 +11068,14 @@ function TelaCuriosidade(_ref43) {
   var onCadastrar = _ref43.onCadastrar,
     onLogin = _ref43.onLogin,
     cidade = _ref43.cidade;
-  var _useState126 = useState([]),
-    _useState127 = _slicedToArray(_useState126, 2),
-    profiles = _useState127[0],
-    setProfiles = _useState127[1];
-  var _useState128 = useState(0),
-    _useState129 = _slicedToArray(_useState128, 2),
-    count = _useState129[0],
-    setCount = _useState129[1];
+  var _useState136 = useState([]),
+    _useState137 = _slicedToArray(_useState136, 2),
+    profiles = _useState137[0],
+    setProfiles = _useState137[1];
+  var _useState138 = useState(0),
+    _useState139 = _slicedToArray(_useState138, 2),
+    count = _useState139[0],
+    setCount = _useState139[1];
   useEffect(function () {
     // Show teaser profiles - blurred
     db.from("profiles").select("id,name,first_name,avatar_url,city,state,year_start,year_end,era").order("created_at", {
@@ -10895,10 +11243,10 @@ function MemoriaDoDia(_ref45) {
   var user = _ref45.user,
     contacts = _ref45.contacts,
     onView = _ref45.onView;
-  var _useState130 = useState([]),
-    _useState131 = _slicedToArray(_useState130, 2),
-    memorias = _useState131[0],
-    setMemorias = _useState131[1];
+  var _useState140 = useState([]),
+    _useState141 = _slicedToArray(_useState140, 2),
+    memorias = _useState141[0],
+    setMemorias = _useState141[1];
   useEffect(function () {
     if (!user && (!contacts || contacts.length === 0)) return;
     // Generate memories from user + contacts profiles
@@ -11053,14 +11401,14 @@ function MemoriaDoDia(_ref45) {
 // ── Quem Passou Por Aqui ──────────────────────────────────────
 function QuemPassouPorAqui(_ref46) {
   var user = _ref46.user;
-  var _useState132 = useState(0),
-    _useState133 = _slicedToArray(_useState132, 2),
-    count = _useState133[0],
-    setCount = _useState133[1];
-  var _useState134 = useState([]),
-    _useState135 = _slicedToArray(_useState134, 2),
-    exemplos = _useState135[0],
-    setExemplos = _useState135[1];
+  var _useState142 = useState(0),
+    _useState143 = _slicedToArray(_useState142, 2),
+    count = _useState143[0],
+    setCount = _useState143[1];
+  var _useState144 = useState([]),
+    _useState145 = _slicedToArray(_useState144, 2),
+    exemplos = _useState145[0],
+    setExemplos = _useState145[1];
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.city) && !(user !== null && user !== void 0 && user.state)) return;
     var filtro = user.city ? "city.ilike.%".concat(user.city, "%") : "state.eq.".concat(user.state);
@@ -11154,22 +11502,22 @@ function QuemPassouPorAqui(_ref46) {
 function PerguntaComunidade(_ref48) {
   var _user$intencao6, _user$intencao7, _user$intencao8, _user$intencao9;
   var user = _ref48.user;
-  var _useState136 = useState(""),
-    _useState137 = _slicedToArray(_useState136, 2),
-    resposta = _useState137[0],
-    setResposta = _useState137[1];
-  var _useState138 = useState(false),
-    _useState139 = _slicedToArray(_useState138, 2),
-    respondeu = _useState139[0],
-    setRespondeu = _useState139[1];
-  var _useState140 = useState(false),
-    _useState141 = _slicedToArray(_useState140, 2),
-    saving = _useState141[0],
-    setSaving = _useState141[1];
-  var _useState142 = useState(0),
-    _useState143 = _slicedToArray(_useState142, 2),
-    totalRespostas = _useState143[0],
-    setTotalRespostas = _useState143[1];
+  var _useState146 = useState(""),
+    _useState147 = _slicedToArray(_useState146, 2),
+    resposta = _useState147[0],
+    setResposta = _useState147[1];
+  var _useState148 = useState(false),
+    _useState149 = _slicedToArray(_useState148, 2),
+    respondeu = _useState149[0],
+    setRespondeu = _useState149[1];
+  var _useState150 = useState(false),
+    _useState151 = _slicedToArray(_useState150, 2),
+    saving = _useState151[0],
+    setSaving = _useState151[1];
+  var _useState152 = useState(0),
+    _useState153 = _slicedToArray(_useState152, 2),
+    totalRespostas = _useState153[0],
+    setTotalRespostas = _useState153[1];
 
   // Perguntas inteligentes baseadas no perfil + intenção
   var perguntas = [(user === null || user === void 0 ? void 0 : user.city) && "Quem lembra de algum ponto de encontro famoso em ".concat(user.city, "?"), (user === null || user === void 0 ? void 0 : user.place_name) && "Quem tem fotos antigas d".concat(user.place_type === "escola" ? "a" : "o", " ").concat(user.place_name, "?"), (user === null || user === void 0 || (_user$intencao6 = user.intencao) === null || _user$intencao6 === void 0 ? void 0 : _user$intencao6.includes("reencontrar")) && (user === null || user === void 0 ? void 0 : user.city) && "Quem mais quer se reencontrar com pessoas de ".concat(user.city, "?"), (user === null || user === void 0 || (_user$intencao7 = user.intencao) === null || _user$intencao7 === void 0 ? void 0 : _user$intencao7.includes("relembrar")) && "Qual foi o momento mais marcante do lugar onde você cresceu?", (user === null || user === void 0 || (_user$intencao8 = user.intencao) === null || _user$intencao8 === void 0 ? void 0 : _user$intencao8.includes("visitar")) && (user === null || user === void 0 ? void 0 : user.city) && "Tem fotos recentes de ".concat(user.city, " para compartilhar?"), (user === null || user === void 0 || (_user$intencao9 = user.intencao) === null || _user$intencao9 === void 0 ? void 0 : _user$intencao9.includes("reconectar")) && "Quem ainda mantém contato com pessoas do mesmo lugar?", (user === null || user === void 0 ? void 0 : user.city) && "Tem algu\xE9m de ".concat(user.city, " morando fora do Brasil?"), (user === null || user === void 0 ? void 0 : user.last_name) && "Tem mais algu\xE9m da fam\xEDlia ".concat(user.last_name, " aqui no Tempnext?")].filter(Boolean);
@@ -11327,7 +11675,7 @@ function PerguntaComunidade(_ref48) {
 function AgendaVisita(_ref50) {
   var user = _ref50.user,
     onSave = _ref50.onSave;
-  var _useState144 = useState({
+  var _useState154 = useState({
       data: "",
       hora: "",
       cidade: (user === null || user === void 0 ? void 0 : user.city) || "",
@@ -11339,17 +11687,17 @@ function AgendaVisita(_ref50) {
       revelarEm: "",
       selecionados: []
     }),
-    _useState145 = _slicedToArray(_useState144, 2),
-    f = _useState145[0],
-    setF = _useState145[1];
-  var _useState146 = useState(false),
-    _useState147 = _slicedToArray(_useState146, 2),
-    saving = _useState147[0],
-    setSaving = _useState147[1];
-  var _useState148 = useState(false),
-    _useState149 = _slicedToArray(_useState148, 2),
-    saved = _useState149[0],
-    setSaved = _useState149[1];
+    _useState155 = _slicedToArray(_useState154, 2),
+    f = _useState155[0],
+    setF = _useState155[1];
+  var _useState156 = useState(false),
+    _useState157 = _slicedToArray(_useState156, 2),
+    saving = _useState157[0],
+    setSaving = _useState157[1];
+  var _useState158 = useState(false),
+    _useState159 = _slicedToArray(_useState158, 2),
+    saved = _useState159[0],
+    setSaved = _useState159[1];
   function salvar() {
     return _salvar6.apply(this, arguments);
   }
@@ -11837,14 +12185,14 @@ function AlertaRegiao(_ref51) {
   var cidade = _ref51.cidade,
     estado = _ref51.estado,
     user = _ref51.user;
-  var _useState150 = useState(0),
-    _useState151 = _slicedToArray(_useState150, 2),
-    count = _useState151[0],
-    setCount = _useState151[1];
-  var _useState152 = useState([]),
-    _useState153 = _slicedToArray(_useState152, 2),
-    visitantes = _useState153[0],
-    setVisitantes = _useState153[1];
+  var _useState160 = useState(0),
+    _useState161 = _slicedToArray(_useState160, 2),
+    count = _useState161[0],
+    setCount = _useState161[1];
+  var _useState162 = useState([]),
+    _useState163 = _slicedToArray(_useState162, 2),
+    visitantes = _useState163[0],
+    setVisitantes = _useState163[1];
   useEffect(function () {
     if (!cidade && !estado) return;
     // Busca agendas de visita para essa região
@@ -11933,18 +12281,18 @@ function AlertaRegiao(_ref51) {
 
 // ── Seguir Lugares (Supabase) ─────────────────────────────────
 function useSeguirLugar(placeId, userId) {
-  var _useState154 = useState(false),
-    _useState155 = _slicedToArray(_useState154, 2),
-    seguindo = _useState155[0],
-    setSeguindo = _useState155[1];
-  var _useState156 = useState(false),
-    _useState157 = _slicedToArray(_useState156, 2),
-    loading = _useState157[0],
-    setLoading = _useState157[1];
-  var _useState158 = useState(0),
-    _useState159 = _slicedToArray(_useState158, 2),
-    totalSeguidores = _useState159[0],
-    setTotalSeguidores = _useState159[1];
+  var _useState164 = useState(false),
+    _useState165 = _slicedToArray(_useState164, 2),
+    seguindo = _useState165[0],
+    setSeguindo = _useState165[1];
+  var _useState166 = useState(false),
+    _useState167 = _slicedToArray(_useState166, 2),
+    loading = _useState167[0],
+    setLoading = _useState167[1];
+  var _useState168 = useState(0),
+    _useState169 = _slicedToArray(_useState168, 2),
+    totalSeguidores = _useState169[0],
+    setTotalSeguidores = _useState169[1];
   useEffect(function () {
     if (!placeId) return;
     // Busca total de seguidores deste lugar
@@ -12031,18 +12379,18 @@ function CapsulaPerfil(_ref55) {
   var capsula = _ref55.capsula,
     index = _ref55.index,
     userId = _ref55.userId;
-  var _useState160 = useState(false),
-    _useState161 = _slicedToArray(_useState160, 2),
-    editando = _useState161[0],
-    setEditando = _useState161[1];
-  var _useState162 = useState({
+  var _useState170 = useState(false),
+    _useState171 = _slicedToArray(_useState170, 2),
+    editando = _useState171[0],
+    setEditando = _useState171[1];
+  var _useState172 = useState({
       revelarEm: capsula.revelarEm || "",
       capsulVis: capsula.capsulVis || "ninguem",
       texto: capsula.texto || ""
     }),
-    _useState163 = _slicedToArray(_useState162, 2),
-    f = _useState163[0],
-    setF = _useState163[1];
+    _useState173 = _slicedToArray(_useState172, 2),
+    f = _useState173[0],
+    setF = _useState173[1];
   function salvarEdicao() {
     try {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
@@ -12213,36 +12561,36 @@ function PerfilLugar(_ref56) {
     user = _ref56.user,
     onBack = _ref56.onBack,
     onView = _ref56.onView;
-  var _useState164 = useState(null),
-    _useState165 = _slicedToArray(_useState164, 2),
-    place = _useState165[0],
-    setPlace = _useState165[1];
-  var _useState166 = useState([]),
-    _useState167 = _slicedToArray(_useState166, 2),
-    profiles = _useState167[0],
-    setProfiles = _useState167[1];
-  var _useState168 = useState([]),
-    _useState169 = _slicedToArray(_useState168, 2),
-    momentos = _useState169[0],
-    setMomentos = _useState169[1];
-  var _useState170 = useState([]),
-    _useState171 = _slicedToArray(_useState170, 2),
-    agendas = _useState171[0],
-    setAgendas = _useState171[1];
-  var _useState172 = useState(true),
-    _useState173 = _slicedToArray(_useState172, 2),
-    loading = _useState173[0],
-    setLoading = _useState173[1];
   var _useState174 = useState(null),
     _useState175 = _slicedToArray(_useState174, 2),
-    decadaSel = _useState175[0],
-    setDecadaSel = _useState175[1];
+    place = _useState175[0],
+    setPlace = _useState175[1];
+  var _useState176 = useState([]),
+    _useState177 = _slicedToArray(_useState176, 2),
+    profiles = _useState177[0],
+    setProfiles = _useState177[1];
+  var _useState178 = useState([]),
+    _useState179 = _slicedToArray(_useState178, 2),
+    momentos = _useState179[0],
+    setMomentos = _useState179[1];
+  var _useState180 = useState([]),
+    _useState181 = _slicedToArray(_useState180, 2),
+    agendas = _useState181[0],
+    setAgendas = _useState181[1];
+  var _useState182 = useState(true),
+    _useState183 = _slicedToArray(_useState182, 2),
+    loading = _useState183[0],
+    setLoading = _useState183[1];
+  var _useState184 = useState(null),
+    _useState185 = _slicedToArray(_useState184, 2),
+    decadaSel = _useState185[0],
+    setDecadaSel = _useState185[1];
 
   // Resolve placeId: pode vir direto ou buscar pelo nome
-  var _useState176 = useState(lugarId || null),
-    _useState177 = _slicedToArray(_useState176, 2),
-    resolvedId = _useState177[0],
-    setResolvedId = _useState177[1];
+  var _useState186 = useState(lugarId || null),
+    _useState187 = _slicedToArray(_useState186, 2),
+    resolvedId = _useState187[0],
+    setResolvedId = _useState187[1];
   useEffect(function () {
     if (lugarId) {
       setResolvedId(lugarId);
@@ -12790,35 +13138,35 @@ function PerfilLugar(_ref56) {
 
 // ── Root App ──────────────────────────────────────────────────
 function App() {
-  var _useState178 = useState("inicio"),
-    _useState179 = _slicedToArray(_useState178, 2),
-    tela = _useState179[0],
-    setTela = _useState179[1];
-  var _useState180 = useState({}),
-    _useState181 = _slicedToArray(_useState180, 2),
-    msgs = _useState181[0],
-    setMsgs = _useState181[1];
-  var _useState182 = useState([]),
-    _useState183 = _slicedToArray(_useState182, 2),
-    contacts = _useState183[0],
-    setContacts = _useState183[1];
-  var _useState184 = useState(false),
-    _useState185 = _slicedToArray(_useState184, 2),
-    showLogin = _useState185[0],
-    setShowLogin = _useState185[1];
-  var _useState186 = useState(null),
-    _useState187 = _slicedToArray(_useState186, 2),
-    perfilLugarAtual = _useState187[0],
-    setPerfilLugarAtual = _useState187[1];
-  var _useState188 = useState(false),
+  var _useState188 = useState("inicio"),
     _useState189 = _slicedToArray(_useState188, 2),
-    showCuriosidade = _useState189[0],
-    setShowCuriosidade = _useState189[1];
-  var _useState190 = useState(true),
+    tela = _useState189[0],
+    setTela = _useState189[1];
+  var _useState190 = useState({}),
     _useState191 = _slicedToArray(_useState190, 2),
-    useCadastroSimples = _useState191[0],
-    setUseCadastroSimples = _useState191[1];
-  var _useState192 = useState(function () {
+    msgs = _useState191[0],
+    setMsgs = _useState191[1];
+  var _useState192 = useState([]),
+    _useState193 = _slicedToArray(_useState192, 2),
+    contacts = _useState193[0],
+    setContacts = _useState193[1];
+  var _useState194 = useState(false),
+    _useState195 = _slicedToArray(_useState194, 2),
+    showLogin = _useState195[0],
+    setShowLogin = _useState195[1];
+  var _useState196 = useState(null),
+    _useState197 = _slicedToArray(_useState196, 2),
+    perfilLugarAtual = _useState197[0],
+    setPerfilLugarAtual = _useState197[1];
+  var _useState198 = useState(false),
+    _useState199 = _slicedToArray(_useState198, 2),
+    showCuriosidade = _useState199[0],
+    setShowCuriosidade = _useState199[1];
+  var _useState200 = useState(true),
+    _useState201 = _slicedToArray(_useState200, 2),
+    useCadastroSimples = _useState201[0],
+    setUseCadastroSimples = _useState201[1];
+  var _useState202 = useState(function () {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
@@ -12826,41 +13174,41 @@ function App() {
         return null;
       }
     }),
-    _useState193 = _slicedToArray(_useState192, 2),
-    user = _useState193[0],
-    setUser = _useState193[1];
-  var _useState194 = useState(null),
-    _useState195 = _slicedToArray(_useState194, 2),
-    modal = _useState195[0],
-    setModal = _useState195[1];
-  var _useState196 = useState(null),
-    _useState197 = _slicedToArray(_useState196, 2),
-    chat = _useState197[0],
-    setChat = _useState197[1];
-  var _useState198 = useState(false),
-    _useState199 = _slicedToArray(_useState198, 2),
-    showReencontrar = _useState199[0],
-    setShowReencontrar = _useState199[1];
-  var _useState200 = useState(null),
-    _useState201 = _slicedToArray(_useState200, 2),
-    filtroReencontrar = _useState201[0],
-    setFiltroReencontrar = _useState201[1];
-  var _useState202 = useState(false),
     _useState203 = _slicedToArray(_useState202, 2),
-    showMenuRapido = _useState203[0],
-    setShowMenuRapido = _useState203[1];
-  var _useState204 = useState(false),
+    user = _useState203[0],
+    setUser = _useState203[1];
+  var _useState204 = useState(null),
     _useState205 = _slicedToArray(_useState204, 2),
-    showAdicionarLugar = _useState205[0],
-    setShowAdicionarLugar = _useState205[1];
-  var _useState206 = useState(false),
+    modal = _useState205[0],
+    setModal = _useState205[1];
+  var _useState206 = useState(null),
     _useState207 = _slicedToArray(_useState206, 2),
-    showAgendaVisita = _useState207[0],
-    setShowAgendaVisita = _useState207[1];
+    chat = _useState207[0],
+    setChat = _useState207[1];
   var _useState208 = useState(false),
     _useState209 = _slicedToArray(_useState208, 2),
-    showMomento = _useState209[0],
-    setShowMomento = _useState209[1];
+    showReencontrar = _useState209[0],
+    setShowReencontrar = _useState209[1];
+  var _useState210 = useState(null),
+    _useState211 = _slicedToArray(_useState210, 2),
+    filtroReencontrar = _useState211[0],
+    setFiltroReencontrar = _useState211[1];
+  var _useState212 = useState(false),
+    _useState213 = _slicedToArray(_useState212, 2),
+    showMenuRapido = _useState213[0],
+    setShowMenuRapido = _useState213[1];
+  var _useState214 = useState(false),
+    _useState215 = _slicedToArray(_useState214, 2),
+    showAdicionarLugar = _useState215[0],
+    setShowAdicionarLugar = _useState215[1];
+  var _useState216 = useState(false),
+    _useState217 = _slicedToArray(_useState216, 2),
+    showAgendaVisita = _useState217[0],
+    setShowAgendaVisita = _useState217[1];
+  var _useState218 = useState(false),
+    _useState219 = _slicedToArray(_useState218, 2),
+    showMomento = _useState219[0],
+    setShowMomento = _useState219[1];
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
@@ -13319,10 +13667,10 @@ function App() {
   }
 
   // Estado de loading inicial
-  var _useState210 = useState(false),
-    _useState211 = _slicedToArray(_useState210, 2),
-    appReady = _useState211[0],
-    setAppReady = _useState211[1];
+  var _useState220 = useState(false),
+    _useState221 = _slicedToArray(_useState220, 2),
+    appReady = _useState221[0],
+    setAppReady = _useState221[1];
 
   // Marca app como pronto após init
   useEffect(function () {
