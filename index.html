@@ -228,6 +228,33 @@ var T = {
   red: "#EF5350",
   redBg: "rgba(239,83,80,0.08)"
 };
+
+// Temas por cor
+var TEMAS = {
+  amber: {
+    main: "#C17E3A",
+    dark: "#9A5F22",
+    bg: "rgba(193,126,58,0.1)"
+  },
+  blue: {
+    main: "#1E88E5",
+    dark: "#0C447C",
+    bg: "rgba(30,136,229,0.1)"
+  },
+  green: {
+    main: "#66BB6A",
+    dark: "#43A047",
+    bg: "rgba(102,187,106,0.1)"
+  },
+  purple: {
+    main: "#9575CD",
+    dark: "#673AB7",
+    bg: "rgba(149,117,205,0.1)"
+  }
+};
+function getTema(user) {
+  return TEMAS[user === null || user === void 0 ? void 0 : user.tema] || TEMAS.amber;
+}
 var PLACES = [{
   value: "escola",
   label: "Escola"
@@ -1809,14 +1836,14 @@ function Inicio(_ref14) {
       borderRadius: "50%",
       overflow: "hidden",
       border: "2px solid #fff",
-      boxShadow: "0 0 0 1.5px ".concat(T.accent),
-      background: "linear-gradient(135deg,".concat(T.accentBg, ",rgba(193,126,58,0.25))"),
+      boxShadow: "0 0 0 1.5px ".concat(getTema(user).main),
+      background: "linear-gradient(135deg,".concat(getTema(user).bg, ",").concat(getTema(user).main, "40)"),
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       fontSize: 16,
       fontWeight: 700,
-      color: T.accentDk,
+      color: getTema(user).dark,
       fontFamily: "Georgia,serif"
     }
   }, user.avatar_url ? /*#__PURE__*/React.createElement("img", {
@@ -4475,7 +4502,7 @@ function Perfil(_ref24) {
       width: 22,
       height: 22,
       borderRadius: "50%",
-      background: T.accent,
+      background: getTema(user).main,
       border: "2px solid #fff",
       display: "flex",
       alignItems: "center",
@@ -9414,6 +9441,7 @@ function CadastroSimples(_ref46) {
               birth_year: f.birthYear ? parseInt(f.birthYear) : null,
               avatar_url: avatarUrl,
               photos: capaUrl ? [capaUrl] : [],
+              tema: f.tema || "amber",
               available: "sim",
               lugares: [{
                 placeName: f.placeName.trim(),
@@ -13168,6 +13196,7 @@ function App() {
         avatar_url: p.avatar_url || null,
         photos: p.photos || [],
         available: p.available || "sim",
+        tema: p.tema || "amber",
         lugares: p.lugares || [],
         interests: p.interests || null,
         curtia: p.curtia || null,
@@ -13400,7 +13429,7 @@ function App() {
     }, "Tempnext \xA9 2026")));
   }
   var NAV_COLORS = {
-    inicio: T.accent,
+    inicio: getTema(user).main,
     buscar: T.blueStrong,
     painel: "#66BB6A",
     perfil: "#9575CD"
@@ -13535,13 +13564,13 @@ function App() {
         width: 44,
         height: 44,
         borderRadius: "50%",
-        background: "linear-gradient(145deg,".concat(T.accent, "cc,").concat(T.accentDk, ")"),
+        background: "linear-gradient(145deg,".concat(getTema(user).main, "cc,").concat(getTema(user).dark, ")"),
         border: "none",
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        boxShadow: "0 4px 18px rgba(193,126,58,0.25)",
+        boxShadow: "0 4px 18px ".concat(getTema(user).main, "40"),
         marginTop: -10
       }
     }, /*#__PURE__*/React.createElement("svg", {
