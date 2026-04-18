@@ -2213,8 +2213,9 @@ function calcularRelevancia(perfil, user) {
 
 // ── Screen: Buscar ────────────────────────────────────────────
 function Buscar(_ref17) {
-  var _user;
-  var onView = _ref17.onView,
+  var _user$intencao4;
+  var user = _ref17.user,
+    onView = _ref17.onView,
     onAdd = _ref17.onAdd,
     contacts = _ref17.contacts;
   var _useState25 = useState(""),
@@ -2262,7 +2263,7 @@ function Buscar(_ref17) {
   }
   function _executarBusca() {
     _executarBusca = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
-      var _user2, query, _yield$query$order$li, data, resultados, _t3;
+      var _user$intencao5, query, _yield$query$order$li, data, resultados, _t3;
       return _regenerator().w(function (_context2) {
         while (1) switch (_context2.p = _context2.n) {
           case 0:
@@ -2280,7 +2281,7 @@ function Buscar(_ref17) {
             data = _yield$query$order$li.data;
             // Ordena por relevância baseado na intenção do usuário logado
             resultados = data || [];
-            if (((_user2 = user) === null || _user2 === void 0 || (_user2 = _user2.intencao) === null || _user2 === void 0 ? void 0 : _user2.length) > 0) {
+            if ((user === null || user === void 0 || (_user$intencao5 = user.intencao) === null || _user$intencao5 === void 0 ? void 0 : _user$intencao5.length) > 0) {
               resultados = resultados.sort(function (a, b) {
                 var scoreA = calcularRelevancia(a, user);
                 var scoreB = calcularRelevancia(b, user);
@@ -2319,18 +2320,28 @@ function Buscar(_ref17) {
       paddingTop: 52,
       paddingBottom: 20
     }
-  }, /*#__PURE__*/React.createElement(Logo, null), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 20,
-      fontWeight: 700,
+      fontFamily: "Georgia,serif",
+      fontSize: 28,
+      fontWeight: 300,
       color: T.text,
-      marginTop: 16
+      letterSpacing: "-0.5px"
     }
   }, "Buscar"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
+      width: 24,
+      height: 2,
+      background: getTema(user).main,
+      marginTop: 8,
+      borderRadius: 1
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
       color: T.muted,
-      marginTop: 3
+      marginTop: 10,
+      fontWeight: 300
     }
   }, "Encontre quem viveu no mesmo lugar e \xE9poca")), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -2443,7 +2454,7 @@ function Buscar(_ref17) {
     style: {
       marginTop: 16
     }
-  }, ((_user = user) === null || _user === void 0 || (_user = _user.intencao) === null || _user === void 0 ? void 0 : _user.length) > 0 && /*#__PURE__*/React.createElement("div", {
+  }, (user === null || user === void 0 || (_user$intencao4 = user.intencao) === null || _user$intencao4 === void 0 ? void 0 : _user$intencao4.length) > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 16,
@@ -4434,17 +4445,44 @@ function PersonalizacaoPerfil(_ref24) {
     bgHue = _useState63[0],
     setBgHue = _useState63[1];
 
-  // Mapeia slider 0-100 → cor real
-  // 0-5: preto | 6-9: cinza escuro | 10-92: espectro colorido | 93-96: cinza claro | 97-100: branco
+  // Mapeia slider 0-100 → cor real — alinhado com gradiente da barra
   function sliderToHex(v) {
-    if (v <= 5) return "#1C1C1E";
-    if (v <= 9) return "#555555";
-    if (v >= 97) return "#F0F0F0";
-    if (v >= 93) return "#B0B0B0";
-    // 10-92 = espectro colorido (mapeia pra hue 0-360)
-    var colorRange = v - 10; // 0 a 82
-    var hue = Math.round(colorRange / 82 * 360);
-    return hslToHex(hue, 65, 52);
+    // 0-3: preto | 4-7: cinza escuro | 8-11: cinza médio
+    if (v <= 3) return "#1C1C1E";
+    if (v <= 7) return "#3D3D3D";
+    if (v <= 11) return "#707070";
+    // 92-95: cinza claro | 96-98: quase branco | 99-100: branco
+    if (v >= 99) return "#F5F5F5";
+    if (v >= 96) return "#D8D8D8";
+    if (v >= 92) return "#A8A8A8";
+    // 12-91: espectro colorido
+    var colorRange = v - 12; // 0 a 79
+    // Mapeia pra hue, mantendo a curva visual
+    var hue = Math.round(colorRange / 79 * 350);
+    // Satura e claridade ajustadas por faixa
+    var sat = 60,
+      light = 55;
+    if (hue < 90) {
+      sat = 65;
+      light = 55;
+    } // vermelhos/laranjas/amarelos
+    else if (hue < 160) {
+      sat = 48;
+      light = 48;
+    } // verdes
+    else if (hue < 240) {
+      sat = 55;
+      light = 52;
+    } // ciano/azul
+    else if (hue < 300) {
+      sat = 48;
+      light = 58;
+    } // roxos
+    else {
+      sat = 52;
+      light = 58;
+    } // rosa/magenta
+    return hslToHex(hue, sat, light);
   }
   function aplicarTemaFromSlider(_x0) {
     return _aplicarTemaFromSlider.apply(this, arguments);
@@ -4532,13 +4570,16 @@ function PersonalizacaoPerfil(_ref24) {
     return _aplicarBg.apply(this, arguments);
   }
   function bgSliderToHex(v, light) {
-    if (v <= 5) return "#1C1C1E";
-    if (v <= 9) return "#555555";
-    if (v >= 97) return "#FFFFFF";
-    if (v >= 93) return "#D0D0D0";
-    var colorRange = v - 10;
-    var hue = Math.round(colorRange / 82 * 360);
-    return hslToHex(hue, 30, light || 90);
+    if (v <= 3) return "#1C1C1E";
+    if (v <= 7) return "#4A4A4A";
+    if (v <= 11) return "#808080";
+    if (v >= 99) return "#FFFFFF";
+    if (v >= 96) return "#E8E8E8";
+    if (v >= 92) return "#C8C8C8";
+    var colorRange = v - 12;
+    var hue = Math.round(colorRange / 79 * 350);
+    var sat = hue < 90 || hue > 270 ? 28 : 25;
+    return hslToHex(hue, sat, light || 92);
   }
   function aplicarBgFromSlider(_x14, _x15) {
     return _aplicarBgFromSlider.apply(this, arguments);
@@ -4849,11 +4890,11 @@ function PersonalizacaoPerfil(_ref24) {
     },
     style: {
       width: "100%",
-      height: 22,
-      borderRadius: 11,
+      height: 18,
+      borderRadius: 9,
       appearance: "none",
       WebkitAppearance: "none",
-      background: "linear-gradient(90deg,#1C1C1E 0%,#555555 6%,#hsl(0,70%,52%) 10%,hsl(0,70%,52%) 12%,hsl(30,70%,52%) 20%,hsl(60,70%,52%) 28%,hsl(120,55%,48%) 40%,hsl(180,60%,45%) 52%,hsl(210,70%,52%) 62%,hsl(260,55%,55%) 74%,hsl(300,55%,55%) 84%,hsl(330,65%,55%) 90%,#B0B0B0 94%,#F0F0F0 100%)",
+      background: "linear-gradient(90deg,#1C1C1E 0%,#3D3D3D 4%,#707070 8%,hsl(0,60%,55%) 14%,hsl(20,65%,55%) 20%,hsl(40,65%,55%) 26%,hsl(60,60%,50%) 32%,hsl(90,50%,48%) 38%,hsl(130,45%,48%) 44%,hsl(160,50%,48%) 50%,hsl(190,55%,52%) 56%,hsl(215,60%,55%) 62%,hsl(240,50%,58%) 68%,hsl(270,45%,58%) 74%,hsl(300,50%,58%) 80%,hsl(330,55%,58%) 86%,#A8A8A8 92%,#D8D8D8 96%,#F5F5F5 100%)",
       outline: "none",
       cursor: "pointer"
     }
@@ -4933,11 +4974,11 @@ function PersonalizacaoPerfil(_ref24) {
     },
     style: {
       width: "100%",
-      height: 18,
-      borderRadius: 9,
+      height: 16,
+      borderRadius: 8,
       appearance: "none",
       WebkitAppearance: "none",
-      background: "linear-gradient(90deg,#1C1C1E 0%,#555555 6%,hsl(0,35%,88%) 10%,hsl(30,40%,90%) 18%,hsl(60,35%,90%) 26%,hsl(120,30%,90%) 40%,hsl(180,30%,90%) 52%,hsl(210,35%,90%) 62%,hsl(260,30%,90%) 74%,hsl(300,30%,90%) 84%,hsl(330,35%,90%) 90%,#D0D0D0 94%,#FFFFFF 100%)",
+      background: "linear-gradient(90deg,#1C1C1E 0%,#4A4A4A 4%,#808080 8%,hsl(0,28%,92%) 14%,hsl(20,32%,92%) 20%,hsl(40,32%,92%) 26%,hsl(60,28%,92%) 32%,hsl(90,25%,92%) 38%,hsl(130,25%,92%) 44%,hsl(160,25%,92%) 50%,hsl(190,28%,92%) 56%,hsl(215,30%,92%) 62%,hsl(240,25%,92%) 68%,hsl(270,22%,92%) 74%,hsl(300,25%,92%) 80%,hsl(330,28%,92%) 86%,#C8C8C8 92%,#E8E8E8 96%,#FFFFFF 100%)",
       outline: "none",
       cursor: "pointer",
       marginBottom: 10
@@ -5111,7 +5152,7 @@ function PersonalizacaoPerfil(_ref24) {
 
 // ── Screen: Perfil ──────────────────────────────────────────
 function Perfil(_ref25) {
-  var _user$photos, _user$lugares2, _user$intencao4, _user$intencao5, _user$lugares3, _user$interests, _user$curtia, _user$curtia2, _user$interests2, _user$curtia4, _user$interests6, _user$interests7, _user$photos2, _user$lugares5;
+  var _user$photos, _user$lugares2, _user$intencao6, _user$intencao7, _user$lugares3, _user$interests, _user$curtia, _user$curtia2, _user$interests2, _user$curtia4, _user$interests6, _user$interests7, _user$photos2, _user$lugares5;
   var user = _ref25.user,
     onLogout = _ref25.onLogout,
     onCadastrar = _ref25.onCadastrar,
@@ -5440,7 +5481,7 @@ function Perfil(_ref25) {
     onOpenAgenda: function onOpenAgenda() {
       return setShowAgendaVisita(true);
     }
-  }), (user.available || user.era || ((_user$intencao4 = user.intencao) === null || _user$intencao4 === void 0 ? void 0 : _user$intencao4.length) > 0) && /*#__PURE__*/React.createElement("div", {
+  }), (user.available || user.era || ((_user$intencao6 = user.intencao) === null || _user$intencao6 === void 0 ? void 0 : _user$intencao6.length) > 0) && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 18,
@@ -5451,7 +5492,7 @@ function Perfil(_ref25) {
       flexDirection: "column",
       gap: 10
     }
-  }, ((_user$intencao5 = user.intencao) === null || _user$intencao5 === void 0 ? void 0 : _user$intencao5.length) > 0 && /*#__PURE__*/React.createElement("div", {
+  }, ((_user$intencao7 = user.intencao) === null || _user$intencao7 === void 0 ? void 0 : _user$intencao7.length) > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       alignItems: "center",
@@ -11096,7 +11137,7 @@ function QuemPassouPorAqui(_ref50) {
 
 // ── Pergunta da Comunidade ────────────────────────────────────
 function PerguntaComunidade(_ref52) {
-  var _user$intencao6, _user$intencao7, _user$intencao8, _user$intencao9;
+  var _user$intencao8, _user$intencao9, _user$intencao0, _user$intencao1;
   var user = _ref52.user;
   var _useState148 = useState(""),
     _useState149 = _slicedToArray(_useState148, 2),
@@ -11116,7 +11157,7 @@ function PerguntaComunidade(_ref52) {
     setTotalRespostas = _useState155[1];
 
   // Perguntas inteligentes baseadas no perfil + intenção
-  var perguntas = [(user === null || user === void 0 ? void 0 : user.city) && "Quem lembra de algum ponto de encontro famoso em ".concat(user.city, "?"), (user === null || user === void 0 ? void 0 : user.place_name) && "Quem tem fotos antigas d".concat(user.place_type === "escola" ? "a" : "o", " ").concat(user.place_name, "?"), (user === null || user === void 0 || (_user$intencao6 = user.intencao) === null || _user$intencao6 === void 0 ? void 0 : _user$intencao6.includes("reencontrar")) && (user === null || user === void 0 ? void 0 : user.city) && "Quem mais quer se reencontrar com pessoas de ".concat(user.city, "?"), (user === null || user === void 0 || (_user$intencao7 = user.intencao) === null || _user$intencao7 === void 0 ? void 0 : _user$intencao7.includes("relembrar")) && "Qual foi o momento mais marcante do lugar onde você cresceu?", (user === null || user === void 0 || (_user$intencao8 = user.intencao) === null || _user$intencao8 === void 0 ? void 0 : _user$intencao8.includes("visitar")) && (user === null || user === void 0 ? void 0 : user.city) && "Tem fotos recentes de ".concat(user.city, " para compartilhar?"), (user === null || user === void 0 || (_user$intencao9 = user.intencao) === null || _user$intencao9 === void 0 ? void 0 : _user$intencao9.includes("reconectar")) && "Quem ainda mantém contato com pessoas do mesmo lugar?", (user === null || user === void 0 ? void 0 : user.city) && "Tem algu\xE9m de ".concat(user.city, " morando fora do Brasil?"), (user === null || user === void 0 ? void 0 : user.last_name) && "Tem mais algu\xE9m da fam\xEDlia ".concat(user.last_name, " aqui no Tempnext?")].filter(Boolean);
+  var perguntas = [(user === null || user === void 0 ? void 0 : user.city) && "Quem lembra de algum ponto de encontro famoso em ".concat(user.city, "?"), (user === null || user === void 0 ? void 0 : user.place_name) && "Quem tem fotos antigas d".concat(user.place_type === "escola" ? "a" : "o", " ").concat(user.place_name, "?"), (user === null || user === void 0 || (_user$intencao8 = user.intencao) === null || _user$intencao8 === void 0 ? void 0 : _user$intencao8.includes("reencontrar")) && (user === null || user === void 0 ? void 0 : user.city) && "Quem mais quer se reencontrar com pessoas de ".concat(user.city, "?"), (user === null || user === void 0 || (_user$intencao9 = user.intencao) === null || _user$intencao9 === void 0 ? void 0 : _user$intencao9.includes("relembrar")) && "Qual foi o momento mais marcante do lugar onde você cresceu?", (user === null || user === void 0 || (_user$intencao0 = user.intencao) === null || _user$intencao0 === void 0 ? void 0 : _user$intencao0.includes("visitar")) && (user === null || user === void 0 ? void 0 : user.city) && "Tem fotos recentes de ".concat(user.city, " para compartilhar?"), (user === null || user === void 0 || (_user$intencao1 = user.intencao) === null || _user$intencao1 === void 0 ? void 0 : _user$intencao1.includes("reconectar")) && "Quem ainda mantém contato com pessoas do mesmo lugar?", (user === null || user === void 0 ? void 0 : user.city) && "Tem algu\xE9m de ".concat(user.city, " morando fora do Brasil?"), (user === null || user === void 0 ? void 0 : user.last_name) && "Tem mais algu\xE9m da fam\xEDlia ".concat(user.last_name, " aqui no Tempnext?")].filter(Boolean);
   var pergunta = perguntas[new Date().getDate() % perguntas.length];
 
   // Load response count from Supabase
@@ -12994,8 +13035,7 @@ function PainelPessoal(_ref65) {
   return /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "52px 18px 100px",
-      minHeight: "100vh",
-      background: T.bg
+      minHeight: "100vh"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -13020,9 +13060,10 @@ function PainelPessoal(_ref65) {
   }, "seu painel \xB7 ", user.city || "", " \xB7 ", user.era || ""), /*#__PURE__*/React.createElement("div", {
     style: {
       width: 32,
-      height: 1,
-      background: T.border,
-      margin: "12px auto 0"
+      height: 2,
+      background: getTema(user).main,
+      margin: "12px auto 0",
+      borderRadius: 1
     }
   })), fotoTop && /*#__PURE__*/React.createElement("div", {
     style: {
@@ -13303,7 +13344,7 @@ function PainelPessoal(_ref65) {
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 8,
-      color: T.accent,
+      color: getTema(user).main,
       letterSpacing: "0.15em",
       textTransform: "uppercase",
       fontWeight: 500,
@@ -13516,7 +13557,7 @@ function PainelPessoal(_ref65) {
     style: {
       textAlign: "center",
       fontSize: 12,
-      color: T.accent,
+      color: getTema(user).main,
       fontWeight: 600,
       cursor: "pointer",
       marginTop: 8
@@ -14382,11 +14423,12 @@ function App() {
       }
     }, "Tempnext \xA9 2026")));
   }
+  var temaCor = getTema(user).main;
   var NAV_COLORS = {
-    inicio: getTema(user).main,
-    buscar: T.blueStrong,
-    painel: "#66BB6A",
-    perfil: "#9575CD"
+    inicio: temaCor,
+    buscar: temaCor,
+    painel: temaCor,
+    perfil: temaCor
   };
   var NAV = [{
     id: "inicio",
@@ -14488,6 +14530,7 @@ function App() {
     },
     onView: setModal
   }), tela === "buscar" && /*#__PURE__*/React.createElement(Buscar, {
+    user: user,
     onView: setModal,
     onAdd: function onAdd(p) {
       addContact(p);
