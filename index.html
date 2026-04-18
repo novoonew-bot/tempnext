@@ -492,7 +492,7 @@ function uploadImage(_x, _x2, _x3, _x4, _x5) {
 function _uploadImage() {
   _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30(file, bucket, userId, maxW, quality) {
     var _blob$type;
-    var defaultW, defaultQ, blob, ts, rand, ext, filename, _yield$db$storage$fro, error, _db$storage$from$getP, data, _t38;
+    var defaultW, defaultQ, blob, ts, rand, ext, filename, uploadPromise, timeoutPromise, _yield$Promise$race, error, _db$storage$from$getP, data, _t38;
     return _regenerator().w(function (_context30) {
       while (1) switch (_context30.p = _context30.n) {
         case 0:
@@ -524,16 +524,22 @@ function _uploadImage() {
           ts = Date.now();
           rand = Math.random().toString(36).slice(2, 8);
           ext = (_blob$type = blob.type) !== null && _blob$type !== void 0 && _blob$type.includes("png") ? "png" : "jpg";
-          filename = "".concat(userId || "anon", "_").concat(ts, "_").concat(rand, ".").concat(ext);
-          _context30.n = 6;
-          return db.storage.from(bucket).upload(filename, blob, {
+          filename = "".concat(userId || "anon", "_").concat(ts, "_").concat(rand, ".").concat(ext); // Upload com timeout de 30s
+          uploadPromise = db.storage.from(bucket).upload(filename, blob, {
             contentType: blob.type || "image/jpeg",
             cacheControl: "3600",
             upsert: false
           });
+          timeoutPromise = new Promise(function (_, reject) {
+            return setTimeout(function () {
+              return reject(new Error("Upload timeout após 30s"));
+            }, 30000);
+          });
+          _context30.n = 6;
+          return Promise.race([uploadPromise, timeoutPromise]);
         case 6:
-          _yield$db$storage$fro = _context30.v;
-          error = _yield$db$storage$fro.error;
+          _yield$Promise$race = _context30.v;
+          error = _yield$Promise$race.error;
           if (!error) {
             _context30.n = 7;
             break;
@@ -3704,7 +3710,7 @@ function ModalEditarPerfil(_ref23) {
     _useState50 = _slicedToArray(_useState49, 2),
     saving = _useState50[0],
     setSaving = _useState50[1];
-  var _useState51 = useState(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
+  var _useState51 = useState(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
       name: user.name || "",
       nick: user.nick || "",
       note: user.note || "",
@@ -3719,7 +3725,7 @@ function ModalEditarPerfil(_ref23) {
       intencao: user.intencao || [],
       knownAs: user.known_as || "",
       familyRef: user.family_ref || ""
-    }, "howIam", user.how_iam || ""), "available", user.available || "sim"), "interests", user.interests || []), "curtia", user.curtia || [])),
+    }, "howIam", user.how_iam || ""), "available", user.available || "sim"), "interests", user.interests || []), "curtia", user.curtia || []), "tema", user.tema || "amber")),
     _useState52 = _slicedToArray(_useState51, 2),
     f = _useState52[0],
     setF = _useState52[1];
@@ -3747,7 +3753,7 @@ function ModalEditarPerfil(_ref23) {
               birth_year: f.birthYear ? parseInt(f.birthYear) : null,
               birth_day: f.birthDay ? parseInt(f.birthDay) : null,
               birth_month: f.birthMonth ? parseInt(f.birthMonth) : null
-            }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_objectSpread3, "birth_year", f.birthYear ? parseInt(f.birthYear) : null), "current_city", f.currentCity.trim() || null), "current_state", f.currentState || null), "current_country", f.currentCountry || null), "known_as", f.knownAs.trim() || null), "curtia", f.curtia.length > 0 ? f.curtia : null), "how_iam", f.howIam.trim() || null), "intencao", f.intencao.length > 0 ? f.intencao : null), "family_ref", f.familyRef.trim() || null), "how_iam", f.howIam.trim() || null), _defineProperty(_defineProperty(_objectSpread3, "available", f.available), "interests", f.interests.length > 0 ? f.interests : null)));
+            }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_objectSpread3, "birth_year", f.birthYear ? parseInt(f.birthYear) : null), "current_city", f.currentCity.trim() || null), "current_state", f.currentState || null), "current_country", f.currentCountry || null), "known_as", f.knownAs.trim() || null), "curtia", f.curtia.length > 0 ? f.curtia : null), "how_iam", f.howIam.trim() || null), "intencao", f.intencao.length > 0 ? f.intencao : null), "family_ref", f.familyRef.trim() || null), "how_iam", f.howIam.trim() || null), _defineProperty(_defineProperty(_defineProperty(_objectSpread3, "available", f.available), "interests", f.interests.length > 0 ? f.interests : null), "tema", f.tema || "amber")));
             _context5.p = 2;
             _context5.n = 3;
             return db.from("profiles").update({
@@ -3761,7 +3767,8 @@ function ModalEditarPerfil(_ref23) {
               how_iam: updated.how_iam,
               intencao: updated.intencao,
               available: updated.available,
-              interests: updated.interests
+              interests: updated.interests,
+              tema: updated.tema
             }).eq("id", user.id);
           case 3:
             _context5.n = 5;
@@ -4231,6 +4238,55 @@ function ModalEditarPerfil(_ref23) {
         transition: "all .15s"
       }
     }, o.l);
+  }))), /*#__PURE__*/React.createElement(STitle, {
+    style: {
+      color: T.accent
+    }
+  }, "Suas cores"), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      justifyContent: "center"
+    }
+  }, [{
+    id: "amber",
+    colors: ["#C4956A", "#9A7552"]
+  }, {
+    id: "blue",
+    colors: ["#5BA4D9", "#3D7AB5"]
+  }, {
+    id: "green",
+    colors: ["#8BC5A0", "#5A9E74"]
+  }, {
+    id: "purple",
+    colors: ["#A99BC8", "#7E6FA8"]
+  }].map(function (t) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: t.id,
+      onClick: function onClick() {
+        return setF(_objectSpread(_objectSpread({}, f), {}, {
+          tema: t.id
+        }));
+      },
+      style: {
+        width: 42,
+        height: 42,
+        borderRadius: 12,
+        cursor: "pointer",
+        background: "linear-gradient(135deg,".concat(t.colors[0], ",").concat(t.colors[1], ")"),
+        border: f.tema === t.id ? "2px solid ".concat(T.text) : "2px solid transparent",
+        transform: f.tema === t.id ? "scale(1.05)" : "scale(1)",
+        transition: "all .15s",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, f.tema === t.id && /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: "#fff",
+        fontSize: 14
+      }
+    }, "\u2713"));
   }))), /*#__PURE__*/React.createElement("div", {
     style: {
       paddingTop: 20
@@ -4569,101 +4625,12 @@ function Perfil(_ref24) {
         fontWeight: 600
       }
     }, label));
-  })), function () {
-    var capsulas = [];
-    try {
-      capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + (user === null || user === void 0 ? void 0 : user.id)) || "[]");
-    } catch (_unused6) {}
-    if (!capsulas.length) return null;
-    return /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginBottom: 12
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 8
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 6
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        width: 22,
-        height: 22,
-        borderRadius: 6,
-        background: "rgba(149,117,205,0.12)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }
-    }, /*#__PURE__*/React.createElement("svg", {
-      width: "12",
-      height: "12",
-      viewBox: "0 0 12 12",
-      fill: "none"
-    }, /*#__PURE__*/React.createElement("circle", {
-      cx: "6",
-      cy: "6",
-      r: "4.5",
-      stroke: T.purple,
-      strokeWidth: "1.2"
-    }), /*#__PURE__*/React.createElement("path", {
-      d: "M6 3.5V6l1.5 1",
-      stroke: T.purple,
-      strokeWidth: "1.2",
-      strokeLinecap: "round"
-    }))), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 11,
-        fontWeight: 700,
-        color: T.purple
-      }
-    }, "C\xE1psulas do Tempo")), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 9,
-        fontWeight: 700,
-        background: "rgba(149,117,205,0.1)",
-        color: T.purple,
-        padding: "2px 8px",
-        borderRadius: 20
-      }
-    }, "S\xF3 voc\xEA v\xEA")), /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        flexDirection: "column",
-        gap: 8
-      }
-    }, capsulas.map(function (cap, i) {
-      return /*#__PURE__*/React.createElement(CapsulaPerfil, {
-        key: i,
-        capsula: cap,
-        index: i,
-        userId: user === null || user === void 0 ? void 0 : user.id
-      });
-    })), /*#__PURE__*/React.createElement("div", {
-      onClick: function onClick() {
-        setShowAgendaVisita(true);
-      },
-      style: {
-        marginTop: 8,
-        padding: "8px 12px",
-        borderRadius: 10,
-        border: "1.5px dashed rgba(149,117,205,0.4)",
-        background: "rgba(149,117,205,0.03)",
-        fontSize: 11,
-        fontWeight: 600,
-        color: T.purple,
-        textAlign: "center",
-        cursor: "pointer"
-      }
-    }, "+ Nova c\xE1psula"));
-  }(), (user.available || user.era || ((_user$intencao4 = user.intencao) === null || _user$intencao4 === void 0 ? void 0 : _user$intencao4.length) > 0) && /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement(CapsulasUser, {
+    user: user,
+    onOpenAgenda: function onOpenAgenda() {
+      return setShowAgendaVisita(true);
+    }
+  }), (user.available || user.era || ((_user$intencao4 = user.intencao) === null || _user$intencao4 === void 0 ? void 0 : _user$intencao4.length) > 0) && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 18,
@@ -9355,7 +9322,7 @@ function CadastroSimples(_ref46) {
   }
   function _salvar4() {
     _salvar4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20() {
-      var nome, authId, _yield$db$auth$getSes, session, avatarUrl, tempId, capaUrl, _tempId, payload, saved, _yield$db$from$insert, data, error, _yield$db$from$upsert, _data, _t21, _t22, _t23, _t24, _t25;
+      var nome, authId, _yield$db$auth$getSes, session, avatarUrl, uploadFailures, tempId, capaUrl, _tempId, payload, saved, _yield$db$from$insert, data, error, _yield$db$from$upsert, _data, _t21, _t22, _t23, _t24, _t25;
       return _regenerator().w(function (_context20) {
         while (1) switch (_context20.p = _context20.n) {
           case 0:
@@ -9383,6 +9350,7 @@ function CadastroSimples(_ref46) {
           case 5:
             // Upload avatar
             avatarUrl = null;
+            uploadFailures = [];
             if (!f.avatarFile) {
               _context20.n = 9;
               break;
@@ -9399,6 +9367,7 @@ function CadastroSimples(_ref46) {
             _context20.p = 8;
             _t22 = _context20.v;
             console.error("Avatar upload:", _t22);
+            uploadFailures.push("foto de perfil");
           case 9:
             // Upload capa
             capaUrl = null;
@@ -9418,6 +9387,7 @@ function CadastroSimples(_ref46) {
             _context20.p = 12;
             _t23 = _context20.v;
             console.error("Capa upload:", _t23);
+            uploadFailures.push("foto de capa");
           case 13:
             payload = {
               auth_id: authId,
@@ -9489,7 +9459,7 @@ function CadastroSimples(_ref46) {
             if (saved) {
               try {
                 localStorage.setItem("tn_user", JSON.stringify(saved));
-              } catch (_unused10) {}
+              } catch (_unused1) {}
               if (saved.id && !saved.id.toString().startsWith("local_")) {
                 syncLugaresToPlaces(saved.id, saved.lugares || payload.lugares || [])["catch"](function (e) {
                   return console.log("Sync:", e);
@@ -11015,7 +10985,7 @@ function AlertaRegiao(_ref54) {
           var _meta$cidade;
           var meta = JSON.parse(m.meta || "{}");
           return ((_meta$cidade = meta.cidade) === null || _meta$cidade === void 0 ? void 0 : _meta$cidade.toLowerCase()) === (cidade === null || cidade === void 0 ? void 0 : cidade.toLowerCase()) || meta.estado === estado;
-        } catch (_unused11) {
+        } catch (_unused10) {
           return false;
         }
       });
@@ -11186,29 +11156,147 @@ function useSeguirLugar(placeId, userId) {
   };
 }
 
-// ── Cápsula no Perfil (individual) ───────────────────────────
-function CapsulaPerfil(_ref58) {
-  var capsula = _ref58.capsula,
-    index = _ref58.index,
-    userId = _ref58.userId;
-  var _useState162 = useState(false),
+// ── Cápsulas do User (carregadas do banco) ───────────────────
+function CapsulasUser(_ref58) {
+  var user = _ref58.user,
+    onOpenAgenda = _ref58.onOpenAgenda;
+  var _useState162 = useState([]),
     _useState163 = _slicedToArray(_useState162, 2),
-    editando = _useState163[0],
-    setEditando = _useState163[1];
-  var _useState164 = useState({
+    capsulas = _useState163[0],
+    setCapsulas = _useState163[1];
+  useEffect(function () {
+    if (!(user !== null && user !== void 0 && user.id)) return;
+    // Busca momentos marcados como cápsula do user
+    dbRead.from("momentos").select("*").eq("user_id", user.id).eq("tipo", "capsula").order("ts", {
+      ascending: false
+    }).limit(20).then(function (_ref59) {
+      var data = _ref59.data;
+      if (data) setCapsulas(data);else {
+        // Fallback: localStorage
+        try {
+          var local = JSON.parse(localStorage.getItem("tn_capsulas_" + user.id) || "[]");
+          if (local.length) setCapsulas(local);
+        } catch (_unused11) {}
+      }
+    })["catch"](function () {
+      try {
+        var local = JSON.parse(localStorage.getItem("tn_capsulas_" + user.id) || "[]");
+        if (local.length) setCapsulas(local);
+      } catch (_unused12) {}
+    });
+  }, [user === null || user === void 0 ? void 0 : user.id]);
+  if (!capsulas.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 22,
+      height: 22,
+      borderRadius: 6,
+      background: "rgba(149,117,205,0.12)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 12 12",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "6",
+    cy: "6",
+    r: "4.5",
+    stroke: T.purple,
+    strokeWidth: "1.2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M6 3.5V6l1.5 1",
+    stroke: T.purple,
+    strokeWidth: "1.2",
+    strokeLinecap: "round"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      fontWeight: 700,
+      color: T.purple
+    }
+  }, "C\xE1psulas do Tempo")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      fontWeight: 700,
+      background: "rgba(149,117,205,0.1)",
+      color: T.purple,
+      padding: "2px 8px",
+      borderRadius: 20
+    }
+  }, "S\xF3 voc\xEA v\xEA")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 8
+    }
+  }, capsulas.map(function (cap, i) {
+    return /*#__PURE__*/React.createElement(CapsulaPerfil, {
+      key: cap.id || i,
+      capsula: cap,
+      index: i,
+      userId: user === null || user === void 0 ? void 0 : user.id
+    });
+  })), /*#__PURE__*/React.createElement("div", {
+    onClick: onOpenAgenda,
+    style: {
+      marginTop: 8,
+      padding: "8px 12px",
+      borderRadius: 10,
+      border: "1.5px dashed rgba(149,117,205,0.4)",
+      background: "rgba(149,117,205,0.03)",
+      fontSize: 11,
+      fontWeight: 600,
+      color: T.purple,
+      textAlign: "center",
+      cursor: "pointer"
+    }
+  }, "+ Nova c\xE1psula"));
+}
+
+// ── Cápsula no Perfil (individual) ───────────────────────────
+function CapsulaPerfil(_ref60) {
+  var capsula = _ref60.capsula,
+    index = _ref60.index,
+    userId = _ref60.userId;
+  var _useState164 = useState(false),
+    _useState165 = _slicedToArray(_useState164, 2),
+    editando = _useState165[0],
+    setEditando = _useState165[1];
+  var _useState166 = useState({
       revelarEm: capsula.revelarEm || "",
       capsulVis: capsula.capsulVis || "ninguem",
       texto: capsula.texto || ""
     }),
-    _useState165 = _slicedToArray(_useState164, 2),
-    f = _useState165[0],
-    setF = _useState165[1];
+    _useState167 = _slicedToArray(_useState166, 2),
+    f = _useState167[0],
+    setF = _useState167[1];
   function salvarEdicao() {
     try {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas[index] = _objectSpread(_objectSpread({}, capsulas[index]), f);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused12) {}
+    } catch (_unused13) {}
     setEditando(false);
   }
   function cancelarCapsula() {
@@ -11216,7 +11304,7 @@ function CapsulaPerfil(_ref58) {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
       capsulas.splice(index, 1);
       localStorage.setItem("tn_capsulas_" + userId, JSON.stringify(capsulas));
-    } catch (_unused13) {}
+    } catch (_unused14) {}
   }
   return /*#__PURE__*/React.createElement("div", {
     style: {
@@ -11367,42 +11455,42 @@ function CapsulaPerfil(_ref58) {
 }
 
 // ── Perfil do Lugar ───────────────────────────────────────────
-function PerfilLugar(_ref59) {
-  var lugar = _ref59.lugar,
-    lugarId = _ref59.lugarId,
-    user = _ref59.user,
-    onBack = _ref59.onBack,
-    onView = _ref59.onView;
-  var _useState166 = useState(null),
-    _useState167 = _slicedToArray(_useState166, 2),
-    place = _useState167[0],
-    setPlace = _useState167[1];
-  var _useState168 = useState([]),
+function PerfilLugar(_ref61) {
+  var lugar = _ref61.lugar,
+    lugarId = _ref61.lugarId,
+    user = _ref61.user,
+    onBack = _ref61.onBack,
+    onView = _ref61.onView;
+  var _useState168 = useState(null),
     _useState169 = _slicedToArray(_useState168, 2),
-    profiles = _useState169[0],
-    setProfiles = _useState169[1];
+    place = _useState169[0],
+    setPlace = _useState169[1];
   var _useState170 = useState([]),
     _useState171 = _slicedToArray(_useState170, 2),
-    momentos = _useState171[0],
-    setMomentos = _useState171[1];
+    profiles = _useState171[0],
+    setProfiles = _useState171[1];
   var _useState172 = useState([]),
     _useState173 = _slicedToArray(_useState172, 2),
-    agendas = _useState173[0],
-    setAgendas = _useState173[1];
-  var _useState174 = useState(true),
+    momentos = _useState173[0],
+    setMomentos = _useState173[1];
+  var _useState174 = useState([]),
     _useState175 = _slicedToArray(_useState174, 2),
-    loading = _useState175[0],
-    setLoading = _useState175[1];
-  var _useState176 = useState(null),
+    agendas = _useState175[0],
+    setAgendas = _useState175[1];
+  var _useState176 = useState(true),
     _useState177 = _slicedToArray(_useState176, 2),
-    decadaSel = _useState177[0],
-    setDecadaSel = _useState177[1];
+    loading = _useState177[0],
+    setLoading = _useState177[1];
+  var _useState178 = useState(null),
+    _useState179 = _slicedToArray(_useState178, 2),
+    decadaSel = _useState179[0],
+    setDecadaSel = _useState179[1];
 
   // Resolve placeId: pode vir direto ou buscar pelo nome
-  var _useState178 = useState(lugarId || null),
-    _useState179 = _slicedToArray(_useState178, 2),
-    resolvedId = _useState179[0],
-    setResolvedId = _useState179[1];
+  var _useState180 = useState(lugarId || null),
+    _useState181 = _slicedToArray(_useState180, 2),
+    resolvedId = _useState181[0],
+    setResolvedId = _useState181[1];
   useEffect(function () {
     if (lugarId) {
       setResolvedId(lugarId);
@@ -11410,8 +11498,8 @@ function PerfilLugar(_ref59) {
     }
     if (!lugar) return;
     // Busca place pelo nome
-    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref60) {
-      var data = _ref60.data;
+    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref62) {
+      var data = _ref62.data;
       if (data) {
         setPlace(data);
         setResolvedId(data.id);
@@ -11426,7 +11514,7 @@ function PerfilLugar(_ref59) {
     if (!resolvedId) return;
     setLoading(true);
     var buscarDados = /*#__PURE__*/function () {
-      var _ref61 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24() {
+      var _ref63 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24() {
         var _yield$dbRead$from$se, p, _yield$dbRead$from$se2, pp, vinculados, lugarNome, _yield$dbRead$from$se3, m, _yield$dbRead$from$se4, a;
         return _regenerator().w(function (_context24) {
           while (1) switch (_context24.n) {
@@ -11487,7 +11575,7 @@ function PerfilLugar(_ref59) {
         }, _callee24);
       }));
       return function buscarDados() {
-        return _ref61.apply(this, arguments);
+        return _ref63.apply(this, arguments);
       };
     }();
     buscarDados()["catch"](function () {
@@ -11922,7 +12010,7 @@ function PerfilLugar(_ref59) {
     var meta = {};
     try {
       meta = JSON.parse(a.meta || "{}");
-    } catch (_unused14) {}
+    } catch (_unused15) {}
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       style: {
@@ -11973,43 +12061,43 @@ function PerfilLugar(_ref59) {
 }
 
 // ── Painel Pessoal ───────────────────────────────────────────
-function PainelPessoal(_ref62) {
+function PainelPessoal(_ref64) {
   var _momentoTop$fotos, _momentoTop$texto;
-  var user = _ref62.user,
-    onBack = _ref62.onBack;
-  var _useState180 = useState({
+  var user = _ref64.user,
+    onBack = _ref64.onBack;
+  var _useState182 = useState({
       fotos: 0,
       momentos: 0,
       conexoes: 0,
       lugares: 0
     }),
-    _useState181 = _slicedToArray(_useState180, 2),
-    stats = _useState181[0],
-    setStats = _useState181[1];
-  var _useState182 = useState(null),
     _useState183 = _slicedToArray(_useState182, 2),
-    fotoTop = _useState183[0],
-    setFotoTop = _useState183[1];
+    stats = _useState183[0],
+    setStats = _useState183[1];
   var _useState184 = useState(null),
     _useState185 = _slicedToArray(_useState184, 2),
-    momentoTop = _useState185[0],
-    setMomentoTop = _useState185[1];
+    fotoTop = _useState185[0],
+    setFotoTop = _useState185[1];
   var _useState186 = useState(null),
     _useState187 = _slicedToArray(_useState186, 2),
-    lugarTop = _useState187[0],
-    setLugarTop = _useState187[1];
-  var _useState188 = useState(0),
+    momentoTop = _useState187[0],
+    setMomentoTop = _useState187[1];
+  var _useState188 = useState(null),
     _useState189 = _slicedToArray(_useState188, 2),
-    nascRegiao = _useState189[0],
-    setNascRegiao = _useState189[1];
-  var _useState190 = useState(null),
+    lugarTop = _useState189[0],
+    setLugarTop = _useState189[1];
+  var _useState190 = useState(0),
     _useState191 = _slicedToArray(_useState190, 2),
-    lugarRelevante = _useState191[0],
-    setLugarRelevante = _useState191[1];
-  var _useState192 = useState([]),
+    nascRegiao = _useState191[0],
+    setNascRegiao = _useState191[1];
+  var _useState192 = useState(null),
     _useState193 = _slicedToArray(_useState192, 2),
-    pessoasLugar = _useState193[0],
-    setPessoasLugar = _useState193[1];
+    lugarRelevante = _useState193[0],
+    setLugarRelevante = _useState193[1];
+  var _useState194 = useState([]),
+    _useState195 = _slicedToArray(_useState194, 2),
+    pessoasLugar = _useState195[0],
+    setPessoasLugar = _useState195[1];
   useEffect(function () {
     var _user$photos3, _user$lugares6, _user$lugares7, _user$photos4;
     if (!(user !== null && user !== void 0 && user.id)) return;
@@ -12026,8 +12114,8 @@ function PainelPessoal(_ref62) {
     // Busca momentos do usuário
     dbRead.from("momentos").select("*").eq("user_id", user.id).order("ts", {
       ascending: false
-    }).limit(20).then(function (_ref63) {
-      var data = _ref63.data;
+    }).limit(20).then(function (_ref65) {
+      var data = _ref65.data;
       if (data) {
         setStats(function (s) {
           return _objectSpread(_objectSpread({}, s), {}, {
@@ -12039,8 +12127,8 @@ function PainelPessoal(_ref62) {
     })["catch"](function () {});
 
     // Busca contatos
-    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref64) {
-      var data = _ref64.data;
+    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref66) {
+      var data = _ref66.data;
       if (data) setStats(function (s) {
         return _objectSpread(_objectSpread({}, s), {}, {
           conexoes: data.length
@@ -12053,8 +12141,8 @@ function PainelPessoal(_ref62) {
       dbRead.from("profiles").select("id", {
         count: "exact",
         head: true
-      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref65) {
-        var count = _ref65.count;
+      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref67) {
+        var count = _ref67.count;
         setNascRegiao(count || 0);
       })["catch"](function () {});
     }
@@ -12074,8 +12162,8 @@ function PainelPessoal(_ref62) {
 
       // Busca pessoas que também viveram nesse lugar
       if (cidadeLugar) {
-        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref66) {
-          var data = _ref66.data;
+        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref68) {
+          var data = _ref68.data;
           if (data) setPessoasLugar(data);
         })["catch"](function () {});
       }
@@ -12624,77 +12712,77 @@ function PainelPessoal(_ref62) {
 
 // ── Root App ──────────────────────────────────────────────────
 function App() {
-  var _useState194 = useState("inicio"),
-    _useState195 = _slicedToArray(_useState194, 2),
-    tela = _useState195[0],
-    setTela = _useState195[1];
-  var _useState196 = useState({}),
+  var _useState196 = useState("inicio"),
     _useState197 = _slicedToArray(_useState196, 2),
-    msgs = _useState197[0],
-    setMsgs = _useState197[1];
-  var _useState198 = useState([]),
+    tela = _useState197[0],
+    setTela = _useState197[1];
+  var _useState198 = useState({}),
     _useState199 = _slicedToArray(_useState198, 2),
-    contacts = _useState199[0],
-    setContacts = _useState199[1];
-  var _useState200 = useState(false),
+    msgs = _useState199[0],
+    setMsgs = _useState199[1];
+  var _useState200 = useState([]),
     _useState201 = _slicedToArray(_useState200, 2),
-    showLogin = _useState201[0],
-    setShowLogin = _useState201[1];
-  var _useState202 = useState(null),
+    contacts = _useState201[0],
+    setContacts = _useState201[1];
+  var _useState202 = useState(false),
     _useState203 = _slicedToArray(_useState202, 2),
-    perfilLugarAtual = _useState203[0],
-    setPerfilLugarAtual = _useState203[1];
-  var _useState204 = useState(false),
+    showLogin = _useState203[0],
+    setShowLogin = _useState203[1];
+  var _useState204 = useState(null),
     _useState205 = _slicedToArray(_useState204, 2),
-    showCuriosidade = _useState205[0],
-    setShowCuriosidade = _useState205[1];
-  var _useState206 = useState(true),
+    perfilLugarAtual = _useState205[0],
+    setPerfilLugarAtual = _useState205[1];
+  var _useState206 = useState(false),
     _useState207 = _slicedToArray(_useState206, 2),
-    useCadastroSimples = _useState207[0],
-    setUseCadastroSimples = _useState207[1];
-  var _useState208 = useState(function () {
+    showCuriosidade = _useState207[0],
+    setShowCuriosidade = _useState207[1];
+  var _useState208 = useState(true),
+    _useState209 = _slicedToArray(_useState208, 2),
+    useCadastroSimples = _useState209[0],
+    setUseCadastroSimples = _useState209[1];
+  var _useState210 = useState(function () {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
-      } catch (_unused15) {
+      } catch (_unused16) {
         return null;
       }
     }),
-    _useState209 = _slicedToArray(_useState208, 2),
-    user = _useState209[0],
-    setUser = _useState209[1];
-  var _useState210 = useState(null),
     _useState211 = _slicedToArray(_useState210, 2),
-    modal = _useState211[0],
-    setModal = _useState211[1];
+    user = _useState211[0],
+    setUser = _useState211[1];
   var _useState212 = useState(null),
     _useState213 = _slicedToArray(_useState212, 2),
-    chat = _useState213[0],
-    setChat = _useState213[1];
-  var _useState214 = useState(false),
+    modal = _useState213[0],
+    setModal = _useState213[1];
+  var _useState214 = useState(null),
     _useState215 = _slicedToArray(_useState214, 2),
-    showReencontrar = _useState215[0],
-    setShowReencontrar = _useState215[1];
-  var _useState216 = useState(null),
+    chat = _useState215[0],
+    setChat = _useState215[1];
+  var _useState216 = useState(false),
     _useState217 = _slicedToArray(_useState216, 2),
-    filtroReencontrar = _useState217[0],
-    setFiltroReencontrar = _useState217[1];
-  var _useState218 = useState(false),
+    showReencontrar = _useState217[0],
+    setShowReencontrar = _useState217[1];
+  var _useState218 = useState(null),
     _useState219 = _slicedToArray(_useState218, 2),
-    showMenuRapido = _useState219[0],
-    setShowMenuRapido = _useState219[1];
+    filtroReencontrar = _useState219[0],
+    setFiltroReencontrar = _useState219[1];
   var _useState220 = useState(false),
     _useState221 = _slicedToArray(_useState220, 2),
-    showAdicionarLugar = _useState221[0],
-    setShowAdicionarLugar = _useState221[1];
+    showMenuRapido = _useState221[0],
+    setShowMenuRapido = _useState221[1];
   var _useState222 = useState(false),
     _useState223 = _slicedToArray(_useState222, 2),
-    showAgendaVisita = _useState223[0],
-    setShowAgendaVisita = _useState223[1];
+    showAdicionarLugar = _useState223[0],
+    setShowAdicionarLugar = _useState223[1];
   var _useState224 = useState(false),
     _useState225 = _slicedToArray(_useState224, 2),
-    showMomento = _useState225[0],
-    setShowMomento = _useState225[1];
+    showAgendaVisita = _useState225[0],
+    setShowAgendaVisita = _useState225[1];
+  var _useState226 = useState(false),
+    _useState227 = _slicedToArray(_useState226, 2),
+    showMomento = _useState227[0],
+    setShowMomento = _useState227[1];
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
@@ -12720,7 +12808,7 @@ function App() {
               try {
                 s = localStorage.getItem("tn_user");
                 if (s) localUser = JSON.parse(s);
-              } catch (_unused22) {}
+              } catch (_unused23) {}
 
               // IMEDIATO: se tem user local, seta agora (não espera nada async)
               if (localUser) setUser(localUser);
@@ -12765,7 +12853,7 @@ function App() {
               setUser(data);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(data));
-              } catch (_unused23) {}
+              } catch (_unused24) {}
               return _context26.a(2);
             case 7:
               _context26.n = 9;
@@ -12804,7 +12892,7 @@ function App() {
               setUser(updated);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(updated));
-              } catch (_unused24) {}
+              } catch (_unused25) {}
               return _context26.a(2);
             case 13:
               _context26.n = 15;
@@ -12845,7 +12933,7 @@ function App() {
               setUser(_data3);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(_data3));
-              } catch (_unused25) {}
+              } catch (_unused26) {}
               return _context26.a(2);
             case 20:
               _context26.n = 22;
@@ -12866,7 +12954,7 @@ function App() {
     }
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
-        var _ref67 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25(event, session) {
+        var _ref69 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25(event, session) {
           var _yield$dbRead$from$se5, data, localU, s, updated, _s, _t29, _t30;
           return _regenerator().w(function (_context25) {
             while (1) switch (_context25.p = _context25.n) {
@@ -12876,10 +12964,10 @@ function App() {
                   setContacts([]);
                   try {
                     localStorage.removeItem("tn_user");
-                  } catch (_unused16) {}
+                  } catch (_unused17) {}
                   try {
                     localStorage.removeItem("tn_contacts");
-                  } catch (_unused17) {}
+                  } catch (_unused18) {}
                 }
                 if (!(event === "SIGNED_IN" && session !== null && session !== void 0 && session.user)) {
                   _context25.n = 9;
@@ -12898,7 +12986,7 @@ function App() {
                 setUser(data);
                 try {
                   localStorage.setItem("tn_user", JSON.stringify(data));
-                } catch (_unused18) {}
+                } catch (_unused19) {}
                 _context25.n = 7;
                 break;
               case 3:
@@ -12907,7 +12995,7 @@ function App() {
                 try {
                   s = localStorage.getItem("tn_user");
                   if (s) localU = JSON.parse(s);
-                } catch (_unused19) {}
+                } catch (_unused20) {}
                 if (!(localU && localU.id && !localU.id.toString().startsWith("local_"))) {
                   _context25.n = 7;
                   break;
@@ -12924,7 +13012,7 @@ function App() {
                 setUser(updated);
                 try {
                   localStorage.setItem("tn_user", JSON.stringify(updated));
-                } catch (_unused20) {}
+                } catch (_unused21) {}
                 console.log("Perfil local vinculado ao Google:", localU.id);
                 _context25.n = 7;
                 break;
@@ -12945,14 +13033,14 @@ function App() {
                 try {
                   _s = localStorage.getItem("tn_user");
                   if (_s) setUser(JSON.parse(_s));
-                } catch (_unused21) {}
+                } catch (_unused22) {}
               case 9:
                 return _context25.a(2);
             }
           }, _callee25, null, [[4, 6], [1, 8]]);
         }));
         return function (_x15, _x16) {
-          return _ref67.apply(this, arguments);
+          return _ref69.apply(this, arguments);
         };
       }()),
       subscription = _db$auth$onAuthStateC.data.subscription;
@@ -12988,7 +13076,7 @@ function App() {
             setContacts(loaded);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(loaded));
-            } catch (_unused26) {}
+            } catch (_unused27) {}
             return _context27.a(2);
           case 2:
             _context27.n = 4;
@@ -13020,7 +13108,7 @@ function App() {
                   })["catch"](function () {});
                 }
               }
-            } catch (_unused27) {}
+            } catch (_unused28) {}
           case 5:
             return _context27.a(2);
         }
@@ -13031,7 +13119,7 @@ function App() {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused28) {}
+    } catch (_unused29) {}
     setTela("perfil");
   }
   function addContact(_x17) {
@@ -13067,7 +13155,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused34) {}
+            } catch (_unused35) {}
             // Persiste no Supabase
             _context28.p = 3;
             _context28.n = 4;
@@ -13109,7 +13197,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused35) {}
+            } catch (_unused36) {}
             // Atualiza no Supabase
             if (!(user !== null && user !== void 0 && user.id)) {
               _context29.n = 4;
@@ -13156,17 +13244,17 @@ function App() {
     setContacts([]);
     try {
       localStorage.removeItem("tn_user");
-    } catch (_unused29) {}
+    } catch (_unused30) {}
     try {
       localStorage.removeItem("tn_contacts");
-    } catch (_unused30) {}
+    } catch (_unused31) {}
     db.auth.signOut();
   }
   function updateUser(p) {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused31) {}
+    } catch (_unused32) {}
     // Sincroniza com Supabase em background — só campos seguros
     if (p !== null && p !== void 0 && p.id && !p.id.toString().startsWith("local_")) {
       var safe = {
@@ -13200,18 +13288,18 @@ function App() {
         family_ref: p.family_ref || null,
         how_iam: p.how_iam || null
       };
-      db.from("profiles").upsert(safe).then(function (_ref69) {
-        var error = _ref69.error;
+      db.from("profiles").upsert(safe).then(function (_ref71) {
+        var error = _ref71.error;
         if (error) console.log("Erro ao sincronizar perfil:", error.message);
       })["catch"](function () {});
     }
   }
 
   // Estado de loading inicial
-  var _useState226 = useState(false),
-    _useState227 = _slicedToArray(_useState226, 2),
-    appReady = _useState227[0],
-    setAppReady = _useState227[1];
+  var _useState228 = useState(false),
+    _useState229 = _slicedToArray(_useState228, 2),
+    appReady = _useState229[0],
+    setAppReady = _useState229[1];
 
   // Marca app como pronto após init
   useEffect(function () {
@@ -13227,10 +13315,10 @@ function App() {
       return c.id === p.id;
     });
   };
-  var unreadCount = Object.entries(msgs).filter(function (_ref70) {
-    var _ref71 = _slicedToArray(_ref70, 2),
-      id = _ref71[0],
-      ms = _ref71[1];
+  var unreadCount = Object.entries(msgs).filter(function (_ref72) {
+    var _ref73 = _slicedToArray(_ref72, 2),
+      id = _ref73[0],
+      ms = _ref73[1];
     return user && id.split("_").includes(String(user.id)) && ms.some(function (m) {
       return m.from !== user.id;
     });
@@ -13695,7 +13783,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused32) {}
+      } catch (_unused33) {}
       ;
       setShowAdicionarLugar(false);
     }
@@ -13709,7 +13797,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused33) {}
+      } catch (_unused34) {}
     }
   }), showReencontrar && /*#__PURE__*/React.createElement(ModalReencontrar, {
     onClose: function onClose() {
