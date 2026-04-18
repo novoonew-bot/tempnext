@@ -1195,7 +1195,6 @@ function BigCard(_ref10) {
     isContact = _ref10.isContact,
     _ref10$delay = _ref10.delay,
     delay = _ref10$delay === void 0 ? 0 : _ref10$delay;
-  var era = eraInfo(p.era || "passado");
   var hasPhoto = !!p.avatar_url;
   return /*#__PURE__*/React.createElement("div", {
     className: "fu",
@@ -1246,22 +1245,7 @@ function BigCard(_ref10) {
       fontWeight: 700,
       color: T.accent
     }
-  }, initials(p.name))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: "absolute",
-      bottom: 6,
-      left: 6,
-      fontSize: 8,
-      fontWeight: 700,
-      color: "#fff",
-      background: era.color,
-      padding: "2px 6px",
-      borderRadius: 20,
-      textTransform: "uppercase",
-      letterSpacing: "0.04em",
-      opacity: .9
-    }
-  }, era.label)), /*#__PURE__*/React.createElement("div", {
+  }, initials(p.name)))), /*#__PURE__*/React.createElement("div", {
     style: {
       flex: 1,
       padding: "14px 14px 12px",
@@ -1692,7 +1676,7 @@ function MomentosFeed(_ref12) {
         textOverflow: "ellipsis",
         whiteSpace: "nowrap"
       }
-    }, "\uD83D\uDCCD ", m.lugar)));
+    }, m.lugar)));
   })));
 }
 
@@ -7347,99 +7331,58 @@ function Perfil(_ref27) {
       borderRadius: 20
     }
   }, availableLabel[user.available] || user.available))), ((_user$lugares3 = user.lugares) === null || _user$lugares3 === void 0 ? void 0 : _user$lugares3.length) > 0 && function () {
-    var passado = user.lugares.filter(function (l) {
-      return (l.era || detectarEra(l.y1, l.y2)) === "passado";
+    // Ordena por ano decrescente (mais recentes primeiro)
+    var ordenados = _toConsumableArray(user.lugares).sort(function (a, b) {
+      var ay = parseInt(a.y2 || a.y1 || 0);
+      var by = parseInt(b.y2 || b.y1 || 0);
+      return by - ay;
     });
-    var presente = user.lugares.filter(function (l) {
-      return (l.era || detectarEra(l.y1, l.y2)) === "presente";
-    });
-    var futuro = user.lugares.filter(function (l) {
-      return (l.era || detectarEra(l.y1, l.y2)) === "futuro";
-    });
-    var grupos = [{
-      label: "Lugares do passado",
-      list: passado,
-      color: "#9575CD"
-    }, {
-      label: "Lugares do presente",
-      list: presente,
-      color: T.blue
-    }, {
-      label: "Lugares do futuro",
-      list: futuro,
-      color: T.green
-    }].filter(function (g) {
-      return g.list.length > 0;
-    });
-    return grupos.map(function (grupo) {
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#fff",
+        borderRadius: 18,
+        padding: "16px 18px",
+        border: "1px solid ".concat(T.border),
+        marginBottom: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        fontWeight: 700,
+        color: T.muted,
+        textTransform: "uppercase",
+        letterSpacing: "0.08em",
+        marginBottom: 10
+      }
+    }, "Lugares que viveu"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 8
+      }
+    }, ordenados.map(function (loc, i) {
       return /*#__PURE__*/React.createElement("div", {
-        key: grupo.label,
+        key: i,
         style: {
-          background: "#fff",
-          borderRadius: 18,
-          padding: "16px 18px",
-          border: "1px solid ".concat(T.border),
-          marginBottom: 12
+          padding: "10px 12px",
+          background: T.faint,
+          borderRadius: 10,
+          border: "1px solid ".concat(T.border)
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          fontSize: 11,
-          fontWeight: 700,
-          color: grupo.color,
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          marginBottom: 10
+          fontWeight: 600,
+          fontSize: 14,
+          color: T.text
         }
-      }, grupo.label), /*#__PURE__*/React.createElement("div", {
+      }, loc.placeName), /*#__PURE__*/React.createElement("div", {
         style: {
-          display: "flex",
-          flexDirection: "column",
-          gap: 8
+          fontSize: 12,
+          color: T.muted,
+          marginTop: 2
         }
-      }, grupo.list.map(function (loc, i) {
-        return /*#__PURE__*/React.createElement("div", {
-          key: i,
-          style: {
-            padding: "10px 12px",
-            background: T.faint,
-            borderRadius: 10,
-            border: "1px solid ".concat(T.border)
-          }
-        }, /*#__PURE__*/React.createElement("div", {
-          style: {
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            flexWrap: "wrap"
-          }
-        }, /*#__PURE__*/React.createElement("div", {
-          style: {
-            fontWeight: 600,
-            fontSize: 14,
-            color: T.text
-          }
-        }, loc.placeName), function () {
-          var e = eraInfo(loc.era || detectarEra(loc.y1, loc.y2));
-          return /*#__PURE__*/React.createElement("span", {
-            style: {
-              fontSize: 10,
-              fontWeight: 700,
-              color: e.color,
-              background: "".concat(e.color, "15"),
-              padding: "2px 8px",
-              borderRadius: 20,
-              textTransform: "uppercase"
-            }
-          }, e.label);
-        }()), /*#__PURE__*/React.createElement("div", {
-          style: {
-            fontSize: 12,
-            color: T.muted,
-            marginTop: 2
-          }
-        }, loc.city, " \u2013 ", loc.uf, " \xB7 ", loc.y1, "\u2013", loc.y2, " \xB7 ", placeLabel(loc.placeType)));
-      })));
-    });
+      }, loc.city, loc.uf ? " \u2013 ".concat(loc.uf) : "", " \xB7 ", loc.y1, loc.y2 && loc.y2 !== loc.y1 ? "\u2013".concat(loc.y2) : "", " \xB7 ", placeLabel(loc.placeType)));
+    })));
   }(), /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
@@ -7813,7 +7756,7 @@ function Perfil(_ref27) {
         textOverflow: "ellipsis",
         whiteSpace: "nowrap"
       }
-    }, "\uD83D\uDCCD ", lugar), periodo && /*#__PURE__*/React.createElement("div", {
+    }, lugar), periodo && /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 9,
         color: T.blueStrong,
@@ -8015,7 +7958,7 @@ function ModalFoto(_ref33) {
       color: "rgba(255,255,255,0.6)",
       textAlign: "center"
     }
-  }, lugar && /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCCD ", lugar), lugar && data && /*#__PURE__*/React.createElement("span", null, " \xB7 "), data && /*#__PURE__*/React.createElement("span", null, data)), /*#__PURE__*/React.createElement("div", {
+  }, lugar && /*#__PURE__*/React.createElement("span", null, lugar), lugar && data && /*#__PURE__*/React.createElement("span", null, " \xB7 "), data && /*#__PURE__*/React.createElement("span", null, data)), /*#__PURE__*/React.createElement("div", {
     onClick: function onClick(e) {
       return e.stopPropagation();
     },
@@ -8623,7 +8566,7 @@ function ModalPerfil(_ref35) {
         color: T.text,
         lineHeight: 1.7
       }
-    }, "\uD83D\uDCCD ", /*#__PURE__*/React.createElement("strong", null, m.city), " \u2014 ", m.from, "\u2013", m.to, m.anos > 0 && /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement("strong", null, m.city), " \u2014 ", m.from, "\u2013", m.to, m.anos > 0 && /*#__PURE__*/React.createElement("span", {
       style: {
         fontSize: 10,
         color: T.muted
@@ -13174,11 +13117,7 @@ function AlertaRegiao(_ref58) {
       gap: 8,
       marginBottom: 6
     }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 16
-    }
-  }, "\uD83D\uDCCD"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 12,
       fontWeight: 700,
