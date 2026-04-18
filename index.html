@@ -14467,24 +14467,53 @@ function App() {
 
   // ── Splash Screen ──
   if (!appReady) {
-    var splashBg = T.bg;
+    var splashBg = T.bg,
+      splashWp = null,
+      splashOp = 0.6;
     try {
       var s = localStorage.getItem("tn_user_prefs");
       if (s) {
         var p = JSON.parse(s);
         splashBg = p.bg || T.bg;
+        splashWp = p.wp || null;
+        if (p.bgop != null) splashOp = p.bgop;
       }
     } catch (_unused39) {}
-    return /*#__PURE__*/React.createElement("div", {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, splashWp && /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 0,
+        pointerEvents: "none"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        inset: 0,
+        background: "".concat(splashBg, " url(").concat(splashWp, ") center/cover")
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        inset: 0,
+        background: splashBg,
+        opacity: splashOp
+      }
+    })), /*#__PURE__*/React.createElement("div", {
       style: {
         maxWidth: 430,
         margin: "0 auto",
         minHeight: "100vh",
-        background: splashBg,
+        background: splashWp ? "transparent" : splashBg,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        position: "relative",
+        zIndex: 1
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
@@ -14529,36 +14558,31 @@ function App() {
           animation: "pulse 1.2s ease-in-out ".concat(i * 0.2, "s infinite")
         }
       });
-    })), /*#__PURE__*/React.createElement("style", null, "@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}"));
+    })), /*#__PURE__*/React.createElement("style", null, "@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}")));
   }
 
   // ── Tela de Login (se não tem user) ──
   if (!user) {
     // Pega última cor/wallpaper salvos (pra manter visual consistente se já teve user)
     var lastBg = T.bg,
-      lastWp = null;
+      lastWp = null,
+      lastOp = 0.6;
     try {
       var _s2 = localStorage.getItem("tn_user_prefs");
       if (_s2) {
         var _p = JSON.parse(_s2);
         lastBg = _p.bg || T.bg;
         lastWp = _p.wp || null;
+        if (_p.bgop != null) lastOp = _p.bgop;
       }
     } catch (_unused40) {}
-    return /*#__PURE__*/React.createElement("div", {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, lastWp && /*#__PURE__*/React.createElement("div", {
       style: {
-        maxWidth: 430,
-        margin: "0 auto",
-        minHeight: "100vh",
-        background: lastBg,
-        display: "flex",
-        flexDirection: "column",
-        position: "relative"
-      }
-    }, lastWp && /*#__PURE__*/React.createElement("div", {
-      style: {
-        position: "absolute",
-        inset: 0,
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         zIndex: 0,
         pointerEvents: "none"
       }
@@ -14566,17 +14590,27 @@ function App() {
       style: {
         position: "absolute",
         inset: 0,
-        background: "url(".concat(lastWp, ") center/cover"),
-        opacity: 0.18
+        background: "".concat(lastBg, " url(").concat(lastWp, ") center/cover")
       }
     }), /*#__PURE__*/React.createElement("div", {
       style: {
         position: "absolute",
         inset: 0,
         background: lastBg,
-        opacity: 0.4
+        opacity: lastOp
       }
     })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        maxWidth: 430,
+        margin: "0 auto",
+        minHeight: "100vh",
+        background: lastWp ? "transparent" : lastBg,
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        zIndex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
       style: {
         flex: 1,
         display: "flex",
@@ -14693,7 +14727,7 @@ function App() {
         color: T.muted,
         fontWeight: 300
       }
-    }, "Tempnext \xA9 2026")));
+    }, "Tempnext \xA9 2026"))));
   }
   var temaCor = getTema(user).main;
   var NAV_COLORS = {
@@ -14727,20 +14761,13 @@ function App() {
   var wallpaper = user === null || user === void 0 ? void 0 : user.wallpaper_url;
   var userBg = (user === null || user === void 0 ? void 0 : user.bg_color) || T.bg;
   var bgOpacity = (user === null || user === void 0 ? void 0 : user.bg_opacity) != null ? user.bg_opacity : wallpaper ? 0.6 : 1;
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 430,
-      margin: "0 auto",
-      minHeight: "100vh",
-      background: userBg,
-      position: "relative"
-    }
-  }, wallpaper && /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, wallpaper && /*#__PURE__*/React.createElement("div", {
     style: {
       position: "fixed",
-      inset: 0,
-      maxWidth: 430,
-      margin: "0 auto",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
       zIndex: 0,
       pointerEvents: "none"
     }
@@ -14759,8 +14786,16 @@ function App() {
     }
   })), /*#__PURE__*/React.createElement("div", {
     style: {
+      maxWidth: 430,
+      margin: "0 auto",
+      minHeight: "100vh",
+      background: wallpaper ? "transparent" : userBg,
       position: "relative",
       zIndex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative"
     }
   }, tela === "inicio" && /*#__PURE__*/React.createElement(Inicio, {
     user: user,
@@ -15204,7 +15239,7 @@ function App() {
     onClose: function onClose() {
       return setChat(null);
     }
-  })));
+  }))));
 }
 ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));
 </script>
