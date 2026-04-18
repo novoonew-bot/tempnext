@@ -432,9 +432,9 @@ var eraInfo = function eraInfo(v) {
   }) || ERAS[0];
 };
 var initials = function initials(n) {
-  return n.trim().split(" ").filter(Boolean).slice(0, 2).map(function (w) {
-    return w[0].toUpperCase();
-  }).join("");
+  return (n || "").trim().split(" ").filter(Boolean).slice(0, 2).map(function (w) {
+    return w[0] ? w[0].toUpperCase() : "";
+  }).join("") || "?";
 };
 var fmtTime = function fmtTime(ts) {
   return new Date(ts).toLocaleTimeString("pt-BR", {
@@ -1318,18 +1318,7 @@ function BigCard(_ref10) {
       fontSize: 11,
       color: T.muted
     }
-  }, p.year_start, "\u2013", p.year_end), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 10,
-      fontWeight: 700,
-      color: era.color,
-      background: "".concat(era.color, "18"),
-      padding: "1px 7px",
-      borderRadius: 20,
-      textTransform: "uppercase",
-      letterSpacing: "0.04em"
-    }
-  }, era.label))), /*#__PURE__*/React.createElement("div", {
+  }, p.year_start, "\u2013", p.year_end))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 8,
@@ -2446,12 +2435,8 @@ function Buscar(_ref17) {
             _context2.p = 1;
             queries = []; // Query pessoas
             if (tipoFiltro === "tudo" || tipoFiltro === "pessoas") {
-              qPessoas = dbRead.from("profiles").select("*").or("name.ilike.%".concat(termoTrim, "%,nick.ilike.%").concat(termoTrim, "%,first_name.ilike.%").concat(termoTrim, "%,last_name.ilike.%").concat(termoTrim, "%,place_name.ilike.%").concat(termoTrim, "%,city.ilike.%").concat(termoTrim, "%,state.ilike.%").concat(termoTrim, "%")); // Filtro de anos: pessoa viveu em algum momento dentro da faixa
-              // (year_end >= anoMin E year_start <= anoMax significa interseção de faixas)
-              if (filtroAnosAtivo) {
-                qPessoas = qPessoas.gte("year_end", anoMin).lte("year_start", anoMax);
-              }
-              queries.push(qPessoas.limit(30));
+              qPessoas = dbRead.from("profiles").select("*").or("name.ilike.%".concat(termoTrim, "%,nick.ilike.%").concat(termoTrim, "%,first_name.ilike.%").concat(termoTrim, "%,last_name.ilike.%").concat(termoTrim, "%,place_name.ilike.%").concat(termoTrim, "%,city.ilike.%").concat(termoTrim, "%,state.ilike.%").concat(termoTrim, "%"));
+              queries.push(qPessoas.limit(60));
             } else {
               queries.push(Promise.resolve({
                 data: []
@@ -2475,7 +2460,25 @@ function Buscar(_ref17) {
             pessoasRes = _yield$Promise$all2[0];
             lugaresRes = _yield$Promise$all2[1];
             pessoas = pessoasRes.data || [];
-            lugares = lugaresRes.data || []; // Ordena pessoas por relevância (usa calcularRelevancia se user tem intenção)
+            lugares = lugaresRes.data || []; // Filtro de anos client-side — NULLs são incluídos pra não perder resultados
+            if (filtroAnosAtivo) {
+              pessoas = pessoas.filter(function (p) {
+                var ys = p.year_start,
+                  ye = p.year_end;
+                // Se ambos NULL, inclui (não sabemos a época)
+                if (ys == null && ye == null) return true;
+                // Intersecção de faixas: [ys..ye] ∩ [anoMin..anoMax] ≠ ∅
+                var inicio = ys != null ? ys : ye != null ? ye : anoMin;
+                var fim = ye != null ? ye : ys != null ? ys : anoMax;
+                return fim >= anoMin && inicio <= anoMax;
+              });
+              // Aplica limit após filtro
+              pessoas = pessoas.slice(0, 30);
+            } else {
+              pessoas = pessoas.slice(0, 30);
+            }
+
+            // Ordena pessoas por relevância (usa calcularRelevancia se user tem intenção)
             if ((user === null || user === void 0 || (_user$intencao4 = user.intencao) === null || _user$intencao4 === void 0 ? void 0 : _user$intencao4.length) > 0) {
               pessoas = pessoas.sort(function (a, b) {
                 return calcularRelevancia(b, user) - calcularRelevancia(a, user);
@@ -4278,17 +4281,7 @@ function Contatos(_ref21) {
         fontSize: 14,
         color: T.text
       }
-    }, p.name), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 10,
-        fontWeight: 700,
-        color: era.color,
-        background: "".concat(era.color, "15"),
-        padding: "1px 7px",
-        borderRadius: 20,
-        textTransform: "uppercase"
-      }
-    }, era.label)), /*#__PURE__*/React.createElement("div", {
+    }, p.name)), /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 12,
         color: T.muted,
@@ -7419,31 +7412,7 @@ function Perfil(_ref27) {
         gap: 4
       }
     }, item.icon, " ", item.label);
-  }))), user.era && /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "center",
-      gap: 10
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 11,
-      fontWeight: 600,
-      color: T.muted,
-      minWidth: 100
-    }
-  }, "Conectado ao"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 11,
-      fontWeight: 700,
-      color: era.color,
-      background: "".concat(era.color, "15"),
-      padding: "4px 12px",
-      borderRadius: 20,
-      textTransform: "uppercase",
-      letterSpacing: "0.05em"
-    }
-  }, era.label)), user.available && /*#__PURE__*/React.createElement("div", {
+  }))), user.available && /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       alignItems: "center",
@@ -8778,20 +8747,7 @@ function ModalPerfil(_ref35) {
       fontSize: 11,
       color: T.sub
     }
-  }, p.how_iam))), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 10,
-      fontWeight: 700,
-      color: era.color,
-      background: "".concat(era.color, "15"),
-      padding: "2px 10px",
-      borderRadius: 20,
-      textTransform: "uppercase",
-      letterSpacing: "0.05em",
-      display: "inline-block",
-      marginTop: 8
-    }
-  }, era.label), isContact && (p.nick || p.known_as) && /*#__PURE__*/React.createElement("div", {
+  }, p.how_iam))), isContact && (p.nick || p.known_as) && /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 10,
       padding: "10px 14px",
@@ -16003,8 +15959,8 @@ function App() {
       return setTela("inicio");
     }
   }), tela === "lugar_perfil" && perfilLugarAtual && /*#__PURE__*/React.createElement(PerfilLugar, {
-    lugar: perfilLugarAtual.nome || perfilLugarAtual,
-    lugarId: perfilLugarAtual.id || null,
+    lugar: typeof perfilLugarAtual === "string" ? perfilLugarAtual : perfilLugarAtual.name || perfilLugarAtual.nome || perfilLugarAtual.placeName || "",
+    lugarId: _typeof(perfilLugarAtual) === "object" ? perfilLugarAtual.id : null,
     user: user,
     onBack: function onBack() {
       return setTela("inicio");
