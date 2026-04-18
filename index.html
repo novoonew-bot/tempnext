@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#FAF7F2}
+html,body{height:100%;background:#FAF7F2;margin:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1C1C1E;-webkit-font-smoothing:antialiased}
 input,select,textarea{
   font-family:inherit;background:#fff;
@@ -14712,6 +14712,12 @@ function App() {
   var wallpaper = user === null || user === void 0 ? void 0 : user.wallpaper_url;
   var userBg = (user === null || user === void 0 ? void 0 : user.bg_color) || T.bg;
   var bgOpacity = (user === null || user === void 0 ? void 0 : user.bg_opacity) != null ? user.bg_opacity : wallpaper ? 0.6 : 1;
+
+  // Aplica cor de fundo no body e html (pra cobrir áreas fora do container)
+  useEffect(function () {
+    document.body.style.background = userBg;
+    document.documentElement.style.background = userBg;
+  }, [userBg]);
   return /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 430,
