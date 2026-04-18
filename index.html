@@ -5020,18 +5020,80 @@ function PersonalizacaoPerfil(_ref24) {
     }
   }, "reset"))), /*#__PURE__*/React.createElement("div", {
     style: {
-      height: 46,
+      height: 64,
       borderRadius: 10,
-      background: bgAtual,
       border: "1px solid ".concat(T.border),
       marginBottom: 12,
+      position: "relative",
+      overflow: "hidden"
+    }
+  }, user.wallpaper_url ? /*#__PURE__*/React.createElement("img", {
+    src: user.wallpaper_url,
+    alt: "",
+    style: {
+      position: "absolute",
+      inset: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "cover"
+    }
+  }) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      inset: 0,
+      background: "repeating-linear-gradient(45deg,#e8e8e8,#e8e8e8 8px,#f4f4f4 8px,#f4f4f4 16px)"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      inset: 0,
+      background: bgAtual,
+      opacity: user.bg_opacity != null ? user.bg_opacity : 0.6
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative",
+      height: "100%",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       fontSize: 11,
-      color: T.muted
+      color: T.muted,
+      fontWeight: 500
     }
-  }, "Pr\xE9via do fundo"), /*#__PURE__*/React.createElement("div", {
+  }, "Pr\xE9via do fundo", !user.wallpaper_url ? " (suba uma foto de fundo)" : "")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: T.muted,
+      marginBottom: 4,
+      display: "flex",
+      justifyContent: "space-between"
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "Transpar\xEAncia do fundo"), /*#__PURE__*/React.createElement("span", null, Math.round((1 - (user.bg_opacity != null ? user.bg_opacity : 0.6)) * 100), "%")), /*#__PURE__*/React.createElement("input", {
+    type: "range",
+    min: "0",
+    max: "100",
+    value: Math.round((1 - (user.bg_opacity != null ? user.bg_opacity : 0.6)) * 100),
+    onChange: function onChange(e) {
+      var v = parseInt(e.target.value);
+      var opacity = 1 - v / 100;
+      var updated = _objectSpread(_objectSpread({}, user), {}, {
+        bg_opacity: opacity
+      });
+      onUpdateUser(updated);
+    },
+    style: {
+      width: "100%",
+      height: 14,
+      borderRadius: 7,
+      appearance: "none",
+      WebkitAppearance: "none",
+      background: "linear-gradient(90deg,".concat(bgAtual, " 0%,transparent 100%),repeating-linear-gradient(45deg,#ddd,#ddd 4px,#fff 4px,#fff 8px)"),
+      outline: "none",
+      cursor: "pointer",
+      marginBottom: 10
+    }
+  }), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 9,
       color: T.muted,
@@ -14311,7 +14373,8 @@ function App() {
         bg: (p === null || p === void 0 ? void 0 : p.bg_color) || null,
         wp: (p === null || p === void 0 ? void 0 : p.wallpaper_url) || null,
         tema: (p === null || p === void 0 ? void 0 : p.tema) || null,
-        card: (p === null || p === void 0 ? void 0 : p.card_color) || null
+        card: (p === null || p === void 0 ? void 0 : p.card_color) || null,
+        bgop: (p === null || p === void 0 ? void 0 : p.bg_opacity) != null ? p.bg_opacity : null
       }));
     } catch (_unused37) {}
     // Sincroniza com Supabase em background — só campos seguros
@@ -14341,6 +14404,7 @@ function App() {
         tema: p.tema || "amber",
         wallpaper_url: p.wallpaper_url || null,
         bg_color: p.bg_color || null,
+        bg_opacity: p.bg_opacity != null ? p.bg_opacity : null,
         card_color: p.card_color || null,
         lugares: p.lugares || [],
         interests: p.interests || null,
@@ -14647,12 +14711,13 @@ function App() {
   // Papel de parede do app (se o usuário escolheu)
   var wallpaper = user === null || user === void 0 ? void 0 : user.wallpaper_url;
   var userBg = (user === null || user === void 0 ? void 0 : user.bg_color) || T.bg;
+  var bgOpacity = (user === null || user === void 0 ? void 0 : user.bg_opacity) != null ? user.bg_opacity : wallpaper ? 0.6 : 1;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 430,
       margin: "0 auto",
       minHeight: "100vh",
-      background: userBg,
+      background: wallpaper ? "#000" : userBg,
       position: "relative"
     }
   }, wallpaper && /*#__PURE__*/React.createElement("div", {
@@ -14668,15 +14733,14 @@ function App() {
     style: {
       position: "absolute",
       inset: 0,
-      background: "url(".concat(wallpaper, ") center/cover"),
-      opacity: 0.18
+      background: "url(".concat(wallpaper, ") center/cover")
     }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       position: "absolute",
       inset: 0,
       background: userBg,
-      opacity: 0.4
+      opacity: bgOpacity
     }
   })), /*#__PURE__*/React.createElement("div", {
     style: {
