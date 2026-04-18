@@ -14267,7 +14267,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused42) {}
+            } catch (_unused43) {}
             // Persiste no Supabase
             _context39.p = 3;
             _context39.n = 4;
@@ -14309,7 +14309,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused43) {}
+            } catch (_unused44) {}
             // Atualiza no Supabase
             if (!(user !== null && user !== void 0 && user.id)) {
               _context40.n = 4;
@@ -14450,6 +14450,21 @@ function App() {
     });
   }).length;
 
+  // Aplica cor de fundo dinâmica no body/html
+  var currentBg = (user === null || user === void 0 ? void 0 : user.bg_color) || function () {
+    try {
+      var s = localStorage.getItem("tn_user_prefs");
+      if (s) {
+        return JSON.parse(s).bg || T.bg;
+      }
+    } catch (_unused38) {}
+    return T.bg;
+  }();
+  useEffect(function () {
+    document.body.style.background = currentBg;
+    document.documentElement.style.background = currentBg;
+  }, [currentBg]);
+
   // ── Splash Screen ──
   if (!appReady) {
     var splashBg = T.bg;
@@ -14459,7 +14474,7 @@ function App() {
         var p = JSON.parse(s);
         splashBg = p.bg || T.bg;
       }
-    } catch (_unused38) {}
+    } catch (_unused39) {}
     return /*#__PURE__*/React.createElement("div", {
       style: {
         maxWidth: 430,
@@ -14529,7 +14544,7 @@ function App() {
         lastBg = _p.bg || T.bg;
         lastWp = _p.wp || null;
       }
-    } catch (_unused39) {}
+    } catch (_unused40) {}
     return /*#__PURE__*/React.createElement("div", {
       style: {
         maxWidth: 430,
@@ -14712,12 +14727,6 @@ function App() {
   var wallpaper = user === null || user === void 0 ? void 0 : user.wallpaper_url;
   var userBg = (user === null || user === void 0 ? void 0 : user.bg_color) || T.bg;
   var bgOpacity = (user === null || user === void 0 ? void 0 : user.bg_opacity) != null ? user.bg_opacity : wallpaper ? 0.6 : 1;
-
-  // Aplica cor de fundo no body e html (pra cobrir áreas fora do container)
-  useEffect(function () {
-    document.body.style.background = userBg;
-    document.documentElement.style.background = userBg;
-  }, [userBg]);
   return /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 430,
@@ -15142,7 +15151,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused40) {}
+      } catch (_unused41) {}
       ;
       setShowAdicionarLugar(false);
     }
@@ -15156,7 +15165,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused41) {}
+      } catch (_unused42) {}
     }
   }), showReencontrar && /*#__PURE__*/React.createElement(ModalReencontrar, {
     user: user,
