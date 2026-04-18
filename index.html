@@ -14717,7 +14717,7 @@ function App() {
       maxWidth: 430,
       margin: "0 auto",
       minHeight: "100vh",
-      background: wallpaper ? "#000" : userBg,
+      background: userBg,
       position: "relative"
     }
   }, wallpaper && /*#__PURE__*/React.createElement("div", {
@@ -14733,7 +14733,7 @@ function App() {
     style: {
       position: "absolute",
       inset: 0,
-      background: "url(".concat(wallpaper, ") center/cover")
+      background: "".concat(userBg, " url(").concat(wallpaper, ") center/cover")
     }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
