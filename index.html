@@ -1444,8 +1444,7 @@ function ModalReencontrar(_ref11) {
       zIndex: 90,
       display: "flex",
       alignItems: "flex-end",
-      justifyContent: "center",
-      backdropFilter: "blur(4px)"
+      justifyContent: "center"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "su",
@@ -3834,8 +3833,7 @@ function ModalEditarPerfil(_ref23) {
       zIndex: 200,
       display: "flex",
       alignItems: "flex-end",
-      justifyContent: "center",
-      backdropFilter: "blur(4px)"
+      justifyContent: "center"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "su",
@@ -6804,8 +6802,7 @@ function ModalPerfil(_ref32) {
       zIndex: 90,
       display: "flex",
       alignItems: "flex-end",
-      justifyContent: "center",
-      backdropFilter: "blur(3px)"
+      justifyContent: "center"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "su",
@@ -8078,6 +8075,8 @@ function ModalAdicionarLugar(_ref42) {
   var user = _ref42.user,
     onClose = _ref42.onClose,
     onSave = _ref42.onSave;
+  var temaCor = getTema(user).main;
+  var temaBg = getTema(user).bg;
   var _useState102 = useState({
       placeType: "escola",
       placeName: "",
@@ -8280,12 +8279,11 @@ function ModalAdicionarLugar(_ref42) {
     style: {
       position: "fixed",
       inset: 0,
-      background: "rgba(0,0,0,0.4)",
+      background: "rgba(0,0,0,0.35)",
       zIndex: 200,
       display: "flex",
       alignItems: "flex-end",
-      justifyContent: "center",
-      backdropFilter: "blur(4px)"
+      justifyContent: "center"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "su",
@@ -8302,12 +8300,12 @@ function ModalAdicionarLugar(_ref42) {
       width: 56,
       height: 56,
       borderRadius: "50%",
-      background: "linear-gradient(135deg,".concat(T.accent, ",").concat(T.accentDk, ")"),
+      background: "linear-gradient(135deg,".concat(temaCor, ",").concat(getTema(user).dark, ")"),
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       margin: "0 auto 16px",
-      boxShadow: "0 6px 20px rgba(193,126,58,0.3)"
+      boxShadow: "0 6px 20px ".concat(temaCor, "50")
     }
   }, /*#__PURE__*/React.createElement("svg", {
     width: "22",
@@ -8346,12 +8344,11 @@ function ModalAdicionarLugar(_ref42) {
     style: {
       position: "fixed",
       inset: 0,
-      background: "rgba(0,0,0,0.4)",
+      background: "rgba(0,0,0,0.35)",
       zIndex: 200,
       display: "flex",
       alignItems: "flex-end",
-      justifyContent: "center",
-      backdropFilter: "blur(4px)"
+      justifyContent: "center"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "su",
@@ -8434,9 +8431,9 @@ function ModalAdicionarLugar(_ref42) {
         borderRadius: 20,
         cursor: "pointer",
         fontSize: 12,
-        border: "1.5px solid ".concat(d.placeType === p.value ? T.accent : T.border),
-        background: d.placeType === p.value ? T.accentBg : "#fff",
-        color: d.placeType === p.value ? T.accent : T.muted,
+        border: "1.5px solid ".concat(d.placeType === p.value ? temaCor : T.border),
+        background: d.placeType === p.value ? temaBg : "#fff",
+        color: d.placeType === p.value ? temaCor : T.muted,
         fontWeight: d.placeType === p.value ? 600 : 400,
         transition: "all .15s"
       }
@@ -8804,12 +8801,11 @@ function MenuRapido(_ref43) {
     style: {
       position: "fixed",
       inset: 0,
-      background: "rgba(0,0,0,0.4)",
+      background: "rgba(0,0,0,0.35)",
       zIndex: 90,
       display: "flex",
       alignItems: "flex-end",
       justifyContent: "center",
-      backdropFilter: "blur(4px)",
       paddingBottom: 72
     }
   }, /*#__PURE__*/React.createElement("div", {
@@ -8951,6 +8947,9 @@ function ModalMomento(_ref44) {
     onClose = _ref44.onClose,
     onSave = _ref44.onSave,
     onUpdateUser = _ref44.onUpdateUser;
+  var temaCor = getTema(user).main;
+  var temaDk = getTema(user).dark;
+  var temaBg = getTema(user).bg;
   var _useState108 = useState(""),
     _useState109 = _slicedToArray(_useState108, 2),
     texto = _useState109[0],
@@ -9137,8 +9136,7 @@ function ModalMomento(_ref44) {
       zIndex: 95,
       display: "flex",
       alignItems: "flex-end",
-      justifyContent: "center",
-      backdropFilter: "blur(4px)"
+      justifyContent: "center"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "su",
@@ -9296,11 +9294,11 @@ function ModalMomento(_ref44) {
       flexDirection: "column",
       alignItems: "center",
       gap: 6,
-      border: "1.5px dashed ".concat(T.accent),
+      border: "1.5px dashed ".concat(temaCor),
       borderRadius: 12,
       padding: "16px 10px",
       cursor: "pointer",
-      background: T.accentBg,
+      background: temaBg,
       transition: "all .15s"
     }
   }, /*#__PURE__*/React.createElement("svg", {
@@ -9310,20 +9308,20 @@ function ModalMomento(_ref44) {
     fill: "none"
   }, /*#__PURE__*/React.createElement("path", {
     d: "M9 2L7 5H3a2 2 0 00-2 2v12a2 2 0 002 2h18a2 2 0 002-2V7a2 2 0 00-2-2h-4l-2-3H9z",
-    stroke: T.accent,
+    stroke: temaCor,
     strokeWidth: "1.6",
     strokeLinejoin: "round"
   }), /*#__PURE__*/React.createElement("circle", {
     cx: "12",
     cy: "12",
     r: "4",
-    stroke: T.accent,
+    stroke: temaCor,
     strokeWidth: "1.6"
   })), /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: 12,
       fontWeight: 700,
-      color: T.accent
+      color: temaCor
     }
   }, "C\xE2mera"), /*#__PURE__*/React.createElement("input", {
     type: "file",
@@ -9349,8 +9347,8 @@ function ModalMomento(_ref44) {
       transition: "all .15s"
     },
     onMouseEnter: function onMouseEnter(e) {
-      e.currentTarget.style.borderColor = T.accent;
-      e.currentTarget.style.background = T.accentBg;
+      e.currentTarget.style.borderColor = temaCor;
+      e.currentTarget.style.background = temaBg;
     },
     onMouseLeave: function onMouseLeave(e) {
       e.currentTarget.style.borderColor = T.border;
@@ -9536,8 +9534,7 @@ function TelaLogin(_ref45) {
       zIndex: 500,
       display: "flex",
       alignItems: "flex-end",
-      justifyContent: "center",
-      backdropFilter: "blur(4px)"
+      justifyContent: "center"
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "su",
