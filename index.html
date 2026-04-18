@@ -8670,6 +8670,9 @@ function MenuRapido(_ref43) {
     onCompartilhar = _ref43.onCompartilhar,
     onAgendaVisita = _ref43.onAgendaVisita,
     user = _ref43.user;
+  var temaCor = getTema(user).main;
+  var temaDk = getTema(user).dark;
+  var temaBg = getTema(user).bg;
   var acoes = [{
     icon: /*#__PURE__*/React.createElement("svg", {
       width: "22",
@@ -8678,18 +8681,17 @@ function MenuRapido(_ref43) {
       fill: "none"
     }, /*#__PURE__*/React.createElement("path", {
       d: "M11 4C7.1 4 4 7.1 4 11c0 5 7 11 7 11s7-6 7-11c0-3.9-3.1-7-7-7z",
-      stroke: T.accent,
+      stroke: temaCor,
       strokeWidth: "1.8",
-      fill: T.accentBg
+      fill: temaBg
     }), /*#__PURE__*/React.createElement("circle", {
       cx: "11",
       cy: "11",
       r: "2.5",
-      fill: T.accent
+      fill: temaCor
     })),
     label: "Adicionar lugar",
     desc: "Inclua mais um lugar onde você viveu",
-    color: T.accent,
     action: onNovoLugar,
     needsUser: true
   }, {
@@ -8700,14 +8702,13 @@ function MenuRapido(_ref43) {
       fill: "none"
     }, /*#__PURE__*/React.createElement("path", {
       d: "M2 2h18v13H12l-4 3.5V15H2V2z",
-      stroke: T.blue,
+      stroke: temaCor,
       strokeWidth: "1.8",
       strokeLinejoin: "round",
-      fill: T.blueBg
+      fill: temaBg
     })),
     label: "Nova conversa",
     desc: "Envie uma mensagem para alguém",
-    color: T.blue,
     action: onNovaConversa,
     needsUser: true
   }, {
@@ -8720,18 +8721,17 @@ function MenuRapido(_ref43) {
       cx: "11",
       cy: "11",
       r: "9",
-      stroke: T.green,
+      stroke: temaCor,
       strokeWidth: "1.8",
-      fill: T.greenBg
+      fill: temaBg
     }), /*#__PURE__*/React.createElement("path", {
       d: "M11 7v4l3 3",
-      stroke: T.green,
+      stroke: temaCor,
       strokeWidth: "1.8",
       strokeLinecap: "round"
     })),
     label: "Registrar momento",
     desc: "Estou aqui agora — quem mais está?",
-    color: T.green,
     action: onMomento,
     needsUser: true
   }, {
@@ -8744,29 +8744,31 @@ function MenuRapido(_ref43) {
       cx: "17",
       cy: "5",
       r: "3",
-      stroke: T.muted,
-      strokeWidth: "1.8"
+      stroke: temaCor,
+      strokeWidth: "1.8",
+      fill: temaBg
     }), /*#__PURE__*/React.createElement("circle", {
       cx: "5",
       cy: "11",
       r: "3",
-      stroke: T.muted,
-      strokeWidth: "1.8"
+      stroke: temaCor,
+      strokeWidth: "1.8",
+      fill: temaBg
     }), /*#__PURE__*/React.createElement("circle", {
       cx: "17",
       cy: "17",
       r: "3",
-      stroke: T.muted,
-      strokeWidth: "1.8"
+      stroke: temaCor,
+      strokeWidth: "1.8",
+      fill: temaBg
     }), /*#__PURE__*/React.createElement("path", {
       d: "M8 9.5l6-3M8 12.5l6 3",
-      stroke: T.muted,
+      stroke: temaCor,
       strokeWidth: "1.5",
       strokeLinecap: "round"
     })),
     label: "Compartilhar perfil",
     desc: "Envie seu perfil para alguém",
-    color: T.muted,
     action: onCompartilhar,
     needsUser: true
   }, {
@@ -8781,22 +8783,21 @@ function MenuRapido(_ref43) {
       width: "16",
       height: "15",
       rx: "2",
-      stroke: "#9575CD",
+      stroke: temaCor,
       strokeWidth: "1.8",
-      fill: "rgba(149,117,205,0.08)"
+      fill: temaBg
     }), /*#__PURE__*/React.createElement("path", {
       d: "M7 2v4M15 2v4M3 9h16",
-      stroke: "#9575CD",
+      stroke: temaCor,
       strokeWidth: "1.8",
       strokeLinecap: "round"
     })),
     label: "Agendar visita",
     desc: "Planeje sua próxima visita a um lugar",
-    color: "#9575CD",
-    action: function action() {},
-    needsUser: true,
-    isAgenda: true
+    action: onAgendaVisita || function () {},
+    needsUser: true
   }];
+  var userBg = (user === null || user === void 0 ? void 0 : user.bg_color) || "#FAF7F2";
   return /*#__PURE__*/React.createElement("div", {
     className: "fi",
     onClick: onClose,
@@ -8808,7 +8809,8 @@ function MenuRapido(_ref43) {
       display: "flex",
       alignItems: "flex-end",
       justifyContent: "center",
-      backdropFilter: "blur(4px)"
+      backdropFilter: "blur(4px)",
+      paddingBottom: 72
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "su",
@@ -8816,18 +8818,24 @@ function MenuRapido(_ref43) {
       return e.stopPropagation();
     },
     style: {
-      background: "#FAF7F2",
+      background: userBg,
       borderRadius: "22px 22px 0 0",
       width: "100%",
       maxWidth: 430,
-      padding: "0 20px 48px"
+      padding: "0 20px 24px",
+      maxHeight: "70vh",
+      overflowY: "auto"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "14px 0 0",
       display: "flex",
       justifyContent: "center",
-      marginBottom: 16
+      marginBottom: 16,
+      position: "sticky",
+      top: 0,
+      background: userBg,
+      zIndex: 1
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -8879,7 +8887,7 @@ function MenuRapido(_ref43) {
         opacity: a.needsUser && !(user !== null && user !== void 0 && user.id) ? 0.45 : 1
       },
       onMouseEnter: function onMouseEnter(e) {
-        return e.currentTarget.style.borderColor = a.color;
+        return e.currentTarget.style.borderColor = temaCor;
       },
       onMouseLeave: function onMouseLeave(e) {
         return e.currentTarget.style.borderColor = T.border;
@@ -8889,7 +8897,7 @@ function MenuRapido(_ref43) {
         width: 44,
         height: 44,
         borderRadius: 12,
-        background: "".concat(a.color, "12"),
+        background: temaBg,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -8927,10 +8935,10 @@ function MenuRapido(_ref43) {
     style: {
       marginTop: 16,
       padding: "12px 16px",
-      background: T.accentBg,
+      background: temaBg,
       borderRadius: 12,
       fontSize: 13,
-      color: T.accent,
+      color: temaDk,
       textAlign: "center",
       fontWeight: 600
     }
