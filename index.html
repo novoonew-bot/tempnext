@@ -44,7 +44,7 @@ input:focus,select:focus,textarea:focus{
     <div style="font-family:Georgia,serif;font-size:32px;font-weight:300;letter-spacing:-0.5px;line-height:1">
       <span style="color:#C17E3A;font-weight:700">Temp</span><span style="color:#1E88E5;font-weight:700">next</span>
     </div>
-    <div style="font-size:11px;color:#8C8478;margin-top:8px;font-style:italic;font-family:Georgia,serif">conta história, marca o presente e reserva o futuro</div>
+    <div style="font-size:11px;color:#8C8478;margin-top:8px;font-style:italic;font-family:Georgia,serif">guarda história, marca o presente e aproxima o futuro</div>
   </div>
   <!-- Bolinhas -->
   <div style="display:flex;gap:6px;margin-top:28px">
@@ -940,7 +940,7 @@ function Logo(_ref) {
       fontStyle: "italic",
       fontFamily: "Georgia,serif"
     }
-  }, "conta hist\xF3ria, marca o presente e reserva o futuro")));
+  }, "guarda hist\xF3ria, marca o presente e aproxima o futuro")));
 }
 
 // ── Logo Nova: Tempnext limpa ────────────────────────────────────
@@ -1057,66 +1057,104 @@ function Btn(_ref3) {
 
 // ── Prova social: mostra quantas pessoas estão no Tempnext ──
 function SocialProof() {
-  var _useState = useState(0),
+  var _useState = useState({
+      pessoas: 0,
+      lugares: 0,
+      momentos: 0,
+      videos: 0,
+      carregou: false
+    }),
     _useState2 = _slicedToArray(_useState, 2),
-    count = _useState2[0],
-    setCount = _useState2[1];
+    stats = _useState2[0],
+    setStats = _useState2[1];
   useEffect(function () {
-    dbRead.from("profiles").select("id", {
+    Promise.all([dbRead.from("profiles").select("id", {
       count: "exact",
       head: true
-    }).then(function (_ref4) {
-      var c = _ref4.count;
-      if (c) setCount(c);
-    })["catch"](function () {});
+    }), dbRead.from("places").select("id", {
+      count: "exact",
+      head: true
+    }), dbRead.from("momentos").select("id", {
+      count: "exact",
+      head: true
+    }).eq("tipo", "momento"), dbRead.from("videos").select("id", {
+      count: "exact",
+      head: true
+    }).gt("expira_em", new Date().toISOString())]).then(function (_ref4) {
+      var _ref5 = _slicedToArray(_ref4, 4),
+        p = _ref5[0],
+        l = _ref5[1],
+        m = _ref5[2],
+        v = _ref5[3];
+      setStats({
+        pessoas: p.count || 0,
+        lugares: l.count || 0,
+        momentos: m.count || 0,
+        videos: v.count || 0,
+        carregou: true
+      });
+    })["catch"](function () {
+      return setStats(function (s) {
+        return _objectSpread(_objectSpread({}, s), {}, {
+          carregou: true
+        });
+      });
+    });
   }, []);
-  if (count < 3) return null;
+
+  // Só mostra se já carregou e tem pelo menos algum dado
+  if (!stats.carregou) return null;
+  var tudoZero = stats.pessoas === 0 && stats.lugares === 0 && stats.momentos === 0 && stats.videos === 0;
+  if (tudoZero) return null;
+  var items = [{
+    n: stats.pessoas,
+    l: "pessoas"
+  }, {
+    n: stats.lugares,
+    l: "lugares"
+  }, {
+    n: stats.momentos,
+    l: "momentos"
+  }, {
+    n: stats.videos,
+    l: "vídeos"
+  }].filter(function (x) {
+    return x.n > 0;
+  });
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      gap: 8,
-      marginTop: 20,
-      padding: "10px 18px",
-      background: T.faint,
-      borderRadius: 12,
-      border: "1px solid ".concat(T.border)
+      gap: 18,
+      marginTop: 24,
+      flexWrap: "wrap"
     }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex"
-    }
-  }, ["JN", "MS", "RC"].map(function (ini, i) {
+  }, items.map(function (it, i) {
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       style: {
-        width: 22,
-        height: 22,
-        borderRadius: "50%",
-        border: "2px solid #FAF7F2",
-        marginLeft: i > 0 ? -6 : 0,
-        background: i === 0 ? T.accentBg : i === 1 ? T.blueBg : "rgba(149,117,205,0.1)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: 7,
-        fontWeight: 600,
-        color: i === 0 ? T.accent : i === 1 ? T.blueStrong : "#9575CD"
+        textAlign: "center"
       }
-    }, ini);
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: T.sub,
-      fontWeight: 400
-    }
-  }, /*#__PURE__*/React.createElement("strong", {
-    style: {
-      fontWeight: 600,
-      color: T.accent
-    }
-  }, count), " pessoas reconectando mem\xF3rias"));
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "Georgia,serif",
+        fontSize: 20,
+        fontWeight: 500,
+        color: T.text,
+        lineHeight: 1
+      }
+    }, it.n), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        color: T.muted,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        fontWeight: 600,
+        marginTop: 4
+      }
+    }, it.l));
+  }));
 }
 
 // ── Comunidade: stats reais do app ──
@@ -1133,8 +1171,8 @@ function CommunityStats() {
     dbRead.from("profiles").select("id", {
       count: "exact",
       head: true
-    }).then(function (_ref5) {
-      var count = _ref5.count;
+    }).then(function (_ref6) {
+      var count = _ref6.count;
       return setTotal(function (prev) {
         return _objectSpread(_objectSpread({}, prev), {}, {
           pessoas: count || 0
@@ -1144,8 +1182,8 @@ function CommunityStats() {
     dbRead.from("places").select("id", {
       count: "exact",
       head: true
-    }).then(function (_ref6) {
-      var count = _ref6.count;
+    }).then(function (_ref7) {
+      var count = _ref7.count;
       return setTotal(function (prev) {
         return _objectSpread(_objectSpread({}, prev), {}, {
           lugares: count || 0
@@ -1155,8 +1193,8 @@ function CommunityStats() {
     dbRead.from("momentos").select("id", {
       count: "exact",
       head: true
-    }).eq("tipo", "momento").then(function (_ref7) {
-      var count = _ref7.count;
+    }).eq("tipo", "momento").then(function (_ref8) {
+      var count = _ref8.count;
       return setTotal(function (prev) {
         return _objectSpread(_objectSpread({}, prev), {}, {
           momentos: count || 0
@@ -1256,14 +1294,14 @@ function useLike(userId, targetType, targetId) {
     dbRead.from("likes").select("id", {
       count: "exact",
       head: true
-    }).eq("target_type", targetType).eq("target_id", targetId).then(function (_ref8) {
-      var c = _ref8.count;
+    }).eq("target_type", targetType).eq("target_id", targetId).then(function (_ref9) {
+      var c = _ref9.count;
       setCount(c || 0);
     })["catch"](function () {});
     // Verifica se o user já curtiu
     if (userId) {
-      dbRead.from("likes").select("id").eq("user_id", userId).eq("target_type", targetType).eq("target_id", targetId).maybeSingle().then(function (_ref9) {
-        var data = _ref9.data;
+      dbRead.from("likes").select("id").eq("user_id", userId).eq("target_type", targetType).eq("target_id", targetId).maybeSingle().then(function (_ref0) {
+        var data = _ref0.data;
         setLiked(!!data);
         setLoading(false);
       })["catch"](function () {
@@ -1340,11 +1378,11 @@ function useLike(userId, targetType, targetId) {
     loading: loading
   };
 }
-function Avatar(_ref0) {
-  var name = _ref0.name,
-    src = _ref0.src,
-    _ref0$size = _ref0.size,
-    size = _ref0$size === void 0 ? 46 : _ref0$size;
+function Avatar(_ref1) {
+  var name = _ref1.name,
+    src = _ref1.src,
+    _ref1$size = _ref1.size,
+    size = _ref1$size === void 0 ? 46 : _ref1$size;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       width: size,
@@ -1371,8 +1409,8 @@ function Avatar(_ref0) {
     }
   }) : initials(name || "?"));
 }
-function Lbl(_ref1) {
-  var children = _ref1.children;
+function Lbl(_ref10) {
+  var children = _ref10.children;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 11,
@@ -1384,9 +1422,9 @@ function Lbl(_ref1) {
     }
   }, children);
 }
-function Spinner(_ref10) {
-  var _ref10$size = _ref10.size,
-    size = _ref10$size === void 0 ? 18 : _ref10$size;
+function Spinner(_ref11) {
+  var _ref11$size = _ref11.size,
+    size = _ref11$size === void 0 ? 18 : _ref11$size;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       width: size,
@@ -1401,12 +1439,12 @@ function Spinner(_ref10) {
 }
 
 // ── Lugar Thumb (foto real ou fallback estético sépia) ───────
-function LugarThumb(_ref11) {
-  var place = _ref11.place,
-    _ref11$size = _ref11.size,
-    size = _ref11$size === void 0 ? 44 : _ref11$size,
-    _ref11$radius = _ref11.radius,
-    radius = _ref11$radius === void 0 ? 10 : _ref11$radius;
+function LugarThumb(_ref12) {
+  var place = _ref12.place,
+    _ref12$size = _ref12.size,
+    size = _ref12$size === void 0 ? 44 : _ref12$size,
+    _ref12$radius = _ref12.radius,
+    radius = _ref12$radius === void 0 ? 10 : _ref12$radius;
   if (!place) return null;
   var photoUrl = place.photo_url;
   var nome = place.name || place.placeName || place.nome || "";
@@ -1464,13 +1502,13 @@ function LugarThumb(_ref11) {
 }
 
 // ── Big Profile Card (like mockup) ────────────────────────────
-function BigCard(_ref12) {
-  var p = _ref12.p,
-    onView = _ref12.onView,
-    onAdd = _ref12.onAdd,
-    isContact = _ref12.isContact,
-    _ref12$delay = _ref12.delay,
-    delay = _ref12$delay === void 0 ? 0 : _ref12$delay;
+function BigCard(_ref13) {
+  var p = _ref13.p,
+    onView = _ref13.onView,
+    onAdd = _ref13.onAdd,
+    isContact = _ref13.isContact,
+    _ref13$delay = _ref13.delay,
+    delay = _ref13$delay === void 0 ? 0 : _ref13$delay;
   var hasPhoto = !!p.avatar_url;
   return /*#__PURE__*/React.createElement("div", {
     className: "fu",
@@ -1642,10 +1680,10 @@ function BigCard(_ref12) {
 }
 
 // ── Modal: Reencontrar ────────────────────────────────────────
-function ModalReencontrar(_ref13) {
-  var user = _ref13.user,
-    onClose = _ref13.onClose,
-    onBuscar = _ref13.onBuscar;
+function ModalReencontrar(_ref14) {
+  var user = _ref14.user,
+    onClose = _ref14.onClose,
+    onBuscar = _ref14.onBuscar;
   var _useState1 = useState("pessoas"),
     _useState10 = _slicedToArray(_useState1, 2),
     tipo = _useState10[0],
@@ -1838,9 +1876,9 @@ function ModalReencontrar(_ref13) {
 }
 
 // ── Feed de Momentos (horizontal compacto, 2 camadas) ────────
-function MomentosFeed(_ref14) {
-  var user = _ref14.user,
-    onView = _ref14.onView;
+function MomentosFeed(_ref15) {
+  var user = _ref15.user,
+    onView = _ref15.onView;
   var _useState15 = useState([]),
     _useState16 = _slicedToArray(_useState15, 2),
     momentos = _useState16[0],
@@ -1895,8 +1933,8 @@ function MomentosFeed(_ref14) {
   useEffect(function () {
     dbRead.from("momentos").select("*").order("ts", {
       ascending: false
-    }).limit(12).then(function (_ref15) {
-      var data = _ref15.data;
+    }).limit(12).then(function (_ref16) {
+      var data = _ref16.data;
       if (data) {
         var ordenados = _toConsumableArray(data).sort(function (a, b) {
           return calcularAfinidade(b, user) - calcularAfinidade(a, user);
@@ -2033,12 +2071,12 @@ function MomentosFeed(_ref14) {
 }
 
 // ── Momento em tela cheia imersiva (Modelo C) ───────────────
-function MomentoFullscreen(_ref16) {
+function MomentoFullscreen(_ref17) {
   var _m$fotos2;
-  var momentos = _ref16.momentos,
-    indiceInicial = _ref16.indiceInicial,
-    onClose = _ref16.onClose,
-    user = _ref16.user;
+  var momentos = _ref17.momentos,
+    indiceInicial = _ref17.indiceInicial,
+    onClose = _ref17.onClose,
+    user = _ref17.user;
   var _useState21 = useState(indiceInicial),
     _useState22 = _slicedToArray(_useState21, 2),
     idx = _useState22[0],
@@ -2241,20 +2279,20 @@ function MomentoFullscreen(_ref16) {
 }
 
 // ── Screen: Início ────────────────────────────────────────────
-function Inicio(_ref17) {
+function Inicio(_ref18) {
   var _user$intencao;
-  var user = _ref17.user,
-    onCadastrar = _ref17.onCadastrar,
-    onBuscar = _ref17.onBuscar,
-    onOlhar = _ref17.onOlhar,
-    onPerfil = _ref17.onPerfil,
-    onMomento = _ref17.onMomento,
-    onView = _ref17.onView,
-    onAdd = _ref17.onAdd,
-    onLugar = _ref17.onLugar,
-    contacts = _ref17.contacts,
-    onConexoes = _ref17.onConexoes,
-    onPainel = _ref17.onPainel;
+  var user = _ref18.user,
+    onCadastrar = _ref18.onCadastrar,
+    onBuscar = _ref18.onBuscar,
+    onOlhar = _ref18.onOlhar,
+    onPerfil = _ref18.onPerfil,
+    onMomento = _ref18.onMomento,
+    onView = _ref18.onView,
+    onAdd = _ref18.onAdd,
+    onLugar = _ref18.onLugar,
+    contacts = _ref18.contacts,
+    onConexoes = _ref18.onConexoes,
+    onPainel = _ref18.onPainel;
   var _useState23 = useState([]),
     _useState24 = _slicedToArray(_useState23, 2),
     profiles = _useState24[0],
@@ -2296,8 +2334,8 @@ function Inicio(_ref17) {
     // Busca perfis
     dbRead.from("profiles").select("id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type,intencao,lugares,current_city,created_at").order("created_at", {
       ascending: false
-    }).limit(40).then(function (_ref18) {
-      var data = _ref18.data;
+    }).limit(40).then(function (_ref19) {
+      var data = _ref19.data;
       setProfiles(data || []);
       setLoading(false);
       clearTimeout(timeout);
@@ -2309,8 +2347,8 @@ function Inicio(_ref17) {
     // Busca lugares da tabela places (sem sub-queries pesadas)
     dbRead.from("places").select("id,name,city,state,type,photo_url").order("created_at", {
       ascending: false
-    }).limit(10).then(function (_ref19) {
-      var places = _ref19.data;
+    }).limit(10).then(function (_ref20) {
+      var places = _ref20.data;
       if (places && places.length > 0) {
         setPlacesEmAlta(places.map(function (pl) {
           return _objectSpread(_objectSpread({}, pl), {}, {
@@ -2326,8 +2364,8 @@ function Inicio(_ref17) {
       dbRead.from("momentos").select("id", {
         count: "exact",
         head: true
-      }).eq("user_id", user.id).eq("tipo", "momento").then(function (_ref20) {
-        var count = _ref20.count;
+      }).eq("user_id", user.id).eq("tipo", "momento").then(function (_ref21) {
+        var count = _ref21.count;
         setTotalMomentos(count || 0);
       })["catch"](function () {});
     }
@@ -2335,8 +2373,8 @@ function Inicio(_ref17) {
     // Busca vídeos ativos (não expirados)
     dbRead.from("videos").select("*").gt("expira_em", new Date().toISOString()).order("created_at", {
       ascending: false
-    }).limit(50).then(function (_ref21) {
-      var data = _ref21.data;
+    }).limit(50).then(function (_ref22) {
+      var data = _ref22.data;
       setVideosAtivos(data || []);
     })["catch"](function () {});
 
@@ -2350,11 +2388,11 @@ function Inicio(_ref17) {
     }).eq("tipo", "momento"), dbRead.from("videos").select("id", {
       count: "exact",
       head: true
-    }).gt("expira_em", new Date().toISOString())]).then(function (_ref22) {
-      var _ref23 = _slicedToArray(_ref22, 3),
-        p = _ref23[0],
-        m = _ref23[1],
-        v = _ref23[2];
+    }).gt("expira_em", new Date().toISOString())]).then(function (_ref23) {
+      var _ref24 = _slicedToArray(_ref23, 3),
+        p = _ref24[0],
+        m = _ref24[1],
+        v = _ref24[2];
       setTotalMemorias((p.count || 0) + (m.count || 0) + (v.count || 0));
     })["catch"](function () {});
     return function () {
@@ -3087,8 +3125,8 @@ function Inicio(_ref17) {
       // Recarrega vídeos ativos
       dbRead.from("videos").select("*").gt("expira_em", new Date().toISOString()).order("created_at", {
         ascending: false
-      }).limit(50).then(function (_ref24) {
-        var data = _ref24.data;
+      }).limit(50).then(function (_ref25) {
+        var data = _ref25.data;
         setVideosAtivos(data || []);
       })["catch"](function () {});
     }
@@ -3103,11 +3141,11 @@ function Inicio(_ref17) {
 }
 
 // ── Visualizador de Passagens (fullscreen, swipe horizontal entre vídeos) ──
-function PassagensViewer(_ref25) {
-  var videos = _ref25.videos,
-    indiceInicial = _ref25.indiceInicial,
-    profile = _ref25.profile,
-    onClose = _ref25.onClose;
+function PassagensViewer(_ref26) {
+  var videos = _ref26.videos,
+    indiceInicial = _ref26.indiceInicial,
+    profile = _ref26.profile,
+    onClose = _ref26.onClose;
   var _useState39 = useState(indiceInicial || 0),
     _useState40 = _slicedToArray(_useState39, 2),
     idx = _useState40[0],
@@ -3505,12 +3543,12 @@ function clearBuscasRecentes() {
 }
 
 // ── Screen: Buscar (unificada) ───────────────────────────────
-function Buscar(_ref26) {
-  var user = _ref26.user,
-    onView = _ref26.onView,
-    onAdd = _ref26.onAdd,
-    onLugar = _ref26.onLugar,
-    contacts = _ref26.contacts;
+function Buscar(_ref27) {
+  var user = _ref27.user,
+    onView = _ref27.onView,
+    onAdd = _ref27.onAdd,
+    onLugar = _ref27.onLugar,
+    contacts = _ref27.contacts;
   var _useState41 = useState(""),
     _useState42 = _slicedToArray(_useState41, 2),
     termo = _useState42[0],
@@ -4384,9 +4422,9 @@ function Buscar(_ref26) {
 }
 
 // ── Componente: Adicionar Lugar ───────────────────────────────
-function NovoLugar(_ref27) {
-  var onAdd = _ref27.onAdd,
-    addrTimer = _ref27.addrTimer;
+function NovoLugar(_ref28) {
+  var onAdd = _ref28.onAdd,
+    addrTimer = _ref28.addrTimer;
   var _useState69 = useState(false),
     _useState70 = _slicedToArray(_useState69, 2),
     open = _useState70[0],
@@ -4796,7 +4834,7 @@ function NovoLugar(_ref27) {
     placeholder: "00000-000",
     value: d.cep,
     onChange: (/*#__PURE__*/function () {
-      var _ref28 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(e) {
+      var _ref29 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(e) {
         var val, digits, r, data, SM, logradouro, _t4;
         return _regenerator().w(function (_context3) {
           while (1) switch (_context3.p = _context3.n) {
@@ -4872,7 +4910,7 @@ function NovoLugar(_ref27) {
         }, _callee3, null, [[1, 4]]);
       }));
       return function (_x13) {
-        return _ref28.apply(this, arguments);
+        return _ref29.apply(this, arguments);
       };
     }())
   }))), /*#__PURE__*/React.createElement("div", {
@@ -4995,22 +5033,22 @@ function NovoLugar(_ref27) {
 }
 
 // ── Screen: Cadastrar ─────────────────────────────────────────
-function Cadastrar(_ref29) {
-  var onSave = _ref29.onSave;
+function Cadastrar(_ref30) {
+  var onSave = _ref30.onSave;
   return null;
 }
 
 // ── Screen: Contatos ─────────────────────────────────────────
-function Contatos(_ref30) {
+function Contatos(_ref31) {
   var _user$lugares;
-  var user = _ref30.user,
-    contacts = _ref30.contacts,
-    onChat = _ref30.onChat,
-    onAdd = _ref30.onAdd,
-    onUpdateRel = _ref30.onUpdateRel,
-    onRemove = _ref30.onRemove,
-    onCadastrar = _ref30.onCadastrar,
-    onBuscar = _ref30.onBuscar;
+  var user = _ref31.user,
+    contacts = _ref31.contacts,
+    onChat = _ref31.onChat,
+    onAdd = _ref31.onAdd,
+    onUpdateRel = _ref31.onUpdateRel,
+    onRemove = _ref31.onRemove,
+    onCadastrar = _ref31.onCadastrar,
+    onBuscar = _ref31.onBuscar;
   var _useState73 = useState("conectados"),
     _useState74 = _slicedToArray(_useState73, 2),
     aba = _useState74[0],
@@ -5054,8 +5092,8 @@ function Contatos(_ref30) {
     }))).join(",");
     dbRead.from("profiles").select("*").neq("id", user.id).or(orFilter).order("created_at", {
       ascending: false
-    }).limit(50).then(function (_ref31) {
-      var data = _ref31.data;
+    }).limit(50).then(function (_ref32) {
+      var data = _ref32.data;
       setRegiaoProfiles(data || []);
       setLoadingRegiao(false);
     })["catch"](function () {
@@ -5561,10 +5599,10 @@ function Contatos(_ref30) {
 }
 
 // ── Modal: Editar Perfil ─────────────────────────────────────
-function ModalEditarPerfil(_ref32) {
-  var user = _ref32.user,
-    onClose = _ref32.onClose,
-    onSave = _ref32.onSave;
+function ModalEditarPerfil(_ref33) {
+  var user = _ref33.user,
+    onClose = _ref33.onClose,
+    onSave = _ref33.onSave;
   var _useState83 = useState(false),
     _useState84 = _slicedToArray(_useState83, 2),
     saving = _useState84[0],
@@ -6031,10 +6069,10 @@ function paletaAtualId(user) {
 }
 
 // ── Painel de Personalização (dentro do Perfil) ──────────────
-function PersonalizacaoPerfil(_ref33) {
-  var user = _ref33.user,
-    onUpdateUser = _ref33.onUpdateUser,
-    onLogin = _ref33.onLogin;
+function PersonalizacaoPerfil(_ref34) {
+  var user = _ref34.user,
+    onUpdateUser = _ref34.onUpdateUser,
+    onLogin = _ref34.onLogin;
   var _useState87 = useState(false),
     _useState88 = _slicedToArray(_useState87, 2),
     expandido = _useState88[0],
@@ -7313,9 +7351,9 @@ var COMPLETAR_COPY = {
     cta: "Aplicar"
   }
 };
-function ProgressoPerfil(_ref34) {
-  var user = _ref34.user,
-    onAbrir = _ref34.onAbrir;
+function ProgressoPerfil(_ref35) {
+  var user = _ref35.user,
+    onAbrir = _ref35.onAbrir;
   var _calcularProgresso = calcularProgresso(user),
     pct = _calcularProgresso.pct,
     pendentes = _calcularProgresso.pendentes,
@@ -7410,11 +7448,11 @@ function ProgressoPerfil(_ref34) {
     }, "+"), p.label);
   })));
 }
-function ModalCompletar(_ref35) {
-  var user = _ref35.user,
-    campo = _ref35.campo,
-    onClose = _ref35.onClose,
-    onUpdateUser = _ref35.onUpdateUser;
+function ModalCompletar(_ref36) {
+  var user = _ref36.user,
+    campo = _ref36.campo,
+    onClose = _ref36.onClose,
+    onUpdateUser = _ref36.onUpdateUser;
   var _useState101 = useState(false),
     _useState102 = _slicedToArray(_useState101, 2),
     saving = _useState102[0],
@@ -7911,10 +7949,10 @@ function ModalCompletar(_ref35) {
 }
 
 // ── Modal: Postar Vídeo Efêmero ─────────────────────────────
-function ModalGravarVideo(_ref36) {
-  var user = _ref36.user,
-    onClose = _ref36.onClose,
-    onPosted = _ref36.onPosted;
+function ModalGravarVideo(_ref37) {
+  var user = _ref37.user,
+    onClose = _ref37.onClose,
+    onPosted = _ref37.onPosted;
   var _useState111 = useState(null),
     _useState112 = _slicedToArray(_useState111, 2),
     arquivo = _useState112[0],
@@ -8317,13 +8355,13 @@ function ModalGravarVideo(_ref36) {
 }
 
 // ── Screen: Perfil ──────────────────────────────────────────
-function Perfil(_ref37) {
+function Perfil(_ref38) {
   var _user$photos, _user$intencao5, _user$lugares2, _user$interests, _user$lugares3;
-  var user = _ref37.user,
-    onLogout = _ref37.onLogout,
-    onCadastrar = _ref37.onCadastrar,
-    onUpdateUser = _ref37.onUpdateUser,
-    onLogin = _ref37.onLogin;
+  var user = _ref38.user,
+    onLogout = _ref38.onLogout,
+    onCadastrar = _ref38.onCadastrar,
+    onUpdateUser = _ref38.onUpdateUser,
+    onLogin = _ref38.onLogin;
   var _useState123 = useState(false),
     _useState124 = _slicedToArray(_useState123, 2),
     editando = _useState124[0],
@@ -9518,13 +9556,13 @@ function Perfil(_ref37) {
 }
 
 // ── Modal: Foto Fullscreen com interações ────────────────────
-function ModalFoto(_ref40) {
-  var src = _ref40.src,
-    onClose = _ref40.onClose,
-    onRemove = _ref40.onRemove,
-    user = _ref40.user,
-    lugar = _ref40.lugar,
-    data = _ref40.data;
+function ModalFoto(_ref41) {
+  var src = _ref41.src,
+    onClose = _ref41.onClose,
+    onRemove = _ref41.onRemove,
+    user = _ref41.user,
+    lugar = _ref41.lugar,
+    data = _ref41.data;
   if (!src) return null;
   var _useLike = useLike(user === null || user === void 0 ? void 0 : user.id, "foto", src),
     liked = _useLike.liked,
@@ -9864,9 +9902,9 @@ function ModalFoto(_ref40) {
 }
 
 // ── Foto com curtida e comentário ────────────────────────────
-function FotoInterativa(_ref41) {
-  var src = _ref41.src,
-    user = _ref41.user;
+function FotoInterativa(_ref42) {
+  var src = _ref42.src,
+    user = _ref42.user;
   var _useLike2 = useLike(user === null || user === void 0 ? void 0 : user.id, "foto", src),
     liked = _useLike2.liked,
     likes = _useLike2.count,
@@ -10057,14 +10095,14 @@ function FotoInterativa(_ref41) {
 }
 
 // ── Modal: Ver Perfil ─────────────────────────────────────────
-function ModalPerfil(_ref42) {
+function ModalPerfil(_ref43) {
   var _p$photos, _p$photos2, _p$photos3;
-  var p = _ref42.p,
-    onClose = _ref42.onClose,
-    onAdd = _ref42.onAdd,
-    onChat = _ref42.onChat,
-    user = _ref42.user,
-    isContact = _ref42.isContact;
+  var p = _ref43.p,
+    onClose = _ref43.onClose,
+    onAdd = _ref43.onAdd,
+    onChat = _ref43.onChat,
+    user = _ref43.user,
+    isContact = _ref43.isContact;
   var _useState155 = useState({
       lugares: 0,
       seguindo: 0,
@@ -10630,14 +10668,14 @@ function ModalPerfil(_ref42) {
 }
 
 // ── Modal: Chat ───────────────────────────────────────────────
-function ModalChat(_ref44) {
-  var user = _ref44.user,
-    dest = _ref44.dest,
-    _ref44$type = _ref44.type,
-    type = _ref44$type === void 0 ? "msg" : _ref44$type,
-    msgs = _ref44.msgs,
-    onSend = _ref44.onSend,
-    onClose = _ref44.onClose;
+function ModalChat(_ref45) {
+  var user = _ref45.user,
+    dest = _ref45.dest,
+    _ref45$type = _ref45.type,
+    type = _ref45$type === void 0 ? "msg" : _ref45$type,
+    msgs = _ref45.msgs,
+    onSend = _ref45.onSend,
+    onClose = _ref45.onClose;
   var _useState161 = useState(""),
     _useState162 = _slicedToArray(_useState161, 2),
     txt = _useState162[0],
@@ -10674,8 +10712,8 @@ function ModalChat(_ref44) {
   useEffect(function () {
     dbRead.from("messages").select("*").eq("conv_id", cid).order("created_at", {
       ascending: true
-    }).limit(100).then(function (_ref45) {
-      var data = _ref45.data;
+    }).limit(100).then(function (_ref46) {
+      var data = _ref46.data;
       if (data) setDbMsgs(data);
     })["catch"](function () {});
   }, [cid]);
@@ -11167,7 +11205,7 @@ function ModalChat(_ref44) {
     type: "file",
     accept: "image/*,video/*",
     onChange: (/*#__PURE__*/function () {
-      var _ref46 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(e) {
+      var _ref47 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(e) {
         var file, t, b64;
         return _regenerator().w(function (_context28) {
           while (1) switch (_context28.n) {
@@ -11193,7 +11231,7 @@ function ModalChat(_ref44) {
         }, _callee28);
       }));
       return function (_x31) {
-        return _ref46.apply(this, arguments);
+        return _ref47.apply(this, arguments);
       };
     }()),
     style: {
@@ -11288,14 +11326,14 @@ function ModalChat(_ref44) {
 }
 
 // ── Componente: Adicionar Outros ─────────────────────────────
-function AddOutro(_ref47) {
-  var placeholder = _ref47.placeholder,
-    onAdd = _ref47.onAdd,
-    onRemove = _ref47.onRemove,
-    _ref47$extras = _ref47.extras,
-    extras = _ref47$extras === void 0 ? [] : _ref47$extras,
-    color = _ref47.color,
-    bgColor = _ref47.bgColor;
+function AddOutro(_ref48) {
+  var placeholder = _ref48.placeholder,
+    onAdd = _ref48.onAdd,
+    onRemove = _ref48.onRemove,
+    _ref48$extras = _ref48.extras,
+    extras = _ref48$extras === void 0 ? [] : _ref48$extras,
+    color = _ref48.color,
+    bgColor = _ref48.bgColor;
   var _useState175 = useState(""),
     _useState176 = _slicedToArray(_useState175, 2),
     val = _useState176[0],
@@ -11386,10 +11424,10 @@ function AddOutro(_ref47) {
 }
 
 // ── Helpers layout ────────────────────────────────────────────
-function STitle(_ref48) {
-  var children = _ref48.children,
-    _ref48$style = _ref48.style,
-    style = _ref48$style === void 0 ? {} : _ref48$style;
+function STitle(_ref49) {
+  var children = _ref49.children,
+    _ref49$style = _ref49.style,
+    style = _ref49$style === void 0 ? {} : _ref49$style;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       paddingTop: 24,
@@ -11406,9 +11444,9 @@ function STitle(_ref48) {
     }, style)
   }, children));
 }
-function FRow(_ref49) {
-  var label = _ref49.label,
-    children = _ref49.children;
+function FRow(_ref50) {
+  var label = _ref50.label,
+    children = _ref50.children;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "14px 0",
@@ -11502,10 +11540,10 @@ function useRegionAlerts(user) {
 }
 
 // ── Componente: Banner de Alerta ──────────────────────────────
-function AlertaBanner(_ref50) {
-  var alerts = _ref50.alerts,
-    onDismiss = _ref50.onDismiss,
-    onView = _ref50.onView;
+function AlertaBanner(_ref51) {
+  var alerts = _ref51.alerts,
+    onDismiss = _ref51.onDismiss,
+    onView = _ref51.onView;
   if (!alerts || alerts.length === 0) return null;
   var first = alerts[0];
   var others = alerts.length - 1;
@@ -11610,10 +11648,10 @@ function AlertaBanner(_ref50) {
 }
 
 // ── Modal: Adicionar Lugar ────────────────────────────────────
-function ModalAdicionarLugar(_ref51) {
-  var user = _ref51.user,
-    onClose = _ref51.onClose,
-    onSave = _ref51.onSave;
+function ModalAdicionarLugar(_ref52) {
+  var user = _ref52.user,
+    onClose = _ref52.onClose,
+    onSave = _ref52.onSave;
   var temaCor = getTema(user).main;
   var temaBg = getTema(user).bg;
   var _useState181 = useState({
@@ -12198,12 +12236,12 @@ function ModalAdicionarLugar(_ref51) {
 }
 
 // ── Modal: Menu Rápido (+) ────────────────────────────────────
-function MenuRapido(_ref52) {
-  var onClose = _ref52.onClose,
-    onNovoLugar = _ref52.onNovoLugar,
-    onMomento = _ref52.onMomento,
-    onAgendaVisita = _ref52.onAgendaVisita,
-    user = _ref52.user;
+function MenuRapido(_ref53) {
+  var onClose = _ref53.onClose,
+    onNovoLugar = _ref53.onNovoLugar,
+    onMomento = _ref53.onMomento,
+    onAgendaVisita = _ref53.onAgendaVisita,
+    user = _ref53.user;
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
@@ -12426,11 +12464,11 @@ function MenuRapido(_ref52) {
 }
 
 // ── Modal: Registrar Momento ──────────────────────────────────
-function ModalMomento(_ref53) {
-  var user = _ref53.user,
-    onClose = _ref53.onClose,
-    onSave = _ref53.onSave,
-    onUpdateUser = _ref53.onUpdateUser;
+function ModalMomento(_ref54) {
+  var user = _ref54.user,
+    onClose = _ref54.onClose,
+    onSave = _ref54.onSave,
+    onUpdateUser = _ref54.onUpdateUser;
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
@@ -12892,9 +12930,9 @@ function ModalMomento(_ref53) {
 }
 
 // ── Tela de Login / Auth ──────────────────────────────────────
-function TelaLogin(_ref54) {
-  var onClose = _ref54.onClose,
-    onLoggedIn = _ref54.onLoggedIn;
+function TelaLogin(_ref55) {
+  var onClose = _ref55.onClose,
+    onLoggedIn = _ref55.onLoggedIn;
   var _useState203 = useState("opcoes"),
     _useState204 = _slicedToArray(_useState203, 2),
     modo = _useState204[0],
@@ -13400,11 +13438,11 @@ function useRegionNotifications(user, contacts) {
 }
 
 // ── Banner de Notificação ─────────────────────────────────────
-function BannerNotificacao(_ref55) {
+function BannerNotificacao(_ref56) {
   var _notif$profile;
-  var notif = _ref55.notif,
-    onDismiss = _ref55.onDismiss,
-    onView = _ref55.onView;
+  var notif = _ref56.notif,
+    onDismiss = _ref56.onDismiss,
+    onView = _ref56.onView;
   if (!notif) return null;
   var isAniv = notif.type === "aniversario";
   return /*#__PURE__*/React.createElement("div", {
@@ -13493,9 +13531,9 @@ function BannerNotificacao(_ref55) {
 }
 
 // ── Cadastro Simples (3 passos) ──────────────────────────────
-function CadastroSimples(_ref56) {
-  var onDone = _ref56.onDone,
-    onLogin = _ref56.onLogin;
+function CadastroSimples(_ref57) {
+  var onDone = _ref57.onDone,
+    onLogin = _ref57.onLogin;
   var _useState215 = useState(false),
     _useState216 = _slicedToArray(_useState215, 2),
     saving = _useState216[0],
@@ -13964,11 +14002,11 @@ function CadastroSimples(_ref56) {
 // ── Tela de Curiosidade (antes do cadastro) ───────────────────
 
 // ── Memória do Dia (Stories 24h) ─────────────────────────────
-function MemoriaDoDia(_ref58) {
+function MemoriaDoDia(_ref59) {
   var _user$name2;
-  var user = _ref58.user,
-    contacts = _ref58.contacts,
-    onView = _ref58.onView;
+  var user = _ref59.user,
+    contacts = _ref59.contacts,
+    onView = _ref59.onView;
   var _useState221 = useState([]),
     _useState222 = _slicedToArray(_useState221, 2),
     memorias = _useState222[0],
@@ -14125,8 +14163,8 @@ function MemoriaDoDia(_ref58) {
 }
 
 // ── Quem Passou Por Aqui ──────────────────────────────────────
-function QuemPassouPorAqui(_ref59) {
-  var user = _ref59.user;
+function QuemPassouPorAqui(_ref60) {
+  var user = _ref60.user;
   var _useState223 = useState(0),
     _useState224 = _slicedToArray(_useState223, 2),
     count = _useState224[0],
@@ -14138,8 +14176,8 @@ function QuemPassouPorAqui(_ref59) {
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.city) && !(user !== null && user !== void 0 && user.state)) return;
     var filtro = user.city ? "city.ilike.%".concat(user.city, "%") : "state.eq.".concat(user.state);
-    dbRead.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref60) {
-      var data = _ref60.data;
+    dbRead.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref61) {
+      var data = _ref61.data;
       setCount((data === null || data === void 0 ? void 0 : data.length) || 0);
       setExemplos((data === null || data === void 0 ? void 0 : data.slice(0, 4)) || []);
     })["catch"](function () {});
@@ -14225,9 +14263,9 @@ function QuemPassouPorAqui(_ref59) {
 }
 
 // ── Pergunta da Comunidade ────────────────────────────────────
-function PerguntaComunidade(_ref61) {
+function PerguntaComunidade(_ref62) {
   var _user$intencao6, _user$intencao7, _user$intencao8, _user$intencao9;
-  var user = _ref61.user;
+  var user = _ref62.user;
   var _useState227 = useState(""),
     _useState228 = _slicedToArray(_useState227, 2),
     resposta = _useState228[0],
@@ -14254,8 +14292,8 @@ function PerguntaComunidade(_ref61) {
     if (!pergunta) return;
     db.from("momentos").select("id", {
       count: "exact"
-    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref62) {
-      var count = _ref62.count;
+    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref63) {
+      var count = _ref63.count;
       return setTotalRespostas(count || 0);
     })["catch"](function () {});
   }, [pergunta]);
@@ -14398,9 +14436,9 @@ function PerguntaComunidade(_ref61) {
 }
 
 // ── Agenda de Visita (Futuro) ─────────────────────────────────
-function AgendaVisita(_ref63) {
-  var user = _ref63.user,
-    onSave = _ref63.onSave;
+function AgendaVisita(_ref64) {
+  var user = _ref64.user,
+    onSave = _ref64.onSave;
   var _useState235 = useState({
       data: "",
       hora: "",
@@ -14907,10 +14945,10 @@ function AgendaVisita(_ref63) {
 }
 
 // ── Alerta de Região ──────────────────────────────────────────
-function AlertaRegiao(_ref64) {
-  var cidade = _ref64.cidade,
-    estado = _ref64.estado,
-    user = _ref64.user;
+function AlertaRegiao(_ref65) {
+  var cidade = _ref65.cidade,
+    estado = _ref65.estado,
+    user = _ref65.user;
   var _useState241 = useState(0),
     _useState242 = _slicedToArray(_useState241, 2),
     count = _useState242[0],
@@ -14922,8 +14960,8 @@ function AlertaRegiao(_ref64) {
   useEffect(function () {
     if (!cidade && !estado) return;
     // Busca agendas de visita para essa região
-    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref65) {
-      var data = _ref65.data;
+    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref66) {
+      var data = _ref66.data;
       var filtrados = (data || []).filter(function (m) {
         try {
           var _meta$cidade;
@@ -15020,14 +15058,14 @@ function useSeguirLugar(placeId, userId) {
     // Busca total de seguidores deste lugar
     dbRead.from("followed_places").select("id", {
       count: "exact"
-    }).eq("place_id", placeId).then(function (_ref66) {
-      var count = _ref66.count;
+    }).eq("place_id", placeId).then(function (_ref67) {
+      var count = _ref67.count;
       return setTotalSeguidores(count || 0);
     })["catch"](function () {});
     // Verifica se o user segue
     if (!userId) return;
-    dbRead.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref67) {
-      var data = _ref67.data;
+    dbRead.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref68) {
+      var data = _ref68.data;
       return setSeguindo(!!data);
     })["catch"](function () {});
   }, [placeId, userId]);
@@ -15097,9 +15135,9 @@ function useSeguirLugar(placeId, userId) {
 }
 
 // ── Cápsulas do User (carregadas do banco) ───────────────────
-function CapsulasUser(_ref68) {
-  var user = _ref68.user,
-    onOpenAgenda = _ref68.onOpenAgenda;
+function CapsulasUser(_ref69) {
+  var user = _ref69.user,
+    onOpenAgenda = _ref69.onOpenAgenda;
   var _useState251 = useState([]),
     _useState252 = _slicedToArray(_useState251, 2),
     capsulas = _useState252[0],
@@ -15109,8 +15147,8 @@ function CapsulasUser(_ref68) {
     // Busca momentos marcados como cápsula do user
     dbRead.from("momentos").select("*").eq("user_id", user.id).eq("tipo", "capsula").order("ts", {
       ascending: false
-    }).limit(20).then(function (_ref69) {
-      var data = _ref69.data;
+    }).limit(20).then(function (_ref70) {
+      var data = _ref70.data;
       if (data) setCapsulas(data);else {
         // Fallback: localStorage
         try {
@@ -15215,10 +15253,10 @@ function CapsulasUser(_ref68) {
 }
 
 // ── Cápsula no Perfil (individual) ───────────────────────────
-function CapsulaPerfil(_ref70) {
-  var capsula = _ref70.capsula,
-    index = _ref70.index,
-    userId = _ref70.userId;
+function CapsulaPerfil(_ref71) {
+  var capsula = _ref71.capsula,
+    index = _ref71.index,
+    userId = _ref71.userId;
   var _useState253 = useState(false),
     _useState254 = _slicedToArray(_useState253, 2),
     editando = _useState254[0],
@@ -15395,12 +15433,12 @@ function CapsulaPerfil(_ref70) {
 }
 
 // ── Perfil do Lugar ───────────────────────────────────────────
-function PerfilLugar(_ref71) {
-  var lugar = _ref71.lugar,
-    lugarId = _ref71.lugarId,
-    user = _ref71.user,
-    onBack = _ref71.onBack,
-    onView = _ref71.onView;
+function PerfilLugar(_ref72) {
+  var lugar = _ref72.lugar,
+    lugarId = _ref72.lugarId,
+    user = _ref72.user,
+    onBack = _ref72.onBack,
+    onView = _ref72.onView;
   var _useState257 = useState(null),
     _useState258 = _slicedToArray(_useState257, 2),
     place = _useState258[0],
@@ -15438,8 +15476,8 @@ function PerfilLugar(_ref71) {
     }
     if (!lugar) return;
     // Busca place pelo nome
-    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref72) {
-      var data = _ref72.data;
+    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref73) {
+      var data = _ref73.data;
       if (data) {
         setPlace(data);
         setResolvedId(data.id);
@@ -15454,7 +15492,7 @@ function PerfilLugar(_ref71) {
     if (!resolvedId) return;
     setLoading(true);
     var buscarDados = /*#__PURE__*/function () {
-      var _ref73 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee43() {
+      var _ref74 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee43() {
         var _yield$dbRead$from$se2, p, _yield$dbRead$from$se3, pp, vinculados, lugarNome, _yield$dbRead$from$se4, m, _yield$dbRead$from$se5, a;
         return _regenerator().w(function (_context43) {
           while (1) switch (_context43.n) {
@@ -15515,7 +15553,7 @@ function PerfilLugar(_ref71) {
         }, _callee43);
       }));
       return function buscarDados() {
-        return _ref73.apply(this, arguments);
+        return _ref74.apply(this, arguments);
       };
     }();
     buscarDados()["catch"](function () {
@@ -16281,10 +16319,10 @@ function PerfilLugar(_ref71) {
 }
 
 // ── Painel Pessoal ───────────────────────────────────────────
-function PainelPessoal(_ref74) {
+function PainelPessoal(_ref75) {
   var _momentoTop$fotos, _momentoTop$texto;
-  var user = _ref74.user,
-    onBack = _ref74.onBack;
+  var user = _ref75.user,
+    onBack = _ref75.onBack;
   var _useState271 = useState({
       fotos: 0,
       momentos: 0,
@@ -16334,8 +16372,8 @@ function PainelPessoal(_ref74) {
     // Busca momentos do usuário
     dbRead.from("momentos").select("*").eq("user_id", user.id).order("ts", {
       ascending: false
-    }).limit(20).then(function (_ref75) {
-      var data = _ref75.data;
+    }).limit(20).then(function (_ref76) {
+      var data = _ref76.data;
       if (data) {
         setStats(function (s) {
           return _objectSpread(_objectSpread({}, s), {}, {
@@ -16347,8 +16385,8 @@ function PainelPessoal(_ref74) {
     })["catch"](function () {});
 
     // Busca contatos
-    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref76) {
-      var data = _ref76.data;
+    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref77) {
+      var data = _ref77.data;
       if (data) setStats(function (s) {
         return _objectSpread(_objectSpread({}, s), {}, {
           conexoes: data.length
@@ -16361,8 +16399,8 @@ function PainelPessoal(_ref74) {
       dbRead.from("profiles").select("id", {
         count: "exact",
         head: true
-      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref77) {
-        var count = _ref77.count;
+      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref78) {
+        var count = _ref78.count;
         setNascRegiao(count || 0);
       })["catch"](function () {});
     }
@@ -16382,8 +16420,8 @@ function PainelPessoal(_ref74) {
 
       // Busca pessoas que também viveram nesse lugar
       if (cidadeLugar) {
-        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref78) {
-          var data = _ref78.data;
+        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref79) {
+          var data = _ref79.data;
           if (data) setPessoasLugar(data);
         })["catch"](function () {});
       }
@@ -17325,7 +17363,7 @@ function App() {
     }
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
-        var _ref80 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee45(event, session) {
+        var _ref81 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee45(event, session) {
           var _yield$dbRead$from$se7, data, localU, s, updated, _s, _t43, _t44;
           return _regenerator().w(function (_context45) {
             while (1) switch (_context45.p = _context45.n) {
@@ -17411,7 +17449,7 @@ function App() {
           }, _callee45, null, [[4, 6], [1, 8]]);
         }));
         return function (_x34, _x35) {
-          return _ref80.apply(this, arguments);
+          return _ref81.apply(this, arguments);
         };
       }()),
       subscription = _db$auth$onAuthStateC.data.subscription;
@@ -17673,8 +17711,8 @@ function App() {
         family_ref: p.family_ref || null,
         how_iam: p.how_iam || null
       };
-      db.from("profiles").upsert(safe).then(function (_ref82) {
-        var error = _ref82.error;
+      db.from("profiles").upsert(safe).then(function (_ref83) {
+        var error = _ref83.error;
         if (error) console.log("Erro ao sincronizar perfil:", error.message);
       })["catch"](function () {});
     }
@@ -17700,10 +17738,10 @@ function App() {
       return c.id === p.id;
     });
   };
-  var unreadCount = Object.entries(msgs).filter(function (_ref83) {
-    var _ref84 = _slicedToArray(_ref83, 2),
-      id = _ref84[0],
-      ms = _ref84[1];
+  var unreadCount = Object.entries(msgs).filter(function (_ref84) {
+    var _ref85 = _slicedToArray(_ref84, 2),
+      id = _ref85[0],
+      ms = _ref85[1];
     return user && id.split("_").includes(String(user.id)) && ms.some(function (m) {
       return m.from !== user.id;
     });
@@ -17800,7 +17838,7 @@ function App() {
         fontStyle: "italic",
         fontFamily: "Georgia,serif"
       }
-    }, "conta hist\xF3ria, marca o presente e reserva o futuro"), /*#__PURE__*/React.createElement("div", {
+    }, "guarda hist\xF3ria, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         gap: 6,
@@ -17906,31 +17944,17 @@ function App() {
         fontStyle: "italic",
         fontFamily: "Georgia,serif",
         textAlign: "center",
-        maxWidth: 280,
-        lineHeight: 1.5
+        maxWidth: 300,
+        lineHeight: 1.55
       }
-    }, "conta hist\xF3ria, marca o presente e reserva o futuro"), /*#__PURE__*/React.createElement("div", {
+    }, "guarda hist\xF3ria, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
       style: {
         width: 32,
         height: 1,
         background: T.border,
-        margin: "28px 0"
+        margin: "32px 0"
       }
-    }), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 15,
-        color: T.sub,
-        textAlign: "center",
-        lineHeight: 1.9,
-        fontWeight: 300,
-        marginBottom: 32
-      }
-    }, "Cada lugar que voc\xEA viveu", /*#__PURE__*/React.createElement("br", null), "guarda ", /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: T.accent,
-        fontWeight: 500
-      }
-    }, "hist\xF3rias"), " e ", /*#__PURE__*/React.createElement("strong", null, "pessoas"), ".", /*#__PURE__*/React.createElement("br", null), "Reconecte com elas."), /*#__PURE__*/React.createElement("button", {
+    }), /*#__PURE__*/React.createElement("button", {
       onClick: function onClick() {
         db.auth.signInWithOAuth({
           provider: "google",
@@ -17977,17 +18001,20 @@ function App() {
         fontSize: 10,
         color: T.muted,
         textAlign: "center",
-        marginTop: 16,
+        marginTop: 18,
         lineHeight: 1.7,
         fontWeight: 300
       }
     }, "Ao entrar voc\xEA concorda com os termos.", /*#__PURE__*/React.createElement("br", null), "Seus dados ficam seguros."), /*#__PURE__*/React.createElement("div", {
       style: {
-        marginTop: "auto",
-        paddingTop: 20,
+        position: "absolute",
+        bottom: 20,
+        left: 0,
+        right: 0,
         fontSize: 9,
         color: T.muted,
-        fontWeight: 300
+        fontWeight: 300,
+        textAlign: "center"
       }
     }, "Tempnext \xA9 2026"))));
   }
@@ -18344,7 +18371,7 @@ function App() {
       maxWidth: 260,
       lineHeight: 1.5
     }
-  }, "conta hist\xF3ria, marca o presente e reserva o futuro"), /*#__PURE__*/React.createElement("div", {
+  }, "guarda hist\xF3ria, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
     style: {
       width: 32,
       height: 1,
@@ -18352,20 +18379,6 @@ function App() {
       margin: "24px 0"
     }
   }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 14,
-      color: T.sub,
-      textAlign: "center",
-      lineHeight: 1.9,
-      fontWeight: 300,
-      marginBottom: 28
-    }
-  }, "Cada lugar que voc\xEA viveu", /*#__PURE__*/React.createElement("br", null), "guarda ", /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: T.accent,
-      fontWeight: 500
-    }
-  }, "hist\xF3rias"), " e ", /*#__PURE__*/React.createElement("strong", null, "pessoas"), ".", /*#__PURE__*/React.createElement("br", null), "Reconecte com elas."), /*#__PURE__*/React.createElement("div", {
     style: {
       width: "100%",
       padding: "13px 20px",
