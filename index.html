@@ -13489,13 +13489,14 @@ function BannerNotificacao(_ref56) {
 // ── Cadastro Simples (3 passos) ──────────────────────────────
 function CadastroSimples(_ref57) {
   var onDone = _ref57.onDone,
-    onLogin = _ref57.onLogin;
+    onLogin = _ref57.onLogin,
+    googleInfo = _ref57.googleInfo;
   var _useState215 = useState(false),
     _useState216 = _slicedToArray(_useState215, 2),
     saving = _useState216[0],
     setSaving = _useState216[1];
   var _useState217 = useState({
-      firstName: "",
+      firstName: googleInfo !== null && googleInfo !== void 0 && googleInfo.name ? googleInfo.name.split(" ")[0] : "",
       placeName: "",
       city: "",
       uf: "",
@@ -13636,7 +13637,7 @@ function CadastroSimples(_ref57) {
               year_start: f.y1 ? parseInt(f.y1) : null,
               year_end: f.y2 ? parseInt(f.y2) : f.y1 ? parseInt(f.y1) : null,
               era: f.y1 ? detectarEra(f.y1, f.y2 || f.y1) : "passado",
-              avatar_url: null,
+              avatar_url: (googleInfo === null || googleInfo === void 0 ? void 0 : googleInfo.avatar_url) || null,
               photos: [],
               available: "sim",
               lugares: [{
@@ -16948,17 +16949,21 @@ function App() {
     setShowLoginPreview = _useState294[1];
   var _useState295 = useState(null),
     _useState296 = _slicedToArray(_useState295, 2),
-    perfilLugarAtual = _useState296[0],
-    setPerfilLugarAtual = _useState296[1];
-  var _useState297 = useState(false),
+    googleUserSemPerfil = _useState296[0],
+    setGoogleUserSemPerfil = _useState296[1]; // {id, email, name, avatar_url} quando precisa cadastrar
+  var _useState297 = useState(null),
     _useState298 = _slicedToArray(_useState297, 2),
-    showCuriosidade = _useState298[0],
-    setShowCuriosidade = _useState298[1];
-  var _useState299 = useState(true),
+    perfilLugarAtual = _useState298[0],
+    setPerfilLugarAtual = _useState298[1];
+  var _useState299 = useState(false),
     _useState300 = _slicedToArray(_useState299, 2),
-    useCadastroSimples = _useState300[0],
-    setUseCadastroSimples = _useState300[1];
-  var _useState301 = useState(function () {
+    showCuriosidade = _useState300[0],
+    setShowCuriosidade = _useState300[1];
+  var _useState301 = useState(true),
+    _useState302 = _slicedToArray(_useState301, 2),
+    useCadastroSimples = _useState302[0],
+    setUseCadastroSimples = _useState302[1];
+  var _useState303 = useState(function () {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
@@ -16966,45 +16971,45 @@ function App() {
         return null;
       }
     }),
-    _useState302 = _slicedToArray(_useState301, 2),
-    user = _useState302[0],
-    setUser = _useState302[1];
-  var _useState303 = useState(null),
     _useState304 = _slicedToArray(_useState303, 2),
-    modal = _useState304[0],
-    setModal = _useState304[1];
+    user = _useState304[0],
+    setUser = _useState304[1];
   var _useState305 = useState(null),
     _useState306 = _slicedToArray(_useState305, 2),
-    chat = _useState306[0],
-    setChat = _useState306[1];
-  var _useState307 = useState(false),
+    modal = _useState306[0],
+    setModal = _useState306[1];
+  var _useState307 = useState(null),
     _useState308 = _slicedToArray(_useState307, 2),
-    showReencontrar = _useState308[0],
-    setShowReencontrar = _useState308[1];
-  var _useState309 = useState(null),
+    chat = _useState308[0],
+    setChat = _useState308[1];
+  var _useState309 = useState(false),
     _useState310 = _slicedToArray(_useState309, 2),
-    filtroReencontrar = _useState310[0],
-    setFiltroReencontrar = _useState310[1];
-  var _useState311 = useState(false),
+    showReencontrar = _useState310[0],
+    setShowReencontrar = _useState310[1];
+  var _useState311 = useState(null),
     _useState312 = _slicedToArray(_useState311, 2),
-    showMenuRapido = _useState312[0],
-    setShowMenuRapido = _useState312[1];
+    filtroReencontrar = _useState312[0],
+    setFiltroReencontrar = _useState312[1];
   var _useState313 = useState(false),
     _useState314 = _slicedToArray(_useState313, 2),
-    showAdicionarLugar = _useState314[0],
-    setShowAdicionarLugar = _useState314[1];
+    showMenuRapido = _useState314[0],
+    setShowMenuRapido = _useState314[1];
   var _useState315 = useState(false),
     _useState316 = _slicedToArray(_useState315, 2),
-    showAgendaVisita = _useState316[0],
-    setShowAgendaVisita = _useState316[1];
+    showAdicionarLugar = _useState316[0],
+    setShowAdicionarLugar = _useState316[1];
   var _useState317 = useState(false),
     _useState318 = _slicedToArray(_useState317, 2),
-    showMomento = _useState318[0],
-    setShowMomento = _useState318[1];
+    showAgendaVisita = _useState318[0],
+    setShowAgendaVisita = _useState318[1];
   var _useState319 = useState(false),
     _useState320 = _slicedToArray(_useState319, 2),
-    confirmandoSaida = _useState320[0],
-    setConfirmandoSaida = _useState320[1];
+    showMomento = _useState320[0],
+    setShowMomento = _useState320[1];
+  var _useState321 = useState(false),
+    _useState322 = _slicedToArray(_useState321, 2),
+    confirmandoSaida = _useState322[0],
+    setConfirmandoSaida = _useState322[1];
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
@@ -17164,7 +17169,7 @@ function App() {
     function _init() {
       _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee46() {
         var _session;
-        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, _yield$dbRead$from$se8, data, _yield$dbRead$from$se9, _data2, updated, _yield$dbRead$from$se0, _data3, _t45, _t46, _t47, _t48;
+        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, _yield$dbRead$from$se8, data, _yield$dbRead$from$se9, _data2, updated, meta, _yield$dbRead$from$se0, _data3, _t45, _t46, _t47, _t48;
         return _regenerator().w(function (_context46) {
           while (1) switch (_context46.p = _context46.n) {
             case 0:
@@ -17274,8 +17279,15 @@ function App() {
               setUser(localUser);
               return _context46.a(2);
             case 16:
-              _context46.n = 23;
-              break;
+              // Sem perfil no banco e sem localUser → novo usuário Google, precisa cadastrar
+              meta = session.user.user_metadata || {};
+              setGoogleUserSemPerfil({
+                auth_id: session.user.id,
+                email: session.user.email || "",
+                name: meta.full_name || meta.name || "",
+                avatar_url: meta.avatar_url || meta.picture || ""
+              });
+              return _context46.a(2);
             case 17:
               if (!localUser) {
                 _context46.n = 23;
@@ -17320,13 +17332,14 @@ function App() {
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
         var _ref81 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee45(event, session) {
-          var _yield$dbRead$from$se7, data, localU, s, updated, _s, _t43, _t44;
+          var _yield$dbRead$from$se7, data, localU, s, updated, meta, _s, _t43, _t44;
           return _regenerator().w(function (_context45) {
             while (1) switch (_context45.p = _context45.n) {
               case 0:
                 if (event === "SIGNED_OUT") {
                   setUser(null);
                   setContacts([]);
+                  setGoogleUserSemPerfil(null);
                   try {
                     localStorage.removeItem("tn_user");
                   } catch (_unused28) {}
@@ -17335,7 +17348,7 @@ function App() {
                   } catch (_unused29) {}
                 }
                 if (!(event === "SIGNED_IN" && session !== null && session !== void 0 && session.user)) {
-                  _context45.n = 9;
+                  _context45.n = 11;
                   break;
                 }
                 _context45.p = 1;
@@ -17352,7 +17365,7 @@ function App() {
                 try {
                   localStorage.setItem("tn_user", JSON.stringify(data));
                 } catch (_unused30) {}
-                _context45.n = 7;
+                _context45.n = 9;
                 break;
               case 3:
                 // Não tem perfil vinculado — tenta vincular perfil local
@@ -17362,7 +17375,7 @@ function App() {
                   if (s) localU = JSON.parse(s);
                 } catch (_unused31) {}
                 if (!(localU && localU.id && !localU.id.toString().startsWith("local_"))) {
-                  _context45.n = 7;
+                  _context45.n = 8;
                   break;
                 }
                 _context45.p = 4;
@@ -17391,7 +17404,19 @@ function App() {
                 _context45.n = 9;
                 break;
               case 8:
-                _context45.p = 8;
+                // SEM perfil no banco E SEM perfil local → novo usuário, precisa cadastrar
+                meta = session.user.user_metadata || {};
+                setGoogleUserSemPerfil({
+                  auth_id: session.user.id,
+                  email: session.user.email || "",
+                  name: meta.full_name || meta.name || "",
+                  avatar_url: meta.avatar_url || meta.picture || ""
+                });
+              case 9:
+                _context45.n = 11;
+                break;
+              case 10:
+                _context45.p = 10;
                 _t44 = _context45.v;
                 console.log("Erro no auth state change:", _t44);
                 // Fallback: usa perfil local se existir
@@ -17399,10 +17424,10 @@ function App() {
                   _s = localStorage.getItem("tn_user");
                   if (_s) setUser(JSON.parse(_s));
                 } catch (_unused33) {}
-              case 9:
+              case 11:
                 return _context45.a(2);
             }
-          }, _callee45, null, [[4, 6], [1, 8]]);
+          }, _callee45, null, [[4, 6], [1, 10]]);
         }));
         return function (_x34, _x35) {
           return _ref81.apply(this, arguments);
@@ -17675,10 +17700,10 @@ function App() {
   }
 
   // Estado de loading inicial
-  var _useState321 = useState(false),
-    _useState322 = _slicedToArray(_useState321, 2),
-    appReady = _useState322[0],
-    setAppReady = _useState322[1];
+  var _useState323 = useState(false),
+    _useState324 = _slicedToArray(_useState323, 2),
+    appReady = _useState324[0],
+    setAppReady = _useState324[1];
 
   // Marca app como pronto após init
   useEffect(function () {
@@ -17812,6 +17837,22 @@ function App() {
         }
       });
     })), /*#__PURE__*/React.createElement("style", null, "@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}")));
+  }
+
+  // ── Se logou no Google mas ainda não tem perfil cadastrado ──
+  if (!user && googleUserSemPerfil) {
+    return /*#__PURE__*/React.createElement(CadastroSimples, {
+      googleInfo: googleUserSemPerfil,
+      onDone: function onDone(p) {
+        setGoogleUserSemPerfil(null);
+        salvar(p);
+      },
+      onLogin: function onLogin() {
+        // Usuário desistiu — faz logout do Google
+        db.auth.signOut()["catch"](function () {});
+        setGoogleUserSemPerfil(null);
+      }
+    });
   }
 
   // ── Tela de Login (se não tem user) ──
@@ -18108,8 +18149,11 @@ function App() {
       setTela("lugar_perfil");
     },
     contacts: contacts
-  }), tela === "cadastrar" && /*#__PURE__*/React.createElement(Cadastrar, {
-    onSave: salvar
+  }), tela === "cadastrar" && /*#__PURE__*/React.createElement(CadastroSimples, {
+    onDone: salvar,
+    onLogin: function onLogin() {
+      return setTela("inicio");
+    }
   }), tela === "encontrei" && /*#__PURE__*/React.createElement(Contatos, {
     user: user,
     contacts: contacts,
