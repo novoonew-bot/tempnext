@@ -7173,7 +7173,7 @@ function ModalCompletar(_ref29) {
 
 // ── Screen: Perfil ──────────────────────────────────────────
 function Perfil(_ref30) {
-  var _user$photos, _user$lugares2, _user$intencao5, _user$intencao6, _user$lugares3, _user$interests, _user$curtia, _user$curtia2, _user$interests2, _user$curtia4, _user$interests6, _user$interests7, _user$photos2, _user$lugares5;
+  var _user$photos, _user$intencao5, _user$lugares2, _user$interests, _user$photos2, _user$lugares4;
   var user = _ref30.user,
     onLogout = _ref30.onLogout,
     onCadastrar = _ref30.onCadastrar,
@@ -7538,69 +7538,20 @@ function Perfil(_ref30) {
       fontWeight: 700,
       color: T.text
     }
-  }, user.name)))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#fff",
-      borderRadius: 18,
-      padding: "12px 18px",
-      border: "1px solid ".concat(T.border),
-      marginBottom: 12,
-      display: "flex",
-      gap: 16
-    }
-  }, [{
-    label: "Encontrei",
-    value: String(user._connections || 0)
-  }, {
-    label: "Lugares",
-    value: String(((_user$lugares2 = user.lugares) === null || _user$lugares2 === void 0 ? void 0 : _user$lugares2.length) || 1)
-  }, {
-    label: "Momentos",
-    value: String(user._moments || 0)
-  }].map(function (_ref32, i, arr) {
-    var label = _ref32.label,
-      value = _ref32.value;
-    return /*#__PURE__*/React.createElement("div", {
-      key: label,
-      style: {
-        flex: 1,
-        textAlign: "center",
-        borderRight: i < arr.length - 1 ? "1px solid ".concat(T.border) : "none"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 18,
-        fontWeight: 800,
-        color: T.text,
-        letterSpacing: "-0.5px"
-      }
-    }, value), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: T.muted,
-        marginTop: 2,
-        textTransform: "uppercase",
-        letterSpacing: "0.06em",
-        fontWeight: 600
-      }
-    }, label));
-  })), /*#__PURE__*/React.createElement(CapsulasUser, {
+  }, user.name)))), /*#__PURE__*/React.createElement(CapsulasUser, {
     user: user,
     onOpenAgenda: function onOpenAgenda() {
       return setShowAgendaVisita(true);
     }
-  }), (user.available || user.era || ((_user$intencao5 = user.intencao) === null || _user$intencao5 === void 0 ? void 0 : _user$intencao5.length) > 0) && /*#__PURE__*/React.createElement("div", {
+  }), ((_user$intencao5 = user.intencao) === null || _user$intencao5 === void 0 ? void 0 : _user$intencao5.length) > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 18,
       padding: "14px 18px",
       border: "1px solid ".concat(T.border),
-      marginBottom: 12,
-      display: "flex",
-      flexDirection: "column",
-      gap: 10
+      marginBottom: 12
     }
-  }, ((_user$intencao6 = user.intencao) === null || _user$intencao6 === void 0 ? void 0 : _user$intencao6.length) > 0 && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       alignItems: "center",
@@ -7612,31 +7563,25 @@ function Perfil(_ref30) {
       fontSize: 11,
       fontWeight: 600,
       color: T.muted,
-      minWidth: 100
+      minWidth: 56
     }
-  }, "Quero"), /*#__PURE__*/React.createElement("div", {
+  }, "Busco"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 5,
       flexWrap: "wrap"
     }
-  }, user.intencao.map(function (v, i) {
+  }, user.intencao.filter(function (v) {
+    return ["reencontrar", "visitar"].includes(v);
+  }).map(function (v, i) {
     var map = {
-      relembrar: {
-        icon: "🕰️",
-        label: "Relembrar"
-      },
       reencontrar: {
         icon: "👥",
-        label: "Reencontrar"
-      },
-      reconectar: {
-        icon: "🤝",
-        label: "Reconectar"
+        label: "Reencontrar pessoas"
       },
       visitar: {
-        icon: "👁️",
-        label: "Visitar"
+        icon: "🌍",
+        label: "Conhecer lugares"
       }
     };
     var item = map[v] || {
@@ -7657,29 +7602,7 @@ function Perfil(_ref30) {
         gap: 4
       }
     }, item.icon, " ", item.label);
-  }))), user.available && /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "center",
-      gap: 10
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 11,
-      fontWeight: 600,
-      color: T.muted,
-      minWidth: 100
-    }
-  }, "Dispon\xEDvel para"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 11,
-      fontWeight: 700,
-      color: availableColor[user.available] || T.muted,
-      background: "".concat(availableColor[user.available] || T.muted, "15"),
-      padding: "4px 12px",
-      borderRadius: 20
-    }
-  }, availableLabel[user.available] || user.available))), ((_user$lugares3 = user.lugares) === null || _user$lugares3 === void 0 ? void 0 : _user$lugares3.length) > 0 && function () {
+  })))), ((_user$lugares2 = user.lugares) === null || _user$lugares2 === void 0 ? void 0 : _user$lugares2.length) > 0 && function () {
     // Ordena por ano decrescente (mais recentes primeiro)
     var ordenados = _toConsumableArray(user.lugares).sort(function (a, b) {
       var ay = parseInt(a.y2 || a.y1 || 0);
@@ -7732,45 +7655,7 @@ function Perfil(_ref30) {
         }
       }, loc.city, loc.uf ? " \u2013 ".concat(loc.uf) : "", " \xB7 ", loc.y1, loc.y2 && loc.y2 !== loc.y1 ? "\u2013".concat(loc.y2) : "", " \xB7 ", placeLabel(loc.placeType)));
     })));
-  }(), /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#fff",
-      borderRadius: 18,
-      overflow: "hidden",
-      border: "1px solid ".concat(T.border),
-      marginBottom: 12
-    }
-  }, [["Município", "".concat(user.city, " \u2013 ").concat(user.state)], ["Local", user.place_name], ["Lugar", placeLabel(user.place_type)], ["Período", "".concat(user.year_start, " \u2013 ").concat(user.year_end)], (user.current_city || user.current_state) && ["Atualmente estou em", [user.current_city, user.current_state, user.current_country && user.current_country !== "Brasil" ? user.current_country : null].filter(Boolean).join(", ")]].filter(Boolean).map(function (_ref33, i, arr) {
-    var _ref34 = _slicedToArray(_ref33, 2),
-      l = _ref34[0],
-      v = _ref34[1];
-    return /*#__PURE__*/React.createElement("div", {
-      key: l,
-      style: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "12px 18px",
-        borderBottom: i < arr.length - 1 ? "1px solid ".concat(T.border) : "none"
-      }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 12,
-        color: T.muted,
-        fontWeight: 600,
-        textTransform: "uppercase",
-        letterSpacing: "0.08em"
-      }
-    }, l), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 13,
-        color: T.text,
-        fontWeight: 500,
-        textAlign: "right",
-        maxWidth: "60%"
-      }
-    }, v));
-  })), user.note && /*#__PURE__*/React.createElement("div", {
+  }(), user.note && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 18,
@@ -7778,34 +7663,42 @@ function Perfil(_ref30) {
       border: "1px solid ".concat(T.border),
       marginBottom: 12
     }
-  }, /*#__PURE__*/React.createElement(Lbl, null, "Mem\xF3ria"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Lbl, null, "Bio"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 14,
       color: T.sub,
       lineHeight: 1.6,
       fontStyle: "italic",
-      marginTop: 4
+      marginTop: 4,
+      fontFamily: "Georgia,serif"
     }
-  }, "\"", user.note, "\"")), (user.family_ref || user.how_iam) && /*#__PURE__*/React.createElement("div", {
+  }, "\"", user.note, "\"")), (user.current_city || user.current_state) && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 18,
-      overflow: "hidden",
+      padding: "14px 18px",
       border: "1px solid ".concat(T.border),
-      marginBottom: 12
+      marginBottom: 12,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between"
     }
-  }, user.family_ref && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", {
     style: {
-      padding: "12px 18px",
-      borderBottom: user.how_iam ? "1px solid ".concat(T.border) : "none"
+      fontSize: 11,
+      color: T.muted,
+      fontWeight: 600,
+      textTransform: "uppercase",
+      letterSpacing: "0.08em"
     }
-  }, /*#__PURE__*/React.createElement(Lbl, null, "Nomes na fam\xEDlia"), /*#__PURE__*/React.createElement("div", {
+  }, "Mora em"), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 14,
-      color: T.sub,
-      marginTop: 4
+      fontSize: 13,
+      color: T.text,
+      fontWeight: 500,
+      textAlign: "right"
     }
-  }, user.family_ref))), (((_user$interests = user.interests) === null || _user$interests === void 0 ? void 0 : _user$interests.length) > 0 || ((_user$curtia = user.curtia) === null || _user$curtia === void 0 ? void 0 : _user$curtia.length) > 0) && /*#__PURE__*/React.createElement("div", {
+  }, [user.current_city, user.current_state, user.current_country && user.current_country !== "Brasil" ? user.current_country : null].filter(Boolean).join(", "))), ((_user$interests = user.interests) === null || _user$interests === void 0 ? void 0 : _user$interests.length) > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 18,
@@ -7813,162 +7706,7 @@ function Perfil(_ref30) {
       border: "1px solid ".concat(T.border),
       marginBottom: 12
     }
-  }, ((_user$curtia2 = user.curtia) === null || _user$curtia2 === void 0 ? void 0 : _user$curtia2.length) > 0 && ((_user$interests2 = user.interests) === null || _user$interests2 === void 0 ? void 0 : _user$interests2.length) > 0 ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      fontWeight: 700,
-      color: T.text,
-      marginBottom: 14,
-      display: "flex",
-      alignItems: "center",
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("span", null, "Antes"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      flex: 1,
-      height: 1,
-      background: T.border
-    }
-  }), /*#__PURE__*/React.createElement("span", null, "Agora")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: 12
-    }
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      fontWeight: 700,
-      color: "#9575CD",
-      textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      marginBottom: 8
-    }
-  }, "Gostava de"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 5,
-      flexWrap: "wrap"
-    }
-  }, user.curtia.map(function (item, i) {
-    var _user$interests3;
-    var ainda = (_user$interests3 = user.interests) === null || _user$interests3 === void 0 ? void 0 : _user$interests3.includes(item);
-    return /*#__PURE__*/React.createElement("span", {
-      key: i,
-      style: {
-        padding: "4px 10px",
-        borderRadius: 20,
-        background: ainda ? "rgba(123,94,167,0.15)" : "rgba(123,94,167,0.06)",
-        color: ainda ? "#9575CD" : "#9B7DB7",
-        fontSize: 11,
-        fontWeight: 600,
-        border: "1px solid ".concat(ainda ? "#9575CD" : "rgba(123,94,167,0.2)"),
-        position: "relative"
-      }
-    }, item, ainda && /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 8,
-        marginLeft: 3
-      }
-    }, "\u2713"));
-  }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      fontWeight: 700,
-      color: T.accent,
-      textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      marginBottom: 8
-    }
-  }, "Gosto de"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 5,
-      flexWrap: "wrap"
-    }
-  }, user.interests.map(function (item, i) {
-    var _user$curtia3;
-    var novo = !((_user$curtia3 = user.curtia) !== null && _user$curtia3 !== void 0 && _user$curtia3.includes(item));
-    return /*#__PURE__*/React.createElement("span", {
-      key: i,
-      style: {
-        padding: "4px 10px",
-        borderRadius: 20,
-        background: novo ? T.accentBg : "rgba(193,126,58,0.06)",
-        color: novo ? T.accent : "#C9946A",
-        fontSize: 11,
-        fontWeight: 600,
-        border: "1px solid ".concat(novo ? T.accent : "rgba(193,126,58,0.2)")
-      }
-    }, item, novo && /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 8,
-        marginLeft: 3
-      }
-    }, "novo"));
-  })))), user.curtia.filter(function (i) {
-    var _user$interests4;
-    return (_user$interests4 = user.interests) === null || _user$interests4 === void 0 ? void 0 : _user$interests4.includes(i);
-  }).length > 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 12,
-      padding: "10px 12px",
-      background: "rgba(46,125,94,0.06)",
-      borderRadius: 10,
-      border: "1px solid rgba(46,125,94,0.15)"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      fontWeight: 700,
-      color: T.green,
-      marginBottom: 6
-    }
-  }, "Sempre curtiu"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 5,
-      flexWrap: "wrap"
-    }
-  }, user.curtia.filter(function (i) {
-    var _user$interests5;
-    return (_user$interests5 = user.interests) === null || _user$interests5 === void 0 ? void 0 : _user$interests5.includes(i);
-  }).map(function (item, i) {
-    return /*#__PURE__*/React.createElement("span", {
-      key: i,
-      style: {
-        padding: "4px 10px",
-        borderRadius: 20,
-        background: "rgba(46,125,94,0.1)",
-        color: T.green,
-        fontSize: 11,
-        fontWeight: 600
-      }
-    }, item);
-  })))) : /*#__PURE__*/React.createElement("div", null, ((_user$curtia4 = user.curtia) === null || _user$curtia4 === void 0 ? void 0 : _user$curtia4.length) > 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: ((_user$interests6 = user.interests) === null || _user$interests6 === void 0 ? void 0 : _user$interests6.length) > 0 ? 12 : 0
-    }
-  }, /*#__PURE__*/React.createElement(Lbl, null, "O que curtia"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 6,
-      flexWrap: "wrap",
-      marginTop: 8
-    }
-  }, user.curtia.map(function (item, i) {
-    return /*#__PURE__*/React.createElement("span", {
-      key: i,
-      style: {
-        padding: "5px 12px",
-        borderRadius: 20,
-        background: "rgba(123,94,167,0.1)",
-        color: "#9575CD",
-        fontSize: 12,
-        fontWeight: 600
-      }
-    }, item);
-  }))), ((_user$interests7 = user.interests) === null || _user$interests7 === void 0 ? void 0 : _user$interests7.length) > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "Do que mais gosta hoje?"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Lbl, null, "Interesses"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 6,
@@ -7987,7 +7725,7 @@ function Perfil(_ref30) {
         fontWeight: 600
       }
     }, item);
-  }))))), /*#__PURE__*/React.createElement("div", {
+  }))), /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 18,
@@ -8059,8 +7797,8 @@ function Perfil(_ref30) {
       scrollSnapType: "x mandatory"
     }
   }, user.photos.map(function (src, i) {
-    var _user$lugares4;
-    var lugar = ((_user$lugares4 = user.lugares) === null || _user$lugares4 === void 0 || (_user$lugares4 = _user$lugares4[0]) === null || _user$lugares4 === void 0 ? void 0 : _user$lugares4.placeName) || user.place_name || "";
+    var _user$lugares3;
+    var lugar = ((_user$lugares3 = user.lugares) === null || _user$lugares3 === void 0 || (_user$lugares3 = _user$lugares3[0]) === null || _user$lugares3 === void 0 ? void 0 : _user$lugares3.placeName) || user.place_name || "";
     var periodo = user.year_start ? "".concat(user.year_start, "\u2013").concat(user.year_end || "") : "";
     return /*#__PURE__*/React.createElement("div", {
       key: i,
@@ -8172,7 +7910,7 @@ function Perfil(_ref30) {
       return setFotoExpandida(null);
     },
     user: user,
-    lugar: ((_user$lugares5 = user.lugares) === null || _user$lugares5 === void 0 || (_user$lugares5 = _user$lugares5[0]) === null || _user$lugares5 === void 0 ? void 0 : _user$lugares5.placeName) || user.place_name || "",
+    lugar: ((_user$lugares4 = user.lugares) === null || _user$lugares4 === void 0 || (_user$lugares4 = _user$lugares4[0]) === null || _user$lugares4 === void 0 ? void 0 : _user$lugares4.placeName) || user.place_name || "",
     data: user.year_start ? "".concat(user.year_start, "\u2013").concat(user.year_end || "") : "",
     onRemove: fotoExpandida.index !== undefined ? /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18() {
       var idx, novas, _t13;
@@ -8316,13 +8054,13 @@ function Perfil(_ref30) {
 }
 
 // ── Modal: Foto Fullscreen com interações ────────────────────
-function ModalFoto(_ref36) {
-  var src = _ref36.src,
-    onClose = _ref36.onClose,
-    onRemove = _ref36.onRemove,
-    user = _ref36.user,
-    lugar = _ref36.lugar,
-    data = _ref36.data;
+function ModalFoto(_ref33) {
+  var src = _ref33.src,
+    onClose = _ref33.onClose,
+    onRemove = _ref33.onRemove,
+    user = _ref33.user,
+    lugar = _ref33.lugar,
+    data = _ref33.data;
   if (!src) return null;
   var _useLike = useLike(user === null || user === void 0 ? void 0 : user.id, "foto", src),
     liked = _useLike.liked,
@@ -8662,9 +8400,9 @@ function ModalFoto(_ref36) {
 }
 
 // ── Foto com curtida e comentário ────────────────────────────
-function FotoInterativa(_ref37) {
-  var src = _ref37.src,
-    user = _ref37.user;
+function FotoInterativa(_ref34) {
+  var src = _ref34.src,
+    user = _ref34.user;
   var _useLike2 = useLike(user === null || user === void 0 ? void 0 : user.id, "foto", src),
     liked = _useLike2.liked,
     likes = _useLike2.count,
@@ -8855,14 +8593,14 @@ function FotoInterativa(_ref37) {
 }
 
 // ── Modal: Ver Perfil ─────────────────────────────────────────
-function ModalPerfil(_ref38) {
+function ModalPerfil(_ref35) {
   var _p$photos, _p$photos2, _p$photos3;
-  var p = _ref38.p,
-    onClose = _ref38.onClose,
-    onAdd = _ref38.onAdd,
-    onChat = _ref38.onChat,
-    user = _ref38.user,
-    isContact = _ref38.isContact;
+  var p = _ref35.p,
+    onClose = _ref35.onClose,
+    onAdd = _ref35.onAdd,
+    onChat = _ref35.onChat,
+    user = _ref35.user,
+    isContact = _ref35.isContact;
   var _useState119 = useState({
       lugares: 0,
       seguindo: 0,
@@ -9277,14 +9015,14 @@ function ModalPerfil(_ref38) {
 }
 
 // ── Modal: Chat ───────────────────────────────────────────────
-function ModalChat(_ref40) {
-  var user = _ref40.user,
-    dest = _ref40.dest,
-    _ref40$type = _ref40.type,
-    type = _ref40$type === void 0 ? "msg" : _ref40$type,
-    msgs = _ref40.msgs,
-    onSend = _ref40.onSend,
-    onClose = _ref40.onClose;
+function ModalChat(_ref37) {
+  var user = _ref37.user,
+    dest = _ref37.dest,
+    _ref37$type = _ref37.type,
+    type = _ref37$type === void 0 ? "msg" : _ref37$type,
+    msgs = _ref37.msgs,
+    onSend = _ref37.onSend,
+    onClose = _ref37.onClose;
   var _useState121 = useState(""),
     _useState122 = _slicedToArray(_useState121, 2),
     txt = _useState122[0],
@@ -9321,8 +9059,8 @@ function ModalChat(_ref40) {
   useEffect(function () {
     dbRead.from("messages").select("*").eq("conv_id", cid).order("created_at", {
       ascending: true
-    }).limit(100).then(function (_ref41) {
-      var data = _ref41.data;
+    }).limit(100).then(function (_ref38) {
+      var data = _ref38.data;
       if (data) setDbMsgs(data);
     })["catch"](function () {});
   }, [cid]);
@@ -9814,7 +9552,7 @@ function ModalChat(_ref40) {
     type: "file",
     accept: "image/*,video/*",
     onChange: (/*#__PURE__*/function () {
-      var _ref42 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22(e) {
+      var _ref39 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22(e) {
         var file, t, b64;
         return _regenerator().w(function (_context22) {
           while (1) switch (_context22.n) {
@@ -9840,7 +9578,7 @@ function ModalChat(_ref40) {
         }, _callee22);
       }));
       return function (_x26) {
-        return _ref42.apply(this, arguments);
+        return _ref39.apply(this, arguments);
       };
     }()),
     style: {
@@ -9935,14 +9673,14 @@ function ModalChat(_ref40) {
 }
 
 // ── Componente: Adicionar Outros ─────────────────────────────
-function AddOutro(_ref43) {
-  var placeholder = _ref43.placeholder,
-    onAdd = _ref43.onAdd,
-    onRemove = _ref43.onRemove,
-    _ref43$extras = _ref43.extras,
-    extras = _ref43$extras === void 0 ? [] : _ref43$extras,
-    color = _ref43.color,
-    bgColor = _ref43.bgColor;
+function AddOutro(_ref40) {
+  var placeholder = _ref40.placeholder,
+    onAdd = _ref40.onAdd,
+    onRemove = _ref40.onRemove,
+    _ref40$extras = _ref40.extras,
+    extras = _ref40$extras === void 0 ? [] : _ref40$extras,
+    color = _ref40.color,
+    bgColor = _ref40.bgColor;
   var _useState135 = useState(""),
     _useState136 = _slicedToArray(_useState135, 2),
     val = _useState136[0],
@@ -10033,10 +9771,10 @@ function AddOutro(_ref43) {
 }
 
 // ── Helpers layout ────────────────────────────────────────────
-function STitle(_ref44) {
-  var children = _ref44.children,
-    _ref44$style = _ref44.style,
-    style = _ref44$style === void 0 ? {} : _ref44$style;
+function STitle(_ref41) {
+  var children = _ref41.children,
+    _ref41$style = _ref41.style,
+    style = _ref41$style === void 0 ? {} : _ref41$style;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       paddingTop: 24,
@@ -10053,9 +9791,9 @@ function STitle(_ref44) {
     }, style)
   }, children));
 }
-function FRow(_ref45) {
-  var label = _ref45.label,
-    children = _ref45.children;
+function FRow(_ref42) {
+  var label = _ref42.label,
+    children = _ref42.children;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "14px 0",
@@ -10149,10 +9887,10 @@ function useRegionAlerts(user) {
 }
 
 // ── Componente: Banner de Alerta ──────────────────────────────
-function AlertaBanner(_ref46) {
-  var alerts = _ref46.alerts,
-    onDismiss = _ref46.onDismiss,
-    onView = _ref46.onView;
+function AlertaBanner(_ref43) {
+  var alerts = _ref43.alerts,
+    onDismiss = _ref43.onDismiss,
+    onView = _ref43.onView;
   if (!alerts || alerts.length === 0) return null;
   var first = alerts[0];
   var others = alerts.length - 1;
@@ -10257,10 +9995,10 @@ function AlertaBanner(_ref46) {
 }
 
 // ── Modal: Adicionar Lugar ────────────────────────────────────
-function ModalAdicionarLugar(_ref47) {
-  var user = _ref47.user,
-    onClose = _ref47.onClose,
-    onSave = _ref47.onSave;
+function ModalAdicionarLugar(_ref44) {
+  var user = _ref44.user,
+    onClose = _ref44.onClose,
+    onSave = _ref44.onSave;
   var temaCor = getTema(user).main;
   var temaBg = getTema(user).bg;
   var _useState141 = useState({
@@ -10845,12 +10583,12 @@ function ModalAdicionarLugar(_ref47) {
 }
 
 // ── Modal: Menu Rápido (+) ────────────────────────────────────
-function MenuRapido(_ref48) {
-  var onClose = _ref48.onClose,
-    onNovoLugar = _ref48.onNovoLugar,
-    onMomento = _ref48.onMomento,
-    onAgendaVisita = _ref48.onAgendaVisita,
-    user = _ref48.user;
+function MenuRapido(_ref45) {
+  var onClose = _ref45.onClose,
+    onNovoLugar = _ref45.onNovoLugar,
+    onMomento = _ref45.onMomento,
+    onAgendaVisita = _ref45.onAgendaVisita,
+    user = _ref45.user;
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
@@ -11073,11 +10811,11 @@ function MenuRapido(_ref48) {
 }
 
 // ── Modal: Registrar Momento ──────────────────────────────────
-function ModalMomento(_ref49) {
-  var user = _ref49.user,
-    onClose = _ref49.onClose,
-    onSave = _ref49.onSave,
-    onUpdateUser = _ref49.onUpdateUser;
+function ModalMomento(_ref46) {
+  var user = _ref46.user,
+    onClose = _ref46.onClose,
+    onSave = _ref46.onSave,
+    onUpdateUser = _ref46.onUpdateUser;
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
@@ -11539,9 +11277,9 @@ function ModalMomento(_ref49) {
 }
 
 // ── Tela de Login / Auth ──────────────────────────────────────
-function TelaLogin(_ref50) {
-  var onClose = _ref50.onClose,
-    onLoggedIn = _ref50.onLoggedIn;
+function TelaLogin(_ref47) {
+  var onClose = _ref47.onClose,
+    onLoggedIn = _ref47.onLoggedIn;
   var _useState163 = useState("opcoes"),
     _useState164 = _slicedToArray(_useState163, 2),
     modo = _useState164[0],
@@ -12047,11 +11785,11 @@ function useRegionNotifications(user, contacts) {
 }
 
 // ── Banner de Notificação ─────────────────────────────────────
-function BannerNotificacao(_ref51) {
+function BannerNotificacao(_ref48) {
   var _notif$profile;
-  var notif = _ref51.notif,
-    onDismiss = _ref51.onDismiss,
-    onView = _ref51.onView;
+  var notif = _ref48.notif,
+    onDismiss = _ref48.onDismiss,
+    onView = _ref48.onView;
   if (!notif) return null;
   var isAniv = notif.type === "aniversario";
   return /*#__PURE__*/React.createElement("div", {
@@ -12140,9 +11878,9 @@ function BannerNotificacao(_ref51) {
 }
 
 // ── Cadastro Simples (3 passos) ──────────────────────────────
-function CadastroSimples(_ref52) {
-  var onDone = _ref52.onDone,
-    onLogin = _ref52.onLogin;
+function CadastroSimples(_ref49) {
+  var onDone = _ref49.onDone,
+    onLogin = _ref49.onLogin;
   var _useState175 = useState(false),
     _useState176 = _slicedToArray(_useState175, 2),
     saving = _useState176[0],
@@ -12611,11 +12349,11 @@ function CadastroSimples(_ref52) {
 // ── Tela de Curiosidade (antes do cadastro) ───────────────────
 
 // ── Memória do Dia (Stories 24h) ─────────────────────────────
-function MemoriaDoDia(_ref54) {
+function MemoriaDoDia(_ref51) {
   var _user$name2;
-  var user = _ref54.user,
-    contacts = _ref54.contacts,
-    onView = _ref54.onView;
+  var user = _ref51.user,
+    contacts = _ref51.contacts,
+    onView = _ref51.onView;
   var _useState181 = useState([]),
     _useState182 = _slicedToArray(_useState181, 2),
     memorias = _useState182[0],
@@ -12772,8 +12510,8 @@ function MemoriaDoDia(_ref54) {
 }
 
 // ── Quem Passou Por Aqui ──────────────────────────────────────
-function QuemPassouPorAqui(_ref55) {
-  var user = _ref55.user;
+function QuemPassouPorAqui(_ref52) {
+  var user = _ref52.user;
   var _useState183 = useState(0),
     _useState184 = _slicedToArray(_useState183, 2),
     count = _useState184[0],
@@ -12785,8 +12523,8 @@ function QuemPassouPorAqui(_ref55) {
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.city) && !(user !== null && user !== void 0 && user.state)) return;
     var filtro = user.city ? "city.ilike.%".concat(user.city, "%") : "state.eq.".concat(user.state);
-    dbRead.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref56) {
-      var data = _ref56.data;
+    dbRead.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref53) {
+      var data = _ref53.data;
       setCount((data === null || data === void 0 ? void 0 : data.length) || 0);
       setExemplos((data === null || data === void 0 ? void 0 : data.slice(0, 4)) || []);
     })["catch"](function () {});
@@ -12872,9 +12610,9 @@ function QuemPassouPorAqui(_ref55) {
 }
 
 // ── Pergunta da Comunidade ────────────────────────────────────
-function PerguntaComunidade(_ref57) {
-  var _user$intencao7, _user$intencao8, _user$intencao9, _user$intencao0;
-  var user = _ref57.user;
+function PerguntaComunidade(_ref54) {
+  var _user$intencao6, _user$intencao7, _user$intencao8, _user$intencao9;
+  var user = _ref54.user;
   var _useState187 = useState(""),
     _useState188 = _slicedToArray(_useState187, 2),
     resposta = _useState188[0],
@@ -12893,7 +12631,7 @@ function PerguntaComunidade(_ref57) {
     setTotalRespostas = _useState194[1];
 
   // Perguntas inteligentes baseadas no perfil + intenção
-  var perguntas = [(user === null || user === void 0 ? void 0 : user.city) && "Quem lembra de algum ponto de encontro famoso em ".concat(user.city, "?"), (user === null || user === void 0 ? void 0 : user.place_name) && "Quem tem fotos antigas d".concat(user.place_type === "escola" ? "a" : "o", " ").concat(user.place_name, "?"), (user === null || user === void 0 || (_user$intencao7 = user.intencao) === null || _user$intencao7 === void 0 ? void 0 : _user$intencao7.includes("reencontrar")) && (user === null || user === void 0 ? void 0 : user.city) && "Quem mais quer se reencontrar com pessoas de ".concat(user.city, "?"), (user === null || user === void 0 || (_user$intencao8 = user.intencao) === null || _user$intencao8 === void 0 ? void 0 : _user$intencao8.includes("relembrar")) && "Qual foi o momento mais marcante do lugar onde você cresceu?", (user === null || user === void 0 || (_user$intencao9 = user.intencao) === null || _user$intencao9 === void 0 ? void 0 : _user$intencao9.includes("visitar")) && (user === null || user === void 0 ? void 0 : user.city) && "Tem fotos recentes de ".concat(user.city, " para compartilhar?"), (user === null || user === void 0 || (_user$intencao0 = user.intencao) === null || _user$intencao0 === void 0 ? void 0 : _user$intencao0.includes("reconectar")) && "Quem ainda mantém contato com pessoas do mesmo lugar?", (user === null || user === void 0 ? void 0 : user.city) && "Tem algu\xE9m de ".concat(user.city, " morando fora do Brasil?"), (user === null || user === void 0 ? void 0 : user.last_name) && "Tem mais algu\xE9m da fam\xEDlia ".concat(user.last_name, " aqui no Tempnext?")].filter(Boolean);
+  var perguntas = [(user === null || user === void 0 ? void 0 : user.city) && "Quem lembra de algum ponto de encontro famoso em ".concat(user.city, "?"), (user === null || user === void 0 ? void 0 : user.place_name) && "Quem tem fotos antigas d".concat(user.place_type === "escola" ? "a" : "o", " ").concat(user.place_name, "?"), (user === null || user === void 0 || (_user$intencao6 = user.intencao) === null || _user$intencao6 === void 0 ? void 0 : _user$intencao6.includes("reencontrar")) && (user === null || user === void 0 ? void 0 : user.city) && "Quem mais quer se reencontrar com pessoas de ".concat(user.city, "?"), (user === null || user === void 0 || (_user$intencao7 = user.intencao) === null || _user$intencao7 === void 0 ? void 0 : _user$intencao7.includes("relembrar")) && "Qual foi o momento mais marcante do lugar onde você cresceu?", (user === null || user === void 0 || (_user$intencao8 = user.intencao) === null || _user$intencao8 === void 0 ? void 0 : _user$intencao8.includes("visitar")) && (user === null || user === void 0 ? void 0 : user.city) && "Tem fotos recentes de ".concat(user.city, " para compartilhar?"), (user === null || user === void 0 || (_user$intencao9 = user.intencao) === null || _user$intencao9 === void 0 ? void 0 : _user$intencao9.includes("reconectar")) && "Quem ainda mantém contato com pessoas do mesmo lugar?", (user === null || user === void 0 ? void 0 : user.city) && "Tem algu\xE9m de ".concat(user.city, " morando fora do Brasil?"), (user === null || user === void 0 ? void 0 : user.last_name) && "Tem mais algu\xE9m da fam\xEDlia ".concat(user.last_name, " aqui no Tempnext?")].filter(Boolean);
   var pergunta = perguntas[new Date().getDate() % perguntas.length];
 
   // Load response count from Supabase
@@ -12901,8 +12639,8 @@ function PerguntaComunidade(_ref57) {
     if (!pergunta) return;
     db.from("momentos").select("id", {
       count: "exact"
-    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref58) {
-      var count = _ref58.count;
+    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref55) {
+      var count = _ref55.count;
       return setTotalRespostas(count || 0);
     })["catch"](function () {});
   }, [pergunta]);
@@ -13045,9 +12783,9 @@ function PerguntaComunidade(_ref57) {
 }
 
 // ── Agenda de Visita (Futuro) ─────────────────────────────────
-function AgendaVisita(_ref59) {
-  var user = _ref59.user,
-    onSave = _ref59.onSave;
+function AgendaVisita(_ref56) {
+  var user = _ref56.user,
+    onSave = _ref56.onSave;
   var _useState195 = useState({
       data: "",
       hora: "",
@@ -13554,10 +13292,10 @@ function AgendaVisita(_ref59) {
 }
 
 // ── Alerta de Região ──────────────────────────────────────────
-function AlertaRegiao(_ref60) {
-  var cidade = _ref60.cidade,
-    estado = _ref60.estado,
-    user = _ref60.user;
+function AlertaRegiao(_ref57) {
+  var cidade = _ref57.cidade,
+    estado = _ref57.estado,
+    user = _ref57.user;
   var _useState201 = useState(0),
     _useState202 = _slicedToArray(_useState201, 2),
     count = _useState202[0],
@@ -13569,8 +13307,8 @@ function AlertaRegiao(_ref60) {
   useEffect(function () {
     if (!cidade && !estado) return;
     // Busca agendas de visita para essa região
-    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref61) {
-      var data = _ref61.data;
+    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref58) {
+      var data = _ref58.data;
       var filtrados = (data || []).filter(function (m) {
         try {
           var _meta$cidade;
@@ -13667,14 +13405,14 @@ function useSeguirLugar(placeId, userId) {
     // Busca total de seguidores deste lugar
     dbRead.from("followed_places").select("id", {
       count: "exact"
-    }).eq("place_id", placeId).then(function (_ref62) {
-      var count = _ref62.count;
+    }).eq("place_id", placeId).then(function (_ref59) {
+      var count = _ref59.count;
       return setTotalSeguidores(count || 0);
     })["catch"](function () {});
     // Verifica se o user segue
     if (!userId) return;
-    dbRead.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref63) {
-      var data = _ref63.data;
+    dbRead.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref60) {
+      var data = _ref60.data;
       return setSeguindo(!!data);
     })["catch"](function () {});
   }, [placeId, userId]);
@@ -13744,9 +13482,9 @@ function useSeguirLugar(placeId, userId) {
 }
 
 // ── Cápsulas do User (carregadas do banco) ───────────────────
-function CapsulasUser(_ref64) {
-  var user = _ref64.user,
-    onOpenAgenda = _ref64.onOpenAgenda;
+function CapsulasUser(_ref61) {
+  var user = _ref61.user,
+    onOpenAgenda = _ref61.onOpenAgenda;
   var _useState211 = useState([]),
     _useState212 = _slicedToArray(_useState211, 2),
     capsulas = _useState212[0],
@@ -13756,8 +13494,8 @@ function CapsulasUser(_ref64) {
     // Busca momentos marcados como cápsula do user
     dbRead.from("momentos").select("*").eq("user_id", user.id).eq("tipo", "capsula").order("ts", {
       ascending: false
-    }).limit(20).then(function (_ref65) {
-      var data = _ref65.data;
+    }).limit(20).then(function (_ref62) {
+      var data = _ref62.data;
       if (data) setCapsulas(data);else {
         // Fallback: localStorage
         try {
@@ -13862,10 +13600,10 @@ function CapsulasUser(_ref64) {
 }
 
 // ── Cápsula no Perfil (individual) ───────────────────────────
-function CapsulaPerfil(_ref66) {
-  var capsula = _ref66.capsula,
-    index = _ref66.index,
-    userId = _ref66.userId;
+function CapsulaPerfil(_ref63) {
+  var capsula = _ref63.capsula,
+    index = _ref63.index,
+    userId = _ref63.userId;
   var _useState213 = useState(false),
     _useState214 = _slicedToArray(_useState213, 2),
     editando = _useState214[0],
@@ -14042,12 +13780,12 @@ function CapsulaPerfil(_ref66) {
 }
 
 // ── Perfil do Lugar ───────────────────────────────────────────
-function PerfilLugar(_ref67) {
-  var lugar = _ref67.lugar,
-    lugarId = _ref67.lugarId,
-    user = _ref67.user,
-    onBack = _ref67.onBack,
-    onView = _ref67.onView;
+function PerfilLugar(_ref64) {
+  var lugar = _ref64.lugar,
+    lugarId = _ref64.lugarId,
+    user = _ref64.user,
+    onBack = _ref64.onBack,
+    onView = _ref64.onView;
   var _useState217 = useState(null),
     _useState218 = _slicedToArray(_useState217, 2),
     place = _useState218[0],
@@ -14085,8 +13823,8 @@ function PerfilLugar(_ref67) {
     }
     if (!lugar) return;
     // Busca place pelo nome
-    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref68) {
-      var data = _ref68.data;
+    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref65) {
+      var data = _ref65.data;
       if (data) {
         setPlace(data);
         setResolvedId(data.id);
@@ -14101,7 +13839,7 @@ function PerfilLugar(_ref67) {
     if (!resolvedId) return;
     setLoading(true);
     var buscarDados = /*#__PURE__*/function () {
-      var _ref69 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee37() {
+      var _ref66 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee37() {
         var _yield$dbRead$from$se, p, _yield$dbRead$from$se2, pp, vinculados, lugarNome, _yield$dbRead$from$se3, m, _yield$dbRead$from$se4, a;
         return _regenerator().w(function (_context37) {
           while (1) switch (_context37.n) {
@@ -14162,7 +13900,7 @@ function PerfilLugar(_ref67) {
         }, _callee37);
       }));
       return function buscarDados() {
-        return _ref69.apply(this, arguments);
+        return _ref66.apply(this, arguments);
       };
     }();
     buscarDados()["catch"](function () {
@@ -14673,10 +14411,10 @@ function PerfilLugar(_ref67) {
 }
 
 // ── Painel Pessoal ───────────────────────────────────────────
-function PainelPessoal(_ref70) {
+function PainelPessoal(_ref67) {
   var _momentoTop$fotos, _momentoTop$texto;
-  var user = _ref70.user,
-    onBack = _ref70.onBack;
+  var user = _ref67.user,
+    onBack = _ref67.onBack;
   var _useState231 = useState({
       fotos: 0,
       momentos: 0,
@@ -14711,11 +14449,11 @@ function PainelPessoal(_ref70) {
     pessoasLugar = _useState244[0],
     setPessoasLugar = _useState244[1];
   useEffect(function () {
-    var _user$photos3, _user$lugares6, _user$lugares7, _user$photos4;
+    var _user$photos3, _user$lugares5, _user$lugares6, _user$photos4;
     if (!(user !== null && user !== void 0 && user.id)) return;
     // Stats básicos
     var nFotos = ((_user$photos3 = user.photos) === null || _user$photos3 === void 0 ? void 0 : _user$photos3.length) || 0;
-    var nLugares = ((_user$lugares6 = user.lugares) === null || _user$lugares6 === void 0 ? void 0 : _user$lugares6.length) || 1;
+    var nLugares = ((_user$lugares5 = user.lugares) === null || _user$lugares5 === void 0 ? void 0 : _user$lugares5.length) || 1;
     setStats(function (s) {
       return _objectSpread(_objectSpread({}, s), {}, {
         fotos: nFotos,
@@ -14726,8 +14464,8 @@ function PainelPessoal(_ref70) {
     // Busca momentos do usuário
     dbRead.from("momentos").select("*").eq("user_id", user.id).order("ts", {
       ascending: false
-    }).limit(20).then(function (_ref71) {
-      var data = _ref71.data;
+    }).limit(20).then(function (_ref68) {
+      var data = _ref68.data;
       if (data) {
         setStats(function (s) {
           return _objectSpread(_objectSpread({}, s), {}, {
@@ -14739,8 +14477,8 @@ function PainelPessoal(_ref70) {
     })["catch"](function () {});
 
     // Busca contatos
-    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref72) {
-      var data = _ref72.data;
+    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref69) {
+      var data = _ref69.data;
       if (data) setStats(function (s) {
         return _objectSpread(_objectSpread({}, s), {}, {
           conexoes: data.length
@@ -14753,14 +14491,14 @@ function PainelPessoal(_ref70) {
       dbRead.from("profiles").select("id", {
         count: "exact",
         head: true
-      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref73) {
-        var count = _ref73.count;
+      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref70) {
+        var count = _ref70.count;
         setNascRegiao(count || 0);
       })["catch"](function () {});
     }
 
     // Lugar mais relevante (primeiro lugar do perfil)
-    var primeiroLugar = (_user$lugares7 = user.lugares) === null || _user$lugares7 === void 0 ? void 0 : _user$lugares7[0];
+    var primeiroLugar = (_user$lugares6 = user.lugares) === null || _user$lugares6 === void 0 ? void 0 : _user$lugares6[0];
     if (primeiroLugar) {
       var nomeLugar = primeiroLugar.placeName || primeiroLugar.place_name || user.place_name || "";
       var cidadeLugar = primeiroLugar.city || user.city || "";
@@ -14774,8 +14512,8 @@ function PainelPessoal(_ref70) {
 
       // Busca pessoas que também viveram nesse lugar
       if (cidadeLugar) {
-        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref74) {
-          var data = _ref74.data;
+        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref71) {
+          var data = _ref71.data;
           if (data) setPessoasLugar(data);
         })["catch"](function () {});
       }
@@ -15717,7 +15455,7 @@ function App() {
     }
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
-        var _ref76 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee39(event, session) {
+        var _ref73 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee39(event, session) {
           var _yield$dbRead$from$se6, data, localU, s, updated, _s, _t37, _t38;
           return _regenerator().w(function (_context39) {
             while (1) switch (_context39.p = _context39.n) {
@@ -15803,7 +15541,7 @@ function App() {
           }, _callee39, null, [[4, 6], [1, 8]]);
         }));
         return function (_x29, _x30) {
-          return _ref76.apply(this, arguments);
+          return _ref73.apply(this, arguments);
         };
       }()),
       subscription = _db$auth$onAuthStateC.data.subscription;
@@ -16065,8 +15803,8 @@ function App() {
         family_ref: p.family_ref || null,
         how_iam: p.how_iam || null
       };
-      db.from("profiles").upsert(safe).then(function (_ref78) {
-        var error = _ref78.error;
+      db.from("profiles").upsert(safe).then(function (_ref75) {
+        var error = _ref75.error;
         if (error) console.log("Erro ao sincronizar perfil:", error.message);
       })["catch"](function () {});
     }
@@ -16092,10 +15830,10 @@ function App() {
       return c.id === p.id;
     });
   };
-  var unreadCount = Object.entries(msgs).filter(function (_ref79) {
-    var _ref80 = _slicedToArray(_ref79, 2),
-      id = _ref80[0],
-      ms = _ref80[1];
+  var unreadCount = Object.entries(msgs).filter(function (_ref76) {
+    var _ref77 = _slicedToArray(_ref76, 2),
+      id = _ref77[0],
+      ms = _ref77[1];
     return user && id.split("_").includes(String(user.id)) && ms.some(function (m) {
       return m.from !== user.id;
     });
