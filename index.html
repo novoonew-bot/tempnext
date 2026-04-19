@@ -897,11 +897,7 @@ function Logo(_ref) {
     size = _ref$size === void 0 ? "sm" : _ref$size;
   var lg = size === "lg",
     fs = lg ? 42 : 22;
-  var W = lg ? 96 : 52,
-    H = lg ? 16 : 9;
-  var pad = lg ? 8 : 4;
-  var boxH = lg ? 68 : 38,
-    boxPad = lg ? "10px 18px" : "6px 12px";
+  var boxPad = lg ? "10px 18px" : "6px 12px";
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
@@ -914,53 +910,27 @@ function Logo(_ref) {
       flexDirection: "column",
       alignItems: "flex-start",
       background: "#FFFFFF",
-      border: "2px solid ".concat(T.borderMd),
-      borderRadius: lg ? 14 : 8,
+      borderRadius: lg ? 12 : 7,
       padding: boxPad,
-      boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-      position: "relative"
+      boxShadow: "0 1px 6px rgba(0,0,0,0.06)"
     }
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: W,
-    height: H,
-    viewBox: "0 0 ".concat(W, " ").concat(H),
-    style: {
-      marginBottom: lg ? 2 : 1,
-      display: "block"
-    }
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M ".concat(pad, " ").concat(H - 1, " Q ").concat(W * 0.27, " 0 ").concat(W * 0.5, " ").concat(H * 0.55),
-    fill: "none",
-    stroke: T.blue,
-    strokeWidth: lg ? 2.5 : 1.8,
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M ".concat(W * 0.5, " ").concat(H * 0.55, " Q ").concat(W * 0.73, " ").concat(H, " ").concat(W - pad, " ").concat(H * 0.15),
-    fill: "none",
-    stroke: T.blue,
-    strokeWidth: lg ? 2.5 : 1.8,
-    strokeLinecap: "round"
-  })), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: fs,
-      fontWeight: 800,
-      letterSpacing: lg ? "-2px" : "-1px",
+      fontWeight: 700,
+      letterSpacing: lg ? "-1px" : "-0.5px",
       lineHeight: 1,
       fontFamily: "Georgia,serif"
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      color: T.blue
-    }
-  }, "T"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: T.text
-    }
-  }, "emp"), /*#__PURE__*/React.createElement("span", {
-    style: {
       color: T.accent
     }
-  }, "next")), lg && /*#__PURE__*/React.createElement("div", {
+  }, "Temp"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: T.blueStrong
+    }
+  }, "nexT")), lg && /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 10,
       fontWeight: 700,
@@ -977,29 +947,37 @@ function LogoNova(_ref2) {
   var _ref2$size = _ref2.size,
     size = _ref2$size === void 0 ? 120 : _ref2$size;
   var fs = size * 0.22;
+  var padV = Math.round(size * 0.05);
+  var padH = Math.round(size * 0.09);
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: "inline-block"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
+      display: "inline-block",
+      background: "#FFFFFF",
+      borderRadius: Math.round(size * 0.07),
+      padding: "".concat(padV, "px ").concat(padH, "px"),
+      boxShadow: "0 1px 6px rgba(0,0,0,0.06)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
       fontSize: fs,
-      fontWeight: 300,
+      fontWeight: 700,
       letterSpacing: "-0.5px",
       lineHeight: 1,
       fontFamily: "Georgia,serif"
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      color: T.accent,
-      fontWeight: 700
+      color: T.accent
     }
   }, "Temp"), /*#__PURE__*/React.createElement("span", {
     style: {
-      color: T.blueStrong,
-      fontWeight: 700
+      color: T.blueStrong
     }
-  }, "next")));
+  }, "nexT"))));
 }
 
 // ── Base UI ───────────────────────────────────────────────────
