@@ -1930,12 +1930,14 @@ function MomentosFeed(_ref14) {
     });
   }, []);
   if (loading || momentos.length === 0) return null;
-  function renderCard(m, i, tamanho) {
+  function renderCard(m, i) {
     var _m$fotos;
     var temFoto = ((_m$fotos = m.fotos) === null || _m$fotos === void 0 ? void 0 : _m$fotos.length) > 0;
     var afinidade = calcularAfinidade(m, user);
     var destaque = afinidade >= 50;
-    var tam = tamanho || 118;
+    var W = 160;
+    var H = 200; // aspect 4/5
+
     return /*#__PURE__*/React.createElement("div", {
       key: m.id || i,
       onClick: function onClick() {
@@ -1944,18 +1946,18 @@ function MomentosFeed(_ref14) {
       style: {
         flexShrink: 0,
         cursor: "pointer",
-        width: tam
+        width: W
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        width: tam,
-        height: tam,
-        borderRadius: 12,
+        width: W,
+        height: H,
+        borderRadius: 14,
         overflow: "hidden",
         position: "relative",
         background: temFoto ? "#000" : T.faint,
         border: destaque ? "1.5px solid ".concat(T.accent) : "none",
-        boxShadow: destaque ? "0 2px 8px rgba(193,126,58,0.15)" : "0 1px 4px rgba(0,0,0,0.04)"
+        boxShadow: destaque ? "0 2px 10px rgba(193,126,58,0.15)" : "0 1px 5px rgba(0,0,0,0.05)"
       }
     }, temFoto ? /*#__PURE__*/React.createElement("img", {
       src: m.fotos[0],
@@ -1973,35 +1975,36 @@ function MomentosFeed(_ref14) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: 10,
+        padding: 18,
         fontFamily: "Georgia,serif",
-        fontSize: 11,
+        fontSize: 13,
         color: T.muted,
         fontStyle: "italic",
         textAlign: "center",
-        lineHeight: 1.4
+        lineHeight: 1.45
       }
-    }, m.texto ? "\"".concat(m.texto.length > 55 ? m.texto.slice(0, 55) + "…" : m.texto, "\"") : "momento"), destaque && /*#__PURE__*/React.createElement("div", {
+    }, m.texto ? "\"".concat(m.texto.length > 100 ? m.texto.slice(0, 100) + "…" : m.texto, "\"") : "momento"), destaque && /*#__PURE__*/React.createElement("div", {
       style: {
         position: "absolute",
-        top: 5,
-        left: 5,
+        top: 7,
+        left: 7,
         background: "rgba(193,126,58,0.95)",
-        padding: "2px 6px",
+        padding: "3px 9px",
         borderRadius: 6,
-        fontSize: 7,
+        fontSize: 9,
         color: "#fff",
         fontWeight: 700,
-        letterSpacing: "0.05em",
+        letterSpacing: "0.12em",
         textTransform: "uppercase"
       }
-    }, "cruzou")), m.lugar && /*#__PURE__*/React.createElement("div", {
+    }, "next")), m.lugar && /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 10,
+        fontFamily: "Georgia,serif",
+        fontSize: 12,
         color: T.text,
-        fontWeight: 600,
-        marginTop: 5,
-        maxWidth: tam,
+        fontStyle: "italic",
+        marginTop: 6,
+        maxWidth: W,
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis"
@@ -2019,7 +2022,7 @@ function MomentosFeed(_ref14) {
       color: T.muted,
       letterSpacing: "0.14em",
       textTransform: "uppercase",
-      margin: "0 4px 12px",
+      margin: "0 4px 14px",
       display: "flex",
       alignItems: "center",
       gap: 8
@@ -2033,24 +2036,13 @@ function MomentosFeed(_ref14) {
   }), "Momentos que marcam"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
-      gap: 10,
+      gap: 12,
       overflowX: "auto",
       paddingBottom: 6,
       WebkitOverflowScrolling: "touch"
     }
-  }, momentos.slice(0, 6).map(function (m, i) {
-    return renderCard(m, i, 118);
-  })), momentos.length > 6 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 8,
-      overflowX: "auto",
-      paddingTop: 10,
-      paddingBottom: 6,
-      WebkitOverflowScrolling: "touch"
-    }
-  }, momentos.slice(6, 12).map(function (m, i) {
-    return renderCard(m, i + 6, 82);
+  }, momentos.slice(0, 12).map(function (m, i) {
+    return renderCard(m, i);
   })), fullscreen !== null && /*#__PURE__*/React.createElement(MomentoFullscreen, {
     momentos: momentos,
     indiceInicial: fullscreen,
@@ -2658,23 +2650,185 @@ function Inicio(_ref17) {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "20px 16px 12px",
+      padding: "20px 12px 6px",
       display: "flex",
       alignItems: "center",
       gap: 10
     }
-  }, /*#__PURE__*/React.createElement(LogoNova, {
-    size: 82
-  }), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
-      flex: 1
+      flexShrink: 0
     }
-  }), user ? /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(LogoNova, {
+    size: 72
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      gap: 10,
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch",
+      alignItems: "center",
+      minHeight: 76
+    }
+  }, user && !passagens.some(function (g) {
+    return g.isMe;
+  }) && /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      return setPostarVideo(true);
+    },
+    style: {
+      flexShrink: 0,
+      textAlign: "center",
+      cursor: "pointer",
+      width: 64
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 56,
+      height: 56,
+      borderRadius: "50%",
+      position: "relative",
+      border: "1.5px solid ".concat(T.border),
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      margin: "0 auto",
+      overflow: "hidden",
+      background: T.faint
+    }
+  }, user.avatar_url ? /*#__PURE__*/React.createElement("img", {
+    src: user.avatar_url,
+    alt: "",
+    style: {
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      opacity: 0.55
+    }
+  }) : /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16,
+      fontWeight: 700,
+      color: T.accentDk,
+      fontFamily: "Georgia,serif",
+      opacity: 0.5
+    }
+  }, initials(user.name || "?")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      right: -2,
+      bottom: -2,
+      width: 20,
+      height: 20,
+      borderRadius: "50%",
+      background: T.accent,
+      border: "1.5px solid #fff",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 700,
+      lineHeight: 1
+    }
+  }, "+")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: T.muted,
+      fontWeight: 500,
+      marginTop: 4,
+      fontStyle: "italic",
+      fontFamily: "Georgia,serif"
+    }
+  }, "postar")), passagens.map(function (g, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: g.userId,
+      onClick: function onClick() {
+        return setVideoVisualizando({
+          videos: g.videos,
+          index: 0,
+          profile: g.profile
+        });
+      },
+      style: {
+        flexShrink: 0,
+        textAlign: "center",
+        cursor: "pointer",
+        width: 64
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 56,
+        height: 56,
+        borderRadius: "50%",
+        border: "2px solid ".concat(T.accent),
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "0 auto",
+        overflow: "hidden",
+        background: T.accentBg
+      }
+    }, g.profile.avatar_url ? /*#__PURE__*/React.createElement("img", {
+      src: g.profile.avatar_url,
+      alt: "",
+      style: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover"
+      }
+    }) : /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "Georgia,serif",
+        fontSize: 16,
+        fontWeight: 700,
+        color: T.accentDk
+      }
+    }, initials(g.profile.name || "?"))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        color: T.text,
+        fontWeight: 600,
+        marginTop: 4,
+        maxWidth: 64,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+      }
+    }, g.isMe ? "você" : (g.profile.name || "").split(" ")[0]), g.videos.length > 1 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 3,
+        justifyContent: "center",
+        marginTop: 2
+      }
+    }, Array.from({
+      length: Math.min(g.videos.length, 5)
+    }).map(function (_, j) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: j,
+        style: {
+          width: 3,
+          height: 3,
+          borderRadius: "50%",
+          background: T.borderMd
+        }
+      });
+    })));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 6,
+      flexShrink: 0
+    }
+  }, user ? /*#__PURE__*/React.createElement("div", {
     onClick: onPerfil,
     style: {
       position: "relative",
-      cursor: "pointer",
-      flexShrink: 0
+      cursor: "pointer"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -2701,240 +2855,30 @@ function Inicio(_ref17) {
       height: "100%",
       objectFit: "cover"
     }
-  }) : initials(user.name || "?"))) : null), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "0 16px 4px"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
+  }) : initials(user.name || "?"))) : null, totalMemorias > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      margin: "0 4px 12px"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "center",
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 14,
-      height: 1,
-      background: T.borderMd
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      fontWeight: 700,
-      color: T.muted,
-      letterSpacing: "0.14em",
-      textTransform: "uppercase"
-    }
-  }, "Passagens")), totalMemorias > 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "baseline",
-      gap: 4
+      flexDirection: "column",
+      alignItems: "center"
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
       fontFamily: "Georgia,serif",
-      fontSize: 14,
+      fontSize: 12,
       fontWeight: 500,
       color: T.text,
       lineHeight: 1
     }
   }, totalMemorias), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 9,
+      fontSize: 7,
       color: T.muted,
-      letterSpacing: "0.06em",
+      letterSpacing: "0.08em",
       textTransform: "uppercase",
-      fontWeight: 600
+      fontWeight: 600,
+      marginTop: 1
     }
-  }, "mem\xF3rias"))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 12,
-      overflowX: "auto",
-      WebkitOverflowScrolling: "touch",
-      paddingBottom: 6
-    }
-  }, user && !passagens.some(function (g) {
-    return g.isMe;
-  }) && /*#__PURE__*/React.createElement("div", {
-    onClick: function onClick() {
-      return setPostarVideo(true);
-    },
-    style: {
-      flexShrink: 0,
-      textAlign: "center",
-      cursor: "pointer",
-      width: 76
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 68,
-      height: 68,
-      borderRadius: "50%",
-      position: "relative",
-      background: "linear-gradient(135deg,".concat(T.accentBg, ",rgba(193,126,58,0.25))"),
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      margin: "0 auto",
-      border: "2px dashed ".concat(T.accent)
-    }
-  }, user.avatar_url ? /*#__PURE__*/React.createElement("img", {
-    src: user.avatar_url,
-    alt: "",
-    style: {
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      borderRadius: "50%",
-      opacity: 0.6
-    }
-  }) : /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 20,
-      fontWeight: 700,
-      color: T.accentDk,
-      fontFamily: "Georgia,serif",
-      opacity: 0.5
-    }
-  }, initials(user.name || "?")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: "absolute",
-      right: -2,
-      bottom: -2,
-      width: 24,
-      height: 24,
-      borderRadius: "50%",
-      background: T.accent,
-      border: "2px solid #fff",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: "#fff",
-      fontSize: 15,
-      fontWeight: 700,
-      lineHeight: 1
-    }
-  }, "+")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      color: T.sub,
-      fontWeight: 500,
-      marginTop: 6,
-      fontStyle: "italic",
-      fontFamily: "Georgia,serif"
-    }
-  }, "postar")), passagens.map(function (g, i) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: g.userId,
-      onClick: function onClick() {
-        if (g.isMe) {
-          // Se é meu próprio, pergunta se quer postar mais ou ver
-          setVideoVisualizando({
-            videos: g.videos,
-            index: 0
-          });
-        } else {
-          setVideoVisualizando({
-            videos: g.videos,
-            index: 0,
-            profile: g.profile
-          });
-        }
-      },
-      style: {
-        flexShrink: 0,
-        textAlign: "center",
-        cursor: "pointer",
-        width: 76
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        width: 68,
-        height: 68,
-        borderRadius: "50%",
-        position: "relative",
-        padding: 3,
-        background: g.isMe ? "linear-gradient(135deg,".concat(T.accent, ",#8B6914)") : "conic-gradient(from 180deg at 50% 50%, ".concat(T.accent, ", #D4A574, ").concat(T.accent, ")"),
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        margin: "0 auto"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        width: "100%",
-        height: "100%",
-        borderRadius: "50%",
-        background: "#fff",
-        padding: 2,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        width: "100%",
-        height: "100%",
-        borderRadius: "50%",
-        overflow: "hidden",
-        background: T.accentBg,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "Georgia,serif",
-        fontSize: 18,
-        fontWeight: 700,
-        color: T.accentDk
-      }
-    }, g.profile.avatar_url ? /*#__PURE__*/React.createElement("img", {
-      src: g.profile.avatar_url,
-      alt: "",
-      style: {
-        width: "100%",
-        height: "100%",
-        objectFit: "cover"
-      }
-    }) : initials(g.profile.name || "?"))), g.videos.length > 1 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        position: "absolute",
-        top: -2,
-        right: -2,
-        minWidth: 18,
-        height: 18,
-        borderRadius: 9,
-        background: T.text,
-        color: "#fff",
-        fontSize: 9,
-        fontWeight: 700,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "0 5px",
-        border: "2px solid #fff"
-      }
-    }, g.videos.length)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: T.text,
-        fontWeight: 600,
-        marginTop: 6,
-        maxWidth: 76,
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis"
-      }
-    }, g.isMe ? "você" : (g.profile.name || "").split(" ")[0]));
-  }))), /*#__PURE__*/React.createElement("div", {
+  }, "mem\xF3rias")))), /*#__PURE__*/React.createElement("div", {
     style: {
       height: 14
     }
@@ -3032,68 +2976,18 @@ function Inicio(_ref17) {
         letterSpacing: "0.01em"
       }
     }, razao.texto));
-  })), pessoasEmAlta.length > 6 && /*#__PURE__*/React.createElement("div", {
+  }))), /*#__PURE__*/React.createElement("div", {
     style: {
-      display: "flex",
-      gap: 10,
-      padding: "12px 16px 0",
-      overflowX: "auto",
-      WebkitOverflowScrolling: "touch"
+      padding: "0 16px",
+      marginBottom: 28
     }
-  }, pessoasEmAlta.slice(6, 12).map(function (p, i) {
-    var razao = razaoDeEstar(p);
-    return /*#__PURE__*/React.createElement("div", {
-      key: p.id || i,
-      onClick: function onClick() {
-        return onView && onView(p);
-      },
-      style: {
-        flexShrink: 0,
-        textAlign: "center",
-        cursor: "pointer",
-        width: 64
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        width: 54,
-        height: 54,
-        borderRadius: 14,
-        overflow: "hidden",
-        position: "relative",
-        background: "linear-gradient(135deg,".concat(T.accentBg, ",rgba(193,126,58,0.18))"),
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: 16,
-        fontWeight: 700,
-        color: T.accentDk,
-        fontFamily: "Georgia,serif",
-        margin: "0 auto",
-        opacity: 0.95
-      }
-    }, p.avatar_url ? /*#__PURE__*/React.createElement("img", {
-      src: p.avatar_url,
-      alt: "",
-      style: {
-        width: "100%",
-        height: "100%",
-        objectFit: "cover"
-      }
-    }) : initials(p.name || "?")), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 9,
-        color: T.sub,
-        fontWeight: 500,
-        marginTop: 5,
-        maxWidth: 64,
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis"
-      }
-    }, (p.name || "").split(" ")[0]));
-  }))), lugaresEmAlta.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(MomentosFeed, {
+    user: user,
+    onView: onView
+  })), lugaresEmAlta.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 24
+      marginBottom: 24,
+      position: "relative"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -3113,7 +3007,38 @@ function Inicio(_ref17) {
       height: 1,
       background: T.borderMd
     }
-  }), "Lugares mais conectados"), /*#__PURE__*/React.createElement("div", {
+  }), "Lugares mais conectados"), lugaresEmAlta.length > 0 && /*#__PURE__*/React.createElement("svg", {
+    width: "100%",
+    height: "16",
+    viewBox: "0 0 ".concat(Math.min(lugaresEmAlta.length, 6) * 108, " 16"),
+    preserveAspectRatio: "none",
+    style: {
+      display: "block",
+      padding: "0 16px",
+      marginBottom: 4,
+      pointerEvents: "none",
+      opacity: 0.35
+    }
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: "16",
+    y1: "2",
+    x2: Math.min(lugaresEmAlta.length, 6) * 108 - 16,
+    y2: "2",
+    stroke: T.borderMd,
+    strokeWidth: "1",
+    strokeDasharray: "2,3"
+  }), lugaresEmAlta.slice(0, Math.min(lugaresEmAlta.length, 6)).map(function (_, i) {
+    return /*#__PURE__*/React.createElement("line", {
+      key: i,
+      x1: 30 + i * 108,
+      y1: "2",
+      x2: 30 + i * 108,
+      y2: "14",
+      stroke: T.borderMd,
+      strokeWidth: "1",
+      strokeDasharray: "2,3"
+    });
+  })), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 12,
@@ -3122,8 +3047,8 @@ function Inicio(_ref17) {
       WebkitOverflowScrolling: "touch",
       paddingBottom: 4
     }
-  }, lugaresEmAlta.slice(0, 4).map(function (l, i) {
-    var cores = ["linear-gradient(135deg,#2E86C1,#1A5276)", "linear-gradient(135deg,#7D3C98,#512E5F)", "linear-gradient(135deg,#1E8449,#145A32)", "linear-gradient(135deg,#C4956A,#8B6914)"];
+  }, lugaresEmAlta.slice(0, 8).map(function (l, i) {
+    var cores = ["linear-gradient(135deg,#2E86C1,#1A5276)", "linear-gradient(135deg,#7D3C98,#512E5F)", "linear-gradient(135deg,#1E8449,#145A32)", "linear-gradient(135deg,#C4956A,#8B6914)", "linear-gradient(135deg,#5BA4D9,#1565C0)", "linear-gradient(135deg,#A99BC8,#6A1B9A)"];
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       onClick: function onClick() {
@@ -3135,88 +3060,39 @@ function Inicio(_ref17) {
       style: {
         flexShrink: 0,
         cursor: "pointer",
-        width: 140
+        width: 96,
+        textAlign: "center"
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        width: 140,
-        height: 96,
-        borderRadius: 16,
+        width: 96,
+        height: 64,
+        borderRadius: 12,
         overflow: "hidden",
-        background: l.photo ? "url(".concat(l.photo, ") center/cover") : cores[i % cores.length],
-        boxShadow: "0 2px 10px rgba(0,0,0,0.08)"
+        background: l.photo ? "url(".concat(l.photo, ") center/cover") : cores[i % cores.length]
       }
     }), /*#__PURE__*/React.createElement("div", {
       style: {
+        fontFamily: "Georgia,serif",
         fontSize: 12,
+        fontStyle: "italic",
         color: T.text,
-        fontWeight: 600,
-        marginTop: 8,
-        maxWidth: 140,
+        marginTop: 6,
+        maxWidth: 96,
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis"
       }
     }, l.city), l.uf && /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 10,
+        fontSize: 9,
         color: T.muted,
         marginTop: 1,
-        maxWidth: 140
+        maxWidth: 96,
+        letterSpacing: "0.04em"
       }
     }, l.uf));
-  })), lugaresEmAlta.length > 4 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 10,
-      padding: "12px 16px 0",
-      overflowX: "auto",
-      WebkitOverflowScrolling: "touch"
-    }
-  }, lugaresEmAlta.slice(4, 10).map(function (l, i) {
-    var cores = ["linear-gradient(135deg,#5BA4D9,#1565C0)", "linear-gradient(135deg,#A99BC8,#6A1B9A)", "linear-gradient(135deg,#C4956A,#8B6914)", "linear-gradient(135deg,#1E8449,#145A32)"];
-    return /*#__PURE__*/React.createElement("div", {
-      key: i,
-      onClick: function onClick() {
-        if (onLugar) onLugar(l.placeId ? {
-          id: l.placeId,
-          nome: l.city
-        } : l.city);
-      },
-      style: {
-        flexShrink: 0,
-        cursor: "pointer",
-        width: 94
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        width: 94,
-        height: 58,
-        borderRadius: 12,
-        overflow: "hidden",
-        background: l.photo ? "url(".concat(l.photo, ") center/cover") : cores[i % cores.length],
-        opacity: 0.92
-      }
-    }), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: T.sub,
-        fontWeight: 500,
-        marginTop: 5,
-        maxWidth: 94,
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis"
-      }
-    }, l.city));
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "0 16px"
-    }
-  }, /*#__PURE__*/React.createElement(MomentosFeed, {
-    user: user,
-    onView: onView
-  })), loading && profiles.length === 0 && /*#__PURE__*/React.createElement("div", {
+  }))), loading && profiles.length === 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "24px",
       textAlign: "center"
