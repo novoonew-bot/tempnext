@@ -15798,7 +15798,42 @@ function PerfilLugar(_ref72) {
       padding: "2px 7px",
       borderRadius: 6
     }
-  }, "foto \xB7 ", place.photo_credit_name)), suaConexao && /*#__PURE__*/React.createElement("div", {
+  }, "foto \xB7 ", place.photo_credit_name)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      margin: "-8px 4px 18px",
+      padding: "0 4px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: T.sub,
+      fontFamily: "Georgia,serif",
+      fontStyle: "italic"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 600,
+      color: T.text,
+      fontStyle: "normal"
+    }
+  }, profiles.length), " ", profiles.length === 1 ? "pessoa esteve aqui" : "pessoas estiveram aqui"), /*#__PURE__*/React.createElement("button", {
+    onClick: toggleSeguir,
+    style: {
+      padding: "5px 12px",
+      borderRadius: 16,
+      cursor: "pointer",
+      background: seguindo ? T.accentBg : "#fff",
+      color: seguindo ? T.accentDk : T.blueStrong,
+      fontSize: 11,
+      fontWeight: 600,
+      fontFamily: "inherit",
+      border: "1px solid ".concat(seguindo ? T.accent + "50" : T.blueStrong + "50"),
+      transition: "all .2s"
+    }
+  }, seguindo ? "✓ Seguindo" : "+ Seguir")), suaConexao && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 16,
@@ -16047,51 +16082,7 @@ function PerfilLugar(_ref72) {
         fontFamily: "Georgia,serif"
       }
     }, "toque num ano pra filtrar")));
-  }(), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      marginBottom: 20,
-      padding: "0 2px"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      flexDirection: "column"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: "Georgia,serif",
-      fontSize: 22,
-      fontWeight: 500,
-      color: T.text,
-      lineHeight: 1
-    }
-  }, profiles.length), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      color: T.muted,
-      letterSpacing: "0.08em",
-      textTransform: "uppercase",
-      fontWeight: 600,
-      marginTop: 3
-    }
-  }, profiles.length === 1 ? "pessoa esteve aqui" : "pessoas estiveram aqui")), /*#__PURE__*/React.createElement("button", {
-    onClick: toggleSeguir,
-    style: {
-      padding: "8px 16px",
-      borderRadius: 20,
-      cursor: "pointer",
-      background: seguindo ? T.faint : "#fff",
-      color: seguindo ? T.accent : T.blueStrong,
-      fontSize: 12,
-      fontWeight: 600,
-      fontFamily: "inherit",
-      border: "1.5px solid ".concat(seguindo ? T.accent + "40" : T.blueStrong + "60"),
-      transition: "all .2s"
-    }
-  }, seguindo ? "✓ Seguindo" : "+ Seguir")), function () {
+  }(), function () {
     // Monta itens: cada pessoa vira um item, cada momento vira um item
     var itensContatos = [];
     var itensOutros = [];
