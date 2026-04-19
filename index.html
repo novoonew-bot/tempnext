@@ -15799,8 +15799,15 @@ function PerfilLugar(_ref72) {
       borderRadius: 6
     }
   }, "foto \xB7 ", place.photo_credit_name)), function () {
+    var ehProprio = function ehProprio(p) {
+      if (!user) return false;
+      if (p.id === user.id) return true;
+      if (user.auth_id && p.auth_id && p.auth_id === user.auth_id) return true;
+      if (user.name && p.name && user.name.toLowerCase() === p.name.toLowerCase() && user.city && p.city && user.city.toLowerCase() === p.city.toLowerCase()) return true;
+      return false;
+    };
     var outrosCount = profiles.filter(function (p) {
-      return !user || p.id !== user.id;
+      return !ehProprio(p);
     }).length;
     return /*#__PURE__*/React.createElement("div", {
       style: {
@@ -16098,8 +16105,21 @@ function PerfilLugar(_ref72) {
     var contactIds = new Set(((user === null || user === void 0 ? void 0 : user._contacts) || []).map(function (c) {
       return c.id;
     }));
+
+    // Função robusta pra detectar se um perfil é o próprio usuário
+    // (cobre casos de perfis duplicados, auth_id, id)
+    var ehProprioUsuario = function ehProprioUsuario(p) {
+      if (!user) return false;
+      if (p.id === user.id) return true;
+      if (user.auth_id && p.auth_id && p.auth_id === user.auth_id) return true;
+      // Fallback: mesmo nome completo e mesma cidade (cobre perfis duplicados)
+      if (user.name && p.name && user.name.toLowerCase() === p.name.toLowerCase() && user.city && p.city && user.city.toLowerCase() === p.city.toLowerCase()) {
+        return true;
+      }
+      return false;
+    };
     profiles.forEach(function (p) {
-      if (user && p.id === user.id) return; // não lista a si mesmo
+      if (ehProprioUsuario(p)) return; // não lista a si mesmo
       var ys = p.pp_year_start || p.year_start || 0;
       var ye = p.pp_year_end || p.year_end || ys;
       var item = {
@@ -16112,8 +16132,18 @@ function PerfilLugar(_ref72) {
       if (contactIds.has(p.id)) itensContatos.push(item);else itensOutros.push(item);
     });
     momentos.forEach(function (m) {
-      if (user && m.user_id === user.id) return; // não lista momentos próprios
-      var ano = m.ano || new Date(m.created_at).getFullYear();
+      if (!user) return itensOutros.push({
+        tipo: "momento",
+        data: m,
+        ys: m.ano || new Date(m.ts || m.created_at).getFullYear(),
+        ye: m.ano || new Date(m.ts || m.created_at).getFullYear(),
+        ano: m.ano || new Date(m.ts || m.created_at).getFullYear()
+      });
+      // Filtra momentos próprios por várias chaves possíveis
+      if (m.user_id === user.id) return;
+      if (user.auth_id && m.user_id === user.auth_id) return;
+      if (m.user_name && user.name && m.user_name.toLowerCase() === user.name.toLowerCase()) return;
+      var ano = m.ano || new Date(m.ts || m.created_at).getFullYear();
       itensOutros.push({
         tipo: "momento",
         data: m,
