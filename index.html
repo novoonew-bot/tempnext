@@ -15358,6 +15358,10 @@ function App() {
     _useState277 = _slicedToArray(_useState276, 2),
     showMomento = _useState277[0],
     setShowMomento = _useState277[1];
+  var _useState278 = useState(false),
+    _useState279 = _slicedToArray(_useState278, 2),
+    confirmandoSaida = _useState279[0],
+    setConfirmandoSaida = _useState279[1];
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
@@ -15408,6 +15412,106 @@ function App() {
     }))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user === null || user === void 0 ? void 0 : user.id]);
+
+  // ── Interceptação do botão "Voltar" do navegador/celular ──
+  // Evita que o usuário saia do app acidentalmente ao pressionar voltar
+  useEffect(function () {
+    // Injeta uma entrada fake no histórico quando o app monta
+    // Assim o primeiro "voltar" não fecha a aba, só dispara popstate
+    window.history.pushState({
+      tn: "root"
+    }, "", window.location.href);
+    var handlePop = function handlePop(e) {
+      // Prioridade: fechar o que estiver aberto primeiro
+      if (modal) {
+        setModal(null);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      if (chat) {
+        setChat(null);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      if (showReencontrar) {
+        setShowReencontrar(false);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      if (showMenuRapido) {
+        setShowMenuRapido(false);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      if (showAdicionarLugar) {
+        setShowAdicionarLugar(false);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      if (showAgendaVisita) {
+        setShowAgendaVisita(false);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      if (showMomento) {
+        setShowMomento(false);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      if (showCuriosidade) {
+        setShowCuriosidade(false);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      if (showLogin) {
+        setShowLogin(false);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      if (showLoginPreview) {
+        setShowLoginPreview(false);
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      // Se está em tela secundária, volta pra home
+      if (tela !== "inicio") {
+        setTela("inicio");
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
+      // Se está na home: pede confirmação antes de sair
+      setConfirmandoSaida(true);
+      window.history.pushState({
+        tn: "root"
+      }, "", window.location.href);
+    };
+    window.addEventListener("popstate", handlePop);
+    return function () {
+      return window.removeEventListener("popstate", handlePop);
+    };
+  }, [modal, chat, showReencontrar, showMenuRapido, showAdicionarLugar, showAgendaVisita, showMomento, showCuriosidade, showLogin, showLoginPreview, tela]);
 
   // Supabase auth listener + perfil persistence
   useEffect(function () {
@@ -15928,10 +16032,10 @@ function App() {
   }
 
   // Estado de loading inicial
-  var _useState278 = useState(false),
-    _useState279 = _slicedToArray(_useState278, 2),
-    appReady = _useState279[0],
-    setAppReady = _useState279[1];
+  var _useState280 = useState(false),
+    _useState281 = _slicedToArray(_useState280, 2),
+    appReady = _useState281[0],
+    setAppReady = _useState281[1];
 
   // Marca app como pronto após init
   useEffect(function () {
@@ -16737,7 +16841,88 @@ function App() {
     onClose: function onClose() {
       return setChat(null);
     }
-  }))));
+  }), confirmandoSaida && /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      return setConfirmandoSaida(false);
+    },
+    style: {
+      position: "fixed",
+      inset: 0,
+      background: "rgba(28,28,30,0.55)",
+      zIndex: 300,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "24px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    },
+    style: {
+      background: "#fff",
+      borderRadius: 18,
+      padding: "28px 26px 22px",
+      maxWidth: 360,
+      width: "100%",
+      boxShadow: "0 20px 60px rgba(0,0,0,0.25)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "Georgia,serif",
+      fontSize: 20,
+      fontWeight: 400,
+      color: T.text,
+      marginBottom: 8,
+      letterSpacing: "-0.01em"
+    }
+  }, "Sair do Tempnext?"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: T.muted,
+      lineHeight: 1.55,
+      marginBottom: 22,
+      fontWeight: 300
+    }
+  }, "Voc\xEA vai fechar o app. Sua sess\xE3o continua ativa \u2014 quando voltar, seu perfil j\xE1 estar\xE1 aqui."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setConfirmandoSaida(false);
+    },
+    style: {
+      flex: 1,
+      padding: "12px",
+      borderRadius: 11,
+      background: T.faint,
+      border: "1px solid ".concat(T.border),
+      color: T.sub,
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Ficar"), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      setConfirmandoSaida(false);
+      window.history.go(-2);
+    },
+    style: {
+      flex: 1,
+      padding: "12px",
+      borderRadius: 11,
+      background: T.sub,
+      border: "none",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Sair")))))));
 }
 ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));
 </script>
