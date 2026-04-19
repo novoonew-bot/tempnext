@@ -4830,22 +4830,18 @@ function ModalEditarPerfil(_ref26) {
     _useState70 = _slicedToArray(_useState69, 2),
     saving = _useState70[0],
     setSaving = _useState70[1];
-  var _useState71 = useState(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
+  var _useState71 = useState({
       name: user.name || "",
-      nick: user.nick || "",
       note: user.note || "",
-      birthDay: user.birth_day || "",
-      birthMonth: user.birth_month || "",
       birthYear: user.birth_year || "",
-      currentDate: user.current_date || "",
       currentCity: user.current_city || "",
       currentState: user.current_state || "",
       currentCountry: user.current_country || "Brasil",
-      howIam: user.how_iam || "",
       intencao: user.intencao || [],
-      knownAs: user.known_as || "",
-      familyRef: user.family_ref || ""
-    }, "howIam", user.how_iam || ""), "available", user.available || "sim"), "interests", user.interests || []), "curtia", user.curtia || []), "tema", user.tema || "amber")),
+      available: user.available || "sim",
+      interests: user.interests || [],
+      tema: user.tema || "amber"
+    }),
     _useState72 = _slicedToArray(_useState71, 2),
     f = _useState72[0],
     setF = _useState72[1];
@@ -4854,7 +4850,6 @@ function ModalEditarPerfil(_ref26) {
   }
   function _salvar() {
     _salvar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
-      var _objectSpread3;
       var updated, _t6;
       return _regenerator().w(function (_context5) {
         while (1) switch (_context5.p = _context5.n) {
@@ -4866,25 +4861,27 @@ function ModalEditarPerfil(_ref26) {
             return _context5.a(2);
           case 1:
             setSaving(true);
-            updated = _objectSpread(_objectSpread({}, user), {}, (_objectSpread3 = {
+            updated = _objectSpread(_objectSpread({}, user), {}, {
               name: f.name.trim(),
-              nick: f.nick.trim() || null,
               note: f.note.trim() || null,
               birth_year: f.birthYear ? parseInt(f.birthYear) : null,
-              birth_day: f.birthDay ? parseInt(f.birthDay) : null,
-              birth_month: f.birthMonth ? parseInt(f.birthMonth) : null
-            }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_objectSpread3, "birth_year", f.birthYear ? parseInt(f.birthYear) : null), "current_city", f.currentCity.trim() || null), "current_state", f.currentState || null), "current_country", f.currentCountry || null), "known_as", f.knownAs.trim() || null), "curtia", f.curtia.length > 0 ? f.curtia : null), "how_iam", f.howIam.trim() || null), "intencao", f.intencao.length > 0 ? f.intencao : null), "family_ref", f.familyRef.trim() || null), "how_iam", f.howIam.trim() || null), _defineProperty(_defineProperty(_defineProperty(_objectSpread3, "available", f.available), "interests", f.interests.length > 0 ? f.interests : null), "tema", f.tema || "amber")));
+              current_city: f.currentCity.trim() || null,
+              current_state: f.currentState || null,
+              current_country: f.currentCountry || null,
+              intencao: f.intencao.length > 0 ? f.intencao : null,
+              available: f.available,
+              interests: f.interests.length > 0 ? f.interests : null,
+              tema: f.tema || "amber"
+            });
             _context5.p = 2;
             _context5.n = 3;
             return db.from("profiles").update({
               name: updated.name,
-              nick: updated.nick,
               note: updated.note,
               birth_year: updated.birth_year,
-              profession: updated.profession,
-              known_as: updated.known_as,
-              family_ref: updated.family_ref,
-              how_iam: updated.how_iam,
+              current_city: updated.current_city,
+              current_state: updated.current_state,
+              current_country: updated.current_country,
               intencao: updated.intencao,
               available: updated.available,
               interests: updated.interests,
@@ -4978,7 +4975,7 @@ function ModalEditarPerfil(_ref26) {
       gap: 0
     }
   }, /*#__PURE__*/React.createElement(STitle, null, "Sobre voc\xEA"), /*#__PURE__*/React.createElement(FRow, {
-    label: "Nome completo *"
+    label: "Nome *"
   }, /*#__PURE__*/React.createElement("input", {
     value: f.name,
     onChange: function onChange(e) {
@@ -4988,104 +4985,51 @@ function ModalEditarPerfil(_ref26) {
     },
     placeholder: "Seu nome"
   })), /*#__PURE__*/React.createElement(FRow, {
-    label: "Apelido"
-  }, /*#__PURE__*/React.createElement("input", {
-    value: f.nick,
-    onChange: function onChange(e) {
-      return setF(_objectSpread(_objectSpread({}, f), {}, {
-        nick: e.target.value
-      }));
-    },
-    placeholder: "Como te chamavam?"
-  })), /*#__PURE__*/React.createElement(FRow, {
-    label: getLbl(f.era, "comoConhecido")
-  }, /*#__PURE__*/React.createElement("input", {
-    value: f.knownAs,
-    onChange: function onChange(e) {
-      return setF(_objectSpread(_objectSpread({}, f), {}, {
-        knownAs: e.target.value
-      }));
-    },
-    placeholder: "Ex: O filho do Seu Z\xE9\u2026"
-  })), /*#__PURE__*/React.createElement(FRow, {
-    label: "Nomes na fam\xEDlia"
-  }, /*#__PURE__*/React.createElement("input", {
-    value: f.familyRef,
-    onChange: function onChange(e) {
-      return setF(_objectSpread(_objectSpread({}, f), {}, {
-        familyRef: e.target.value
-      }));
-    },
-    placeholder: "Ex: Silva, Maria das Gra\xE7as, Tio Z\xE9\u2026"
-  })), /*#__PURE__*/React.createElement(FRow, {
-    label: "Mem\xF3ria"
+    label: "Bio"
   }, /*#__PURE__*/React.createElement("textarea", {
-    rows: 3,
+    rows: 2,
     value: f.note,
     onChange: function onChange(e) {
       return setF(_objectSpread(_objectSpread({}, f), {}, {
-        note: e.target.value
+        note: e.target.value.slice(0, 140)
       }));
     },
-    placeholder: "Conte uma mem\xF3ria daquela \xE9poca\u2026",
+    placeholder: "Uma frase que te resume\u2026",
     style: {
-      resize: "vertical"
-    }
-  })), /*#__PURE__*/React.createElement(STitle, null, "Sobre voc\xEA"), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "Data de nascimento"), /*#__PURE__*/React.createElement("div", {
+      resize: "none"
+    },
+    maxLength: 140
+  }), /*#__PURE__*/React.createElement("div", {
     style: {
-      display: "grid",
-      gridTemplateColumns: "70px 70px 1fr",
-      gap: 8
+      fontSize: 10,
+      color: T.muted,
+      marginTop: 4,
+      textAlign: "right"
     }
+  }, f.note.length, "/140")), /*#__PURE__*/React.createElement(FRow, {
+    label: "Ano de nascimento"
   }, /*#__PURE__*/React.createElement("input", {
     type: "number",
-    placeholder: "Dia",
-    min: "1",
-    max: "31",
-    value: f.birthDay,
-    onChange: function onChange(e) {
-      return setF(_objectSpread(_objectSpread({}, f), {}, {
-        birthDay: e.target.value
-      }));
-    },
-    style: {
-      textAlign: "center"
-    }
-  }), /*#__PURE__*/React.createElement("input", {
-    type: "number",
-    placeholder: "M\xEAs",
-    min: "1",
-    max: "12",
-    value: f.birthMonth,
-    onChange: function onChange(e) {
-      return setF(_objectSpread(_objectSpread({}, f), {}, {
-        birthMonth: e.target.value
-      }));
-    },
-    style: {
-      textAlign: "center"
-    }
-  }), /*#__PURE__*/React.createElement("input", {
-    type: "number",
-    placeholder: "Ano",
+    placeholder: "1985",
     value: f.birthYear,
     onChange: function onChange(e) {
       return setF(_objectSpread(_objectSpread({}, f), {}, {
         birthYear: e.target.value
       }));
-    }
-  }))), /*#__PURE__*/React.createElement("div", {
+    },
     style: {
-      marginTop: 12
+      maxWidth: 120
     }
-  }, /*#__PURE__*/React.createElement(Lbl, null, "Atualmente estou em"), /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement(FRow, {
+    label: "Onde voc\xEA mora hoje"
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       flexDirection: "column",
       gap: 8
     }
   }, /*#__PURE__*/React.createElement("input", {
-    placeholder: "Cidade atual",
+    placeholder: "Cidade",
     value: f.currentCity,
     onChange: function onChange(e) {
       return setF(_objectSpread(_objectSpread({}, f), {}, {
@@ -5120,11 +5064,7 @@ function ModalEditarPerfil(_ref26) {
         currentCountry: e.target.value
       }));
     }
-  }))))), /*#__PURE__*/React.createElement(STitle, {
-    style: {
-      color: getColor(f.era)
-    }
-  }, getLbl(f.era, "interesses")), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", {
+  })))), /*#__PURE__*/React.createElement(STitle, null, "Interesses"), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 6,
@@ -5154,97 +5094,22 @@ function ModalEditarPerfil(_ref26) {
         transition: "all .15s"
       }
     }, item);
-  }))), /*#__PURE__*/React.createElement(STitle, {
-    style: {
-      color: getColor(f.era)
-    }
-  }, getLbl(f.era, "curtia")), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 6,
-      flexWrap: "wrap"
-    }
-  }, ["Futebol", "Pesca", "Música", "Agricultura", "Culinária", "Dança", "Leitura", "Viagem", "Religião", "Arte", "Tecnologia", "Pecuária"].map(function (item) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: item,
-      onClick: function onClick() {
-        return setF(function (v) {
-          return _objectSpread(_objectSpread({}, v), {}, {
-            curtia: v.curtia.includes(item) ? v.curtia.filter(function (i) {
-              return i !== item;
-            }) : [].concat(_toConsumableArray(v.curtia), [item])
-          });
-        });
-      },
-      style: {
-        padding: "6px 13px",
-        borderRadius: 20,
-        cursor: "pointer",
-        fontSize: 13,
-        border: "1.5px solid ".concat(f.curtia.includes(item) ? "#9575CD" : T.border),
-        background: f.curtia.includes(item) ? "rgba(123,94,167,0.1)" : "#fff",
-        color: f.curtia.includes(item) ? "#9575CD" : T.muted,
-        fontWeight: f.curtia.includes(item) ? 600 : 400,
-        transition: "all .15s"
-      }
-    }, item);
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 8
-    }
-  }, /*#__PURE__*/React.createElement(AddOutro, {
-    placeholder: "Adicionar outro\u2026 ex: Cavalgada, Baile, Domin\xF3",
-    color: "#9575CD",
-    bgColor: "rgba(123,94,167,0.1)",
-    onAdd: function onAdd(v) {
-      return setF(function (prev) {
-        return _objectSpread(_objectSpread({}, prev), {}, {
-          curtia: prev.curtia.includes(v) ? prev.curtia : [].concat(_toConsumableArray(prev.curtia), [v])
-        });
-      });
-    },
-    onRemove: function onRemove(v) {
-      return setF(function (prev) {
-        return _objectSpread(_objectSpread({}, prev), {}, {
-          curtia: prev.curtia.filter(function (i) {
-            return i !== v;
-          })
-        });
-      });
-    },
-    extras: f.curtia.filter(function (i) {
-      return !["Futebol", "Pesca", "Música", "Agricultura", "Culinária", "Dança", "Leitura", "Viagem", "Religião", "Arte", "Tecnologia", "Pecuária"].includes(i);
-    })
-  }))), /*#__PURE__*/React.createElement(STitle, {
-    style: {
-      color: getColor(f.era)
-    }
-  }, "O que voc\xEA quer fazer com esse lugar?"), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", {
+  }))), /*#__PURE__*/React.createElement(STitle, null, "O que voc\xEA busca aqui"), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       flexDirection: "column",
       gap: 8
     }
   }, [{
-    v: "relembrar",
-    icon: "🕰️",
-    label: "Relembrar",
-    desc: "Quero reviver memórias desse lugar"
-  }, {
     v: "reencontrar",
     icon: "👥",
-    label: "Reencontrar",
-    desc: "Quero achar pessoas que viveram lá comigo"
-  }, {
-    v: "reconectar",
-    icon: "🤝",
-    label: "Reconectar",
-    desc: "Quero manter contato com quem está lá hoje"
+    label: "Reencontrar pessoas",
+    desc: "Quero achar quem viveu nos mesmos lugares"
   }, {
     v: "visitar",
-    icon: "👁️",
-    label: "Visitar",
-    desc: "Quero explorar virtualmente como está hoje"
+    icon: "🌍",
+    label: "Conhecer lugares",
+    desc: "Quero descobrir lugares e suas histórias"
   }].map(function (o) {
     return /*#__PURE__*/React.createElement("div", {
       key: o.v,
@@ -5264,8 +5129,8 @@ function ModalEditarPerfil(_ref26) {
         padding: "12px 14px",
         borderRadius: 12,
         cursor: "pointer",
-        border: "1.5px solid ".concat(f.intencao.includes(o.v) ? getColor(f.era) : T.border),
-        background: f.intencao.includes(o.v) ? getBg(f.era) : "#fff",
+        border: "1.5px solid ".concat(f.intencao.includes(o.v) ? T.accent : T.border),
+        background: f.intencao.includes(o.v) ? T.accentBg : "#fff",
         transition: "all .15s"
       }
     }, /*#__PURE__*/React.createElement("span", {
@@ -5280,7 +5145,7 @@ function ModalEditarPerfil(_ref26) {
       style: {
         fontSize: 13,
         fontWeight: 700,
-        color: f.intencao.includes(o.v) ? getColor(f.era) : T.text
+        color: f.intencao.includes(o.v) ? T.accent : T.text
       }
     }, o.label), /*#__PURE__*/React.createElement("div", {
       style: {
@@ -5293,7 +5158,7 @@ function ModalEditarPerfil(_ref26) {
         width: 20,
         height: 20,
         borderRadius: "50%",
-        background: getColor(f.era),
+        background: T.accent,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -5317,24 +5182,20 @@ function ModalEditarPerfil(_ref26) {
       color: T.muted,
       marginTop: 8
     }
-  }, "Pode selecionar mais de uma op\xE7\xE3o")), /*#__PURE__*/React.createElement(STitle, {
-    style: {
-      color: getColor(f.era)
-    }
-  }, getLbl(f.era, "disponivel")), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", {
+  }, "Pode escolher os dois")), /*#__PURE__*/React.createElement(STitle, null, "Como voc\xEA est\xE1 dispon\xEDvel"), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 8
     }
   }, [{
     v: "sim",
-    l: "Relembrar"
+    l: "Aberto a reencontros"
   }, {
     v: "mensagem",
-    l: "Só mensagem"
+    l: "Só mensagens"
   }, {
     v: "nao",
-    l: "Por enquanto não"
+    l: "Só observando"
   }].map(function (o) {
     return /*#__PURE__*/React.createElement("div", {
       key: o.v,
@@ -5351,7 +5212,7 @@ function ModalEditarPerfil(_ref26) {
         textAlign: "center",
         border: "1.5px solid ".concat(f.available === o.v ? T.accent : T.border),
         background: f.available === o.v ? T.accentBg : "#fff",
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: f.available === o.v ? 700 : 400,
         color: f.available === o.v ? T.accent : T.muted,
         transition: "all .15s"
@@ -5474,18 +5335,18 @@ function PersonalizacaoPerfil(_ref27) {
   var user = _ref27.user,
     onUpdateUser = _ref27.onUpdateUser,
     onLogin = _ref27.onLogin;
-  var _useState74 = useState(false),
-    _useState75 = _slicedToArray(_useState74, 2),
-    expandido = _useState75[0],
-    setExpandido = _useState75[1];
-  var _useState76 = useState(false),
-    _useState77 = _slicedToArray(_useState76, 2),
-    modoAvancado = _useState77[0],
-    setModoAvancado = _useState77[1];
-  var _useState78 = useState(false),
-    _useState79 = _slicedToArray(_useState78, 2),
-    uploadingWallpaper = _useState79[0],
-    setUploadingWallpaper = _useState79[1];
+  var _useState73 = useState(false),
+    _useState74 = _slicedToArray(_useState73, 2),
+    expandido = _useState74[0],
+    setExpandido = _useState74[1];
+  var _useState75 = useState(false),
+    _useState76 = _slicedToArray(_useState75, 2),
+    modoAvancado = _useState76[0],
+    setModoAvancado = _useState76[1];
+  var _useState77 = useState(false),
+    _useState78 = _slicedToArray(_useState77, 2),
+    uploadingWallpaper = _useState78[0],
+    setUploadingWallpaper = _useState78[1];
 
   // Converte tema salvo pra posição no slider (0-100)
   function temaToSliderPos(tema) {
@@ -5571,22 +5432,22 @@ function PersonalizacaoPerfil(_ref27) {
     }
     return 96;
   }
-  var _useState80 = useState(temaToSliderPos(user.tema)),
-    _useState81 = _slicedToArray(_useState80, 2),
-    hue = _useState81[0],
-    setHue = _useState81[1];
-  var _useState82 = useState(bgToLight(user.bg_color)),
-    _useState83 = _slicedToArray(_useState82, 2),
-    bgLight = _useState83[0],
-    setBgLight = _useState83[1];
-  var _useState84 = useState(user.bg_color ? temaToSliderPos(user.bg_color) : 18),
-    _useState85 = _slicedToArray(_useState84, 2),
-    bgHue = _useState85[0],
-    setBgHue = _useState85[1];
-  var _useState86 = useState(user.card_color ? temaToSliderPos(user.card_color) : 99),
-    _useState87 = _slicedToArray(_useState86, 2),
-    cardHue = _useState87[0],
-    setCardHue = _useState87[1];
+  var _useState79 = useState(temaToSliderPos(user.tema)),
+    _useState80 = _slicedToArray(_useState79, 2),
+    hue = _useState80[0],
+    setHue = _useState80[1];
+  var _useState81 = useState(bgToLight(user.bg_color)),
+    _useState82 = _slicedToArray(_useState81, 2),
+    bgLight = _useState82[0],
+    setBgLight = _useState82[1];
+  var _useState83 = useState(user.bg_color ? temaToSliderPos(user.bg_color) : 18),
+    _useState84 = _slicedToArray(_useState83, 2),
+    bgHue = _useState84[0],
+    setBgHue = _useState84[1];
+  var _useState85 = useState(user.card_color ? temaToSliderPos(user.card_color) : 99),
+    _useState86 = _slicedToArray(_useState85, 2),
+    cardHue = _useState86[0],
+    setCardHue = _useState86[1];
 
   // Mapeia slider 0-100 → cor real — alinhado com gradiente da barra
   function sliderToHex(v) {
@@ -6854,11 +6715,11 @@ function ModalCompletar(_ref29) {
     campo = _ref29.campo,
     onClose = _ref29.onClose,
     onUpdateUser = _ref29.onUpdateUser;
-  var _useState88 = useState(false),
-    _useState89 = _slicedToArray(_useState88, 2),
-    saving = _useState89[0],
-    setSaving = _useState89[1];
-  var _useState90 = useState(function () {
+  var _useState87 = useState(false),
+    _useState88 = _slicedToArray(_useState87, 2),
+    saving = _useState88[0],
+    setSaving = _useState88[1];
+  var _useState89 = useState(function () {
       if (campo === "lastName") return user.last_name || "";
       if (campo === "birth") return {
         d: user.birth_day || "",
@@ -6867,21 +6728,21 @@ function ModalCompletar(_ref29) {
       };
       return "";
     }),
-    _useState91 = _slicedToArray(_useState90, 2),
-    val = _useState91[0],
-    setVal = _useState91[1];
-  var _useState92 = useState(null),
-    _useState93 = _slicedToArray(_useState92, 2),
-    file = _useState93[0],
-    setFile = _useState93[1];
-  var _useState94 = useState(null),
-    _useState95 = _slicedToArray(_useState94, 2),
-    filePreview = _useState95[0],
-    setFilePreview = _useState95[1];
-  var _useState96 = useState(user.tema || null),
-    _useState97 = _slicedToArray(_useState96, 2),
-    temaEscolhido = _useState97[0],
-    setTemaEscolhido = _useState97[1];
+    _useState90 = _slicedToArray(_useState89, 2),
+    val = _useState90[0],
+    setVal = _useState90[1];
+  var _useState91 = useState(null),
+    _useState92 = _slicedToArray(_useState91, 2),
+    file = _useState92[0],
+    setFile = _useState92[1];
+  var _useState93 = useState(null),
+    _useState94 = _slicedToArray(_useState93, 2),
+    filePreview = _useState94[0],
+    setFilePreview = _useState94[1];
+  var _useState95 = useState(user.tema || null),
+    _useState96 = _slicedToArray(_useState95, 2),
+    temaEscolhido = _useState96[0],
+    setTemaEscolhido = _useState96[1];
   var copy = COMPLETAR_COPY[campo] || {
     titulo: "",
     subtitulo: "",
@@ -7357,22 +7218,22 @@ function Perfil(_ref30) {
     onCadastrar = _ref30.onCadastrar,
     onUpdateUser = _ref30.onUpdateUser,
     onLogin = _ref30.onLogin;
-  var _useState98 = useState(false),
-    _useState99 = _slicedToArray(_useState98, 2),
-    editando = _useState99[0],
-    setEditando = _useState99[1];
-  var _useState100 = useState(null),
-    _useState101 = _slicedToArray(_useState100, 2),
-    fotoExpandida = _useState101[0],
-    setFotoExpandida = _useState101[1];
-  var _useState102 = useState(null),
-    _useState103 = _slicedToArray(_useState102, 2),
-    completarCampo = _useState103[0],
-    setCompletarCampo = _useState103[1];
-  var _useState104 = useState(false),
-    _useState105 = _slicedToArray(_useState104, 2),
-    confirmandoLogout = _useState105[0],
-    setConfirmandoLogout = _useState105[1];
+  var _useState97 = useState(false),
+    _useState98 = _slicedToArray(_useState97, 2),
+    editando = _useState98[0],
+    setEditando = _useState98[1];
+  var _useState99 = useState(null),
+    _useState100 = _slicedToArray(_useState99, 2),
+    fotoExpandida = _useState100[0],
+    setFotoExpandida = _useState100[1];
+  var _useState101 = useState(null),
+    _useState102 = _slicedToArray(_useState101, 2),
+    completarCampo = _useState102[0],
+    setCompletarCampo = _useState102[1];
+  var _useState103 = useState(false),
+    _useState104 = _slicedToArray(_useState103, 2),
+    confirmandoLogout = _useState104[0],
+    setConfirmandoLogout = _useState104[1];
   if (!user) return /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "80px 20px",
@@ -8506,18 +8367,18 @@ function ModalFoto(_ref36) {
     liked = _useLike.liked,
     likes = _useLike.count,
     toggleLike = _useLike.toggle;
-  var _useState106 = useState(false),
-    _useState107 = _slicedToArray(_useState106, 2),
-    showMsg = _useState107[0],
-    setShowMsg = _useState107[1];
-  var _useState108 = useState(""),
-    _useState109 = _slicedToArray(_useState108, 2),
-    msg = _useState109[0],
-    setMsg = _useState109[1];
-  var _useState110 = useState(false),
-    _useState111 = _slicedToArray(_useState110, 2),
-    confirmRemove = _useState111[0],
-    setConfirmRemove = _useState111[1];
+  var _useState105 = useState(false),
+    _useState106 = _slicedToArray(_useState105, 2),
+    showMsg = _useState106[0],
+    setShowMsg = _useState106[1];
+  var _useState107 = useState(""),
+    _useState108 = _slicedToArray(_useState107, 2),
+    msg = _useState108[0],
+    setMsg = _useState108[1];
+  var _useState109 = useState(false),
+    _useState110 = _slicedToArray(_useState109, 2),
+    confirmRemove = _useState110[0],
+    setConfirmRemove = _useState110[1];
   return /*#__PURE__*/React.createElement("div", {
     className: "fi",
     onClick: onClose,
@@ -8847,22 +8708,22 @@ function FotoInterativa(_ref37) {
     liked = _useLike2.liked,
     likes = _useLike2.count,
     toggleLike = _useLike2.toggle;
-  var _useState112 = useState(false),
-    _useState113 = _slicedToArray(_useState112, 2),
-    showComments = _useState113[0],
-    setShowComments = _useState113[1];
-  var _useState114 = useState([]),
-    _useState115 = _slicedToArray(_useState114, 2),
-    comments = _useState115[0],
-    setComments = _useState115[1];
-  var _useState116 = useState(""),
-    _useState117 = _slicedToArray(_useState116, 2),
-    newComment = _useState117[0],
-    setNewComment = _useState117[1];
-  var _useState118 = useState(false),
-    _useState119 = _slicedToArray(_useState118, 2),
-    fullscreen = _useState119[0],
-    setFullscreen = _useState119[1];
+  var _useState111 = useState(false),
+    _useState112 = _slicedToArray(_useState111, 2),
+    showComments = _useState112[0],
+    setShowComments = _useState112[1];
+  var _useState113 = useState([]),
+    _useState114 = _slicedToArray(_useState113, 2),
+    comments = _useState114[0],
+    setComments = _useState114[1];
+  var _useState115 = useState(""),
+    _useState116 = _slicedToArray(_useState115, 2),
+    newComment = _useState116[0],
+    setNewComment = _useState116[1];
+  var _useState117 = useState(false),
+    _useState118 = _slicedToArray(_useState117, 2),
+    fullscreen = _useState118[0],
+    setFullscreen = _useState118[1];
   function addComment() {
     if (!newComment.trim() || !user) return;
     setComments(function (v) {
@@ -9041,15 +8902,15 @@ function ModalPerfil(_ref38) {
     onChat = _ref38.onChat,
     user = _ref38.user,
     isContact = _ref38.isContact;
-  var _useState120 = useState({
+  var _useState119 = useState({
       lugares: 0,
       seguindo: 0,
       momentos: 0,
       loading: true
     }),
-    _useState121 = _slicedToArray(_useState120, 2),
-    stats = _useState121[0],
-    setStats = _useState121[1];
+    _useState120 = _slicedToArray(_useState119, 2),
+    stats = _useState120[0],
+    setStats = _useState120[1];
 
   // Carrega métricas em paralelo quando abre
   useEffect(function () {
@@ -9403,7 +9264,7 @@ function ModalPerfil(_ref38) {
       color: T.sub,
       fontWeight: 500
     }
-  }, p.available === "sim" ? "Disponível pra relembrar" : p.available === "mensagem" ? "Aberto a mensagens" : ""))), /*#__PURE__*/React.createElement("div", {
+  }, p.available === "sim" ? "Aberto a reencontros" : p.available === "mensagem" ? "Aberto a mensagens" : ""))), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "18px 20px 32px",
       display: "flex",
@@ -9484,34 +9345,34 @@ function ModalChat(_ref40) {
     msgs = _ref40.msgs,
     onSend = _ref40.onSend,
     onClose = _ref40.onClose;
-  var _useState122 = useState(""),
-    _useState123 = _slicedToArray(_useState122, 2),
-    txt = _useState123[0],
-    setTxt = _useState123[1];
-  var _useState124 = useState(null),
-    _useState125 = _slicedToArray(_useState124, 2),
-    mediaPreview = _useState125[0],
-    setMediaPreview = _useState125[1];
-  var _useState126 = useState(null),
-    _useState127 = _slicedToArray(_useState126, 2),
-    mediaFile = _useState127[0],
-    setMediaFile = _useState127[1];
-  var _useState128 = useState(null),
-    _useState129 = _slicedToArray(_useState128, 2),
-    mediaType = _useState129[0],
-    setMediaType = _useState129[1];
-  var _useState130 = useState(false),
-    _useState131 = _slicedToArray(_useState130, 2),
-    isRecording = _useState131[0],
-    setIsRecording = _useState131[1];
-  var _useState132 = useState(null),
-    _useState133 = _slicedToArray(_useState132, 2),
-    audioBlob = _useState133[0],
-    setAudioBlob = _useState133[1];
-  var _useState134 = useState([]),
-    _useState135 = _slicedToArray(_useState134, 2),
-    dbMsgs = _useState135[0],
-    setDbMsgs = _useState135[1];
+  var _useState121 = useState(""),
+    _useState122 = _slicedToArray(_useState121, 2),
+    txt = _useState122[0],
+    setTxt = _useState122[1];
+  var _useState123 = useState(null),
+    _useState124 = _slicedToArray(_useState123, 2),
+    mediaPreview = _useState124[0],
+    setMediaPreview = _useState124[1];
+  var _useState125 = useState(null),
+    _useState126 = _slicedToArray(_useState125, 2),
+    mediaFile = _useState126[0],
+    setMediaFile = _useState126[1];
+  var _useState127 = useState(null),
+    _useState128 = _slicedToArray(_useState127, 2),
+    mediaType = _useState128[0],
+    setMediaType = _useState128[1];
+  var _useState129 = useState(false),
+    _useState130 = _slicedToArray(_useState129, 2),
+    isRecording = _useState130[0],
+    setIsRecording = _useState130[1];
+  var _useState131 = useState(null),
+    _useState132 = _slicedToArray(_useState131, 2),
+    audioBlob = _useState132[0],
+    setAudioBlob = _useState132[1];
+  var _useState133 = useState([]),
+    _useState134 = _slicedToArray(_useState133, 2),
+    dbMsgs = _useState134[0],
+    setDbMsgs = _useState134[1];
   var recorderRef = useRef(null);
   var endRef = useRef();
 
@@ -10142,10 +10003,10 @@ function AddOutro(_ref43) {
     extras = _ref43$extras === void 0 ? [] : _ref43$extras,
     color = _ref43.color,
     bgColor = _ref43.bgColor;
-  var _useState136 = useState(""),
-    _useState137 = _slicedToArray(_useState136, 2),
-    val = _useState137[0],
-    setVal = _useState137[1];
+  var _useState135 = useState(""),
+    _useState136 = _slicedToArray(_useState135, 2),
+    val = _useState136[0],
+    setVal = _useState136[1];
   var activeColor = color || T.accent;
   var activeBg = bgColor || T.accentBg;
   function add() {
@@ -10265,14 +10126,14 @@ function FRow(_ref45) {
 
 // ── Sistema de Alertas por Região ────────────────────────────
 function useRegionAlerts(user) {
-  var _useState138 = useState([]),
-    _useState139 = _slicedToArray(_useState138, 2),
-    alerts = _useState139[0],
-    setAlerts = _useState139[1];
-  var _useState140 = useState(false),
-    _useState141 = _slicedToArray(_useState140, 2),
-    showAlert = _useState141[0],
-    setShowAlert = _useState141[1];
+  var _useState137 = useState([]),
+    _useState138 = _slicedToArray(_useState137, 2),
+    alerts = _useState138[0],
+    setAlerts = _useState138[1];
+  var _useState139 = useState(false),
+    _useState140 = _slicedToArray(_useState139, 2),
+    showAlert = _useState140[0],
+    setShowAlert = _useState140[1];
   var lastCheck = useRef(null);
   useEffect(function () {
     if (!user || !user.lugares || user.lugares.length === 0) return;
@@ -10462,7 +10323,7 @@ function ModalAdicionarLugar(_ref47) {
     onSave = _ref47.onSave;
   var temaCor = getTema(user).main;
   var temaBg = getTema(user).bg;
-  var _useState142 = useState({
+  var _useState141 = useState({
       placeType: "escola",
       placeName: "",
       addrSearch: "",
@@ -10476,17 +10337,17 @@ function ModalAdicionarLugar(_ref47) {
       y2: "",
       era: "passado"
     }),
-    _useState143 = _slicedToArray(_useState142, 2),
-    d = _useState143[0],
-    setD = _useState143[1];
-  var _useState144 = useState(false),
-    _useState145 = _slicedToArray(_useState144, 2),
-    saving = _useState145[0],
-    setSaving = _useState145[1];
-  var _useState146 = useState(false),
-    _useState147 = _slicedToArray(_useState146, 2),
-    done = _useState147[0],
-    setDone = _useState147[1];
+    _useState142 = _slicedToArray(_useState141, 2),
+    d = _useState142[0],
+    setD = _useState142[1];
+  var _useState143 = useState(false),
+    _useState144 = _slicedToArray(_useState143, 2),
+    saving = _useState144[0],
+    setSaving = _useState144[1];
+  var _useState145 = useState(false),
+    _useState146 = _slicedToArray(_useState145, 2),
+    done = _useState146[0],
+    setDone = _useState146[1];
   var timer = useRef();
   function searchAddr(_x27) {
     return _searchAddr2.apply(this, arguments);
@@ -11280,38 +11141,38 @@ function ModalMomento(_ref49) {
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
-  var _useState148 = useState(""),
-    _useState149 = _slicedToArray(_useState148, 2),
-    texto = _useState149[0],
-    setTexto = _useState149[1];
-  var _useState150 = useState(""),
-    _useState151 = _slicedToArray(_useState150, 2),
-    lugar = _useState151[0],
-    setLugar = _useState151[1];
-  var _useState152 = useState([]),
-    _useState153 = _slicedToArray(_useState152, 2),
-    fotos = _useState153[0],
-    setFotos = _useState153[1];
-  var _useState154 = useState([]),
-    _useState155 = _slicedToArray(_useState154, 2),
-    fotosFiles = _useState155[0],
-    setFotosFiles = _useState155[1];
-  var _useState156 = useState(false),
-    _useState157 = _slicedToArray(_useState156, 2),
-    saving = _useState157[0],
-    setSaving = _useState157[1];
-  var _useState158 = useState("contatos"),
-    _useState159 = _slicedToArray(_useState158, 2),
-    privMomento = _useState159[0],
-    setPrivMomento = _useState159[1];
-  var _useState160 = useState(false),
-    _useState161 = _slicedToArray(_useState160, 2),
-    capsulaAtiva = _useState161[0],
-    setCapsulaAtiva = _useState161[1];
-  var _useState162 = useState(""),
-    _useState163 = _slicedToArray(_useState162, 2),
-    revelarEm = _useState163[0],
-    setRevelarEm = _useState163[1];
+  var _useState147 = useState(""),
+    _useState148 = _slicedToArray(_useState147, 2),
+    texto = _useState148[0],
+    setTexto = _useState148[1];
+  var _useState149 = useState(""),
+    _useState150 = _slicedToArray(_useState149, 2),
+    lugar = _useState150[0],
+    setLugar = _useState150[1];
+  var _useState151 = useState([]),
+    _useState152 = _slicedToArray(_useState151, 2),
+    fotos = _useState152[0],
+    setFotos = _useState152[1];
+  var _useState153 = useState([]),
+    _useState154 = _slicedToArray(_useState153, 2),
+    fotosFiles = _useState154[0],
+    setFotosFiles = _useState154[1];
+  var _useState155 = useState(false),
+    _useState156 = _slicedToArray(_useState155, 2),
+    saving = _useState156[0],
+    setSaving = _useState156[1];
+  var _useState157 = useState("contatos"),
+    _useState158 = _slicedToArray(_useState157, 2),
+    privMomento = _useState158[0],
+    setPrivMomento = _useState158[1];
+  var _useState159 = useState(false),
+    _useState160 = _slicedToArray(_useState159, 2),
+    capsulaAtiva = _useState160[0],
+    setCapsulaAtiva = _useState160[1];
+  var _useState161 = useState(""),
+    _useState162 = _slicedToArray(_useState161, 2),
+    revelarEm = _useState162[0],
+    setRevelarEm = _useState162[1];
   function handleFotos(_x28) {
     return _handleFotos.apply(this, arguments);
   }
@@ -11741,26 +11602,26 @@ function ModalMomento(_ref49) {
 function TelaLogin(_ref50) {
   var onClose = _ref50.onClose,
     onLoggedIn = _ref50.onLoggedIn;
-  var _useState164 = useState("opcoes"),
-    _useState165 = _slicedToArray(_useState164, 2),
-    modo = _useState165[0],
-    setModo = _useState165[1]; // opcoes | email
-  var _useState166 = useState(""),
-    _useState167 = _slicedToArray(_useState166, 2),
-    email = _useState167[0],
-    setEmail = _useState167[1];
-  var _useState168 = useState(false),
-    _useState169 = _slicedToArray(_useState168, 2),
-    loading = _useState169[0],
-    setLoading = _useState169[1];
-  var _useState170 = useState(false),
-    _useState171 = _slicedToArray(_useState170, 2),
-    enviado = _useState171[0],
-    setEnviado = _useState171[1];
-  var _useState172 = useState(""),
-    _useState173 = _slicedToArray(_useState172, 2),
-    erro = _useState173[0],
-    setErro = _useState173[1];
+  var _useState163 = useState("opcoes"),
+    _useState164 = _slicedToArray(_useState163, 2),
+    modo = _useState164[0],
+    setModo = _useState164[1]; // opcoes | email
+  var _useState165 = useState(""),
+    _useState166 = _slicedToArray(_useState165, 2),
+    email = _useState166[0],
+    setEmail = _useState166[1];
+  var _useState167 = useState(false),
+    _useState168 = _slicedToArray(_useState167, 2),
+    loading = _useState168[0],
+    setLoading = _useState168[1];
+  var _useState169 = useState(false),
+    _useState170 = _slicedToArray(_useState169, 2),
+    enviado = _useState170[0],
+    setEnviado = _useState170[1];
+  var _useState171 = useState(""),
+    _useState172 = _slicedToArray(_useState171, 2),
+    erro = _useState172[0],
+    setErro = _useState172[1];
   function loginGoogle() {
     return _loginGoogle.apply(this, arguments);
   }
@@ -12159,10 +12020,10 @@ function TelaLogin(_ref50) {
 
 // ── Hook: Notificações de Região ──────────────────────────────
 function useRegionNotifications(user, contacts) {
-  var _useState174 = useState(null),
-    _useState175 = _slicedToArray(_useState174, 2),
-    notif = _useState175[0],
-    setNotif = _useState175[1]; // {type,profile,message}
+  var _useState173 = useState(null),
+    _useState174 = _slicedToArray(_useState173, 2),
+    notif = _useState174[0],
+    setNotif = _useState174[1]; // {type,profile,message}
   var lastCheck = useRef(null);
   var checked = useRef(new Set());
   useEffect(function () {
@@ -12342,11 +12203,11 @@ function BannerNotificacao(_ref51) {
 function CadastroSimples(_ref52) {
   var onDone = _ref52.onDone,
     onLogin = _ref52.onLogin;
-  var _useState176 = useState(false),
-    _useState177 = _slicedToArray(_useState176, 2),
-    saving = _useState177[0],
-    setSaving = _useState177[1];
-  var _useState178 = useState({
+  var _useState175 = useState(false),
+    _useState176 = _slicedToArray(_useState175, 2),
+    saving = _useState176[0],
+    setSaving = _useState176[1];
+  var _useState177 = useState({
       firstName: "",
       placeName: "",
       city: "",
@@ -12355,13 +12216,13 @@ function CadastroSimples(_ref52) {
       y1: "",
       y2: ""
     }),
-    _useState179 = _slicedToArray(_useState178, 2),
-    f = _useState179[0],
-    setF = _useState179[1];
-  var _useState180 = useState([]),
-    _useState181 = _slicedToArray(_useState180, 2),
-    addrSugs = _useState181[0],
-    setAddrSugs = _useState181[1];
+    _useState178 = _slicedToArray(_useState177, 2),
+    f = _useState178[0],
+    setF = _useState178[1];
+  var _useState179 = useState([]),
+    _useState180 = _slicedToArray(_useState179, 2),
+    addrSugs = _useState180[0],
+    setAddrSugs = _useState180[1];
   var addrTimer = useRef(null);
 
   // Autocomplete de lugar (mundial — sem forçar Brasil)
@@ -12815,10 +12676,10 @@ function MemoriaDoDia(_ref54) {
   var user = _ref54.user,
     contacts = _ref54.contacts,
     onView = _ref54.onView;
-  var _useState182 = useState([]),
-    _useState183 = _slicedToArray(_useState182, 2),
-    memorias = _useState183[0],
-    setMemorias = _useState183[1];
+  var _useState181 = useState([]),
+    _useState182 = _slicedToArray(_useState181, 2),
+    memorias = _useState182[0],
+    setMemorias = _useState182[1];
   useEffect(function () {
     if (!user && (!contacts || contacts.length === 0)) return;
     // Generate memories from user + contacts profiles
@@ -12973,14 +12834,14 @@ function MemoriaDoDia(_ref54) {
 // ── Quem Passou Por Aqui ──────────────────────────────────────
 function QuemPassouPorAqui(_ref55) {
   var user = _ref55.user;
-  var _useState184 = useState(0),
-    _useState185 = _slicedToArray(_useState184, 2),
-    count = _useState185[0],
-    setCount = _useState185[1];
-  var _useState186 = useState([]),
-    _useState187 = _slicedToArray(_useState186, 2),
-    exemplos = _useState187[0],
-    setExemplos = _useState187[1];
+  var _useState183 = useState(0),
+    _useState184 = _slicedToArray(_useState183, 2),
+    count = _useState184[0],
+    setCount = _useState184[1];
+  var _useState185 = useState([]),
+    _useState186 = _slicedToArray(_useState185, 2),
+    exemplos = _useState186[0],
+    setExemplos = _useState186[1];
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.city) && !(user !== null && user !== void 0 && user.state)) return;
     var filtro = user.city ? "city.ilike.%".concat(user.city, "%") : "state.eq.".concat(user.state);
@@ -13074,22 +12935,22 @@ function QuemPassouPorAqui(_ref55) {
 function PerguntaComunidade(_ref57) {
   var _user$intencao7, _user$intencao8, _user$intencao9, _user$intencao0;
   var user = _ref57.user;
-  var _useState188 = useState(""),
-    _useState189 = _slicedToArray(_useState188, 2),
-    resposta = _useState189[0],
-    setResposta = _useState189[1];
-  var _useState190 = useState(false),
-    _useState191 = _slicedToArray(_useState190, 2),
-    respondeu = _useState191[0],
-    setRespondeu = _useState191[1];
-  var _useState192 = useState(false),
-    _useState193 = _slicedToArray(_useState192, 2),
-    saving = _useState193[0],
-    setSaving = _useState193[1];
-  var _useState194 = useState(0),
-    _useState195 = _slicedToArray(_useState194, 2),
-    totalRespostas = _useState195[0],
-    setTotalRespostas = _useState195[1];
+  var _useState187 = useState(""),
+    _useState188 = _slicedToArray(_useState187, 2),
+    resposta = _useState188[0],
+    setResposta = _useState188[1];
+  var _useState189 = useState(false),
+    _useState190 = _slicedToArray(_useState189, 2),
+    respondeu = _useState190[0],
+    setRespondeu = _useState190[1];
+  var _useState191 = useState(false),
+    _useState192 = _slicedToArray(_useState191, 2),
+    saving = _useState192[0],
+    setSaving = _useState192[1];
+  var _useState193 = useState(0),
+    _useState194 = _slicedToArray(_useState193, 2),
+    totalRespostas = _useState194[0],
+    setTotalRespostas = _useState194[1];
 
   // Perguntas inteligentes baseadas no perfil + intenção
   var perguntas = [(user === null || user === void 0 ? void 0 : user.city) && "Quem lembra de algum ponto de encontro famoso em ".concat(user.city, "?"), (user === null || user === void 0 ? void 0 : user.place_name) && "Quem tem fotos antigas d".concat(user.place_type === "escola" ? "a" : "o", " ").concat(user.place_name, "?"), (user === null || user === void 0 || (_user$intencao7 = user.intencao) === null || _user$intencao7 === void 0 ? void 0 : _user$intencao7.includes("reencontrar")) && (user === null || user === void 0 ? void 0 : user.city) && "Quem mais quer se reencontrar com pessoas de ".concat(user.city, "?"), (user === null || user === void 0 || (_user$intencao8 = user.intencao) === null || _user$intencao8 === void 0 ? void 0 : _user$intencao8.includes("relembrar")) && "Qual foi o momento mais marcante do lugar onde você cresceu?", (user === null || user === void 0 || (_user$intencao9 = user.intencao) === null || _user$intencao9 === void 0 ? void 0 : _user$intencao9.includes("visitar")) && (user === null || user === void 0 ? void 0 : user.city) && "Tem fotos recentes de ".concat(user.city, " para compartilhar?"), (user === null || user === void 0 || (_user$intencao0 = user.intencao) === null || _user$intencao0 === void 0 ? void 0 : _user$intencao0.includes("reconectar")) && "Quem ainda mantém contato com pessoas do mesmo lugar?", (user === null || user === void 0 ? void 0 : user.city) && "Tem algu\xE9m de ".concat(user.city, " morando fora do Brasil?"), (user === null || user === void 0 ? void 0 : user.last_name) && "Tem mais algu\xE9m da fam\xEDlia ".concat(user.last_name, " aqui no Tempnext?")].filter(Boolean);
@@ -13247,7 +13108,7 @@ function PerguntaComunidade(_ref57) {
 function AgendaVisita(_ref59) {
   var user = _ref59.user,
     onSave = _ref59.onSave;
-  var _useState196 = useState({
+  var _useState195 = useState({
       data: "",
       hora: "",
       cidade: (user === null || user === void 0 ? void 0 : user.city) || "",
@@ -13259,17 +13120,17 @@ function AgendaVisita(_ref59) {
       revelarEm: "",
       selecionados: []
     }),
-    _useState197 = _slicedToArray(_useState196, 2),
-    f = _useState197[0],
-    setF = _useState197[1];
-  var _useState198 = useState(false),
-    _useState199 = _slicedToArray(_useState198, 2),
-    saving = _useState199[0],
-    setSaving = _useState199[1];
-  var _useState200 = useState(false),
-    _useState201 = _slicedToArray(_useState200, 2),
-    saved = _useState201[0],
-    setSaved = _useState201[1];
+    _useState196 = _slicedToArray(_useState195, 2),
+    f = _useState196[0],
+    setF = _useState196[1];
+  var _useState197 = useState(false),
+    _useState198 = _slicedToArray(_useState197, 2),
+    saving = _useState198[0],
+    setSaving = _useState198[1];
+  var _useState199 = useState(false),
+    _useState200 = _slicedToArray(_useState199, 2),
+    saved = _useState200[0],
+    setSaved = _useState200[1];
   function salvar() {
     return _salvar6.apply(this, arguments);
   }
@@ -13757,14 +13618,14 @@ function AlertaRegiao(_ref60) {
   var cidade = _ref60.cidade,
     estado = _ref60.estado,
     user = _ref60.user;
-  var _useState202 = useState(0),
-    _useState203 = _slicedToArray(_useState202, 2),
-    count = _useState203[0],
-    setCount = _useState203[1];
-  var _useState204 = useState([]),
-    _useState205 = _slicedToArray(_useState204, 2),
-    visitantes = _useState205[0],
-    setVisitantes = _useState205[1];
+  var _useState201 = useState(0),
+    _useState202 = _slicedToArray(_useState201, 2),
+    count = _useState202[0],
+    setCount = _useState202[1];
+  var _useState203 = useState([]),
+    _useState204 = _slicedToArray(_useState203, 2),
+    visitantes = _useState204[0],
+    setVisitantes = _useState204[1];
   useEffect(function () {
     if (!cidade && !estado) return;
     // Busca agendas de visita para essa região
@@ -13849,18 +13710,18 @@ function AlertaRegiao(_ref60) {
 
 // ── Seguir Lugares (Supabase) ─────────────────────────────────
 function useSeguirLugar(placeId, userId) {
-  var _useState206 = useState(false),
-    _useState207 = _slicedToArray(_useState206, 2),
-    seguindo = _useState207[0],
-    setSeguindo = _useState207[1];
-  var _useState208 = useState(false),
-    _useState209 = _slicedToArray(_useState208, 2),
-    loading = _useState209[0],
-    setLoading = _useState209[1];
-  var _useState210 = useState(0),
-    _useState211 = _slicedToArray(_useState210, 2),
-    totalSeguidores = _useState211[0],
-    setTotalSeguidores = _useState211[1];
+  var _useState205 = useState(false),
+    _useState206 = _slicedToArray(_useState205, 2),
+    seguindo = _useState206[0],
+    setSeguindo = _useState206[1];
+  var _useState207 = useState(false),
+    _useState208 = _slicedToArray(_useState207, 2),
+    loading = _useState208[0],
+    setLoading = _useState208[1];
+  var _useState209 = useState(0),
+    _useState210 = _slicedToArray(_useState209, 2),
+    totalSeguidores = _useState210[0],
+    setTotalSeguidores = _useState210[1];
   useEffect(function () {
     if (!placeId) return;
     // Busca total de seguidores deste lugar
@@ -13946,10 +13807,10 @@ function useSeguirLugar(placeId, userId) {
 function CapsulasUser(_ref64) {
   var user = _ref64.user,
     onOpenAgenda = _ref64.onOpenAgenda;
-  var _useState212 = useState([]),
-    _useState213 = _slicedToArray(_useState212, 2),
-    capsulas = _useState213[0],
-    setCapsulas = _useState213[1];
+  var _useState211 = useState([]),
+    _useState212 = _slicedToArray(_useState211, 2),
+    capsulas = _useState212[0],
+    setCapsulas = _useState212[1];
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
     // Busca momentos marcados como cápsula do user
@@ -14065,18 +13926,18 @@ function CapsulaPerfil(_ref66) {
   var capsula = _ref66.capsula,
     index = _ref66.index,
     userId = _ref66.userId;
-  var _useState214 = useState(false),
-    _useState215 = _slicedToArray(_useState214, 2),
-    editando = _useState215[0],
-    setEditando = _useState215[1];
-  var _useState216 = useState({
+  var _useState213 = useState(false),
+    _useState214 = _slicedToArray(_useState213, 2),
+    editando = _useState214[0],
+    setEditando = _useState214[1];
+  var _useState215 = useState({
       revelarEm: capsula.revelarEm || "",
       capsulVis: capsula.capsulVis || "ninguem",
       texto: capsula.texto || ""
     }),
-    _useState217 = _slicedToArray(_useState216, 2),
-    f = _useState217[0],
-    setF = _useState217[1];
+    _useState216 = _slicedToArray(_useState215, 2),
+    f = _useState216[0],
+    setF = _useState216[1];
   function salvarEdicao() {
     try {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
@@ -14247,36 +14108,36 @@ function PerfilLugar(_ref67) {
     user = _ref67.user,
     onBack = _ref67.onBack,
     onView = _ref67.onView;
-  var _useState218 = useState(null),
-    _useState219 = _slicedToArray(_useState218, 2),
-    place = _useState219[0],
-    setPlace = _useState219[1];
-  var _useState220 = useState([]),
-    _useState221 = _slicedToArray(_useState220, 2),
-    profiles = _useState221[0],
-    setProfiles = _useState221[1];
-  var _useState222 = useState([]),
-    _useState223 = _slicedToArray(_useState222, 2),
-    momentos = _useState223[0],
-    setMomentos = _useState223[1];
-  var _useState224 = useState([]),
-    _useState225 = _slicedToArray(_useState224, 2),
-    agendas = _useState225[0],
-    setAgendas = _useState225[1];
-  var _useState226 = useState(true),
-    _useState227 = _slicedToArray(_useState226, 2),
-    loading = _useState227[0],
-    setLoading = _useState227[1];
-  var _useState228 = useState(null),
-    _useState229 = _slicedToArray(_useState228, 2),
-    decadaSel = _useState229[0],
-    setDecadaSel = _useState229[1];
+  var _useState217 = useState(null),
+    _useState218 = _slicedToArray(_useState217, 2),
+    place = _useState218[0],
+    setPlace = _useState218[1];
+  var _useState219 = useState([]),
+    _useState220 = _slicedToArray(_useState219, 2),
+    profiles = _useState220[0],
+    setProfiles = _useState220[1];
+  var _useState221 = useState([]),
+    _useState222 = _slicedToArray(_useState221, 2),
+    momentos = _useState222[0],
+    setMomentos = _useState222[1];
+  var _useState223 = useState([]),
+    _useState224 = _slicedToArray(_useState223, 2),
+    agendas = _useState224[0],
+    setAgendas = _useState224[1];
+  var _useState225 = useState(true),
+    _useState226 = _slicedToArray(_useState225, 2),
+    loading = _useState226[0],
+    setLoading = _useState226[1];
+  var _useState227 = useState(null),
+    _useState228 = _slicedToArray(_useState227, 2),
+    decadaSel = _useState228[0],
+    setDecadaSel = _useState228[1];
 
   // Resolve placeId: pode vir direto ou buscar pelo nome
-  var _useState230 = useState(lugarId || null),
-    _useState231 = _slicedToArray(_useState230, 2),
-    resolvedId = _useState231[0],
-    setResolvedId = _useState231[1];
+  var _useState229 = useState(lugarId || null),
+    _useState230 = _slicedToArray(_useState229, 2),
+    resolvedId = _useState230[0],
+    setResolvedId = _useState230[1];
   useEffect(function () {
     if (lugarId) {
       setResolvedId(lugarId);
@@ -14876,39 +14737,39 @@ function PainelPessoal(_ref70) {
   var _momentoTop$fotos, _momentoTop$texto;
   var user = _ref70.user,
     onBack = _ref70.onBack;
-  var _useState232 = useState({
+  var _useState231 = useState({
       fotos: 0,
       momentos: 0,
       conexoes: 0,
       lugares: 0
     }),
-    _useState233 = _slicedToArray(_useState232, 2),
-    stats = _useState233[0],
-    setStats = _useState233[1];
-  var _useState234 = useState(null),
-    _useState235 = _slicedToArray(_useState234, 2),
-    fotoTop = _useState235[0],
-    setFotoTop = _useState235[1];
-  var _useState236 = useState(null),
-    _useState237 = _slicedToArray(_useState236, 2),
-    momentoTop = _useState237[0],
-    setMomentoTop = _useState237[1];
-  var _useState238 = useState(null),
-    _useState239 = _slicedToArray(_useState238, 2),
-    lugarTop = _useState239[0],
-    setLugarTop = _useState239[1];
-  var _useState240 = useState(0),
-    _useState241 = _slicedToArray(_useState240, 2),
-    nascRegiao = _useState241[0],
-    setNascRegiao = _useState241[1];
-  var _useState242 = useState(null),
-    _useState243 = _slicedToArray(_useState242, 2),
-    lugarRelevante = _useState243[0],
-    setLugarRelevante = _useState243[1];
-  var _useState244 = useState([]),
-    _useState245 = _slicedToArray(_useState244, 2),
-    pessoasLugar = _useState245[0],
-    setPessoasLugar = _useState245[1];
+    _useState232 = _slicedToArray(_useState231, 2),
+    stats = _useState232[0],
+    setStats = _useState232[1];
+  var _useState233 = useState(null),
+    _useState234 = _slicedToArray(_useState233, 2),
+    fotoTop = _useState234[0],
+    setFotoTop = _useState234[1];
+  var _useState235 = useState(null),
+    _useState236 = _slicedToArray(_useState235, 2),
+    momentoTop = _useState236[0],
+    setMomentoTop = _useState236[1];
+  var _useState237 = useState(null),
+    _useState238 = _slicedToArray(_useState237, 2),
+    lugarTop = _useState238[0],
+    setLugarTop = _useState238[1];
+  var _useState239 = useState(0),
+    _useState240 = _slicedToArray(_useState239, 2),
+    nascRegiao = _useState240[0],
+    setNascRegiao = _useState240[1];
+  var _useState241 = useState(null),
+    _useState242 = _slicedToArray(_useState241, 2),
+    lugarRelevante = _useState242[0],
+    setLugarRelevante = _useState242[1];
+  var _useState243 = useState([]),
+    _useState244 = _slicedToArray(_useState243, 2),
+    pessoasLugar = _useState244[0],
+    setPessoasLugar = _useState244[1];
   useEffect(function () {
     var _user$photos3, _user$lugares6, _user$lugares7, _user$photos4;
     if (!(user !== null && user !== void 0 && user.id)) return;
@@ -15523,39 +15384,39 @@ function PainelPessoal(_ref70) {
 
 // ── Root App ──────────────────────────────────────────────────
 function App() {
-  var _useState246 = useState("inicio"),
-    _useState247 = _slicedToArray(_useState246, 2),
-    tela = _useState247[0],
-    setTela = _useState247[1];
-  var _useState248 = useState({}),
-    _useState249 = _slicedToArray(_useState248, 2),
-    msgs = _useState249[0],
-    setMsgs = _useState249[1];
-  var _useState250 = useState([]),
-    _useState251 = _slicedToArray(_useState250, 2),
-    contacts = _useState251[0],
-    setContacts = _useState251[1];
-  var _useState252 = useState(false),
-    _useState253 = _slicedToArray(_useState252, 2),
-    showLogin = _useState253[0],
-    setShowLogin = _useState253[1];
-  var _useState254 = useState(false),
-    _useState255 = _slicedToArray(_useState254, 2),
-    showLoginPreview = _useState255[0],
-    setShowLoginPreview = _useState255[1];
-  var _useState256 = useState(null),
-    _useState257 = _slicedToArray(_useState256, 2),
-    perfilLugarAtual = _useState257[0],
-    setPerfilLugarAtual = _useState257[1];
-  var _useState258 = useState(false),
-    _useState259 = _slicedToArray(_useState258, 2),
-    showCuriosidade = _useState259[0],
-    setShowCuriosidade = _useState259[1];
-  var _useState260 = useState(true),
-    _useState261 = _slicedToArray(_useState260, 2),
-    useCadastroSimples = _useState261[0],
-    setUseCadastroSimples = _useState261[1];
-  var _useState262 = useState(function () {
+  var _useState245 = useState("inicio"),
+    _useState246 = _slicedToArray(_useState245, 2),
+    tela = _useState246[0],
+    setTela = _useState246[1];
+  var _useState247 = useState({}),
+    _useState248 = _slicedToArray(_useState247, 2),
+    msgs = _useState248[0],
+    setMsgs = _useState248[1];
+  var _useState249 = useState([]),
+    _useState250 = _slicedToArray(_useState249, 2),
+    contacts = _useState250[0],
+    setContacts = _useState250[1];
+  var _useState251 = useState(false),
+    _useState252 = _slicedToArray(_useState251, 2),
+    showLogin = _useState252[0],
+    setShowLogin = _useState252[1];
+  var _useState253 = useState(false),
+    _useState254 = _slicedToArray(_useState253, 2),
+    showLoginPreview = _useState254[0],
+    setShowLoginPreview = _useState254[1];
+  var _useState255 = useState(null),
+    _useState256 = _slicedToArray(_useState255, 2),
+    perfilLugarAtual = _useState256[0],
+    setPerfilLugarAtual = _useState256[1];
+  var _useState257 = useState(false),
+    _useState258 = _slicedToArray(_useState257, 2),
+    showCuriosidade = _useState258[0],
+    setShowCuriosidade = _useState258[1];
+  var _useState259 = useState(true),
+    _useState260 = _slicedToArray(_useState259, 2),
+    useCadastroSimples = _useState260[0],
+    setUseCadastroSimples = _useState260[1];
+  var _useState261 = useState(function () {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
@@ -15563,45 +15424,45 @@ function App() {
         return null;
       }
     }),
-    _useState263 = _slicedToArray(_useState262, 2),
-    user = _useState263[0],
-    setUser = _useState263[1];
-  var _useState264 = useState(null),
-    _useState265 = _slicedToArray(_useState264, 2),
-    modal = _useState265[0],
-    setModal = _useState265[1];
-  var _useState266 = useState(null),
-    _useState267 = _slicedToArray(_useState266, 2),
-    chat = _useState267[0],
-    setChat = _useState267[1];
-  var _useState268 = useState(false),
-    _useState269 = _slicedToArray(_useState268, 2),
-    showReencontrar = _useState269[0],
-    setShowReencontrar = _useState269[1];
-  var _useState270 = useState(null),
-    _useState271 = _slicedToArray(_useState270, 2),
-    filtroReencontrar = _useState271[0],
-    setFiltroReencontrar = _useState271[1];
-  var _useState272 = useState(false),
-    _useState273 = _slicedToArray(_useState272, 2),
-    showMenuRapido = _useState273[0],
-    setShowMenuRapido = _useState273[1];
-  var _useState274 = useState(false),
-    _useState275 = _slicedToArray(_useState274, 2),
-    showAdicionarLugar = _useState275[0],
-    setShowAdicionarLugar = _useState275[1];
-  var _useState276 = useState(false),
-    _useState277 = _slicedToArray(_useState276, 2),
-    showAgendaVisita = _useState277[0],
-    setShowAgendaVisita = _useState277[1];
-  var _useState278 = useState(false),
-    _useState279 = _slicedToArray(_useState278, 2),
-    showMomento = _useState279[0],
-    setShowMomento = _useState279[1];
-  var _useState280 = useState(false),
-    _useState281 = _slicedToArray(_useState280, 2),
-    confirmandoSaida = _useState281[0],
-    setConfirmandoSaida = _useState281[1];
+    _useState262 = _slicedToArray(_useState261, 2),
+    user = _useState262[0],
+    setUser = _useState262[1];
+  var _useState263 = useState(null),
+    _useState264 = _slicedToArray(_useState263, 2),
+    modal = _useState264[0],
+    setModal = _useState264[1];
+  var _useState265 = useState(null),
+    _useState266 = _slicedToArray(_useState265, 2),
+    chat = _useState266[0],
+    setChat = _useState266[1];
+  var _useState267 = useState(false),
+    _useState268 = _slicedToArray(_useState267, 2),
+    showReencontrar = _useState268[0],
+    setShowReencontrar = _useState268[1];
+  var _useState269 = useState(null),
+    _useState270 = _slicedToArray(_useState269, 2),
+    filtroReencontrar = _useState270[0],
+    setFiltroReencontrar = _useState270[1];
+  var _useState271 = useState(false),
+    _useState272 = _slicedToArray(_useState271, 2),
+    showMenuRapido = _useState272[0],
+    setShowMenuRapido = _useState272[1];
+  var _useState273 = useState(false),
+    _useState274 = _slicedToArray(_useState273, 2),
+    showAdicionarLugar = _useState274[0],
+    setShowAdicionarLugar = _useState274[1];
+  var _useState275 = useState(false),
+    _useState276 = _slicedToArray(_useState275, 2),
+    showAgendaVisita = _useState276[0],
+    setShowAgendaVisita = _useState276[1];
+  var _useState277 = useState(false),
+    _useState278 = _slicedToArray(_useState277, 2),
+    showMomento = _useState278[0],
+    setShowMomento = _useState278[1];
+  var _useState279 = useState(false),
+    _useState280 = _slicedToArray(_useState279, 2),
+    confirmandoSaida = _useState280[0],
+    setConfirmandoSaida = _useState280[1];
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
@@ -16272,10 +16133,10 @@ function App() {
   }
 
   // Estado de loading inicial
-  var _useState282 = useState(false),
-    _useState283 = _slicedToArray(_useState282, 2),
-    appReady = _useState283[0],
-    setAppReady = _useState283[1];
+  var _useState281 = useState(false),
+    _useState282 = _slicedToArray(_useState281, 2),
+    appReady = _useState282[0],
+    setAppReady = _useState282[1];
 
   // Marca app como pronto após init
   useEffect(function () {
