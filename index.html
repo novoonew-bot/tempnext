@@ -13499,21 +13499,26 @@ function CadastroSimples(_ref57) {
     saving = _useState216[0],
     setSaving = _useState216[1];
   var _useState217 = useState({
-      firstName: googleInfo !== null && googleInfo !== void 0 && googleInfo.name ? googleInfo.name.split(" ")[0] : "",
+      fullName: (googleInfo === null || googleInfo === void 0 ? void 0 : googleInfo.name) || "",
+      birthDay: "",
+      birthMonth: "",
+      birthYear: "",
       placeName: "",
       city: "",
       uf: "",
-      country: "Brasil",
-      y1: "",
-      y2: ""
+      country: "Brasil"
     }),
     _useState218 = _slicedToArray(_useState217, 2),
     f = _useState218[0],
     setF = _useState218[1];
-  var _useState219 = useState([]),
+  var _useState219 = useState(""),
     _useState220 = _slicedToArray(_useState219, 2),
-    addrSugs = _useState220[0],
-    setAddrSugs = _useState220[1];
+    erroIdade = _useState220[0],
+    setErroIdade = _useState220[1];
+  var _useState221 = useState([]),
+    _useState222 = _slicedToArray(_useState221, 2),
+    addrSugs = _useState222[0],
+    setAddrSugs = _useState222[1];
   var addrTimer = useRef(null);
 
   // Autocomplete de lugar (mundial — sem forçar Brasil)
@@ -13595,102 +13600,144 @@ function CadastroSimples(_ref57) {
     });
     setAddrSugs([]);
   }
+
+  // Calcula idade dada data de nascimento
+  function calcularIdade(dia, mes, ano) {
+    if (!dia || !mes || !ano) return null;
+    var hoje = new Date();
+    var nasc = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
+    if (isNaN(nasc.getTime())) return null;
+    var idade = hoje.getFullYear() - nasc.getFullYear();
+    var m = hoje.getMonth() - nasc.getMonth();
+    if (m < 0 || m === 0 && hoje.getDate() < nasc.getDate()) idade--;
+    return idade;
+  }
+
+  // Valida data ao mudar qualquer campo de idade
+  useEffect(function () {
+    if (f.birthDay && f.birthMonth && f.birthYear) {
+      var _idade = calcularIdade(f.birthDay, f.birthMonth, f.birthYear);
+      if (_idade === null) {
+        setErroIdade("Data inválida");
+        return;
+      }
+      if (_idade < 13) {
+        setErroIdade("Tempnext é pra maiores de 13 anos. Quando fizer 13, você é muito bem-vindo.");
+        return;
+      }
+      if (_idade > 120) {
+        setErroIdade("Verifique o ano de nascimento");
+        return;
+      }
+      setErroIdade("");
+    } else {
+      setErroIdade("");
+    }
+  }, [f.birthDay, f.birthMonth, f.birthYear]);
   function salvar() {
     return _salvar5.apply(this, arguments);
   }
   function _salvar5() {
     _salvar5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee39() {
-      var authId, _yield$db$auth$getSes, session, nome, payload, saved, _yield$db$from$insert2, data, error, _yield$db$from$upsert, _data, _t36, _t37, _t38;
+      var idade, authId, _yield$db$auth$getSes, session, nomeCompleto, partes, firstName, lastName, birthDate, payload, saved, _yield$db$from$insert2, data, error, _yield$db$from$upsert, _data, _t36, _t37, _t38;
       return _regenerator().w(function (_context39) {
         while (1) switch (_context39.p = _context39.n) {
           case 0:
-            if (!(!f.firstName.trim() || !f.placeName.trim() || !f.y1)) {
+            if (!(!f.fullName.trim() || !f.placeName.trim())) {
               _context39.n = 1;
               break;
             }
             return _context39.a(2);
           case 1:
+            if (!(!f.birthDay || !f.birthMonth || !f.birthYear)) {
+              _context39.n = 2;
+              break;
+            }
+            return _context39.a(2);
+          case 2:
+            idade = calcularIdade(f.birthDay, f.birthMonth, f.birthYear);
+            if (!(idade === null || idade < 13 || idade > 120)) {
+              _context39.n = 3;
+              break;
+            }
+            return _context39.a(2);
+          case 3:
             setSaving(true);
 
             // Busca auth_id
             authId = null;
-            _context39.p = 2;
-            _context39.n = 3;
+            _context39.p = 4;
+            _context39.n = 5;
             return db.auth.getSession();
-          case 3:
+          case 5:
             _yield$db$auth$getSes = _context39.v;
             session = _yield$db$auth$getSes.data.session;
             if (session !== null && session !== void 0 && session.user) authId = session.user.id;
-            _context39.n = 5;
+            _context39.n = 7;
             break;
-          case 4:
-            _context39.p = 4;
+          case 6:
+            _context39.p = 6;
             _t36 = _context39.v;
-          case 5:
-            nome = f.firstName.trim();
+          case 7:
+            nomeCompleto = f.fullName.trim();
+            partes = nomeCompleto.split(" ").filter(Boolean);
+            firstName = partes[0] || "";
+            lastName = partes.length > 1 ? partes.slice(1).join(" ") : "";
+            birthDate = "".concat(f.birthYear, "-").concat(String(f.birthMonth).padStart(2, "0"), "-").concat(String(f.birthDay).padStart(2, "0"));
             payload = {
               auth_id: authId,
-              name: nome,
-              first_name: nome,
-              last_name: "",
+              name: nomeCompleto,
+              first_name: firstName,
+              last_name: lastName,
+              birth_date: birthDate,
               place_name: f.placeName.trim(),
               city: f.city.trim() || f.placeName.trim(),
               state: f.uf || "",
               country: f.country || "Brasil",
-              year_start: f.y1 ? parseInt(f.y1) : null,
-              year_end: f.y2 ? parseInt(f.y2) : f.y1 ? parseInt(f.y1) : null,
-              era: f.y1 ? detectarEra(f.y1, f.y2 || f.y1) : "passado",
+              current_city: f.city.trim() || f.placeName.trim(),
               avatar_url: (googleInfo === null || googleInfo === void 0 ? void 0 : googleInfo.avatar_url) || null,
               photos: [],
               available: "sim",
-              lugares: [{
-                placeName: f.placeName.trim(),
-                city: f.city.trim(),
-                uf: f.uf,
-                pais: f.country,
-                y1: f.y1,
-                y2: f.y2 || f.y1,
-                era: f.y1 ? detectarEra(f.y1, f.y2 || f.y1) : "passado"
-              }]
+              lugares: []
             };
             saved = null;
-            _context39.p = 6;
-            _context39.n = 7;
+            _context39.p = 8;
+            _context39.n = 9;
             return db.from("profiles").insert(payload).select().single();
-          case 7:
+          case 9:
             _yield$db$from$insert2 = _context39.v;
             data = _yield$db$from$insert2.data;
             error = _yield$db$from$insert2.error;
             if (!error) {
-              _context39.n = 8;
+              _context39.n = 10;
               break;
             }
             throw error;
-          case 8:
+          case 10:
             saved = data;
-            _context39.n = 13;
+            _context39.n = 15;
             break;
-          case 9:
-            _context39.p = 9;
+          case 11:
+            _context39.p = 11;
             _t37 = _context39.v;
             console.error("Erro ao salvar perfil:", _t37);
-            _context39.p = 10;
-            _context39.n = 11;
+            _context39.p = 12;
+            _context39.n = 13;
             return db.from("profiles").upsert(payload).select().single();
-          case 11:
+          case 13:
             _yield$db$from$upsert = _context39.v;
             _data = _yield$db$from$upsert.data;
             saved = _data;
-            _context39.n = 13;
+            _context39.n = 15;
             break;
-          case 12:
-            _context39.p = 12;
+          case 14:
+            _context39.p = 14;
             _t38 = _context39.v;
             console.error("Erro no upsert:", _t38);
             saved = _objectSpread(_objectSpread({}, payload), {}, {
               id: "local_" + Date.now()
             });
-          case 13:
+          case 15:
             if (saved) {
               try {
                 localStorage.setItem("tn_user", JSON.stringify(saved));
@@ -13703,17 +13750,19 @@ function CadastroSimples(_ref57) {
             }
             setSaving(false);
             onDone(saved || payload);
-          case 14:
+          case 16:
             return _context39.a(2);
         }
-      }, _callee39, null, [[10, 12], [6, 9], [2, 4]]);
+      }, _callee39, null, [[12, 14], [8, 11], [4, 6]]);
     }));
     return _salvar5.apply(this, arguments);
   }
-  var canSave = f.firstName.trim().length >= 1 && f.placeName.trim().length >= 1 && f.y1;
+  var idade = calcularIdade(f.birthDay, f.birthMonth, f.birthYear);
+  var dataValida = idade !== null && idade >= 13 && idade <= 120;
+  var canSave = f.fullName.trim().length >= 2 && f.placeName.trim().length >= 1 && dataValida;
   return /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "60px 28px 40px",
+      padding: "48px 28px 40px",
       minHeight: "100vh",
       background: "linear-gradient(to bottom, #FFFEFB 0%, #FFFEFB 25%, #F4ECDB 50%, #E5D8B8 75%, #E5D8B8 100%)",
       display: "flex",
@@ -13721,36 +13770,61 @@ function CadastroSimples(_ref57) {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 36
+      textAlign: "center",
+      marginBottom: 32
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
-      color: T.muted,
-      letterSpacing: "0.18em",
-      textTransform: "uppercase",
-      fontWeight: 400,
-      marginBottom: 10
+      fontSize: 36,
+      fontWeight: 300,
+      color: T.text,
+      letterSpacing: "-0.5px",
+      fontFamily: "Georgia,serif",
+      marginBottom: 6
     }
-  }, "Come\xE7ando"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: T.accent,
+      fontWeight: 700
+    }
+  }, "Temp"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: T.blueStrong,
+      fontWeight: 700
+    }
+  }, "nexT")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: T.muted,
+      fontStyle: "italic",
+      fontFamily: "Georgia,serif",
+      lineHeight: 1.55,
+      maxWidth: 300,
+      margin: "0 auto"
+    }
+  }, "guarda hist\xF3rias, marca o presente e aproxima o futuro")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 26,
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: "Georgia,serif",
-      fontSize: 26,
+      fontSize: 18,
       fontWeight: 400,
       color: T.text,
-      lineHeight: 1.25,
-      marginBottom: 8
+      lineHeight: 1.3
     }
-  }, "Me conte onde e quando voc\xEA viveu"), /*#__PURE__*/React.createElement("div", {
+  }, googleInfo !== null && googleInfo !== void 0 && googleInfo.name ? "Bem-vindo(a), ".concat(googleInfo.name.split(" ")[0]) : "Vamos começar"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
+      fontSize: 12,
       color: T.muted,
       fontWeight: 300,
-      lineHeight: 1.5
+      marginTop: 6
     }
-  }, "\xC9 s\xF3 isso pra come\xE7ar. O resto voc\xEA completa depois.")), /*#__PURE__*/React.createElement("div", {
+  }, "S\xF3 tr\xEAs coisas pra come\xE7ar a sua jornada.")), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 22
+      marginBottom: 20
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -13758,19 +13832,20 @@ function CadastroSimples(_ref57) {
       color: T.muted,
       letterSpacing: "0.14em",
       textTransform: "uppercase",
-      marginBottom: 7
+      marginBottom: 7,
+      fontWeight: 600
     }
-  }, "Como te chamam"), /*#__PURE__*/React.createElement("input", {
-    value: f.firstName,
+  }, "Nome completo"), /*#__PURE__*/React.createElement("input", {
+    value: f.fullName,
     onChange: function onChange(e) {
       return setF(function (v) {
         return _objectSpread(_objectSpread({}, v), {}, {
-          firstName: e.target.value
+          fullName: e.target.value
         });
       });
     },
-    placeholder: "Seu nome",
-    autoFocus: true,
+    placeholder: "Seu nome completo",
+    autoFocus: !googleInfo,
     style: {
       width: "100%",
       padding: "14px 16px",
@@ -13783,7 +13858,102 @@ function CadastroSimples(_ref57) {
     }
   })), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 22,
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: T.muted,
+      letterSpacing: "0.14em",
+      textTransform: "uppercase",
+      marginBottom: 7,
+      fontWeight: 600
+    }
+  }, "Data de nascimento"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    value: f.birthDay,
+    onChange: function onChange(e) {
+      return setF(function (v) {
+        return _objectSpread(_objectSpread({}, v), {}, {
+          birthDay: e.target.value.replace(/\D/g, "").slice(0, 2)
+        });
+      });
+    },
+    placeholder: "DD",
+    inputMode: "numeric",
+    maxLength: 2,
+    style: {
+      flex: "0 0 68px",
+      padding: "13px 10px",
+      borderRadius: 12,
+      border: "1px solid ".concat(erroIdade ? T.red + "50" : T.border),
+      background: "#fff",
+      fontSize: 14,
+      fontFamily: "inherit",
+      outline: "none",
+      textAlign: "center"
+    }
+  }), /*#__PURE__*/React.createElement("input", {
+    value: f.birthMonth,
+    onChange: function onChange(e) {
+      return setF(function (v) {
+        return _objectSpread(_objectSpread({}, v), {}, {
+          birthMonth: e.target.value.replace(/\D/g, "").slice(0, 2)
+        });
+      });
+    },
+    placeholder: "MM",
+    inputMode: "numeric",
+    maxLength: 2,
+    style: {
+      flex: "0 0 68px",
+      padding: "13px 10px",
+      borderRadius: 12,
+      border: "1px solid ".concat(erroIdade ? T.red + "50" : T.border),
+      background: "#fff",
+      fontSize: 14,
+      fontFamily: "inherit",
+      outline: "none",
+      textAlign: "center"
+    }
+  }), /*#__PURE__*/React.createElement("input", {
+    value: f.birthYear,
+    onChange: function onChange(e) {
+      return setF(function (v) {
+        return _objectSpread(_objectSpread({}, v), {}, {
+          birthYear: e.target.value.replace(/\D/g, "").slice(0, 4)
+        });
+      });
+    },
+    placeholder: "AAAA",
+    inputMode: "numeric",
+    maxLength: 4,
+    style: {
+      flex: 1,
+      padding: "13px 14px",
+      borderRadius: 12,
+      border: "1px solid ".concat(erroIdade ? T.red + "50" : T.border),
+      background: "#fff",
+      fontSize: 14,
+      fontFamily: "inherit",
+      outline: "none",
+      textAlign: "center"
+    }
+  })), erroIdade && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: T.red,
+      marginTop: 6,
+      fontStyle: "italic",
+      lineHeight: 1.5
+    }
+  }, erroIdade)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 28,
       position: "relative"
     }
   }, /*#__PURE__*/React.createElement("div", {
@@ -13792,9 +13962,10 @@ function CadastroSimples(_ref57) {
       color: T.muted,
       letterSpacing: "0.14em",
       textTransform: "uppercase",
-      marginBottom: 7
+      marginBottom: 7,
+      fontWeight: 600
     }
-  }, "Onde voc\xEA viveu"), /*#__PURE__*/React.createElement("input", {
+  }, "Onde voc\xEA mora hoje"), /*#__PURE__*/React.createElement("input", {
     value: f.placeName,
     onChange: function onChange(e) {
       setF(function (v) {
@@ -13804,7 +13975,7 @@ function CadastroSimples(_ref57) {
       });
       searchAddr(e.target.value);
     },
-    placeholder: "Cidade, bairro, escola\u2026",
+    placeholder: "Cidade",
     style: {
       width: "100%",
       padding: "14px 16px",
@@ -13853,82 +14024,7 @@ function CadastroSimples(_ref57) {
         marginTop: 2
       }
     }, s.display_name.split(",").slice(1, 3).join(",").trim()));
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 28
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      color: T.muted,
-      letterSpacing: "0.14em",
-      textTransform: "uppercase",
-      marginBottom: 7
-    }
-  }, "Em que \xE9poca"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 10,
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    value: f.y1,
-    onChange: function onChange(e) {
-      return setF(function (v) {
-        return _objectSpread(_objectSpread({}, v), {}, {
-          y1: e.target.value.replace(/\D/g, "").slice(0, 4)
-        });
-      });
-    },
-    placeholder: "De",
-    inputMode: "numeric",
-    style: {
-      flex: 1,
-      padding: "13px 14px",
-      borderRadius: 12,
-      border: "1px solid ".concat(T.border),
-      background: "#fff",
-      fontSize: 14,
-      fontFamily: "inherit",
-      outline: "none",
-      textAlign: "center"
-    }
-  }), /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: T.muted,
-      fontSize: 14
-    }
-  }, "\u2014"), /*#__PURE__*/React.createElement("input", {
-    value: f.y2,
-    onChange: function onChange(e) {
-      return setF(function (v) {
-        return _objectSpread(_objectSpread({}, v), {}, {
-          y2: e.target.value.replace(/\D/g, "").slice(0, 4)
-        });
-      });
-    },
-    placeholder: "At\xE9 (opcional)",
-    inputMode: "numeric",
-    style: {
-      flex: 1,
-      padding: "13px 14px",
-      borderRadius: 12,
-      border: "1px solid ".concat(T.border),
-      background: "#fff",
-      fontSize: 14,
-      fontFamily: "inherit",
-      outline: "none",
-      textAlign: "center"
-    }
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      color: T.muted,
-      marginTop: 8,
-      fontWeight: 300,
-      fontStyle: "italic"
-    }
-  }, "Pode ser o ano aproximado \u2014 o importante \xE9 a \xE9poca.")), /*#__PURE__*/React.createElement("button", {
+  }))), /*#__PURE__*/React.createElement("button", {
     onClick: salvar,
     disabled: !canSave || saving,
     style: {
@@ -13936,8 +14032,8 @@ function CadastroSimples(_ref57) {
       padding: "15px",
       borderRadius: 14,
       border: "none",
-      background: canSave ? "linear-gradient(145deg,".concat(T.accent, "cc,").concat(T.accentDk, ")") : T.border,
-      color: "#fff",
+      background: canSave ? "linear-gradient(145deg,".concat(T.accent, "cc,").concat(T.accentDk, ")") : "rgba(0,0,0,0.08)",
+      color: canSave ? "#fff" : "rgba(0,0,0,0.4)",
       fontSize: 14,
       fontWeight: 600,
       cursor: canSave && !saving ? "pointer" : "not-allowed",
@@ -13954,9 +14050,11 @@ function CadastroSimples(_ref57) {
       textAlign: "center",
       marginTop: 14,
       fontWeight: 300,
-      lineHeight: 1.5
+      lineHeight: 1.5,
+      fontStyle: "italic",
+      fontFamily: "Georgia,serif"
     }
-  }, "Voc\xEA adiciona foto, mais lugares e personaliza depois, no seu perfil."));
+  }, "Voc\xEA adiciona outros lugares, \xE9pocas e fotos depois, no seu perfil."));
 }
 
 // ── Tela de Curiosidade (antes do cadastro) ───────────────────
@@ -13967,10 +14065,10 @@ function MemoriaDoDia(_ref59) {
   var user = _ref59.user,
     contacts = _ref59.contacts,
     onView = _ref59.onView;
-  var _useState221 = useState([]),
-    _useState222 = _slicedToArray(_useState221, 2),
-    memorias = _useState222[0],
-    setMemorias = _useState222[1];
+  var _useState223 = useState([]),
+    _useState224 = _slicedToArray(_useState223, 2),
+    memorias = _useState224[0],
+    setMemorias = _useState224[1];
   useEffect(function () {
     if (!user && (!contacts || contacts.length === 0)) return;
     // Generate memories from user + contacts profiles
@@ -14125,14 +14223,14 @@ function MemoriaDoDia(_ref59) {
 // ── Quem Passou Por Aqui ──────────────────────────────────────
 function QuemPassouPorAqui(_ref60) {
   var user = _ref60.user;
-  var _useState223 = useState(0),
-    _useState224 = _slicedToArray(_useState223, 2),
-    count = _useState224[0],
-    setCount = _useState224[1];
-  var _useState225 = useState([]),
+  var _useState225 = useState(0),
     _useState226 = _slicedToArray(_useState225, 2),
-    exemplos = _useState226[0],
-    setExemplos = _useState226[1];
+    count = _useState226[0],
+    setCount = _useState226[1];
+  var _useState227 = useState([]),
+    _useState228 = _slicedToArray(_useState227, 2),
+    exemplos = _useState228[0],
+    setExemplos = _useState228[1];
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.city) && !(user !== null && user !== void 0 && user.state)) return;
     var filtro = user.city ? "city.ilike.%".concat(user.city, "%") : "state.eq.".concat(user.state);
@@ -14226,22 +14324,22 @@ function QuemPassouPorAqui(_ref60) {
 function PerguntaComunidade(_ref62) {
   var _user$intencao6, _user$intencao7, _user$intencao8, _user$intencao9;
   var user = _ref62.user;
-  var _useState227 = useState(""),
-    _useState228 = _slicedToArray(_useState227, 2),
-    resposta = _useState228[0],
-    setResposta = _useState228[1];
-  var _useState229 = useState(false),
+  var _useState229 = useState(""),
     _useState230 = _slicedToArray(_useState229, 2),
-    respondeu = _useState230[0],
-    setRespondeu = _useState230[1];
+    resposta = _useState230[0],
+    setResposta = _useState230[1];
   var _useState231 = useState(false),
     _useState232 = _slicedToArray(_useState231, 2),
-    saving = _useState232[0],
-    setSaving = _useState232[1];
-  var _useState233 = useState(0),
+    respondeu = _useState232[0],
+    setRespondeu = _useState232[1];
+  var _useState233 = useState(false),
     _useState234 = _slicedToArray(_useState233, 2),
-    totalRespostas = _useState234[0],
-    setTotalRespostas = _useState234[1];
+    saving = _useState234[0],
+    setSaving = _useState234[1];
+  var _useState235 = useState(0),
+    _useState236 = _slicedToArray(_useState235, 2),
+    totalRespostas = _useState236[0],
+    setTotalRespostas = _useState236[1];
 
   // Perguntas inteligentes baseadas no perfil + intenção
   var perguntas = [(user === null || user === void 0 ? void 0 : user.city) && "Quem lembra de algum ponto de encontro famoso em ".concat(user.city, "?"), (user === null || user === void 0 ? void 0 : user.place_name) && "Quem tem fotos antigas d".concat(user.place_type === "escola" ? "a" : "o", " ").concat(user.place_name, "?"), (user === null || user === void 0 || (_user$intencao6 = user.intencao) === null || _user$intencao6 === void 0 ? void 0 : _user$intencao6.includes("reencontrar")) && (user === null || user === void 0 ? void 0 : user.city) && "Quem mais quer se reencontrar com pessoas de ".concat(user.city, "?"), (user === null || user === void 0 || (_user$intencao7 = user.intencao) === null || _user$intencao7 === void 0 ? void 0 : _user$intencao7.includes("relembrar")) && "Qual foi o momento mais marcante do lugar onde você cresceu?", (user === null || user === void 0 || (_user$intencao8 = user.intencao) === null || _user$intencao8 === void 0 ? void 0 : _user$intencao8.includes("visitar")) && (user === null || user === void 0 ? void 0 : user.city) && "Tem fotos recentes de ".concat(user.city, " para compartilhar?"), (user === null || user === void 0 || (_user$intencao9 = user.intencao) === null || _user$intencao9 === void 0 ? void 0 : _user$intencao9.includes("reconectar")) && "Quem ainda mantém contato com pessoas do mesmo lugar?", (user === null || user === void 0 ? void 0 : user.city) && "Tem algu\xE9m de ".concat(user.city, " morando fora do Brasil?"), (user === null || user === void 0 ? void 0 : user.last_name) && "Tem mais algu\xE9m da fam\xEDlia ".concat(user.last_name, " aqui no Tempnext?")].filter(Boolean);
@@ -14399,7 +14497,7 @@ function PerguntaComunidade(_ref62) {
 function AgendaVisita(_ref64) {
   var user = _ref64.user,
     onSave = _ref64.onSave;
-  var _useState235 = useState({
+  var _useState237 = useState({
       data: "",
       hora: "",
       cidade: (user === null || user === void 0 ? void 0 : user.city) || "",
@@ -14411,17 +14509,17 @@ function AgendaVisita(_ref64) {
       revelarEm: "",
       selecionados: []
     }),
-    _useState236 = _slicedToArray(_useState235, 2),
-    f = _useState236[0],
-    setF = _useState236[1];
-  var _useState237 = useState(false),
     _useState238 = _slicedToArray(_useState237, 2),
-    saving = _useState238[0],
-    setSaving = _useState238[1];
+    f = _useState238[0],
+    setF = _useState238[1];
   var _useState239 = useState(false),
     _useState240 = _slicedToArray(_useState239, 2),
-    saved = _useState240[0],
-    setSaved = _useState240[1];
+    saving = _useState240[0],
+    setSaving = _useState240[1];
+  var _useState241 = useState(false),
+    _useState242 = _slicedToArray(_useState241, 2),
+    saved = _useState242[0],
+    setSaved = _useState242[1];
   function salvar() {
     return _salvar6.apply(this, arguments);
   }
@@ -14909,14 +15007,14 @@ function AlertaRegiao(_ref65) {
   var cidade = _ref65.cidade,
     estado = _ref65.estado,
     user = _ref65.user;
-  var _useState241 = useState(0),
-    _useState242 = _slicedToArray(_useState241, 2),
-    count = _useState242[0],
-    setCount = _useState242[1];
-  var _useState243 = useState([]),
+  var _useState243 = useState(0),
     _useState244 = _slicedToArray(_useState243, 2),
-    visitantes = _useState244[0],
-    setVisitantes = _useState244[1];
+    count = _useState244[0],
+    setCount = _useState244[1];
+  var _useState245 = useState([]),
+    _useState246 = _slicedToArray(_useState245, 2),
+    visitantes = _useState246[0],
+    setVisitantes = _useState246[1];
   useEffect(function () {
     if (!cidade && !estado) return;
     // Busca agendas de visita para essa região
@@ -15001,18 +15099,18 @@ function AlertaRegiao(_ref65) {
 
 // ── Seguir Lugares (Supabase) ─────────────────────────────────
 function useSeguirLugar(placeId, userId) {
-  var _useState245 = useState(false),
-    _useState246 = _slicedToArray(_useState245, 2),
-    seguindo = _useState246[0],
-    setSeguindo = _useState246[1];
   var _useState247 = useState(false),
     _useState248 = _slicedToArray(_useState247, 2),
-    loading = _useState248[0],
-    setLoading = _useState248[1];
-  var _useState249 = useState(0),
+    seguindo = _useState248[0],
+    setSeguindo = _useState248[1];
+  var _useState249 = useState(false),
     _useState250 = _slicedToArray(_useState249, 2),
-    totalSeguidores = _useState250[0],
-    setTotalSeguidores = _useState250[1];
+    loading = _useState250[0],
+    setLoading = _useState250[1];
+  var _useState251 = useState(0),
+    _useState252 = _slicedToArray(_useState251, 2),
+    totalSeguidores = _useState252[0],
+    setTotalSeguidores = _useState252[1];
   useEffect(function () {
     if (!placeId) return;
     // Busca total de seguidores deste lugar
@@ -15098,10 +15196,10 @@ function useSeguirLugar(placeId, userId) {
 function CapsulasUser(_ref69) {
   var user = _ref69.user,
     onOpenAgenda = _ref69.onOpenAgenda;
-  var _useState251 = useState([]),
-    _useState252 = _slicedToArray(_useState251, 2),
-    capsulas = _useState252[0],
-    setCapsulas = _useState252[1];
+  var _useState253 = useState([]),
+    _useState254 = _slicedToArray(_useState253, 2),
+    capsulas = _useState254[0],
+    setCapsulas = _useState254[1];
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
     // Busca momentos marcados como cápsula do user
@@ -15217,18 +15315,18 @@ function CapsulaPerfil(_ref71) {
   var capsula = _ref71.capsula,
     index = _ref71.index,
     userId = _ref71.userId;
-  var _useState253 = useState(false),
-    _useState254 = _slicedToArray(_useState253, 2),
-    editando = _useState254[0],
-    setEditando = _useState254[1];
-  var _useState255 = useState({
+  var _useState255 = useState(false),
+    _useState256 = _slicedToArray(_useState255, 2),
+    editando = _useState256[0],
+    setEditando = _useState256[1];
+  var _useState257 = useState({
       revelarEm: capsula.revelarEm || "",
       capsulVis: capsula.capsulVis || "ninguem",
       texto: capsula.texto || ""
     }),
-    _useState256 = _slicedToArray(_useState255, 2),
-    f = _useState256[0],
-    setF = _useState256[1];
+    _useState258 = _slicedToArray(_useState257, 2),
+    f = _useState258[0],
+    setF = _useState258[1];
   function salvarEdicao() {
     try {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
@@ -15399,44 +15497,44 @@ function PerfilLugar(_ref72) {
     user = _ref72.user,
     onBack = _ref72.onBack,
     onView = _ref72.onView;
-  var _useState257 = useState(null),
-    _useState258 = _slicedToArray(_useState257, 2),
-    place = _useState258[0],
-    setPlace = _useState258[1];
-  var _useState259 = useState([]),
+  var _useState259 = useState(null),
     _useState260 = _slicedToArray(_useState259, 2),
-    profiles = _useState260[0],
-    setProfiles = _useState260[1];
+    place = _useState260[0],
+    setPlace = _useState260[1];
   var _useState261 = useState([]),
     _useState262 = _slicedToArray(_useState261, 2),
-    momentos = _useState262[0],
-    setMomentos = _useState262[1];
+    profiles = _useState262[0],
+    setProfiles = _useState262[1];
   var _useState263 = useState([]),
     _useState264 = _slicedToArray(_useState263, 2),
-    agendas = _useState264[0],
-    setAgendas = _useState264[1];
+    momentos = _useState264[0],
+    setMomentos = _useState264[1];
   var _useState265 = useState([]),
     _useState266 = _slicedToArray(_useState265, 2),
-    lugaresRelacionados = _useState266[0],
-    setLugaresRelacionados = _useState266[1];
-  var _useState267 = useState(true),
+    agendas = _useState266[0],
+    setAgendas = _useState266[1];
+  var _useState267 = useState([]),
     _useState268 = _slicedToArray(_useState267, 2),
-    loading = _useState268[0],
-    setLoading = _useState268[1];
-  var _useState269 = useState(null),
+    lugaresRelacionados = _useState268[0],
+    setLugaresRelacionados = _useState268[1];
+  var _useState269 = useState(true),
     _useState270 = _slicedToArray(_useState269, 2),
-    decadaSel = _useState270[0],
-    setDecadaSel = _useState270[1];
+    loading = _useState270[0],
+    setLoading = _useState270[1];
   var _useState271 = useState(null),
     _useState272 = _slicedToArray(_useState271, 2),
-    filtroEpoca = _useState272[0],
-    setFiltroEpoca = _useState272[1]; // {ys, ye} clicável da linha do tempo
+    decadaSel = _useState272[0],
+    setDecadaSel = _useState272[1];
+  var _useState273 = useState(null),
+    _useState274 = _slicedToArray(_useState273, 2),
+    filtroEpoca = _useState274[0],
+    setFiltroEpoca = _useState274[1]; // {ys, ye} clicável da linha do tempo
 
   // Resolve placeId: pode vir direto ou buscar pelo nome
-  var _useState273 = useState(lugarId || null),
-    _useState274 = _slicedToArray(_useState273, 2),
-    resolvedId = _useState274[0],
-    setResolvedId = _useState274[1];
+  var _useState275 = useState(lugarId || null),
+    _useState276 = _slicedToArray(_useState275, 2),
+    resolvedId = _useState276[0],
+    setResolvedId = _useState276[1];
   useEffect(function () {
     if (lugarId) {
       setResolvedId(lugarId);
@@ -16652,39 +16750,39 @@ function PainelPessoal(_ref75) {
   var _momentoTop$fotos, _momentoTop$texto;
   var user = _ref75.user,
     onBack = _ref75.onBack;
-  var _useState275 = useState({
+  var _useState277 = useState({
       fotos: 0,
       momentos: 0,
       conexoes: 0,
       lugares: 0
     }),
-    _useState276 = _slicedToArray(_useState275, 2),
-    stats = _useState276[0],
-    setStats = _useState276[1];
-  var _useState277 = useState(null),
     _useState278 = _slicedToArray(_useState277, 2),
-    fotoTop = _useState278[0],
-    setFotoTop = _useState278[1];
+    stats = _useState278[0],
+    setStats = _useState278[1];
   var _useState279 = useState(null),
     _useState280 = _slicedToArray(_useState279, 2),
-    momentoTop = _useState280[0],
-    setMomentoTop = _useState280[1];
+    fotoTop = _useState280[0],
+    setFotoTop = _useState280[1];
   var _useState281 = useState(null),
     _useState282 = _slicedToArray(_useState281, 2),
-    lugarTop = _useState282[0],
-    setLugarTop = _useState282[1];
-  var _useState283 = useState(0),
+    momentoTop = _useState282[0],
+    setMomentoTop = _useState282[1];
+  var _useState283 = useState(null),
     _useState284 = _slicedToArray(_useState283, 2),
-    nascRegiao = _useState284[0],
-    setNascRegiao = _useState284[1];
-  var _useState285 = useState(null),
+    lugarTop = _useState284[0],
+    setLugarTop = _useState284[1];
+  var _useState285 = useState(0),
     _useState286 = _slicedToArray(_useState285, 2),
-    lugarRelevante = _useState286[0],
-    setLugarRelevante = _useState286[1];
-  var _useState287 = useState([]),
+    nascRegiao = _useState286[0],
+    setNascRegiao = _useState286[1];
+  var _useState287 = useState(null),
     _useState288 = _slicedToArray(_useState287, 2),
-    pessoasLugar = _useState288[0],
-    setPessoasLugar = _useState288[1];
+    lugarRelevante = _useState288[0],
+    setLugarRelevante = _useState288[1];
+  var _useState289 = useState([]),
+    _useState290 = _slicedToArray(_useState289, 2),
+    pessoasLugar = _useState290[0],
+    setPessoasLugar = _useState290[1];
   useEffect(function () {
     var _user$photos2, _user$lugares4, _user$lugares5, _user$photos3;
     if (!(user !== null && user !== void 0 && user.id)) return;
@@ -17299,43 +17397,43 @@ function PainelPessoal(_ref75) {
 
 // ── Root App ──────────────────────────────────────────────────
 function App() {
-  var _useState289 = useState("inicio"),
-    _useState290 = _slicedToArray(_useState289, 2),
-    tela = _useState290[0],
-    setTela = _useState290[1];
-  var _useState291 = useState({}),
+  var _useState291 = useState("inicio"),
     _useState292 = _slicedToArray(_useState291, 2),
-    msgs = _useState292[0],
-    setMsgs = _useState292[1];
-  var _useState293 = useState([]),
+    tela = _useState292[0],
+    setTela = _useState292[1];
+  var _useState293 = useState({}),
     _useState294 = _slicedToArray(_useState293, 2),
-    contacts = _useState294[0],
-    setContacts = _useState294[1];
-  var _useState295 = useState(false),
+    msgs = _useState294[0],
+    setMsgs = _useState294[1];
+  var _useState295 = useState([]),
     _useState296 = _slicedToArray(_useState295, 2),
-    showLogin = _useState296[0],
-    setShowLogin = _useState296[1];
+    contacts = _useState296[0],
+    setContacts = _useState296[1];
   var _useState297 = useState(false),
     _useState298 = _slicedToArray(_useState297, 2),
-    showLoginPreview = _useState298[0],
-    setShowLoginPreview = _useState298[1];
-  var _useState299 = useState(null),
+    showLogin = _useState298[0],
+    setShowLogin = _useState298[1];
+  var _useState299 = useState(false),
     _useState300 = _slicedToArray(_useState299, 2),
-    googleUserSemPerfil = _useState300[0],
-    setGoogleUserSemPerfil = _useState300[1]; // {id, email, name, avatar_url} quando precisa cadastrar
+    showLoginPreview = _useState300[0],
+    setShowLoginPreview = _useState300[1];
   var _useState301 = useState(null),
     _useState302 = _slicedToArray(_useState301, 2),
-    perfilLugarAtual = _useState302[0],
-    setPerfilLugarAtual = _useState302[1];
-  var _useState303 = useState(false),
+    googleUserSemPerfil = _useState302[0],
+    setGoogleUserSemPerfil = _useState302[1]; // {id, email, name, avatar_url} quando precisa cadastrar
+  var _useState303 = useState(null),
     _useState304 = _slicedToArray(_useState303, 2),
-    showCuriosidade = _useState304[0],
-    setShowCuriosidade = _useState304[1];
-  var _useState305 = useState(true),
+    perfilLugarAtual = _useState304[0],
+    setPerfilLugarAtual = _useState304[1];
+  var _useState305 = useState(false),
     _useState306 = _slicedToArray(_useState305, 2),
-    useCadastroSimples = _useState306[0],
-    setUseCadastroSimples = _useState306[1];
-  var _useState307 = useState(function () {
+    showCuriosidade = _useState306[0],
+    setShowCuriosidade = _useState306[1];
+  var _useState307 = useState(true),
+    _useState308 = _slicedToArray(_useState307, 2),
+    useCadastroSimples = _useState308[0],
+    setUseCadastroSimples = _useState308[1];
+  var _useState309 = useState(function () {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
@@ -17343,45 +17441,45 @@ function App() {
         return null;
       }
     }),
-    _useState308 = _slicedToArray(_useState307, 2),
-    user = _useState308[0],
-    setUser = _useState308[1];
-  var _useState309 = useState(null),
     _useState310 = _slicedToArray(_useState309, 2),
-    modal = _useState310[0],
-    setModal = _useState310[1];
+    user = _useState310[0],
+    setUser = _useState310[1];
   var _useState311 = useState(null),
     _useState312 = _slicedToArray(_useState311, 2),
-    chat = _useState312[0],
-    setChat = _useState312[1];
-  var _useState313 = useState(false),
+    modal = _useState312[0],
+    setModal = _useState312[1];
+  var _useState313 = useState(null),
     _useState314 = _slicedToArray(_useState313, 2),
-    showReencontrar = _useState314[0],
-    setShowReencontrar = _useState314[1];
-  var _useState315 = useState(null),
+    chat = _useState314[0],
+    setChat = _useState314[1];
+  var _useState315 = useState(false),
     _useState316 = _slicedToArray(_useState315, 2),
-    filtroReencontrar = _useState316[0],
-    setFiltroReencontrar = _useState316[1];
-  var _useState317 = useState(false),
+    showReencontrar = _useState316[0],
+    setShowReencontrar = _useState316[1];
+  var _useState317 = useState(null),
     _useState318 = _slicedToArray(_useState317, 2),
-    showMenuRapido = _useState318[0],
-    setShowMenuRapido = _useState318[1];
+    filtroReencontrar = _useState318[0],
+    setFiltroReencontrar = _useState318[1];
   var _useState319 = useState(false),
     _useState320 = _slicedToArray(_useState319, 2),
-    showAdicionarLugar = _useState320[0],
-    setShowAdicionarLugar = _useState320[1];
+    showMenuRapido = _useState320[0],
+    setShowMenuRapido = _useState320[1];
   var _useState321 = useState(false),
     _useState322 = _slicedToArray(_useState321, 2),
-    showAgendaVisita = _useState322[0],
-    setShowAgendaVisita = _useState322[1];
+    showAdicionarLugar = _useState322[0],
+    setShowAdicionarLugar = _useState322[1];
   var _useState323 = useState(false),
     _useState324 = _slicedToArray(_useState323, 2),
-    showMomento = _useState324[0],
-    setShowMomento = _useState324[1];
+    showAgendaVisita = _useState324[0],
+    setShowAgendaVisita = _useState324[1];
   var _useState325 = useState(false),
     _useState326 = _slicedToArray(_useState325, 2),
-    confirmandoSaida = _useState326[0],
-    setConfirmandoSaida = _useState326[1];
+    showMomento = _useState326[0],
+    setShowMomento = _useState326[1];
+  var _useState327 = useState(false),
+    _useState328 = _slicedToArray(_useState327, 2),
+    confirmandoSaida = _useState328[0],
+    setConfirmandoSaida = _useState328[1];
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
@@ -18088,10 +18186,10 @@ function App() {
   }
 
   // Estado de loading inicial
-  var _useState327 = useState(false),
-    _useState328 = _slicedToArray(_useState327, 2),
-    appReady = _useState328[0],
-    setAppReady = _useState328[1];
+  var _useState329 = useState(false),
+    _useState330 = _slicedToArray(_useState329, 2),
+    appReady = _useState330[0],
+    setAppReady = _useState330[1];
 
   // Marca app como pronto após init
   useEffect(function () {
