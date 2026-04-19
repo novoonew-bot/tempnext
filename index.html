@@ -8706,7 +8706,7 @@ function FotoInterativa(_ref35) {
 
 // ── Modal: Ver Perfil ─────────────────────────────────────────
 function ModalPerfil(_ref36) {
-  var _p$photos;
+  var _p$photos, _p$photos2;
   var p = _ref36.p,
     onClose = _ref36.onClose,
     onAdd = _ref36.onAdd,
@@ -8864,19 +8864,29 @@ function ModalPerfil(_ref36) {
     }
   }, "Voc\xEAs compartilham mem\xF3rias do mesmo lugar na mesma \xE9poca")), /*#__PURE__*/React.createElement("div", {
     style: {
-      height: 140,
+      height: 180,
       background: "linear-gradient(135deg,".concat(T.accentBg, ",rgba(21,101,192,0.08))"),
       position: "relative",
-      margin: "8px 0 0"
+      margin: "8px 0 0",
+      overflow: "hidden"
     }
-  }, p.avatar_url && /*#__PURE__*/React.createElement("img", {
+  }, (_p$photos = p.photos) !== null && _p$photos !== void 0 && _p$photos[0] ? /*#__PURE__*/React.createElement("img", {
+    src: p.photos[0],
+    alt: "",
+    style: {
+      width: "100%",
+      height: "100%",
+      objectFit: "cover"
+    }
+  }) : p.avatar_url && /*#__PURE__*/React.createElement("img", {
     src: p.avatar_url,
     alt: "",
     style: {
       width: "100%",
       height: "100%",
       objectFit: "cover",
-      opacity: .4
+      opacity: 0.35,
+      filter: "blur(4px)"
     }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -8901,9 +8911,10 @@ function ModalPerfil(_ref36) {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 22,
+      fontSize: 17,
       fontWeight: 700,
-      color: T.text
+      color: T.text,
+      letterSpacing: "-0.01em"
     }
   }, p.name), p.how_iam && /*#__PURE__*/React.createElement("div", {
     style: {
@@ -8913,116 +8924,70 @@ function ModalPerfil(_ref36) {
       background: T.accentBg,
       border: "1px solid ".concat(T.accent),
       borderRadius: 20,
-      padding: "3px 12px"
+      padding: "2px 10px"
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 11,
+      fontSize: 10,
       fontWeight: 700,
       color: T.accent
     }
   }, "Estou"), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 11,
+      fontSize: 10,
       color: T.sub
     }
-  }, p.how_iam))), isContact && (p.nick || p.known_as) && /*#__PURE__*/React.createElement("div", {
+  }, p.how_iam))), p.note && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 6,
+      fontSize: 13,
+      color: T.sub,
+      fontStyle: "italic",
+      lineHeight: 1.5,
+      fontFamily: "Georgia,serif"
+    }
+  }, "\"", p.note, "\""), p.available && p.available !== "nao" && /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 10,
-      padding: "10px 14px",
-      background: T.faint,
-      borderRadius: 10,
-      border: "1px solid ".concat(T.border)
+      display: "flex",
+      alignItems: "center",
+      gap: 7
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 10,
-      fontWeight: 700,
-      color: T.muted,
-      textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      marginBottom: 6
+      width: 6,
+      height: 6,
+      borderRadius: "50%",
+      background: T.green
     }
-  }, "Informa\xE7\xF5es dos contatos"), p.nick && /*#__PURE__*/React.createElement("div", {
+  }), /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 13,
+      fontSize: 11,
       color: T.sub,
-      marginBottom: 2
+      fontWeight: 500
     }
-  }, "Apelido: ", /*#__PURE__*/React.createElement("strong", null, "\"", p.nick, "\"")), p.known_as && /*#__PURE__*/React.createElement("div", {
+  }, p.available === "sim" ? "Disponível pra relembrar" : p.available === "mensagem" ? "Aberto a mensagens" : ""))), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
-      color: T.sub,
-      fontStyle: "italic"
-    }
-  }, "Conhecido como: ", /*#__PURE__*/React.createElement("strong", null, p.known_as)))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "16px 20px 32px",
+      padding: "18px 20px 32px",
       display: "flex",
       flexDirection: "column",
       gap: 12
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, ((_p$photos2 = p.photos) === null || _p$photos2 === void 0 ? void 0 : _p$photos2.length) > 1 && /*#__PURE__*/React.createElement("div", {
     style: {
-      background: T.surface,
-      borderRadius: 14,
-      overflow: "hidden",
-      border: "1px solid ".concat(T.border)
+      marginTop: 4
     }
-  }, [["Local", p.place_name], ["Município", "".concat(p.city, " \u2013 ").concat(p.state)], ["Período", "".concat(p.year_start, " \u2013 ").concat(p.year_end)], ["Tipo", placeLabel(p.place_type)]].map(function (_ref37, i, arr) {
-    var _ref38 = _slicedToArray(_ref37, 2),
-      l = _ref38[0],
-      v = _ref38[1];
-    return /*#__PURE__*/React.createElement("div", {
-      key: l,
-      style: {
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "11px 16px",
-        borderBottom: i < arr.length - 1 ? "1px solid ".concat(T.border) : "none"
-      }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 11,
-        color: T.muted,
-        fontWeight: 600,
-        textTransform: "uppercase",
-        letterSpacing: "0.08em"
-      }
-    }, l), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 13,
-        color: T.text,
-        fontWeight: 500,
-        textAlign: "right",
-        maxWidth: "60%"
-      }
-    }, v));
-  })), p.note && /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: T.surface,
-      borderRadius: 14,
-      padding: "14px 16px",
-      border: "1px solid ".concat(T.border)
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 14,
-      color: T.sub,
-      lineHeight: 1.6,
-      fontStyle: "italic"
-    }
-  }, "\"", p.note, "\"")), ((_p$photos = p.photos) === null || _p$photos === void 0 ? void 0 : _p$photos.length) > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "Fotos da \xE9poca"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Lbl, null, "Fotos"), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 8
     }
-  }, p.photos.map(function (src, i) {
+  }, p.photos.slice(1).map(function (src, i) {
     return /*#__PURE__*/React.createElement(FotoInterativa, {
       key: i,
       src: src,
       user: user
     });
-  }))), user && user.id !== p.id ? isContact ? /*#__PURE__*/React.createElement("div", {
+  }))), user && user.id !== p.id ? /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 10
@@ -9030,31 +8995,18 @@ function ModalPerfil(_ref36) {
   }, /*#__PURE__*/React.createElement(Btn, {
     full: true,
     onClick: function onClick() {
-      onChat(p, "call");
-      onClose();
+      if (!isContact) onAdd(p);
     },
-    variant: "outline",
+    variant: isContact ? "outline" : "primary",
     size: "lg"
-  }, "\uD83D\uDCDE Chamar"), /*#__PURE__*/React.createElement(Btn, {
+  }, isContact ? "✓ Seguindo" : "+ Seguir"), /*#__PURE__*/React.createElement(Btn, {
     full: true,
     onClick: function onClick() {
       onChat(p, "msg");
       onClose();
     },
     size: "lg"
-  }, "\uD83D\uDCAC Mensagem")) : /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 10
-    }
-  }, /*#__PURE__*/React.createElement(Btn, {
-    full: true,
-    onClick: function onClick() {
-      onAdd(p);
-      onClose();
-    },
-    size: "lg"
-  }, "+ Adicionar contato")) : !user && /*#__PURE__*/React.createElement("div", {
+  }, "\uD83D\uDCAC Mensagem")) : !user && /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: "center",
       fontSize: 13,
@@ -9064,14 +9016,14 @@ function ModalPerfil(_ref36) {
 }
 
 // ── Modal: Chat ───────────────────────────────────────────────
-function ModalChat(_ref39) {
-  var user = _ref39.user,
-    dest = _ref39.dest,
-    _ref39$type = _ref39.type,
-    type = _ref39$type === void 0 ? "msg" : _ref39$type,
-    msgs = _ref39.msgs,
-    onSend = _ref39.onSend,
-    onClose = _ref39.onClose;
+function ModalChat(_ref37) {
+  var user = _ref37.user,
+    dest = _ref37.dest,
+    _ref37$type = _ref37.type,
+    type = _ref37$type === void 0 ? "msg" : _ref37$type,
+    msgs = _ref37.msgs,
+    onSend = _ref37.onSend,
+    onClose = _ref37.onClose;
   var _useState116 = useState(""),
     _useState117 = _slicedToArray(_useState116, 2),
     txt = _useState117[0],
@@ -9108,8 +9060,8 @@ function ModalChat(_ref39) {
   useEffect(function () {
     dbRead.from("messages").select("*").eq("conv_id", cid).order("created_at", {
       ascending: true
-    }).limit(100).then(function (_ref40) {
-      var data = _ref40.data;
+    }).limit(100).then(function (_ref38) {
+      var data = _ref38.data;
       if (data) setDbMsgs(data);
     })["catch"](function () {});
   }, [cid]);
@@ -9601,7 +9553,7 @@ function ModalChat(_ref39) {
     type: "file",
     accept: "image/*,video/*",
     onChange: (/*#__PURE__*/function () {
-      var _ref41 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21(e) {
+      var _ref39 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21(e) {
         var file, t, b64;
         return _regenerator().w(function (_context21) {
           while (1) switch (_context21.n) {
@@ -9627,7 +9579,7 @@ function ModalChat(_ref39) {
         }, _callee21);
       }));
       return function (_x26) {
-        return _ref41.apply(this, arguments);
+        return _ref39.apply(this, arguments);
       };
     }()),
     style: {
@@ -9722,14 +9674,14 @@ function ModalChat(_ref39) {
 }
 
 // ── Componente: Adicionar Outros ─────────────────────────────
-function AddOutro(_ref42) {
-  var placeholder = _ref42.placeholder,
-    onAdd = _ref42.onAdd,
-    onRemove = _ref42.onRemove,
-    _ref42$extras = _ref42.extras,
-    extras = _ref42$extras === void 0 ? [] : _ref42$extras,
-    color = _ref42.color,
-    bgColor = _ref42.bgColor;
+function AddOutro(_ref40) {
+  var placeholder = _ref40.placeholder,
+    onAdd = _ref40.onAdd,
+    onRemove = _ref40.onRemove,
+    _ref40$extras = _ref40.extras,
+    extras = _ref40$extras === void 0 ? [] : _ref40$extras,
+    color = _ref40.color,
+    bgColor = _ref40.bgColor;
   var _useState130 = useState(""),
     _useState131 = _slicedToArray(_useState130, 2),
     val = _useState131[0],
@@ -9820,10 +9772,10 @@ function AddOutro(_ref42) {
 }
 
 // ── Helpers layout ────────────────────────────────────────────
-function STitle(_ref43) {
-  var children = _ref43.children,
-    _ref43$style = _ref43.style,
-    style = _ref43$style === void 0 ? {} : _ref43$style;
+function STitle(_ref41) {
+  var children = _ref41.children,
+    _ref41$style = _ref41.style,
+    style = _ref41$style === void 0 ? {} : _ref41$style;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       paddingTop: 24,
@@ -9840,9 +9792,9 @@ function STitle(_ref43) {
     }, style)
   }, children));
 }
-function FRow(_ref44) {
-  var label = _ref44.label,
-    children = _ref44.children;
+function FRow(_ref42) {
+  var label = _ref42.label,
+    children = _ref42.children;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "14px 0",
@@ -9936,10 +9888,10 @@ function useRegionAlerts(user) {
 }
 
 // ── Componente: Banner de Alerta ──────────────────────────────
-function AlertaBanner(_ref45) {
-  var alerts = _ref45.alerts,
-    onDismiss = _ref45.onDismiss,
-    onView = _ref45.onView;
+function AlertaBanner(_ref43) {
+  var alerts = _ref43.alerts,
+    onDismiss = _ref43.onDismiss,
+    onView = _ref43.onView;
   if (!alerts || alerts.length === 0) return null;
   var first = alerts[0];
   var others = alerts.length - 1;
@@ -10044,10 +9996,10 @@ function AlertaBanner(_ref45) {
 }
 
 // ── Modal: Adicionar Lugar ────────────────────────────────────
-function ModalAdicionarLugar(_ref46) {
-  var user = _ref46.user,
-    onClose = _ref46.onClose,
-    onSave = _ref46.onSave;
+function ModalAdicionarLugar(_ref44) {
+  var user = _ref44.user,
+    onClose = _ref44.onClose,
+    onSave = _ref44.onSave;
   var temaCor = getTema(user).main;
   var temaBg = getTema(user).bg;
   var _useState136 = useState({
@@ -10632,12 +10584,12 @@ function ModalAdicionarLugar(_ref46) {
 }
 
 // ── Modal: Menu Rápido (+) ────────────────────────────────────
-function MenuRapido(_ref47) {
-  var onClose = _ref47.onClose,
-    onNovoLugar = _ref47.onNovoLugar,
-    onMomento = _ref47.onMomento,
-    onAgendaVisita = _ref47.onAgendaVisita,
-    user = _ref47.user;
+function MenuRapido(_ref45) {
+  var onClose = _ref45.onClose,
+    onNovoLugar = _ref45.onNovoLugar,
+    onMomento = _ref45.onMomento,
+    onAgendaVisita = _ref45.onAgendaVisita,
+    user = _ref45.user;
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
@@ -10860,11 +10812,11 @@ function MenuRapido(_ref47) {
 }
 
 // ── Modal: Registrar Momento ──────────────────────────────────
-function ModalMomento(_ref48) {
-  var user = _ref48.user,
-    onClose = _ref48.onClose,
-    onSave = _ref48.onSave,
-    onUpdateUser = _ref48.onUpdateUser;
+function ModalMomento(_ref46) {
+  var user = _ref46.user,
+    onClose = _ref46.onClose,
+    onSave = _ref46.onSave,
+    onUpdateUser = _ref46.onUpdateUser;
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
@@ -11326,9 +11278,9 @@ function ModalMomento(_ref48) {
 }
 
 // ── Tela de Login / Auth ──────────────────────────────────────
-function TelaLogin(_ref49) {
-  var onClose = _ref49.onClose,
-    onLoggedIn = _ref49.onLoggedIn;
+function TelaLogin(_ref47) {
+  var onClose = _ref47.onClose,
+    onLoggedIn = _ref47.onLoggedIn;
   var _useState158 = useState("opcoes"),
     _useState159 = _slicedToArray(_useState158, 2),
     modo = _useState159[0],
@@ -11834,11 +11786,11 @@ function useRegionNotifications(user, contacts) {
 }
 
 // ── Banner de Notificação ─────────────────────────────────────
-function BannerNotificacao(_ref50) {
+function BannerNotificacao(_ref48) {
   var _notif$profile;
-  var notif = _ref50.notif,
-    onDismiss = _ref50.onDismiss,
-    onView = _ref50.onView;
+  var notif = _ref48.notif,
+    onDismiss = _ref48.onDismiss,
+    onView = _ref48.onView;
   if (!notif) return null;
   var isAniv = notif.type === "aniversario";
   return /*#__PURE__*/React.createElement("div", {
@@ -11927,9 +11879,9 @@ function BannerNotificacao(_ref50) {
 }
 
 // ── Cadastro Simples (3 passos) ──────────────────────────────
-function CadastroSimples(_ref51) {
-  var onDone = _ref51.onDone,
-    onLogin = _ref51.onLogin;
+function CadastroSimples(_ref49) {
+  var onDone = _ref49.onDone,
+    onLogin = _ref49.onLogin;
   var _useState170 = useState(false),
     _useState171 = _slicedToArray(_useState170, 2),
     saving = _useState171[0],
@@ -12398,11 +12350,11 @@ function CadastroSimples(_ref51) {
 // ── Tela de Curiosidade (antes do cadastro) ───────────────────
 
 // ── Memória do Dia (Stories 24h) ─────────────────────────────
-function MemoriaDoDia(_ref53) {
+function MemoriaDoDia(_ref51) {
   var _user$name2;
-  var user = _ref53.user,
-    contacts = _ref53.contacts,
-    onView = _ref53.onView;
+  var user = _ref51.user,
+    contacts = _ref51.contacts,
+    onView = _ref51.onView;
   var _useState176 = useState([]),
     _useState177 = _slicedToArray(_useState176, 2),
     memorias = _useState177[0],
@@ -12559,8 +12511,8 @@ function MemoriaDoDia(_ref53) {
 }
 
 // ── Quem Passou Por Aqui ──────────────────────────────────────
-function QuemPassouPorAqui(_ref54) {
-  var user = _ref54.user;
+function QuemPassouPorAqui(_ref52) {
+  var user = _ref52.user;
   var _useState178 = useState(0),
     _useState179 = _slicedToArray(_useState178, 2),
     count = _useState179[0],
@@ -12572,8 +12524,8 @@ function QuemPassouPorAqui(_ref54) {
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.city) && !(user !== null && user !== void 0 && user.state)) return;
     var filtro = user.city ? "city.ilike.%".concat(user.city, "%") : "state.eq.".concat(user.state);
-    dbRead.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref55) {
-      var data = _ref55.data;
+    dbRead.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref53) {
+      var data = _ref53.data;
       setCount((data === null || data === void 0 ? void 0 : data.length) || 0);
       setExemplos((data === null || data === void 0 ? void 0 : data.slice(0, 4)) || []);
     })["catch"](function () {});
@@ -12659,9 +12611,9 @@ function QuemPassouPorAqui(_ref54) {
 }
 
 // ── Pergunta da Comunidade ────────────────────────────────────
-function PerguntaComunidade(_ref56) {
+function PerguntaComunidade(_ref54) {
   var _user$intencao7, _user$intencao8, _user$intencao9, _user$intencao0;
-  var user = _ref56.user;
+  var user = _ref54.user;
   var _useState182 = useState(""),
     _useState183 = _slicedToArray(_useState182, 2),
     resposta = _useState183[0],
@@ -12688,8 +12640,8 @@ function PerguntaComunidade(_ref56) {
     if (!pergunta) return;
     db.from("momentos").select("id", {
       count: "exact"
-    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref57) {
-      var count = _ref57.count;
+    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref55) {
+      var count = _ref55.count;
       return setTotalRespostas(count || 0);
     })["catch"](function () {});
   }, [pergunta]);
@@ -12832,9 +12784,9 @@ function PerguntaComunidade(_ref56) {
 }
 
 // ── Agenda de Visita (Futuro) ─────────────────────────────────
-function AgendaVisita(_ref58) {
-  var user = _ref58.user,
-    onSave = _ref58.onSave;
+function AgendaVisita(_ref56) {
+  var user = _ref56.user,
+    onSave = _ref56.onSave;
   var _useState190 = useState({
       data: "",
       hora: "",
@@ -13341,10 +13293,10 @@ function AgendaVisita(_ref58) {
 }
 
 // ── Alerta de Região ──────────────────────────────────────────
-function AlertaRegiao(_ref59) {
-  var cidade = _ref59.cidade,
-    estado = _ref59.estado,
-    user = _ref59.user;
+function AlertaRegiao(_ref57) {
+  var cidade = _ref57.cidade,
+    estado = _ref57.estado,
+    user = _ref57.user;
   var _useState196 = useState(0),
     _useState197 = _slicedToArray(_useState196, 2),
     count = _useState197[0],
@@ -13356,8 +13308,8 @@ function AlertaRegiao(_ref59) {
   useEffect(function () {
     if (!cidade && !estado) return;
     // Busca agendas de visita para essa região
-    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref60) {
-      var data = _ref60.data;
+    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref58) {
+      var data = _ref58.data;
       var filtrados = (data || []).filter(function (m) {
         try {
           var _meta$cidade;
@@ -13454,14 +13406,14 @@ function useSeguirLugar(placeId, userId) {
     // Busca total de seguidores deste lugar
     dbRead.from("followed_places").select("id", {
       count: "exact"
-    }).eq("place_id", placeId).then(function (_ref61) {
-      var count = _ref61.count;
+    }).eq("place_id", placeId).then(function (_ref59) {
+      var count = _ref59.count;
       return setTotalSeguidores(count || 0);
     })["catch"](function () {});
     // Verifica se o user segue
     if (!userId) return;
-    dbRead.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref62) {
-      var data = _ref62.data;
+    dbRead.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref60) {
+      var data = _ref60.data;
       return setSeguindo(!!data);
     })["catch"](function () {});
   }, [placeId, userId]);
@@ -13531,9 +13483,9 @@ function useSeguirLugar(placeId, userId) {
 }
 
 // ── Cápsulas do User (carregadas do banco) ───────────────────
-function CapsulasUser(_ref63) {
-  var user = _ref63.user,
-    onOpenAgenda = _ref63.onOpenAgenda;
+function CapsulasUser(_ref61) {
+  var user = _ref61.user,
+    onOpenAgenda = _ref61.onOpenAgenda;
   var _useState206 = useState([]),
     _useState207 = _slicedToArray(_useState206, 2),
     capsulas = _useState207[0],
@@ -13543,8 +13495,8 @@ function CapsulasUser(_ref63) {
     // Busca momentos marcados como cápsula do user
     dbRead.from("momentos").select("*").eq("user_id", user.id).eq("tipo", "capsula").order("ts", {
       ascending: false
-    }).limit(20).then(function (_ref64) {
-      var data = _ref64.data;
+    }).limit(20).then(function (_ref62) {
+      var data = _ref62.data;
       if (data) setCapsulas(data);else {
         // Fallback: localStorage
         try {
@@ -13649,10 +13601,10 @@ function CapsulasUser(_ref63) {
 }
 
 // ── Cápsula no Perfil (individual) ───────────────────────────
-function CapsulaPerfil(_ref65) {
-  var capsula = _ref65.capsula,
-    index = _ref65.index,
-    userId = _ref65.userId;
+function CapsulaPerfil(_ref63) {
+  var capsula = _ref63.capsula,
+    index = _ref63.index,
+    userId = _ref63.userId;
   var _useState208 = useState(false),
     _useState209 = _slicedToArray(_useState208, 2),
     editando = _useState209[0],
@@ -13829,12 +13781,12 @@ function CapsulaPerfil(_ref65) {
 }
 
 // ── Perfil do Lugar ───────────────────────────────────────────
-function PerfilLugar(_ref66) {
-  var lugar = _ref66.lugar,
-    lugarId = _ref66.lugarId,
-    user = _ref66.user,
-    onBack = _ref66.onBack,
-    onView = _ref66.onView;
+function PerfilLugar(_ref64) {
+  var lugar = _ref64.lugar,
+    lugarId = _ref64.lugarId,
+    user = _ref64.user,
+    onBack = _ref64.onBack,
+    onView = _ref64.onView;
   var _useState212 = useState(null),
     _useState213 = _slicedToArray(_useState212, 2),
     place = _useState213[0],
@@ -13872,8 +13824,8 @@ function PerfilLugar(_ref66) {
     }
     if (!lugar) return;
     // Busca place pelo nome
-    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref67) {
-      var data = _ref67.data;
+    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref65) {
+      var data = _ref65.data;
       if (data) {
         setPlace(data);
         setResolvedId(data.id);
@@ -13888,7 +13840,7 @@ function PerfilLugar(_ref66) {
     if (!resolvedId) return;
     setLoading(true);
     var buscarDados = /*#__PURE__*/function () {
-      var _ref68 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee36() {
+      var _ref66 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee36() {
         var _yield$dbRead$from$se, p, _yield$dbRead$from$se2, pp, vinculados, lugarNome, _yield$dbRead$from$se3, m, _yield$dbRead$from$se4, a;
         return _regenerator().w(function (_context36) {
           while (1) switch (_context36.n) {
@@ -13949,7 +13901,7 @@ function PerfilLugar(_ref66) {
         }, _callee36);
       }));
       return function buscarDados() {
-        return _ref68.apply(this, arguments);
+        return _ref66.apply(this, arguments);
       };
     }();
     buscarDados()["catch"](function () {
@@ -14460,10 +14412,10 @@ function PerfilLugar(_ref66) {
 }
 
 // ── Painel Pessoal ───────────────────────────────────────────
-function PainelPessoal(_ref69) {
+function PainelPessoal(_ref67) {
   var _momentoTop$fotos, _momentoTop$texto;
-  var user = _ref69.user,
-    onBack = _ref69.onBack;
+  var user = _ref67.user,
+    onBack = _ref67.onBack;
   var _useState226 = useState({
       fotos: 0,
       momentos: 0,
@@ -14513,8 +14465,8 @@ function PainelPessoal(_ref69) {
     // Busca momentos do usuário
     dbRead.from("momentos").select("*").eq("user_id", user.id).order("ts", {
       ascending: false
-    }).limit(20).then(function (_ref70) {
-      var data = _ref70.data;
+    }).limit(20).then(function (_ref68) {
+      var data = _ref68.data;
       if (data) {
         setStats(function (s) {
           return _objectSpread(_objectSpread({}, s), {}, {
@@ -14526,8 +14478,8 @@ function PainelPessoal(_ref69) {
     })["catch"](function () {});
 
     // Busca contatos
-    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref71) {
-      var data = _ref71.data;
+    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref69) {
+      var data = _ref69.data;
       if (data) setStats(function (s) {
         return _objectSpread(_objectSpread({}, s), {}, {
           conexoes: data.length
@@ -14540,8 +14492,8 @@ function PainelPessoal(_ref69) {
       dbRead.from("profiles").select("id", {
         count: "exact",
         head: true
-      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref72) {
-        var count = _ref72.count;
+      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref70) {
+        var count = _ref70.count;
         setNascRegiao(count || 0);
       })["catch"](function () {});
     }
@@ -14561,8 +14513,8 @@ function PainelPessoal(_ref69) {
 
       // Busca pessoas que também viveram nesse lugar
       if (cidadeLugar) {
-        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref73) {
-          var data = _ref73.data;
+        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref71) {
+          var data = _ref71.data;
           if (data) setPessoasLugar(data);
         })["catch"](function () {});
       }
@@ -15400,7 +15352,7 @@ function App() {
     }
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
-        var _ref75 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee38(event, session) {
+        var _ref73 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee38(event, session) {
           var _yield$dbRead$from$se6, data, localU, s, updated, _s, _t36, _t37;
           return _regenerator().w(function (_context38) {
             while (1) switch (_context38.p = _context38.n) {
@@ -15486,7 +15438,7 @@ function App() {
           }, _callee38, null, [[4, 6], [1, 8]]);
         }));
         return function (_x29, _x30) {
-          return _ref75.apply(this, arguments);
+          return _ref73.apply(this, arguments);
         };
       }()),
       subscription = _db$auth$onAuthStateC.data.subscription;
@@ -15748,8 +15700,8 @@ function App() {
         family_ref: p.family_ref || null,
         how_iam: p.how_iam || null
       };
-      db.from("profiles").upsert(safe).then(function (_ref77) {
-        var error = _ref77.error;
+      db.from("profiles").upsert(safe).then(function (_ref75) {
+        var error = _ref75.error;
         if (error) console.log("Erro ao sincronizar perfil:", error.message);
       })["catch"](function () {});
     }
@@ -15775,10 +15727,10 @@ function App() {
       return c.id === p.id;
     });
   };
-  var unreadCount = Object.entries(msgs).filter(function (_ref78) {
-    var _ref79 = _slicedToArray(_ref78, 2),
-      id = _ref79[0],
-      ms = _ref79[1];
+  var unreadCount = Object.entries(msgs).filter(function (_ref76) {
+    var _ref77 = _slicedToArray(_ref76, 2),
+      id = _ref77[0],
+      ms = _ref77[1];
     return user && id.split("_").includes(String(user.id)) && ms.some(function (m) {
       return m.from !== user.id;
     });
