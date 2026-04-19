@@ -15564,6 +15564,106 @@ function PerfilLugar(_ref71) {
     acc[era].push(p);
     return acc;
   }, {});
+
+  // ── Sua Conexão com este lugar (4 situações) ──
+  var suaConexao = function () {
+    if (!user) return null;
+    // Busca a conexão do user com este lugar (se tiver)
+    var minhaPassagem = profiles.find(function (p) {
+      return p.id === user.id;
+    });
+    var outrasPessoas = profiles.filter(function (p) {
+      return p.id !== user.id;
+    });
+    if (minhaPassagem) {
+      var ys = minhaPassagem.pp_year_start || 0;
+      var ye = minhaPassagem.pp_year_end || 0;
+      // Quantas outras pessoas viveram em época que se sobrepõe com a minha
+      var naMesmaEpoca = outrasPessoas.filter(function (p) {
+        var pys = p.pp_year_start || p.year_start || 0;
+        var pye = p.pp_year_end || p.year_end || 0;
+        return Math.max(ys, pys) <= Math.min(ye || 9999, pye || 9999);
+      }).length;
+      if (naMesmaEpoca > 0) {
+        // Situação A: viveu + cruzamento
+        return {
+          tipo: "A",
+          ys: ys,
+          ye: ye,
+          naMesmaEpoca: naMesmaEpoca,
+          totalOutras: outrasPessoas.length
+        };
+      }
+      // Situação B: viveu sozinho
+      return {
+        tipo: "B",
+        ys: ys,
+        ye: ye
+      };
+    }
+
+    // Não viveu aqui — verifica se tem contato que viveu
+    // (como contatos do user não chegam aqui, vamos simplificar: se tem outros profiles, é caso C, senão D)
+    if (outrasPessoas.length > 0) {
+      // Situação C: não viveu, mas outros viveram
+      return {
+        tipo: "C",
+        outras: outrasPessoas.length
+      };
+    }
+    return null; // Situação D: sem dados, sem bloco
+  }();
+
+  // ── Arco temporal: distribui pessoas ao longo das décadas ──
+  var arcoTemporal = function () {
+    if (profiles.length === 0) return null;
+    // Coleta todos os anos (start + end) dos perfis
+    var anos = [];
+    profiles.forEach(function (p) {
+      var ys = parseInt(p.pp_year_start || p.year_start) || 0;
+      var ye = parseInt(p.pp_year_end || p.year_end) || ys;
+      if (ys > 0) for (var a = ys; a <= Math.min(ye, 2030); a++) anos.push({
+        ano: a,
+        profile: p
+      });
+    });
+    if (anos.length === 0) return null;
+
+    // Limites: da primeira década até agora
+    var anoMin = Math.min.apply(Math, _toConsumableArray(anos.map(function (a) {
+      return a.ano;
+    })));
+    var decInicio = Math.floor(anoMin / 10) * 10;
+    var decFim = Math.floor(2026 / 10) * 10;
+
+    // Agrupa por década pra contar
+    var porDec = {};
+    for (var d = decInicio; d <= decFim; d += 10) porDec[d] = 0;
+    anos.forEach(function (a) {
+      var d = Math.floor(a.ano / 10) * 10;
+      if (porDec[d] !== undefined) porDec[d]++;
+    });
+
+    // Minha marcação (se sou um dos profiles)
+    var minhaFaixa = null;
+    if (user) {
+      var eu = profiles.find(function (p) {
+        return p.id === user.id;
+      });
+      if (eu) {
+        minhaFaixa = {
+          ys: eu.pp_year_start || eu.year_start,
+          ye: eu.pp_year_end || eu.year_end
+        };
+      }
+    }
+    return {
+      porDec: porDec,
+      decInicio: decInicio,
+      decFim: decFim,
+      minhaFaixa: minhaFaixa
+    };
+  }();
   var lugarNome = (place === null || place === void 0 ? void 0 : place.name) || lugar || "Lugar";
   var lugarCidade = (place === null || place === void 0 ? void 0 : place.city) || "";
   var lugarEstado = (place === null || place === void 0 ? void 0 : place.state) || "";
@@ -15605,9 +15705,9 @@ function PerfilLugar(_ref71) {
       borderRadius: 20,
       overflow: "hidden",
       position: "relative",
-      height: 160,
+      height: 180,
       background: place !== null && place !== void 0 && place.photo_url ? "#000" : "linear-gradient(135deg,#1a5276,#2e86c1)",
-      marginBottom: 12
+      marginBottom: 16
     }
   }, (place === null || place === void 0 ? void 0 : place.photo_url) && /*#__PURE__*/React.createElement("img", {
     src: place.photo_url,
@@ -15624,137 +15724,232 @@ function PerfilLugar(_ref71) {
     style: {
       position: "absolute",
       inset: 0,
-      background: "linear-gradient(to top,rgba(0,0,0,0.65),rgba(0,0,0,0.1))",
+      background: "linear-gradient(to top,rgba(0,0,0,0.7),rgba(0,0,0,0.15))",
       display: "flex",
       flexDirection: "column",
       justifyContent: "flex-end",
-      padding: "18px"
+      padding: "20px"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: "Georgia,serif",
-      fontSize: 22,
-      fontWeight: 700,
-      color: "#fff"
+      fontSize: 26,
+      fontWeight: 400,
+      color: "#fff",
+      letterSpacing: "-0.01em"
     }
-  }, lugarNome), lugarCidade && /*#__PURE__*/React.createElement("div", {
+  }, lugarNome), (lugarCidade || lugarEstado) && lugarCidade !== lugarNome && /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 11,
-      color: "rgba(255,255,255,0.65)",
-      marginTop: 2
+      fontSize: 12,
+      color: "rgba(255,255,255,0.75)",
+      marginTop: 3,
+      fontWeight: 500
     }
-  }, lugarCidade, lugarEstado ? " \u2013 ".concat(lugarEstado) : "", place !== null && place !== void 0 && place.country && place.country !== "Brasil" ? " \xB7 ".concat(place.country) : "")), (place === null || place === void 0 ? void 0 : place.photo_url) && (place === null || place === void 0 ? void 0 : place.photo_credit_name) && /*#__PURE__*/React.createElement("a", {
+  }, lugarCidade, lugarEstado ? " \xB7 ".concat(lugarEstado) : "", place !== null && place !== void 0 && place.country && place.country !== "Brasil" ? " \xB7 ".concat(place.country) : ""), (!lugarCidade || lugarCidade === lugarNome) && lugarEstado && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: "rgba(255,255,255,0.75)",
+      marginTop: 3,
+      fontWeight: 500
+    }
+  }, lugarEstado, place !== null && place !== void 0 && place.country && place.country !== "Brasil" ? " \xB7 ".concat(place.country) : "")), (place === null || place === void 0 ? void 0 : place.photo_url) && (place === null || place === void 0 ? void 0 : place.photo_credit_name) && /*#__PURE__*/React.createElement("a", {
     href: place.photo_credit_url || "https://unsplash.com",
     target: "_blank",
     rel: "noopener noreferrer",
     style: {
       position: "absolute",
-      bottom: 6,
-      right: 8,
-      fontSize: 8,
-      color: "rgba(255,255,255,0.7)",
+      bottom: 8,
+      right: 10,
+      fontSize: 9,
+      color: "rgba(255,255,255,0.8)",
       textDecoration: "none",
-      fontWeight: 400,
-      letterSpacing: "0.02em"
+      fontWeight: 500,
+      letterSpacing: "0.02em",
+      background: "rgba(0,0,0,0.25)",
+      padding: "2px 7px",
+      borderRadius: 6
     }
-  }, "Foto: ", place.photo_credit_name)), /*#__PURE__*/React.createElement("div", {
+  }, "foto \xB7 ", place.photo_credit_name)), suaConexao && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 16,
+      padding: "16px 18px",
       border: "1px solid ".concat(T.border),
-      padding: "14px 16px",
-      marginBottom: 12,
-      marginTop: -20,
-      position: "relative",
-      zIndex: 2
+      marginBottom: 14,
+      boxShadow: "0 1px 6px rgba(0,0,0,0.04)"
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, suaConexao.tipo === "A" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 10
+      fontSize: 11,
+      fontWeight: 700,
+      color: T.accent,
+      letterSpacing: "0.1em",
+      textTransform: "uppercase",
+      marginBottom: 8
     }
-  }, [{
-    label: "Pessoas",
-    value: profiles.length,
-    max: 20,
-    color: T.blueStrong
-  }, {
-    label: "Seguidores",
-    value: totalSeguidores,
-    max: 20,
-    color: T.accent
-  }, {
-    label: "Momentos",
-    value: momentos.length,
-    max: 20,
-    color: T.green
-  }, {
-    label: "Épocas",
-    value: decadas.length,
-    max: 10,
-    color: "#9575CD"
-  }].map(function (b, i) {
+  }, "Sua conex\xE3o"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "Georgia,serif",
+      fontSize: 16,
+      color: T.text,
+      lineHeight: 1.5
+    }
+  }, "Voc\xEA viveu aqui ", suaConexao.ye && suaConexao.ys !== suaConexao.ye ? "entre ".concat(suaConexao.ys, " e ").concat(suaConexao.ye) : "em ".concat(suaConexao.ys), "."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: T.sub,
+      marginTop: 6,
+      fontStyle: "italic",
+      fontFamily: "Georgia,serif"
+    }
+  }, "Nesse mesmo tempo, ", suaConexao.naMesmaEpoca === 1 ? "1 outra vida passou" : "outras ".concat(suaConexao.naMesmaEpoca, " vidas passaram"), " por aqui.")), suaConexao.tipo === "B" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      fontWeight: 700,
+      color: T.accent,
+      letterSpacing: "0.1em",
+      textTransform: "uppercase",
+      marginBottom: 8
+    }
+  }, "Sua conex\xE3o"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "Georgia,serif",
+      fontSize: 16,
+      color: T.text,
+      lineHeight: 1.5
+    }
+  }, "Voc\xEA deixou um peda\xE7o aqui ", suaConexao.ye && suaConexao.ys !== suaConexao.ye ? "entre ".concat(suaConexao.ys, " e ").concat(suaConexao.ye) : "em ".concat(suaConexao.ys), "."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: T.sub,
+      marginTop: 6,
+      fontStyle: "italic",
+      fontFamily: "Georgia,serif"
+    }
+  }, "Ainda ningu\xE9m registrou esse mesmo tempo \u2014 quando algu\xE9m chegar, voc\xEA vai saber.")), suaConexao.tipo === "C" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      fontWeight: 700,
+      color: T.sub,
+      letterSpacing: "0.1em",
+      textTransform: "uppercase",
+      marginBottom: 8
+    }
+  }, "Outras passagens"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "Georgia,serif",
+      fontSize: 16,
+      color: T.text,
+      lineHeight: 1.5
+    }
+  }, suaConexao.outras === 1 ? "1 pessoa deixou um pedaço aqui." : "".concat(suaConexao.outras, " pessoas deixaram um peda\xE7o aqui.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: T.sub,
+      marginTop: 6,
+      fontStyle: "italic",
+      fontFamily: "Georgia,serif"
+    }
+  }, "Voc\xEA ainda n\xE3o esteve neste lugar."))), arcoTemporal && function () {
+    var decadas = [];
+    for (var d = arcoTemporal.decInicio; d <= arcoTemporal.decFim; d += 10) decadas.push(d);
+    var width = Math.max(280, decadas.length * 44);
+    var H = 70;
+    var padL = 20,
+      padR = 20;
+    var innerW = width - padL - padR;
+    var step = decadas.length > 1 ? innerW / (decadas.length - 1) : 0;
+    var maxCount = Math.max.apply(Math, [1].concat(_toConsumableArray(Object.values(arcoTemporal.porDec))));
     return /*#__PURE__*/React.createElement("div", {
-      key: i,
       style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 10
+        background: "#fff",
+        borderRadius: 16,
+        padding: "14px 16px",
+        border: "1px solid ".concat(T.border),
+        marginBottom: 14
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        width: 3,
-        height: 20,
-        borderRadius: 2,
-        background: b.color,
-        opacity: 0.6
+        fontSize: 10,
+        fontWeight: 700,
+        color: T.muted,
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+        marginBottom: 10
       }
-    }), /*#__PURE__*/React.createElement("div", {
+    }, "Linha do tempo"), /*#__PURE__*/React.createElement("div", {
       style: {
-        flex: 1
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch"
       }
-    }, /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: width,
+      height: H,
       style: {
-        fontSize: 11,
-        color: T.sub
+        display: "block"
       }
-    }, b.label), /*#__PURE__*/React.createElement("div", {
-      style: {
-        height: 3,
-        borderRadius: 2,
-        background: T.faint,
-        marginTop: 3,
-        overflow: "hidden"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        height: "100%",
-        borderRadius: 2,
-        background: b.color,
-        opacity: 0.45,
-        width: "".concat(Math.min(100, b.value / b.max * 100), "%")
-      }
-    }))), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontFamily: "Georgia,serif",
-        fontSize: 16,
-        fontWeight: 400,
-        color: T.text,
-        minWidth: 24,
-        textAlign: "right"
-      }
-    }, b.value));
-  })), /*#__PURE__*/React.createElement("button", {
+    }, arcoTemporal.minhaFaixa && function () {
+      var ys = arcoTemporal.minhaFaixa.ys;
+      var ye = arcoTemporal.minhaFaixa.ye || ys;
+      var xStart = padL + (ys - arcoTemporal.decInicio) / 10 * step;
+      var xEnd = padL + (ye - arcoTemporal.decInicio) / 10 * step;
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("rect", {
+        x: xStart,
+        y: 18,
+        width: Math.max(4, xEnd - xStart),
+        height: 18,
+        fill: T.accent,
+        opacity: 0.12,
+        rx: 2
+      }), /*#__PURE__*/React.createElement("text", {
+        x: (xStart + xEnd) / 2,
+        y: 14,
+        fill: T.accent,
+        fontSize: "9",
+        fontWeight: "600",
+        textAnchor: "middle",
+        style: {
+          letterSpacing: "0.05em"
+        }
+      }, "voc\xEA"));
+    }(), /*#__PURE__*/React.createElement("line", {
+      x1: padL,
+      y1: 27,
+      x2: width - padR,
+      y2: 27,
+      stroke: T.borderMd,
+      strokeWidth: "1",
+      strokeDasharray: "2,3"
+    }), decadas.map(function (d, i) {
+      var x = padL + i * step;
+      var count = arcoTemporal.porDec[d] || 0;
+      var r = count === 0 ? 2 : 3 + Math.min(5, count / maxCount * 5);
+      return /*#__PURE__*/React.createElement("g", {
+        key: d
+      }, /*#__PURE__*/React.createElement("circle", {
+        cx: x,
+        cy: 27,
+        r: r,
+        fill: count > 0 ? T.accent : T.borderMd,
+        opacity: count > 0 ? 0.85 : 0.5
+      }), /*#__PURE__*/React.createElement("text", {
+        x: x,
+        y: 54,
+        fill: T.muted,
+        fontSize: "9",
+        textAnchor: "middle"
+      }, d, "s"));
+    }))));
+  }(), /*#__PURE__*/React.createElement("button", {
     onClick: toggleSeguir,
     style: {
-      padding: "10px 20px",
+      padding: "12px 20px",
       borderRadius: 14,
       border: "none",
       cursor: "pointer",
       background: seguindo ? T.faint : "linear-gradient(135deg,".concat(T.blueStrong, ",#0D47A1)"),
       color: seguindo ? T.accent : "#fff",
-      fontSize: 12,
+      fontSize: 13,
       fontWeight: 600,
       fontFamily: "inherit",
       borderWidth: seguindo ? "1px" : "0",
@@ -15762,9 +15957,10 @@ function PerfilLugar(_ref71) {
       borderColor: seguindo ? T.border : "transparent",
       transition: "all .2s",
       width: "100%",
-      marginTop: 12
+      marginBottom: 16,
+      boxShadow: seguindo ? "none" : "0 2px 10px rgba(30,136,229,0.25)"
     }
-  }, seguindo ? "Seguindo este lugar" : "Seguir este lugar")), decadas.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, seguindo ? "Seguindo este lugar" : "Seguir este lugar"), profiles.length >= 1 && /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 16
     }
@@ -15774,91 +15970,16 @@ function PerfilLugar(_ref71) {
       fontWeight: 700,
       color: T.muted,
       textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      marginBottom: 8
+      letterSpacing: "0.1em",
+      marginBottom: 10
     }
-  }, "Linha do tempo"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 6,
-      overflowX: "auto",
-      WebkitOverflowScrolling: "touch",
-      paddingBottom: 4
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      return setDecadaSel(null);
-    },
-    style: {
-      padding: "6px 14px",
-      borderRadius: 20,
-      fontSize: 10,
-      fontWeight: 700,
-      fontFamily: "inherit",
-      cursor: "pointer",
-      flexShrink: 0,
-      background: !decadaSel ? T.accent : "#fff",
-      color: !decadaSel ? "#fff" : T.sub,
-      border: "1px solid ".concat(!decadaSel ? T.accent : T.border),
-      transition: "all .15s"
-    }
-  }, "Todas"), decadas.map(function (d) {
-    return /*#__PURE__*/React.createElement("button", {
-      key: d,
-      onClick: function onClick() {
-        return setDecadaSel(d === decadaSel ? null : d);
-      },
-      style: {
-        padding: "6px 14px",
-        borderRadius: 20,
-        fontSize: 10,
-        fontWeight: 700,
-        fontFamily: "inherit",
-        cursor: "pointer",
-        flexShrink: 0,
-        background: decadaSel === d ? T.blueStrong : "#fff",
-        color: decadaSel === d ? "#fff" : T.sub,
-        border: "1px solid ".concat(decadaSel === d ? T.blueStrong : T.border),
-        transition: "all .15s"
-      }
-    }, "Anos ", d);
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 8
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      fontWeight: 700,
-      color: T.muted,
-      textTransform: "uppercase",
-      letterSpacing: "0.08em"
-    }
-  }, decadaSel ? "Pessoas nos anos ".concat(decadaSel) : "Quem viveu aqui", " (", profilesFiltrados.length, ")"), profilesFiltrados.length > 6 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      color: T.blueStrong,
-      fontWeight: 600,
-      cursor: "pointer"
-    }
-  }, "Ver todos \u2192")), profilesFiltrados.length === 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: T.muted,
-      padding: "16px 0",
-      textAlign: "center"
-    }
-  }, "Nenhuma pessoa registrada", decadaSel ? " nos anos ".concat(decadaSel) : ""), /*#__PURE__*/React.createElement("div", {
+  }, "Quem viveu aqui ", profiles.length > 0 ? "(".concat(profiles.length, ")") : ""), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       flexWrap: "wrap",
-      gap: 6,
-      marginBottom: 16
+      gap: 6
     }
-  }, profilesFiltrados.slice(0, 12).map(function (p, i) {
+  }, profiles.slice(0, 12).map(function (p, i) {
     var _p$first_name2, _p$name2, _p$name3;
     var era = eraInfo(p.pp_era || p.era || "passado");
     var ys = p.pp_year_start || p.year_start || 0;
@@ -15914,8 +16035,8 @@ function PerfilLugar(_ref71) {
         fontSize: 8,
         color: T.muted
       }
-    }, ys, "\u2013", ye)));
-  }), profilesFiltrados.length > 12 && /*#__PURE__*/React.createElement("div", {
+    }, ys, ye && ye !== ys ? "\u2013".concat(ye) : "")));
+  }), profiles.length > 12 && /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       alignItems: "center",
@@ -15932,7 +16053,7 @@ function PerfilLugar(_ref71) {
       fontWeight: 600,
       color: T.blueStrong
     }
-  }, "+", profilesFiltrados.length - 12, " mais"))), momentos.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, "+", profiles.length - 12, " mais")))), momentos.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 16
     }
@@ -15942,8 +16063,8 @@ function PerfilLugar(_ref71) {
       fontWeight: 700,
       color: T.muted,
       textTransform: "uppercase",
-      letterSpacing: "0.08em",
-      marginBottom: 8
+      letterSpacing: "0.1em",
+      marginBottom: 10
     }
   }, "Momentos (", momentos.length, ")"), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -15975,12 +16096,21 @@ function PerfilLugar(_ref71) {
         height: "100%",
         objectFit: "cover"
       }
-    }) : "📸");
+    }) : /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "Georgia,serif",
+        fontSize: 11,
+        color: T.muted,
+        fontStyle: "italic",
+        padding: 6,
+        textAlign: "center"
+      }
+    }, m.texto ? m.texto.slice(0, 30) : ""));
   }))), agendas.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       background: T.greenBg,
       borderRadius: 14,
-      padding: "12px 14px",
+      padding: "14px 16px",
       border: "1px solid rgba(102,187,106,0.3)",
       marginTop: 12
     }
@@ -15989,9 +16119,11 @@ function PerfilLugar(_ref71) {
       fontSize: 11,
       fontWeight: 700,
       color: T.green,
-      marginBottom: 6
+      marginBottom: 10,
+      letterSpacing: "0.06em",
+      textTransform: "uppercase"
     }
-  }, "\uD83D\uDDD3\uFE0F Visitas agendadas"), agendas.map(function (a, i) {
+  }, "Visitas agendadas"), agendas.map(function (a, i) {
     var _a$user_name;
     var meta = {};
     try {
@@ -16001,9 +16133,9 @@ function PerfilLugar(_ref71) {
       key: i,
       style: {
         display: "flex",
-        gap: 8,
+        gap: 10,
         alignItems: "center",
-        marginBottom: i < agendas.length - 1 ? 6 : 0
+        marginBottom: i < agendas.length - 1 ? 8 : 0
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
@@ -16022,7 +16154,7 @@ function PerfilLugar(_ref71) {
       }
     }, ((_a$user_name = a.user_name) === null || _a$user_name === void 0 ? void 0 : _a$user_name[0]) || "?"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 11,
+        fontSize: 12,
         fontWeight: 700,
         color: T.text
       }
@@ -16041,7 +16173,9 @@ function PerfilLugar(_ref71) {
       padding: "12px 14px",
       background: "#fff",
       borderRadius: 12,
-      border: "1px solid ".concat(T.border)
+      border: "1px solid ".concat(T.border),
+      fontFamily: "Georgia,serif",
+      fontStyle: "italic"
     }
   }, place.description)));
 }
