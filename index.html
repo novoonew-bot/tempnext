@@ -192,51 +192,51 @@ function buscarFotoLugarUnsplash(_x, _x2, _x3) {
   return _buscarFotoLugarUnsplash.apply(this, arguments);
 } // Detecta se o que o usuário digitou é uma cidade (via Nominatim addr)
 function _buscarFotoLugarUnsplash() {
-  _buscarFotoLugarUnsplash = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee46(cidade, estado, pais) {
-    var partes, query, _candidata$urls, _candidata$urls2, _candidata$urls3, _candidata$user, _candidata$user2, _candidata$links, r, data, candidata, _t48;
-    return _regenerator().w(function (_context46) {
-      while (1) switch (_context46.p = _context46.n) {
+  _buscarFotoLugarUnsplash = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee50(cidade, estado, pais) {
+    var partes, query, _candidata$urls, _candidata$urls2, _candidata$urls3, _candidata$user, _candidata$user2, _candidata$links, r, data, candidata, _t52;
+    return _regenerator().w(function (_context50) {
+      while (1) switch (_context50.p = _context50.n) {
         case 0:
           if (cidade) {
-            _context46.n = 1;
+            _context50.n = 1;
             break;
           }
-          return _context46.a(2, null);
+          return _context50.a(2, null);
         case 1:
           partes = [cidade, estado, pais].filter(Boolean).join(" ");
           query = encodeURIComponent(partes);
-          _context46.p = 2;
-          _context46.n = 3;
+          _context50.p = 2;
+          _context50.n = 3;
           return fetch("https://api.unsplash.com/search/photos?query=".concat(query, "&per_page=5&orientation=landscape&content_filter=high&client_id=").concat(UNSPLASH_ACCESS_KEY));
         case 3:
-          r = _context46.v;
+          r = _context50.v;
           if (r.ok) {
-            _context46.n = 4;
+            _context50.n = 4;
             break;
           }
-          return _context46.a(2, null);
+          return _context50.a(2, null);
         case 4:
-          _context46.n = 5;
+          _context50.n = 5;
           return r.json();
         case 5:
-          data = _context46.v;
+          data = _context50.v;
           if (!(!data.results || data.results.length === 0)) {
-            _context46.n = 6;
+            _context50.n = 6;
             break;
           }
-          return _context46.a(2, null);
+          return _context50.a(2, null);
         case 6:
           // Pega a primeira foto com likes >= 10 (filtro de qualidade) ou a 1ª se nenhuma passar
           candidata = data.results.find(function (p) {
             return p.likes >= 10;
           }) || data.results[0];
           if (candidata) {
-            _context46.n = 7;
+            _context50.n = 7;
             break;
           }
-          return _context46.a(2, null);
+          return _context50.a(2, null);
         case 7:
-          return _context46.a(2, {
+          return _context50.a(2, {
             url: ((_candidata$urls = candidata.urls) === null || _candidata$urls === void 0 ? void 0 : _candidata$urls.regular) || ((_candidata$urls2 = candidata.urls) === null || _candidata$urls2 === void 0 ? void 0 : _candidata$urls2.small),
             urlSmall: (_candidata$urls3 = candidata.urls) === null || _candidata$urls3 === void 0 ? void 0 : _candidata$urls3.small,
             photographer: ((_candidata$user = candidata.user) === null || _candidata$user === void 0 ? void 0 : _candidata$user.name) || "fotógrafo",
@@ -244,12 +244,12 @@ function _buscarFotoLugarUnsplash() {
             downloadLocation: ((_candidata$links = candidata.links) === null || _candidata$links === void 0 ? void 0 : _candidata$links.download_location) || null
           });
         case 8:
-          _context46.p = 8;
-          _t48 = _context46.v;
-          console.log("Unsplash erro:", _t48.message || _t48);
-          return _context46.a(2, null);
+          _context50.p = 8;
+          _t52 = _context50.v;
+          console.log("Unsplash erro:", _t52.message || _t52);
+          return _context50.a(2, null);
       }
-    }, _callee46, null, [[2, 8]]);
+    }, _callee50, null, [[2, 8]]);
   }));
   return _buscarFotoLugarUnsplash.apply(this, arguments);
 }
@@ -606,34 +606,34 @@ var fileToBlob = function fileToBlob(f) {
 // ── uploadImage: redimensiona + sobe pro bucket + retorna URL pública ──
 function uploadImage(_x4, _x5, _x6, _x7, _x8) {
   return _uploadImage.apply(this, arguments);
-} // ── Sincroniza lugares de um perfil pras tabelas places + place_profiles ──
+} // ── uploadVideo: sobe vídeo pro bucket 'videos' e retorna URL pública ──
 function _uploadImage() {
-  _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee47(file, bucket, userId, maxW, quality) {
+  _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee51(file, bucket, userId, maxW, quality) {
     var _blob$type;
-    var defaultW, defaultQ, blob, ts, rand, ext, filename, uploadPromise, timeoutPromise, _yield$Promise$race, error, _db$storage$from$getP, data, _t49;
-    return _regenerator().w(function (_context47) {
-      while (1) switch (_context47.p = _context47.n) {
+    var defaultW, defaultQ, blob, ts, rand, ext, filename, uploadPromise, timeoutPromise, _yield$Promise$race, error, _db$storage$from$getP, data, _t53;
+    return _regenerator().w(function (_context51) {
+      while (1) switch (_context51.p = _context51.n) {
         case 0:
           defaultW = bucket === "avatars" ? 400 : 800;
           defaultQ = bucket === "avatars" ? 0.75 : 0.78;
-          _context47.p = 1;
-          _context47.n = 2;
+          _context51.p = 1;
+          _context51.n = 2;
           return fileToBlob(file, maxW || defaultW, quality || defaultQ);
         case 2:
-          blob = _context47.v;
-          _context47.n = 5;
+          blob = _context51.v;
+          _context51.n = 5;
           break;
         case 3:
-          _context47.p = 3;
-          _t49 = _context47.v;
-          console.log("fileToBlob falhou, tentando upload direto:", _t49);
+          _context51.p = 3;
+          _t53 = _context51.v;
+          console.log("fileToBlob falhou, tentando upload direto:", _t53);
           // Fallback: sobe o arquivo original se for menor que 2MB
           if (!(file.size <= 2 * 1024 * 1024)) {
-            _context47.n = 4;
+            _context51.n = 4;
             break;
           }
           blob = file;
-          _context47.n = 5;
+          _context51.n = 5;
           break;
         case 4:
           throw new Error("Imagem muito grande e não foi possível redimensionar");
@@ -653,46 +653,105 @@ function _uploadImage() {
               return reject(new Error("Upload timeout após 30s"));
             }, 30000);
           });
-          _context47.n = 6;
+          _context51.n = 6;
           return Promise.race([uploadPromise, timeoutPromise]);
         case 6:
-          _yield$Promise$race = _context47.v;
+          _yield$Promise$race = _context51.v;
           error = _yield$Promise$race.error;
           if (!error) {
-            _context47.n = 7;
+            _context51.n = 7;
             break;
           }
           console.error("Upload erro:", error);
           throw error;
         case 7:
           _db$storage$from$getP = db.storage.from(bucket).getPublicUrl(filename), data = _db$storage$from$getP.data;
-          return _context47.a(2, data.publicUrl);
+          return _context51.a(2, data.publicUrl);
       }
-    }, _callee47, null, [[1, 3]]);
+    }, _callee51, null, [[1, 3]]);
   }));
   return _uploadImage.apply(this, arguments);
 }
-function syncLugaresToPlaces(_x9, _x0) {
+function uploadVideo(_x9, _x0) {
+  return _uploadVideo.apply(this, arguments);
+} // ── Lê duração do vídeo em segundos ──
+function _uploadVideo() {
+  _uploadVideo = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee52(file, userId) {
+    var ts, rand, ext, filename, uploadPromise, timeoutPromise, _yield$Promise$race2, error, _db$storage$from$getP2, data;
+    return _regenerator().w(function (_context52) {
+      while (1) switch (_context52.n) {
+        case 0:
+          // Nome único
+          ts = Date.now();
+          rand = Math.random().toString(36).slice(2, 8);
+          ext = file.name.split('.').pop().toLowerCase() || 'mp4';
+          filename = "".concat(userId || "anon", "_").concat(ts, "_").concat(rand, ".").concat(ext); // Upload com timeout de 90s (vídeos são maiores)
+          uploadPromise = db.storage.from('videos').upload(filename, file, {
+            contentType: file.type || 'video/mp4',
+            cacheControl: "3600",
+            upsert: false
+          });
+          timeoutPromise = new Promise(function (_, reject) {
+            return setTimeout(function () {
+              return reject(new Error("Upload timeout após 90s"));
+            }, 90000);
+          });
+          _context52.n = 1;
+          return Promise.race([uploadPromise, timeoutPromise]);
+        case 1:
+          _yield$Promise$race2 = _context52.v;
+          error = _yield$Promise$race2.error;
+          if (!error) {
+            _context52.n = 2;
+            break;
+          }
+          console.error("Upload vídeo erro:", error);
+          throw error;
+        case 2:
+          _db$storage$from$getP2 = db.storage.from('videos').getPublicUrl(filename), data = _db$storage$from$getP2.data;
+          return _context52.a(2, data.publicUrl);
+      }
+    }, _callee52);
+  }));
+  return _uploadVideo.apply(this, arguments);
+}
+function lerDuracaoVideo(file) {
+  return new Promise(function (resolve, reject) {
+    var video = document.createElement('video');
+    video.preload = 'metadata';
+    video.onloadedmetadata = function () {
+      window.URL.revokeObjectURL(video.src);
+      resolve(video.duration);
+    };
+    video.onerror = function () {
+      reject(new Error("Não consegui ler o vídeo"));
+    };
+    video.src = URL.createObjectURL(file);
+  });
+}
+
+// ── Sincroniza lugares de um perfil pras tabelas places + place_profiles ──
+function syncLugaresToPlaces(_x1, _x10) {
   return _syncLugaresToPlaces.apply(this, arguments);
 } // ── Logo ──────────────────────────────────────────────────────
 function _syncLugaresToPlaces() {
-  _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee48(profileId, lugares) {
-    var _iterator7, _step7, l, nome, cidade, estado, pais, _yield$db$from$select3, existing, placeId, foto, photoFields, _foto, _yield$db$from$insert2, created, error, _foto2, _t50, _t51;
-    return _regenerator().w(function (_context48) {
-      while (1) switch (_context48.p = _context48.n) {
+  _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee53(profileId, lugares) {
+    var _iterator7, _step7, l, nome, cidade, estado, pais, _yield$db$from$select3, existing, placeId, foto, photoFields, _foto, _yield$db$from$insert3, created, error, _foto2, _t54, _t55;
+    return _regenerator().w(function (_context53) {
+      while (1) switch (_context53.p = _context53.n) {
         case 0:
           if (!(!profileId || !lugares || lugares.length === 0)) {
-            _context48.n = 1;
+            _context53.n = 1;
             break;
           }
-          return _context48.a(2);
+          return _context53.a(2);
         case 1:
           _iterator7 = _createForOfIteratorHelper(lugares);
-          _context48.p = 2;
+          _context53.p = 2;
           _iterator7.s();
         case 3:
           if ((_step7 = _iterator7.n()).done) {
-            _context48.n = 18;
+            _context53.n = 18;
             break;
           }
           l = _step7.value;
@@ -701,37 +760,37 @@ function _syncLugaresToPlaces() {
           estado = (l.uf || l.state || "").trim();
           pais = (l.pais || l.country || "Brasil").trim();
           if (!(!nome && !cidade)) {
-            _context48.n = 4;
+            _context53.n = 4;
             break;
           }
-          return _context48.a(3, 17);
+          return _context53.a(3, 17);
         case 4:
-          _context48.p = 4;
-          _context48.n = 5;
+          _context53.p = 4;
+          _context53.n = 5;
           return db.from("places").select("id, photo_url").eq("name", nome).eq("city", cidade).maybeSingle();
         case 5:
-          _yield$db$from$select3 = _context48.v;
+          _yield$db$from$select3 = _context53.v;
           existing = _yield$db$from$select3.data;
           placeId = void 0;
           if (!existing) {
-            _context48.n = 9;
+            _context53.n = 9;
             break;
           }
           placeId = existing.id;
           // Se já existe mas sem foto e é cidade, tenta buscar agora
           if (!(!existing.photo_url && nome.toLowerCase() === cidade.toLowerCase())) {
-            _context48.n = 8;
+            _context53.n = 8;
             break;
           }
-          _context48.n = 6;
+          _context53.n = 6;
           return buscarFotoLugarUnsplash(cidade, estado, pais);
         case 6:
-          foto = _context48.v;
+          foto = _context53.v;
           if (!foto) {
-            _context48.n = 8;
+            _context53.n = 8;
             break;
           }
-          _context48.n = 7;
+          _context53.n = 7;
           return db.from("places").update({
             photo_url: foto.url,
             photo_credit_name: foto.photographer,
@@ -740,19 +799,19 @@ function _syncLugaresToPlaces() {
         case 7:
           unsplashTrackDownload(foto.downloadLocation);
         case 8:
-          _context48.n = 14;
+          _context53.n = 14;
           break;
         case 9:
           // Novo lugar: busca foto se for cidade (nome ~= cidade)
           photoFields = {};
           if (!(nome.toLowerCase() === cidade.toLowerCase() && cidade)) {
-            _context48.n = 11;
+            _context53.n = 11;
             break;
           }
-          _context48.n = 10;
+          _context53.n = 10;
           return buscarFotoLugarUnsplash(cidade, estado, pais);
         case 10:
-          _foto = _context48.v;
+          _foto = _context53.v;
           if (_foto) {
             photoFields = {
               photo_url: _foto.url,
@@ -761,7 +820,7 @@ function _syncLugaresToPlaces() {
             };
           }
         case 11:
-          _context48.n = 12;
+          _context53.n = 12;
           return db.from("places").insert(_objectSpread({
             name: nome,
             city: cidade,
@@ -771,15 +830,15 @@ function _syncLugaresToPlaces() {
             created_by: profileId
           }, photoFields)).select("id").single();
         case 12:
-          _yield$db$from$insert2 = _context48.v;
-          created = _yield$db$from$insert2.data;
-          error = _yield$db$from$insert2.error;
+          _yield$db$from$insert3 = _context53.v;
+          created = _yield$db$from$insert3.data;
+          error = _yield$db$from$insert3.error;
           if (!error) {
-            _context48.n = 13;
+            _context53.n = 13;
             break;
           }
           console.error("Erro ao criar lugar:", error);
-          return _context48.a(3, 17);
+          return _context53.a(3, 17);
         case 13:
           placeId = created.id;
           // Notifica download do Unsplash (exigência de atribuição)
@@ -791,10 +850,10 @@ function _syncLugaresToPlaces() {
           }
         case 14:
           if (!placeId) {
-            _context48.n = 15;
+            _context53.n = 15;
             break;
           }
-          _context48.n = 15;
+          _context53.n = 15;
           return db.from("place_profiles").upsert({
             place_id: placeId,
             profile_id: profileId,
@@ -806,30 +865,30 @@ function _syncLugaresToPlaces() {
             onConflict: "place_id,profile_id,year_start"
           });
         case 15:
-          _context48.n = 17;
+          _context53.n = 17;
           break;
         case 16:
-          _context48.p = 16;
-          _t50 = _context48.v;
-          console.error("Erro syncLugares:", _t50);
+          _context53.p = 16;
+          _t54 = _context53.v;
+          console.error("Erro syncLugares:", _t54);
         case 17:
-          _context48.n = 3;
+          _context53.n = 3;
           break;
         case 18:
-          _context48.n = 20;
+          _context53.n = 20;
           break;
         case 19:
-          _context48.p = 19;
-          _t51 = _context48.v;
-          _iterator7.e(_t51);
+          _context53.p = 19;
+          _t55 = _context53.v;
+          _iterator7.e(_t55);
         case 20:
-          _context48.p = 20;
+          _context53.p = 20;
           _iterator7.f();
-          return _context48.f(20);
+          return _context53.f(20);
         case 21:
-          return _context48.a(2);
+          return _context53.a(2);
       }
-    }, _callee48, null, [[4, 16], [2, 19, 20, 21]]);
+    }, _callee53, null, [[4, 16], [2, 19, 20, 21]]);
   }));
   return _syncLugaresToPlaces.apply(this, arguments);
 }
@@ -2947,31 +3006,31 @@ function carregarLugaresEmAlta() {
   return _carregarLugaresEmAlta.apply(this, arguments);
 } // ── Helper: Contar perfis por place_id em lote ────────────────
 function _carregarLugaresEmAlta() {
-  _carregarLugaresEmAlta = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee49() {
+  _carregarLugaresEmAlta = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee54() {
     var limite,
-      _yield$dbRead$from$se1,
+      _yield$dbRead$from$se10,
       pp,
       counts,
       topIds,
-      _yield$dbRead$from$se10,
+      _yield$dbRead$from$se11,
       places,
-      _args49 = arguments,
-      _t52;
-    return _regenerator().w(function (_context49) {
-      while (1) switch (_context49.p = _context49.n) {
+      _args54 = arguments,
+      _t56;
+    return _regenerator().w(function (_context54) {
+      while (1) switch (_context54.p = _context54.n) {
         case 0:
-          limite = _args49.length > 0 && _args49[0] !== undefined ? _args49[0] : 6;
-          _context49.p = 1;
-          _context49.n = 2;
+          limite = _args54.length > 0 && _args54[0] !== undefined ? _args54[0] : 6;
+          _context54.p = 1;
+          _context54.n = 2;
           return dbRead.from("place_profiles").select("place_id");
         case 2:
-          _yield$dbRead$from$se1 = _context49.v;
-          pp = _yield$dbRead$from$se1.data;
+          _yield$dbRead$from$se10 = _context54.v;
+          pp = _yield$dbRead$from$se10.data;
           if (!(!pp || pp.length === 0)) {
-            _context49.n = 3;
+            _context54.n = 3;
             break;
           }
-          return _context49.a(2, []);
+          return _context54.a(2, []);
         case 3:
           counts = {};
           pp.forEach(function (r) {
@@ -2983,23 +3042,23 @@ function _carregarLugaresEmAlta() {
             return e[0];
           });
           if (!(topIds.length === 0)) {
-            _context49.n = 4;
+            _context54.n = 4;
             break;
           }
-          return _context49.a(2, []);
+          return _context54.a(2, []);
         case 4:
-          _context49.n = 5;
+          _context54.n = 5;
           return dbRead.from("places").select("*")["in"]("id", topIds);
         case 5:
-          _yield$dbRead$from$se10 = _context49.v;
-          places = _yield$dbRead$from$se10.data;
+          _yield$dbRead$from$se11 = _context54.v;
+          places = _yield$dbRead$from$se11.data;
           if (places) {
-            _context49.n = 6;
+            _context54.n = 6;
             break;
           }
-          return _context49.a(2, []);
+          return _context54.a(2, []);
         case 6:
-          return _context49.a(2, topIds.map(function (id) {
+          return _context54.a(2, topIds.map(function (id) {
             var p = places.find(function (x) {
               return String(x.id) === String(id);
             });
@@ -3009,47 +3068,47 @@ function _carregarLugaresEmAlta() {
             });
           }).filter(Boolean));
         case 7:
-          _context49.p = 7;
-          _t52 = _context49.v;
-          console.log("Lugares em alta:", _t52.message || _t52);
-          return _context49.a(2, []);
+          _context54.p = 7;
+          _t56 = _context54.v;
+          console.log("Lugares em alta:", _t56.message || _t56);
+          return _context54.a(2, []);
       }
-    }, _callee49, null, [[1, 7]]);
+    }, _callee54, null, [[1, 7]]);
   }));
   return _carregarLugaresEmAlta.apply(this, arguments);
 }
-function contarPerfisPorLugar(_x1) {
+function contarPerfisPorLugar(_x11) {
   return _contarPerfisPorLugar.apply(this, arguments);
 } // ── Helper: Buscas recentes (localStorage) ────────────────────
 function _contarPerfisPorLugar() {
-  _contarPerfisPorLugar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee50(placeIds) {
-    var _yield$dbRead$from$se11, data, counts, _t53;
-    return _regenerator().w(function (_context50) {
-      while (1) switch (_context50.p = _context50.n) {
+  _contarPerfisPorLugar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee55(placeIds) {
+    var _yield$dbRead$from$se12, data, counts, _t57;
+    return _regenerator().w(function (_context55) {
+      while (1) switch (_context55.p = _context55.n) {
         case 0:
           if (!(!placeIds || placeIds.length === 0)) {
-            _context50.n = 1;
+            _context55.n = 1;
             break;
           }
-          return _context50.a(2, {});
+          return _context55.a(2, {});
         case 1:
-          _context50.p = 1;
-          _context50.n = 2;
+          _context55.p = 1;
+          _context55.n = 2;
           return dbRead.from("place_profiles").select("place_id")["in"]("place_id", placeIds);
         case 2:
-          _yield$dbRead$from$se11 = _context50.v;
-          data = _yield$dbRead$from$se11.data;
+          _yield$dbRead$from$se12 = _context55.v;
+          data = _yield$dbRead$from$se12.data;
           counts = {};
           (data || []).forEach(function (r) {
             counts[r.place_id] = (counts[r.place_id] || 0) + 1;
           });
-          return _context50.a(2, counts);
+          return _context55.a(2, counts);
         case 3:
-          _context50.p = 3;
-          _t53 = _context50.v;
-          return _context50.a(2, {});
+          _context55.p = 3;
+          _t57 = _context55.v;
+          return _context55.a(2, {});
       }
-    }, _callee50, null, [[1, 3]]);
+    }, _callee55, null, [[1, 3]]);
   }));
   return _contarPerfisPorLugar.apply(this, arguments);
 }
@@ -3982,7 +4041,7 @@ function NovoLugar(_ref22) {
     d = _useState62[0],
     setD = _useState62[1];
   var timer = useRef();
-  function searchAddr(_x10) {
+  function searchAddr(_x12) {
     return _searchAddr.apply(this, arguments);
   }
   function _searchAddr() {
@@ -4444,7 +4503,7 @@ function NovoLugar(_ref22) {
           }
         }, _callee3, null, [[1, 4]]);
       }));
-      return function (_x11) {
+      return function (_x13) {
         return _ref23.apply(this, arguments);
       };
     }())
@@ -5761,7 +5820,7 @@ function PersonalizacaoPerfil(_ref28) {
     } // rosa/magenta
     return hslToHex(hue, sat, light);
   }
-  function aplicarTemaFromSlider(_x12) {
+  function aplicarTemaFromSlider(_x14) {
     return _aplicarTemaFromSlider.apply(this, arguments);
   }
   function _aplicarTemaFromSlider() {
@@ -5782,7 +5841,7 @@ function PersonalizacaoPerfil(_ref28) {
     }));
     return _aplicarTemaFromSlider.apply(this, arguments);
   }
-  function aplicarTema(_x13) {
+  function aplicarTema(_x15) {
     return _aplicarTema.apply(this, arguments);
   }
   function _aplicarTema() {
@@ -5804,7 +5863,7 @@ function PersonalizacaoPerfil(_ref28) {
     }));
     return _aplicarTema.apply(this, arguments);
   }
-  function aplicarTemaHex(_x14, _x15) {
+  function aplicarTemaHex(_x16, _x17) {
     return _aplicarTemaHex.apply(this, arguments);
   }
   function _aplicarTemaHex() {
@@ -5825,7 +5884,7 @@ function PersonalizacaoPerfil(_ref28) {
     }));
     return _aplicarTemaHex.apply(this, arguments);
   }
-  function aplicarBg(_x16, _x17) {
+  function aplicarBg(_x18, _x19) {
     return _aplicarBg.apply(this, arguments);
   } // Mapeia slider 0-100 → cor de fundo real (pastel suave)
   function _aplicarBg() {
@@ -5858,7 +5917,7 @@ function PersonalizacaoPerfil(_ref28) {
     var sat = hue < 90 || hue > 270 ? 28 : 25;
     return hslToHex(hue, sat, light || 92);
   }
-  function aplicarBgFromSlider(_x18, _x19) {
+  function aplicarBgFromSlider(_x20, _x21) {
     return _aplicarBgFromSlider.apply(this, arguments);
   }
   function _aplicarBgFromSlider() {
@@ -5879,7 +5938,7 @@ function PersonalizacaoPerfil(_ref28) {
     }));
     return _aplicarBgFromSlider.apply(this, arguments);
   }
-  function aplicarBgHex(_x20) {
+  function aplicarBgHex(_x22) {
     return _aplicarBgHex.apply(this, arguments);
   } // Cor dos cards (normalmente branco/claro)
   function _aplicarBgHex() {
@@ -5910,7 +5969,7 @@ function PersonalizacaoPerfil(_ref28) {
     var hue = Math.round(colorRange / 79 * 350);
     return hslToHex(hue, 20, 96); // bem claro e levemente saturado
   }
-  function aplicarCardFromSlider(_x21) {
+  function aplicarCardFromSlider(_x23) {
     return _aplicarCardFromSlider.apply(this, arguments);
   }
   function _aplicarCardFromSlider() {
@@ -5963,7 +6022,7 @@ function PersonalizacaoPerfil(_ref28) {
     }));
     return _resetCard.apply(this, arguments);
   }
-  function aplicarPaleta(_x22) {
+  function aplicarPaleta(_x24) {
     return _aplicarPaleta.apply(this, arguments);
   }
   function _aplicarPaleta() {
@@ -6003,7 +6062,7 @@ function PersonalizacaoPerfil(_ref28) {
     }));
     return _aplicarPaleta.apply(this, arguments);
   }
-  function handleWallpaper(_x23) {
+  function handleWallpaper(_x25) {
     return _handleWallpaper.apply(this, arguments);
   }
   function _handleWallpaper() {
@@ -7483,38 +7542,538 @@ function ModalCompletar(_ref30) {
   }, "Depois eu volto")));
 }
 
-// ── Screen: Perfil ──────────────────────────────────────────
-function Perfil(_ref31) {
-  var _user$photos, _user$intencao5, _user$lugares2, _user$interests, _user$lugares3;
+// ── Modal: Postar Vídeo Efêmero ─────────────────────────────
+function ModalGravarVideo(_ref31) {
   var user = _ref31.user,
-    onLogout = _ref31.onLogout,
-    onCadastrar = _ref31.onCadastrar,
-    onUpdateUser = _ref31.onUpdateUser,
-    onLogin = _ref31.onLogin;
-  var _useState101 = useState(false),
+    onClose = _ref31.onClose,
+    onPosted = _ref31.onPosted;
+  var _useState101 = useState(null),
     _useState102 = _slicedToArray(_useState101, 2),
-    editando = _useState102[0],
-    setEditando = _useState102[1];
+    arquivo = _useState102[0],
+    setArquivo = _useState102[1];
   var _useState103 = useState(null),
     _useState104 = _slicedToArray(_useState103, 2),
-    fotoExpandida = _useState104[0],
-    setFotoExpandida = _useState104[1];
-  var _useState105 = useState(null),
+    previewUrl = _useState104[0],
+    setPreviewUrl = _useState104[1];
+  var _useState105 = useState(0),
     _useState106 = _slicedToArray(_useState105, 2),
-    completarCampo = _useState106[0],
-    setCompletarCampo = _useState106[1];
-  var _useState107 = useState(false),
+    duracao = _useState106[0],
+    setDuracao = _useState106[1];
+  var _useState107 = useState(""),
     _useState108 = _slicedToArray(_useState107, 2),
-    confirmandoLogout = _useState108[0],
-    setConfirmandoLogout = _useState108[1];
-  var _useState109 = useState(false),
+    erro = _useState108[0],
+    setErro = _useState108[1];
+  var _useState109 = useState(48),
     _useState110 = _slicedToArray(_useState109, 2),
-    menuAberto = _useState110[0],
-    setMenuAberto = _useState110[1];
-  var _useState111 = useState(""),
+    expiraHoras = _useState110[0],
+    setExpiraHoras = _useState110[1];
+  var _useState111 = useState(false),
     _useState112 = _slicedToArray(_useState111, 2),
-    novoLugarQuer = _useState112[0],
-    setNovoLugarQuer = _useState112[1];
+    postando = _useState112[0],
+    setPostando = _useState112[1];
+  var LIMITE_SEGUNDOS = 15;
+  var LIMITE_BYTES = 10 * 1024 * 1024; // 10MB
+  function onSelecionar(_x26) {
+    return _onSelecionar.apply(this, arguments);
+  }
+  function _onSelecionar() {
+    _onSelecionar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17(e) {
+      var _e$target$files;
+      var file, dur, _t12;
+      return _regenerator().w(function (_context17) {
+        while (1) switch (_context17.p = _context17.n) {
+          case 0:
+            setErro("");
+            file = (_e$target$files = e.target.files) === null || _e$target$files === void 0 ? void 0 : _e$target$files[0];
+            if (file) {
+              _context17.n = 1;
+              break;
+            }
+            return _context17.a(2);
+          case 1:
+            if (file.type.startsWith('video/')) {
+              _context17.n = 2;
+              break;
+            }
+            setErro("Arquivo não é um vídeo válido");
+            return _context17.a(2);
+          case 2:
+            if (!(file.size > LIMITE_BYTES)) {
+              _context17.n = 3;
+              break;
+            }
+            setErro("V\xEDdeo muito grande (".concat((file.size / 1024 / 1024).toFixed(1), "MB). Limite: 10MB"));
+            return _context17.a(2);
+          case 3:
+            _context17.p = 3;
+            _context17.n = 4;
+            return lerDuracaoVideo(file);
+          case 4:
+            dur = _context17.v;
+            if (!(dur > LIMITE_SEGUNDOS + 0.5)) {
+              _context17.n = 5;
+              break;
+            }
+            setErro("V\xEDdeo muito longo (".concat(dur.toFixed(1), "s). Limite: ").concat(LIMITE_SEGUNDOS, "s"));
+            return _context17.a(2);
+          case 5:
+            setDuracao(dur);
+            setArquivo(file);
+            setPreviewUrl(URL.createObjectURL(file));
+            _context17.n = 7;
+            break;
+          case 6:
+            _context17.p = 6;
+            _t12 = _context17.v;
+            setErro("Não consegui ler o vídeo. Tente outro arquivo.");
+          case 7:
+            return _context17.a(2);
+        }
+      }, _callee17, null, [[3, 6]]);
+    }));
+    return _onSelecionar.apply(this, arguments);
+  }
+  function postar() {
+    return _postar.apply(this, arguments);
+  }
+  function _postar() {
+    _postar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18() {
+      var url, expira, _yield$db$from$insert, error, _t13;
+      return _regenerator().w(function (_context18) {
+        while (1) switch (_context18.p = _context18.n) {
+          case 0:
+            if (!(!arquivo || postando)) {
+              _context18.n = 1;
+              break;
+            }
+            return _context18.a(2);
+          case 1:
+            setPostando(true);
+            _context18.p = 2;
+            _context18.n = 3;
+            return uploadVideo(arquivo, user.id);
+          case 3:
+            url = _context18.v;
+            expira = new Date(Date.now() + expiraHoras * 60 * 60 * 1000).toISOString();
+            _context18.n = 4;
+            return db.from("videos").insert({
+              user_id: user.id,
+              video_url: url,
+              duracao_seg: Math.round(duracao),
+              tamanho_bytes: arquivo.size,
+              expira_em: expira
+            });
+          case 4:
+            _yield$db$from$insert = _context18.v;
+            error = _yield$db$from$insert.error;
+            if (!error) {
+              _context18.n = 5;
+              break;
+            }
+            throw error;
+          case 5:
+            if (onPosted) onPosted();
+            onClose();
+            _context18.n = 7;
+            break;
+          case 6:
+            _context18.p = 6;
+            _t13 = _context18.v;
+            console.error("Erro ao postar vídeo:", _t13);
+            setErro("Falha ao enviar. Tente novamente.");
+            setPostando(false);
+          case 7:
+            return _context18.a(2);
+        }
+      }, _callee18, null, [[2, 6]]);
+    }));
+    return _postar.apply(this, arguments);
+  }
+  function descartar() {
+    setArquivo(null);
+    setPreviewUrl(null);
+    setDuracao(0);
+    setErro("");
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    className: "fi",
+    onClick: onClose,
+    style: {
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.5)",
+      zIndex: 210,
+      display: "flex",
+      alignItems: "flex-end",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    },
+    style: {
+      background: getUserBg(user),
+      borderRadius: "22px 22px 0 0",
+      width: "100%",
+      maxWidth: 430,
+      maxHeight: "92vh",
+      overflowY: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "14px 0 4px",
+      display: "flex",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 4,
+      borderRadius: 2,
+      background: "#DDD8D0"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "8px 20px 16px"
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 17,
+      fontWeight: 700,
+      color: T.text
+    }
+  }, "Postar v\xEDdeo"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: T.muted,
+      marginTop: 2
+    }
+  }, "aparece s\xF3 no seu perfil")), /*#__PURE__*/React.createElement("button", {
+    onClick: onClose,
+    style: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      color: T.muted,
+      fontSize: 22,
+      lineHeight: 1
+    }
+  }, "\xD7")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0 20px 32px"
+    }
+  }, !arquivo ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "40px 20px",
+      border: "2px dashed ".concat(T.borderMd),
+      borderRadius: 16,
+      background: T.faint,
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 48,
+      height: 48,
+      borderRadius: "50%",
+      background: T.accentBg,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "22",
+    height: "22",
+    viewBox: "0 0 22 22",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "5",
+    width: "14",
+    height: "12",
+    rx: "2",
+    stroke: T.accent,
+    strokeWidth: "1.5"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 9l4-3v10l-4-3",
+    stroke: T.accent,
+    strokeWidth: "1.5",
+    strokeLinejoin: "round"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600,
+      color: T.text
+    }
+  }, "Escolher v\xEDdeo"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: T.muted,
+      marginTop: 4,
+      textAlign: "center"
+    }
+  }, "at\xE9 ", LIMITE_SEGUNDOS, " segundos \xB7 m\xE1x. 10MB"), /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: "video/*",
+    onChange: onSelecionar,
+    style: {
+      display: "none"
+    }
+  })), erro && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 14,
+      padding: "10px 14px",
+      background: "rgba(239,83,80,0.08)",
+      borderRadius: 10,
+      border: "1px solid rgba(239,83,80,0.2)",
+      fontSize: 12,
+      color: "#D84848"
+    }
+  }, erro), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 20,
+      fontSize: 11,
+      color: T.muted,
+      lineHeight: 1.6,
+      fontStyle: "italic",
+      fontFamily: "Georgia,serif"
+    }
+  }, "Seu v\xEDdeo fica vis\xEDvel no seu perfil e some depois do tempo que voc\xEA escolher. Uma mem\xF3ria passageira.")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderRadius: 14,
+      overflow: "hidden",
+      background: "#000",
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("video", {
+    src: previewUrl,
+    controls: true,
+    playsInline: true,
+    style: {
+      width: "100%",
+      display: "block",
+      maxHeight: 320
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 18,
+      fontSize: 11,
+      color: T.muted
+    }
+  }, /*#__PURE__*/React.createElement("span", null, duracao.toFixed(1), "s \xB7 ", (arquivo.size / 1024 / 1024).toFixed(1), "MB"), /*#__PURE__*/React.createElement("button", {
+    onClick: descartar,
+    style: {
+      background: "none",
+      border: "none",
+      color: T.accent,
+      cursor: "pointer",
+      fontSize: 12,
+      fontWeight: 600,
+      fontFamily: "inherit"
+    }
+  }, "Escolher outro")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: T.muted,
+      fontWeight: 700,
+      textTransform: "uppercase",
+      letterSpacing: "0.08em",
+      marginBottom: 10
+    }
+  }, "Vis\xEDvel por"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6
+    }
+  }, [{
+    h: 12,
+    l: "12h"
+  }, {
+    h: 24,
+    l: "24h"
+  }, {
+    h: 48,
+    l: "48h"
+  }, {
+    h: 168,
+    l: "7 dias"
+  }].map(function (o) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: o.h,
+      onClick: function onClick() {
+        return setExpiraHoras(o.h);
+      },
+      style: {
+        flex: 1,
+        padding: "9px 6px",
+        borderRadius: 10,
+        cursor: "pointer",
+        textAlign: "center",
+        border: "1.5px solid ".concat(expiraHoras === o.h ? T.accent : T.border),
+        background: expiraHoras === o.h ? T.accentBg : "#fff",
+        fontSize: 12,
+        fontWeight: expiraHoras === o.h ? 700 : 500,
+        color: expiraHoras === o.h ? T.accent : T.muted
+      }
+    }, o.l);
+  }))), erro && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 14,
+      padding: "10px 14px",
+      background: "rgba(239,83,80,0.08)",
+      borderRadius: 10,
+      border: "1px solid rgba(239,83,80,0.2)",
+      fontSize: 12,
+      color: "#D84848"
+    }
+  }, erro), /*#__PURE__*/React.createElement(Btn, {
+    full: true,
+    onClick: postar,
+    disabled: postando,
+    size: "lg"
+  }, postando ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Spinner, null), " Enviando\u2026") : "Postar vídeo")))));
+}
+
+// ── Screen: Perfil ──────────────────────────────────────────
+function Perfil(_ref32) {
+  var _user$photos, _user$intencao5, _user$lugares2, _user$interests, _user$lugares3;
+  var user = _ref32.user,
+    onLogout = _ref32.onLogout,
+    onCadastrar = _ref32.onCadastrar,
+    onUpdateUser = _ref32.onUpdateUser,
+    onLogin = _ref32.onLogin;
+  var _useState113 = useState(false),
+    _useState114 = _slicedToArray(_useState113, 2),
+    editando = _useState114[0],
+    setEditando = _useState114[1];
+  var _useState115 = useState(null),
+    _useState116 = _slicedToArray(_useState115, 2),
+    fotoExpandida = _useState116[0],
+    setFotoExpandida = _useState116[1];
+  var _useState117 = useState(null),
+    _useState118 = _slicedToArray(_useState117, 2),
+    completarCampo = _useState118[0],
+    setCompletarCampo = _useState118[1];
+  var _useState119 = useState(false),
+    _useState120 = _slicedToArray(_useState119, 2),
+    confirmandoLogout = _useState120[0],
+    setConfirmandoLogout = _useState120[1];
+  var _useState121 = useState(false),
+    _useState122 = _slicedToArray(_useState121, 2),
+    menuAberto = _useState122[0],
+    setMenuAberto = _useState122[1];
+  var _useState123 = useState(""),
+    _useState124 = _slicedToArray(_useState123, 2),
+    novoLugarQuer = _useState124[0],
+    setNovoLugarQuer = _useState124[1];
+  var _useState125 = useState(false),
+    _useState126 = _slicedToArray(_useState125, 2),
+    gravarVideo = _useState126[0],
+    setGravarVideo = _useState126[1];
+  var _useState127 = useState([]),
+    _useState128 = _slicedToArray(_useState127, 2),
+    meusVideos = _useState128[0],
+    setMeusVideos = _useState128[1];
+  var _useState129 = useState(null),
+    _useState130 = _slicedToArray(_useState129, 2),
+    videoAberto = _useState130[0],
+    setVideoAberto = _useState130[1];
+
+  // Carrega vídeos ativos do usuário
+  function carregarMeusVideos() {
+    return _carregarMeusVideos.apply(this, arguments);
+  }
+  function _carregarMeusVideos() {
+    _carregarMeusVideos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21() {
+      var _yield$dbRead$from$se, data, _t16;
+      return _regenerator().w(function (_context21) {
+        while (1) switch (_context21.p = _context21.n) {
+          case 0:
+            if (user !== null && user !== void 0 && user.id) {
+              _context21.n = 1;
+              break;
+            }
+            return _context21.a(2);
+          case 1:
+            _context21.p = 1;
+            _context21.n = 2;
+            return dbRead.from("videos").select("*").eq("user_id", user.id).gt("expira_em", new Date().toISOString()).order("created_at", {
+              ascending: false
+            });
+          case 2:
+            _yield$dbRead$from$se = _context21.v;
+            data = _yield$dbRead$from$se.data;
+            setMeusVideos(data || []);
+            _context21.n = 4;
+            break;
+          case 3:
+            _context21.p = 3;
+            _t16 = _context21.v;
+            console.error("Erro ao carregar vídeos:", _t16);
+          case 4:
+            return _context21.a(2);
+        }
+      }, _callee21, null, [[1, 3]]);
+    }));
+    return _carregarMeusVideos.apply(this, arguments);
+  }
+  useEffect(function () {
+    carregarMeusVideos();
+  }, [user === null || user === void 0 ? void 0 : user.id]);
+  function removerVideo(_x27) {
+    return _removerVideo.apply(this, arguments);
+  }
+  function _removerVideo() {
+    _removerVideo = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22(id) {
+      var _t17;
+      return _regenerator().w(function (_context22) {
+        while (1) switch (_context22.p = _context22.n) {
+          case 0:
+            _context22.p = 0;
+            _context22.n = 1;
+            return db.from("videos")["delete"]().eq("id", id);
+          case 1:
+            setMeusVideos(function (prev) {
+              return prev.filter(function (v) {
+                return v.id !== id;
+              });
+            });
+            _context22.n = 3;
+            break;
+          case 2:
+            _context22.p = 2;
+            _t17 = _context22.v;
+            console.error("Erro ao remover vídeo:", _t17);
+          case 3:
+            return _context22.a(2);
+        }
+      }, _callee22, null, [[0, 2]]);
+    }));
+    return _removerVideo.apply(this, arguments);
+  }
+  function tempoRestante(expiraEm) {
+    var ms = new Date(expiraEm).getTime() - Date.now();
+    if (ms <= 0) return "expirado";
+    var horas = ms / (1000 * 60 * 60);
+    if (horas < 1) return "".concat(Math.ceil(horas * 60), " min");
+    if (horas < 24) return "".concat(Math.floor(horas), "h");
+    var dias = horas / 24;
+    return "".concat(Math.floor(dias), "d");
+  }
   if (!user) return /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "80px 20px",
@@ -7528,109 +8087,109 @@ function Perfil(_ref31) {
     }
   }, "Entre com sua conta para ver seu perfil."));
   var era = eraInfo(user.era || "passado");
-  function handleNewAvatar(_x24) {
+  function handleNewAvatar(_x28) {
     return _handleNewAvatar.apply(this, arguments);
   }
   function _handleNewAvatar() {
-    _handleNewAvatar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19(e) {
-      var file, url, updated, _t14, _t15;
-      return _regenerator().w(function (_context19) {
-        while (1) switch (_context19.p = _context19.n) {
+    _handleNewAvatar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee23(e) {
+      var file, url, updated, _t18, _t19;
+      return _regenerator().w(function (_context23) {
+        while (1) switch (_context23.p = _context23.n) {
           case 0:
             file = e.target.files[0];
             if (file) {
-              _context19.n = 1;
+              _context23.n = 1;
               break;
             }
-            return _context19.a(2);
+            return _context23.a(2);
           case 1:
-            _context19.p = 1;
-            _context19.n = 2;
+            _context23.p = 1;
+            _context23.n = 2;
             return uploadImage(file, "avatars", user.id);
           case 2:
-            url = _context19.v;
+            url = _context23.v;
             updated = _objectSpread(_objectSpread({}, user), {}, {
               avatar_url: url
             });
             onUpdateUser(updated);
-            _context19.p = 3;
-            _context19.n = 4;
+            _context23.p = 3;
+            _context23.n = 4;
             return db.from("profiles").update({
               avatar_url: url
             }).eq("id", user.id);
           case 4:
-            _context19.n = 6;
+            _context23.n = 6;
             break;
           case 5:
-            _context19.p = 5;
-            _t14 = _context19.v;
-            console.error("update profile avatar:", _t14);
+            _context23.p = 5;
+            _t18 = _context23.v;
+            console.error("update profile avatar:", _t18);
           case 6:
-            _context19.n = 8;
+            _context23.n = 8;
             break;
           case 7:
-            _context19.p = 7;
-            _t15 = _context19.v;
-            console.error("Falha no upload do avatar:", _t15);
+            _context23.p = 7;
+            _t19 = _context23.v;
+            console.error("Falha no upload do avatar:", _t19);
             alert("Não consegui enviar a foto. Tente novamente ou escolha outra imagem.");
           case 8:
-            return _context19.a(2);
+            return _context23.a(2);
         }
-      }, _callee19, null, [[3, 5], [1, 7]]);
+      }, _callee23, null, [[3, 5], [1, 7]]);
     }));
     return _handleNewAvatar.apply(this, arguments);
   }
-  function handleMorePhotos(_x25) {
+  function handleMorePhotos(_x29) {
     return _handleMorePhotos.apply(this, arguments);
   } // Helpers para lugares que quer conhecer (armazenados em user.lugares_quer)
   function _handleMorePhotos() {
-    _handleMorePhotos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20(e) {
-      var files, urls, newPhotos, _t16, _t17;
-      return _regenerator().w(function (_context20) {
-        while (1) switch (_context20.p = _context20.n) {
+    _handleMorePhotos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(e) {
+      var files, urls, newPhotos, _t20, _t21;
+      return _regenerator().w(function (_context24) {
+        while (1) switch (_context24.p = _context24.n) {
           case 0:
             files = Array.from(e.target.files).slice(0, 6);
             if (!(files.length === 0)) {
-              _context20.n = 1;
+              _context24.n = 1;
               break;
             }
-            return _context20.a(2);
+            return _context24.a(2);
           case 1:
-            _context20.p = 1;
-            _context20.n = 2;
+            _context24.p = 1;
+            _context24.n = 2;
             return Promise.all(files.map(function (f) {
               return uploadImage(f, "photos", user.id);
             }));
           case 2:
-            urls = _context20.v;
+            urls = _context24.v;
             newPhotos = [].concat(_toConsumableArray(user.photos || []), _toConsumableArray(urls)).slice(0, 6);
             onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
               photos: newPhotos
             }));
-            _context20.p = 3;
-            _context20.n = 4;
+            _context24.p = 3;
+            _context24.n = 4;
             return db.from("profiles").update({
               photos: newPhotos
             }).eq("id", user.id);
           case 4:
-            _context20.n = 6;
+            _context24.n = 6;
             break;
           case 5:
-            _context20.p = 5;
-            _t16 = _context20.v;
-            console.error("update profile photos:", _t16);
+            _context24.p = 5;
+            _t20 = _context24.v;
+            console.error("update profile photos:", _t20);
           case 6:
-            _context20.n = 8;
+            _context24.n = 8;
             break;
           case 7:
-            _context20.p = 7;
-            _t17 = _context20.v;
-            console.error("Falha no upload das fotos:", _t17);
+            _context24.p = 7;
+            _t21 = _context24.v;
+            console.error("Falha no upload das fotos:", _t21);
             alert("Não consegui enviar alguma das fotos. Tente novamente.");
           case 8:
-            return _context20.a(2);
+            return _context24.a(2);
         }
-      }, _callee20, null, [[3, 5], [1, 7]]);
+      }, _callee24, null, [[3, 5], [1, 7]]);
     }));
     return _handleMorePhotos.apply(this, arguments);
   }
@@ -7638,60 +8197,60 @@ function Perfil(_ref31) {
     return _adicionarLugarQuer.apply(this, arguments);
   }
   function _adicionarLugarQuer() {
-    _adicionarLugarQuer = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21() {
-      var nome, atual, atualizado, _t18;
-      return _regenerator().w(function (_context21) {
-        while (1) switch (_context21.p = _context21.n) {
+    _adicionarLugarQuer = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25() {
+      var nome, atual, atualizado, _t22;
+      return _regenerator().w(function (_context25) {
+        while (1) switch (_context25.p = _context25.n) {
           case 0:
             nome = novoLugarQuer.trim();
             if (nome) {
-              _context21.n = 1;
+              _context25.n = 1;
               break;
             }
-            return _context21.a(2);
+            return _context25.a(2);
           case 1:
             atual = user.lugares_quer || [];
             if (!atual.some(function (l) {
               return l.toLowerCase() === nome.toLowerCase();
             })) {
-              _context21.n = 2;
+              _context25.n = 2;
               break;
             }
             setNovoLugarQuer("");
-            return _context21.a(2);
+            return _context25.a(2);
           case 2:
             atualizado = [].concat(_toConsumableArray(atual), [nome]).slice(0, 10);
             onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
               lugares_quer: atualizado
             }));
-            _context21.p = 3;
-            _context21.n = 4;
+            _context25.p = 3;
+            _context25.n = 4;
             return db.from("profiles").update({
               lugares_quer: atualizado
             }).eq("id", user.id);
           case 4:
-            _context21.n = 6;
+            _context25.n = 6;
             break;
           case 5:
-            _context21.p = 5;
-            _t18 = _context21.v;
+            _context25.p = 5;
+            _t22 = _context25.v;
           case 6:
             setNovoLugarQuer("");
           case 7:
-            return _context21.a(2);
+            return _context25.a(2);
         }
-      }, _callee21, null, [[3, 5]]);
+      }, _callee25, null, [[3, 5]]);
     }));
     return _adicionarLugarQuer.apply(this, arguments);
   }
-  function removerLugarQuer(_x26) {
+  function removerLugarQuer(_x30) {
     return _removerLugarQuer.apply(this, arguments);
   }
   function _removerLugarQuer() {
-    _removerLugarQuer = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22(nome) {
-      var atualizado, _t19;
-      return _regenerator().w(function (_context22) {
-        while (1) switch (_context22.p = _context22.n) {
+    _removerLugarQuer = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26(nome) {
+      var atualizado, _t23;
+      return _regenerator().w(function (_context26) {
+        while (1) switch (_context26.p = _context26.n) {
           case 0:
             atualizado = (user.lugares_quer || []).filter(function (l) {
               return l !== nome;
@@ -7699,21 +8258,21 @@ function Perfil(_ref31) {
             onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
               lugares_quer: atualizado
             }));
-            _context22.p = 1;
-            _context22.n = 2;
+            _context26.p = 1;
+            _context26.n = 2;
             return db.from("profiles").update({
               lugares_quer: atualizado
             }).eq("id", user.id);
           case 2:
-            _context22.n = 4;
+            _context26.n = 4;
             break;
           case 3:
-            _context22.p = 3;
-            _t19 = _context22.v;
+            _context26.p = 3;
+            _t23 = _context26.v;
           case 4:
-            return _context22.a(2);
+            return _context26.a(2);
         }
-      }, _callee22, null, [[1, 3]]);
+      }, _callee26, null, [[1, 3]]);
     }));
     return _removerLugarQuer.apply(this, arguments);
   }
@@ -7804,45 +8363,45 @@ function Perfil(_ref31) {
       overflow: "hidden"
     }
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17() {
-      var url, nome, texto, _t12;
-      return _regenerator().w(function (_context17) {
-        while (1) switch (_context17.p = _context17.n) {
+    onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19() {
+      var url, nome, texto, _t14;
+      return _regenerator().w(function (_context19) {
+        while (1) switch (_context19.p = _context19.n) {
           case 0:
             setMenuAberto(false);
             url = "".concat(window.location.origin, "/?perfil=").concat(user.id);
             nome = user.name || "meu perfil";
             texto = "Conhe\xE7a ".concat(nome, " no Tempnext");
-            _context17.p = 1;
+            _context19.p = 1;
             if (!navigator.share) {
-              _context17.n = 3;
+              _context19.n = 3;
               break;
             }
-            _context17.n = 2;
+            _context19.n = 2;
             return navigator.share({
               title: "Tempnext",
               text: texto,
               url: url
             });
           case 2:
-            _context17.n = 5;
+            _context19.n = 5;
             break;
           case 3:
-            _context17.n = 4;
+            _context19.n = 4;
             return navigator.clipboard.writeText(url);
           case 4:
             alert("Link copiado!");
           case 5:
-            _context17.n = 7;
+            _context19.n = 7;
             break;
           case 6:
-            _context17.p = 6;
-            _t12 = _context17.v;
-            if (_t12.name !== "AbortError") console.error("Share:", _t12);
+            _context19.p = 6;
+            _t14 = _context19.v;
+            if (_t14.name !== "AbortError") console.error("Share:", _t14);
           case 7:
-            return _context17.a(2);
+            return _context19.a(2);
         }
-      }, _callee17, null, [[1, 6]]);
+      }, _callee19, null, [[1, 6]]);
     })),
     style: {
       width: "100%",
@@ -8202,7 +8761,150 @@ function Perfil(_ref31) {
       border: "none",
       cursor: novoLugarQuer.trim() ? "pointer" : "default"
     }
-  }, "Adicionar"))), user.note && /*#__PURE__*/React.createElement("div", {
+  }, "Adicionar"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#fff",
+      borderRadius: 18,
+      padding: "16px 18px",
+      border: "1px solid ".concat(T.border),
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "Seus v\xEDdeos"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: T.muted,
+      marginTop: 2
+    }
+  }, "somem depois do tempo escolhido")), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setGravarVideo(true);
+    },
+    style: {
+      padding: "7px 14px",
+      borderRadius: 16,
+      fontSize: 12,
+      fontWeight: 600,
+      fontFamily: "inherit",
+      background: T.accent,
+      color: "#fff",
+      border: "none",
+      cursor: "pointer"
+    }
+  }, "+ Postar")), meusVideos.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: T.muted,
+      fontStyle: "italic",
+      padding: "10px 0"
+    }
+  }, "Nenhum v\xEDdeo ativo. Poste algo que passa \u2014 lembran\xE7a, vista, momento.") : /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch",
+      paddingBottom: 4
+    }
+  }, meusVideos.map(function (v) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: v.id,
+      style: {
+        flexShrink: 0,
+        width: 108,
+        position: "relative"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        return setVideoAberto(v);
+      },
+      style: {
+        width: 108,
+        height: 144,
+        borderRadius: 12,
+        overflow: "hidden",
+        background: "#000",
+        cursor: "pointer",
+        position: "relative",
+        border: "1px solid ".concat(T.border)
+      }
+    }, /*#__PURE__*/React.createElement("video", {
+      src: v.video_url,
+      muted: true,
+      playsInline: true,
+      preload: "metadata",
+      style: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover"
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        inset: 0,
+        background: "rgba(0,0,0,0.15)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 32,
+        height: 32,
+        borderRadius: "50%",
+        background: "rgba(255,255,255,0.85)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "12",
+      height: "12",
+      viewBox: "0 0 12 12"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M3 2l7 4-7 4V2z",
+      fill: T.text
+    })))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        top: 5,
+        right: 5,
+        background: "rgba(0,0,0,0.6)",
+        color: "#fff",
+        fontSize: 8,
+        padding: "2px 6px",
+        borderRadius: 6,
+        fontWeight: 600
+      }
+    }, tempoRestante(v.expira_em))), /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        if (confirm("Remover este vídeo?")) removerVideo(v.id);
+      },
+      style: {
+        position: "absolute",
+        top: 4,
+        left: 4,
+        width: 20,
+        height: 20,
+        borderRadius: "50%",
+        background: "rgba(239,83,80,0.9)",
+        border: "none",
+        color: "#fff",
+        fontSize: 12,
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        lineHeight: 1
+      }
+    }, "\xD7"));
+  }))), user.note && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 18,
@@ -8254,10 +8956,10 @@ function Perfil(_ref31) {
     user: user,
     lugar: ((_user$lugares3 = user.lugares) === null || _user$lugares3 === void 0 || (_user$lugares3 = _user$lugares3[0]) === null || _user$lugares3 === void 0 ? void 0 : _user$lugares3.placeName) || user.place_name || "",
     data: user.year_start ? "".concat(user.year_start, "\u2013").concat(user.year_end || "") : "",
-    onRemove: fotoExpandida.index !== undefined ? /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18() {
-      var idx, novas, _t13;
-      return _regenerator().w(function (_context18) {
-        while (1) switch (_context18.p = _context18.n) {
+    onRemove: fotoExpandida.index !== undefined ? /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20() {
+      var idx, novas, _t15;
+      return _regenerator().w(function (_context20) {
+        while (1) switch (_context20.p = _context20.n) {
           case 0:
             idx = fotoExpandida.index;
             novas = user.photos.filter(function (_, j) {
@@ -8266,23 +8968,23 @@ function Perfil(_ref31) {
             onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
               photos: novas
             }));
-            _context18.p = 1;
-            _context18.n = 2;
+            _context20.p = 1;
+            _context20.n = 2;
             return db.from("profiles").update({
               photos: novas
             }).eq("id", user.id);
           case 2:
-            _context18.n = 4;
+            _context20.n = 4;
             break;
           case 3:
-            _context18.p = 3;
-            _t13 = _context18.v;
+            _context20.p = 3;
+            _t15 = _context20.v;
           case 4:
             setFotoExpandida(null);
           case 5:
-            return _context18.a(2);
+            return _context20.a(2);
         }
-      }, _callee18, null, [[1, 3]]);
+      }, _callee20, null, [[1, 3]]);
     })) : null
   }), /*#__PURE__*/React.createElement(PersonalizacaoPerfil, {
     user: user,
@@ -8310,7 +9012,59 @@ function Perfil(_ref31) {
       return setCompletarCampo(null);
     },
     onUpdateUser: onUpdateUser
-  }), confirmandoLogout && /*#__PURE__*/React.createElement("div", {
+  }), gravarVideo && /*#__PURE__*/React.createElement(ModalGravarVideo, {
+    user: user,
+    onClose: function onClose() {
+      return setGravarVideo(false);
+    },
+    onPosted: carregarMeusVideos
+  }), videoAberto && /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      return setVideoAberto(null);
+    },
+    style: {
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.95)",
+      zIndex: 260,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setVideoAberto(null);
+    },
+    style: {
+      position: "absolute",
+      top: 16,
+      right: 16,
+      width: 40,
+      height: 40,
+      borderRadius: "50%",
+      background: "rgba(255,255,255,0.15)",
+      border: "none",
+      color: "#fff",
+      fontSize: 22,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, "\xD7"), /*#__PURE__*/React.createElement("video", {
+    src: videoAberto.video_url,
+    controls: true,
+    autoPlay: true,
+    playsInline: true,
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    },
+    style: {
+      maxWidth: "95vw",
+      maxHeight: "85vh",
+      borderRadius: 10
+    }
+  })), confirmandoLogout && /*#__PURE__*/React.createElement("div", {
     onClick: function onClick() {
       return setConfirmandoLogout(false);
     },
@@ -8396,30 +9150,30 @@ function Perfil(_ref31) {
 }
 
 // ── Modal: Foto Fullscreen com interações ────────────────────
-function ModalFoto(_ref34) {
-  var src = _ref34.src,
-    onClose = _ref34.onClose,
-    onRemove = _ref34.onRemove,
-    user = _ref34.user,
-    lugar = _ref34.lugar,
-    data = _ref34.data;
+function ModalFoto(_ref35) {
+  var src = _ref35.src,
+    onClose = _ref35.onClose,
+    onRemove = _ref35.onRemove,
+    user = _ref35.user,
+    lugar = _ref35.lugar,
+    data = _ref35.data;
   if (!src) return null;
   var _useLike = useLike(user === null || user === void 0 ? void 0 : user.id, "foto", src),
     liked = _useLike.liked,
     likes = _useLike.count,
     toggleLike = _useLike.toggle;
-  var _useState113 = useState(false),
-    _useState114 = _slicedToArray(_useState113, 2),
-    showMsg = _useState114[0],
-    setShowMsg = _useState114[1];
-  var _useState115 = useState(""),
-    _useState116 = _slicedToArray(_useState115, 2),
-    msg = _useState116[0],
-    setMsg = _useState116[1];
-  var _useState117 = useState(false),
-    _useState118 = _slicedToArray(_useState117, 2),
-    confirmRemove = _useState118[0],
-    setConfirmRemove = _useState118[1];
+  var _useState131 = useState(false),
+    _useState132 = _slicedToArray(_useState131, 2),
+    showMsg = _useState132[0],
+    setShowMsg = _useState132[1];
+  var _useState133 = useState(""),
+    _useState134 = _slicedToArray(_useState133, 2),
+    msg = _useState134[0],
+    setMsg = _useState134[1];
+  var _useState135 = useState(false),
+    _useState136 = _slicedToArray(_useState135, 2),
+    confirmRemove = _useState136[0],
+    setConfirmRemove = _useState136[1];
   return /*#__PURE__*/React.createElement("div", {
     className: "fi",
     onClick: onClose,
@@ -8742,29 +9496,29 @@ function ModalFoto(_ref34) {
 }
 
 // ── Foto com curtida e comentário ────────────────────────────
-function FotoInterativa(_ref35) {
-  var src = _ref35.src,
-    user = _ref35.user;
+function FotoInterativa(_ref36) {
+  var src = _ref36.src,
+    user = _ref36.user;
   var _useLike2 = useLike(user === null || user === void 0 ? void 0 : user.id, "foto", src),
     liked = _useLike2.liked,
     likes = _useLike2.count,
     toggleLike = _useLike2.toggle;
-  var _useState119 = useState(false),
-    _useState120 = _slicedToArray(_useState119, 2),
-    showComments = _useState120[0],
-    setShowComments = _useState120[1];
-  var _useState121 = useState([]),
-    _useState122 = _slicedToArray(_useState121, 2),
-    comments = _useState122[0],
-    setComments = _useState122[1];
-  var _useState123 = useState(""),
-    _useState124 = _slicedToArray(_useState123, 2),
-    newComment = _useState124[0],
-    setNewComment = _useState124[1];
-  var _useState125 = useState(false),
-    _useState126 = _slicedToArray(_useState125, 2),
-    fullscreen = _useState126[0],
-    setFullscreen = _useState126[1];
+  var _useState137 = useState(false),
+    _useState138 = _slicedToArray(_useState137, 2),
+    showComments = _useState138[0],
+    setShowComments = _useState138[1];
+  var _useState139 = useState([]),
+    _useState140 = _slicedToArray(_useState139, 2),
+    comments = _useState140[0],
+    setComments = _useState140[1];
+  var _useState141 = useState(""),
+    _useState142 = _slicedToArray(_useState141, 2),
+    newComment = _useState142[0],
+    setNewComment = _useState142[1];
+  var _useState143 = useState(false),
+    _useState144 = _slicedToArray(_useState143, 2),
+    fullscreen = _useState144[0],
+    setFullscreen = _useState144[1];
   function addComment() {
     if (!newComment.trim() || !user) return;
     setComments(function (v) {
@@ -8935,35 +9689,43 @@ function FotoInterativa(_ref35) {
 }
 
 // ── Modal: Ver Perfil ─────────────────────────────────────────
-function ModalPerfil(_ref36) {
+function ModalPerfil(_ref37) {
   var _p$photos, _p$photos2, _p$photos3;
-  var p = _ref36.p,
-    onClose = _ref36.onClose,
-    onAdd = _ref36.onAdd,
-    onChat = _ref36.onChat,
-    user = _ref36.user,
-    isContact = _ref36.isContact;
-  var _useState127 = useState({
+  var p = _ref37.p,
+    onClose = _ref37.onClose,
+    onAdd = _ref37.onAdd,
+    onChat = _ref37.onChat,
+    user = _ref37.user,
+    isContact = _ref37.isContact;
+  var _useState145 = useState({
       lugares: 0,
       seguindo: 0,
       momentos: 0,
       loading: true
     }),
-    _useState128 = _slicedToArray(_useState127, 2),
-    stats = _useState128[0],
-    setStats = _useState128[1];
+    _useState146 = _slicedToArray(_useState145, 2),
+    stats = _useState146[0],
+    setStats = _useState146[1];
+  var _useState147 = useState([]),
+    _useState148 = _slicedToArray(_useState147, 2),
+    videos = _useState148[0],
+    setVideos = _useState148[1];
+  var _useState149 = useState(null),
+    _useState150 = _slicedToArray(_useState149, 2),
+    videoAberto = _useState150[0],
+    setVideoAberto = _useState150[1];
 
   // Carrega métricas em paralelo quando abre
   useEffect(function () {
     if (!(p !== null && p !== void 0 && p.id)) return;
     var cancelled = false;
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee23() {
-      var _yield$Promise$all3, _yield$Promise$all4, lugaresR, seguindoR, momentosR, _lugaresR$count, _seguindoR$count, _momentosR$count, _t20;
-      return _regenerator().w(function (_context23) {
-        while (1) switch (_context23.p = _context23.n) {
+    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27() {
+      var _yield$Promise$all3, _yield$Promise$all4, lugaresR, seguindoR, momentosR, videosR, _lugaresR$count, _seguindoR$count, _momentosR$count, _t24;
+      return _regenerator().w(function (_context27) {
+        while (1) switch (_context27.p = _context27.n) {
           case 0:
-            _context23.p = 0;
-            _context23.n = 1;
+            _context27.p = 0;
+            _context27.n = 1;
             return Promise.all([dbRead.from("place_profiles").select("place_id", {
               count: "exact",
               head: true
@@ -8973,13 +9735,16 @@ function ModalPerfil(_ref36) {
             }).eq("user_id", p.id), dbRead.from("momentos").select("id", {
               count: "exact",
               head: true
-            }).eq("user_id", p.id).eq("tipo", "momento")]);
+            }).eq("user_id", p.id).eq("tipo", "momento"), dbRead.from("videos").select("*").eq("user_id", p.id).gt("expira_em", new Date().toISOString()).order("created_at", {
+              ascending: false
+            })]);
           case 1:
-            _yield$Promise$all3 = _context23.v;
-            _yield$Promise$all4 = _slicedToArray(_yield$Promise$all3, 3);
+            _yield$Promise$all3 = _context27.v;
+            _yield$Promise$all4 = _slicedToArray(_yield$Promise$all3, 4);
             lugaresR = _yield$Promise$all4[0];
             seguindoR = _yield$Promise$all4[1];
             momentosR = _yield$Promise$all4[2];
+            videosR = _yield$Promise$all4[3];
             if (!cancelled) {
               setStats({
                 lugares: (_lugaresR$count = lugaresR.count) !== null && _lugaresR$count !== void 0 ? _lugaresR$count : 0,
@@ -8987,21 +9752,22 @@ function ModalPerfil(_ref36) {
                 momentos: (_momentosR$count = momentosR.count) !== null && _momentosR$count !== void 0 ? _momentosR$count : 0,
                 loading: false
               });
+              setVideos(videosR.data || []);
             }
-            _context23.n = 3;
+            _context27.n = 3;
             break;
           case 2:
-            _context23.p = 2;
-            _t20 = _context23.v;
+            _context27.p = 2;
+            _t24 = _context27.v;
             if (!cancelled) setStats(function (s) {
               return _objectSpread(_objectSpread({}, s), {}, {
                 loading: false
               });
             });
           case 3:
-            return _context23.a(2);
+            return _context27.a(2);
         }
-      }, _callee23, null, [[0, 2]]);
+      }, _callee27, null, [[0, 2]]);
     }))();
     return function () {
       cancelled = true;
@@ -9291,7 +10057,100 @@ function ModalPerfil(_ref36) {
       flexDirection: "column",
       gap: 12
     }
-  }, ((_p$photos3 = p.photos) === null || _p$photos3 === void 0 ? void 0 : _p$photos3.length) > 1 && /*#__PURE__*/React.createElement("div", {
+  }, videos.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 4
+    }
+  }, /*#__PURE__*/React.createElement(Lbl, null, "V\xEDdeos recentes"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: T.muted,
+      marginTop: 2,
+      marginBottom: 10,
+      fontStyle: "italic"
+    }
+  }, "mem\xF3rias passageiras \u2014 somem em breve"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch",
+      paddingBottom: 4
+    }
+  }, videos.map(function (v) {
+    var ms = new Date(v.expira_em).getTime() - Date.now();
+    var horas = ms / (1000 * 60 * 60);
+    var restante = horas < 1 ? "".concat(Math.ceil(horas * 60), "min") : horas < 24 ? "".concat(Math.floor(horas), "h") : "".concat(Math.floor(horas / 24), "d");
+    return /*#__PURE__*/React.createElement("div", {
+      key: v.id,
+      onClick: function onClick() {
+        return setVideoAberto(v);
+      },
+      style: {
+        flexShrink: 0,
+        width: 120,
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 120,
+        height: 160,
+        borderRadius: 14,
+        overflow: "hidden",
+        background: "#000",
+        position: "relative",
+        border: "1px solid ".concat(T.border)
+      }
+    }, /*#__PURE__*/React.createElement("video", {
+      src: v.video_url,
+      muted: true,
+      playsInline: true,
+      preload: "metadata",
+      style: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover"
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        inset: 0,
+        background: "rgba(0,0,0,0.15)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 36,
+        height: 36,
+        borderRadius: "50%",
+        background: "rgba(255,255,255,0.9)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 12 12"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M3 2l7 4-7 4V2z",
+      fill: T.text
+    })))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        top: 6,
+        right: 6,
+        background: "rgba(0,0,0,0.65)",
+        color: "#fff",
+        fontSize: 9,
+        padding: "2px 7px",
+        borderRadius: 6,
+        fontWeight: 600
+      }
+    }, restante)));
+  }))), ((_p$photos3 = p.photos) === null || _p$photos3 === void 0 ? void 0 : _p$photos3.length) > 1 && /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 4
     }
@@ -9353,46 +10212,92 @@ function ModalPerfil(_ref36) {
       fontSize: 13,
       color: T.muted
     }
-  }, "Crie seu perfil para interagir"))));
+  }, "Crie seu perfil para interagir"))), videoAberto && /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      return setVideoAberto(null);
+    },
+    style: {
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.95)",
+      zIndex: 260,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setVideoAberto(null);
+    },
+    style: {
+      position: "absolute",
+      top: 16,
+      right: 16,
+      width: 40,
+      height: 40,
+      borderRadius: "50%",
+      background: "rgba(255,255,255,0.15)",
+      border: "none",
+      color: "#fff",
+      fontSize: 22,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, "\xD7"), /*#__PURE__*/React.createElement("video", {
+    src: videoAberto.video_url,
+    controls: true,
+    autoPlay: true,
+    playsInline: true,
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    },
+    style: {
+      maxWidth: "95vw",
+      maxHeight: "85vh",
+      borderRadius: 10
+    }
+  })));
 }
 
 // ── Modal: Chat ───────────────────────────────────────────────
-function ModalChat(_ref38) {
-  var user = _ref38.user,
-    dest = _ref38.dest,
-    _ref38$type = _ref38.type,
-    type = _ref38$type === void 0 ? "msg" : _ref38$type,
-    msgs = _ref38.msgs,
-    onSend = _ref38.onSend,
-    onClose = _ref38.onClose;
-  var _useState129 = useState(""),
-    _useState130 = _slicedToArray(_useState129, 2),
-    txt = _useState130[0],
-    setTxt = _useState130[1];
-  var _useState131 = useState(null),
-    _useState132 = _slicedToArray(_useState131, 2),
-    mediaPreview = _useState132[0],
-    setMediaPreview = _useState132[1];
-  var _useState133 = useState(null),
-    _useState134 = _slicedToArray(_useState133, 2),
-    mediaFile = _useState134[0],
-    setMediaFile = _useState134[1];
-  var _useState135 = useState(null),
-    _useState136 = _slicedToArray(_useState135, 2),
-    mediaType = _useState136[0],
-    setMediaType = _useState136[1];
-  var _useState137 = useState(false),
-    _useState138 = _slicedToArray(_useState137, 2),
-    isRecording = _useState138[0],
-    setIsRecording = _useState138[1];
-  var _useState139 = useState(null),
-    _useState140 = _slicedToArray(_useState139, 2),
-    audioBlob = _useState140[0],
-    setAudioBlob = _useState140[1];
-  var _useState141 = useState([]),
-    _useState142 = _slicedToArray(_useState141, 2),
-    dbMsgs = _useState142[0],
-    setDbMsgs = _useState142[1];
+function ModalChat(_ref39) {
+  var user = _ref39.user,
+    dest = _ref39.dest,
+    _ref39$type = _ref39.type,
+    type = _ref39$type === void 0 ? "msg" : _ref39$type,
+    msgs = _ref39.msgs,
+    onSend = _ref39.onSend,
+    onClose = _ref39.onClose;
+  var _useState151 = useState(""),
+    _useState152 = _slicedToArray(_useState151, 2),
+    txt = _useState152[0],
+    setTxt = _useState152[1];
+  var _useState153 = useState(null),
+    _useState154 = _slicedToArray(_useState153, 2),
+    mediaPreview = _useState154[0],
+    setMediaPreview = _useState154[1];
+  var _useState155 = useState(null),
+    _useState156 = _slicedToArray(_useState155, 2),
+    mediaFile = _useState156[0],
+    setMediaFile = _useState156[1];
+  var _useState157 = useState(null),
+    _useState158 = _slicedToArray(_useState157, 2),
+    mediaType = _useState158[0],
+    setMediaType = _useState158[1];
+  var _useState159 = useState(false),
+    _useState160 = _slicedToArray(_useState159, 2),
+    isRecording = _useState160[0],
+    setIsRecording = _useState160[1];
+  var _useState161 = useState(null),
+    _useState162 = _slicedToArray(_useState161, 2),
+    audioBlob = _useState162[0],
+    setAudioBlob = _useState162[1];
+  var _useState163 = useState([]),
+    _useState164 = _slicedToArray(_useState163, 2),
+    dbMsgs = _useState164[0],
+    setDbMsgs = _useState164[1];
   var recorderRef = useRef(null);
   var endRef = useRef();
 
@@ -9401,8 +10306,8 @@ function ModalChat(_ref38) {
   useEffect(function () {
     dbRead.from("messages").select("*").eq("conv_id", cid).order("created_at", {
       ascending: true
-    }).limit(100).then(function (_ref39) {
-      var data = _ref39.data;
+    }).limit(100).then(function (_ref40) {
+      var data = _ref40.data;
       if (data) setDbMsgs(data);
     })["catch"](function () {});
   }, [cid]);
@@ -9465,16 +10370,16 @@ function ModalChat(_ref38) {
     return _send.apply(this, arguments);
   }
   function _send() {
-    _send = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25() {
-      var msg, _t21;
-      return _regenerator().w(function (_context25) {
-        while (1) switch (_context25.p = _context25.n) {
+    _send = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29() {
+      var msg, _t25;
+      return _regenerator().w(function (_context29) {
+        while (1) switch (_context29.p = _context29.n) {
           case 0:
             if (!(!txt.trim() && !mediaFile && !audioBlob)) {
-              _context25.n = 1;
+              _context29.n = 1;
               break;
             }
-            return _context25.a(2);
+            return _context29.a(2);
           case 1:
             msg = {
               from: user.id,
@@ -9490,23 +10395,23 @@ function ModalChat(_ref38) {
             setMediaFile(null);
             setMediaType(null);
             setAudioBlob(null);
-            _context25.p = 2;
-            _context25.n = 3;
+            _context29.p = 2;
+            _context29.n = 3;
             return db.from("messages").insert({
               conv_id: cid,
               from_id: user.id,
               text: txt.trim() || "[mídia]"
             });
           case 3:
-            _context25.n = 5;
+            _context29.n = 5;
             break;
           case 4:
-            _context25.p = 4;
-            _t21 = _context25.v;
+            _context29.p = 4;
+            _t25 = _context29.v;
           case 5:
-            return _context25.a(2);
+            return _context29.a(2);
         }
-      }, _callee25, null, [[2, 4]]);
+      }, _callee29, null, [[2, 4]]);
     }));
     return _send.apply(this, arguments);
   }
@@ -9894,33 +10799,33 @@ function ModalChat(_ref38) {
     type: "file",
     accept: "image/*,video/*",
     onChange: (/*#__PURE__*/function () {
-      var _ref40 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(e) {
+      var _ref41 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(e) {
         var file, t, b64;
-        return _regenerator().w(function (_context24) {
-          while (1) switch (_context24.n) {
+        return _regenerator().w(function (_context28) {
+          while (1) switch (_context28.n) {
             case 0:
               file = e.target.files[0];
               if (file) {
-                _context24.n = 1;
+                _context28.n = 1;
                 break;
               }
-              return _context24.a(2);
+              return _context28.a(2);
             case 1:
               t = file.type.startsWith("video") ? "video" : "image";
-              _context24.n = 2;
+              _context28.n = 2;
               return fileToB64(file);
             case 2:
-              b64 = _context24.v;
+              b64 = _context28.v;
               setMediaPreview(URL.createObjectURL(file));
               setMediaFile(b64);
               setMediaType(t);
             case 3:
-              return _context24.a(2);
+              return _context28.a(2);
           }
-        }, _callee24);
+        }, _callee28);
       }));
-      return function (_x27) {
-        return _ref40.apply(this, arguments);
+      return function (_x31) {
+        return _ref41.apply(this, arguments);
       };
     }()),
     style: {
@@ -10015,18 +10920,18 @@ function ModalChat(_ref38) {
 }
 
 // ── Componente: Adicionar Outros ─────────────────────────────
-function AddOutro(_ref41) {
-  var placeholder = _ref41.placeholder,
-    onAdd = _ref41.onAdd,
-    onRemove = _ref41.onRemove,
-    _ref41$extras = _ref41.extras,
-    extras = _ref41$extras === void 0 ? [] : _ref41$extras,
-    color = _ref41.color,
-    bgColor = _ref41.bgColor;
-  var _useState143 = useState(""),
-    _useState144 = _slicedToArray(_useState143, 2),
-    val = _useState144[0],
-    setVal = _useState144[1];
+function AddOutro(_ref42) {
+  var placeholder = _ref42.placeholder,
+    onAdd = _ref42.onAdd,
+    onRemove = _ref42.onRemove,
+    _ref42$extras = _ref42.extras,
+    extras = _ref42$extras === void 0 ? [] : _ref42$extras,
+    color = _ref42.color,
+    bgColor = _ref42.bgColor;
+  var _useState165 = useState(""),
+    _useState166 = _slicedToArray(_useState165, 2),
+    val = _useState166[0],
+    setVal = _useState166[1];
   var activeColor = color || T.accent;
   var activeBg = bgColor || T.accentBg;
   function add() {
@@ -10113,10 +11018,10 @@ function AddOutro(_ref41) {
 }
 
 // ── Helpers layout ────────────────────────────────────────────
-function STitle(_ref42) {
-  var children = _ref42.children,
-    _ref42$style = _ref42.style,
-    style = _ref42$style === void 0 ? {} : _ref42$style;
+function STitle(_ref43) {
+  var children = _ref43.children,
+    _ref43$style = _ref43.style,
+    style = _ref43$style === void 0 ? {} : _ref43$style;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       paddingTop: 24,
@@ -10133,9 +11038,9 @@ function STitle(_ref42) {
     }, style)
   }, children));
 }
-function FRow(_ref43) {
-  var label = _ref43.label,
-    children = _ref43.children;
+function FRow(_ref44) {
+  var label = _ref44.label,
+    children = _ref44.children;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "14px 0",
@@ -10146,14 +11051,14 @@ function FRow(_ref43) {
 
 // ── Sistema de Alertas por Região ────────────────────────────
 function useRegionAlerts(user) {
-  var _useState145 = useState([]),
-    _useState146 = _slicedToArray(_useState145, 2),
-    alerts = _useState146[0],
-    setAlerts = _useState146[1];
-  var _useState147 = useState(false),
-    _useState148 = _slicedToArray(_useState147, 2),
-    showAlert = _useState148[0],
-    setShowAlert = _useState148[1];
+  var _useState167 = useState([]),
+    _useState168 = _slicedToArray(_useState167, 2),
+    alerts = _useState168[0],
+    setAlerts = _useState168[1];
+  var _useState169 = useState(false),
+    _useState170 = _slicedToArray(_useState169, 2),
+    showAlert = _useState170[0],
+    setShowAlert = _useState170[1];
   var lastCheck = useRef(null);
   useEffect(function () {
     if (!user || !user.lugares || user.lugares.length === 0) return;
@@ -10163,10 +11068,10 @@ function useRegionAlerts(user) {
       return _checkNewProfiles.apply(this, arguments);
     }
     function _checkNewProfiles() {
-      _checkNewProfiles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26() {
-        var since, userCities, userStates, cityFilters, stateFilters, orFilter, _yield$db$from$select, data, _t22;
-        return _regenerator().w(function (_context26) {
-          while (1) switch (_context26.p = _context26.n) {
+      _checkNewProfiles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30() {
+        var since, userCities, userStates, cityFilters, stateFilters, orFilter, _yield$db$from$select, data, _t26;
+        return _regenerator().w(function (_context30) {
+          while (1) switch (_context30.p = _context30.n) {
             case 0:
               since = lastCheck.current || new Date(Date.now() - 86400000).toISOString(); // last 24h on first load
               userCities = user.lugares.map(function (l) {
@@ -10176,12 +11081,12 @@ function useRegionAlerts(user) {
                 return l.uf;
               }).filter(Boolean);
               if (!(userCities.length === 0 && userStates.length === 0)) {
-                _context26.n = 1;
+                _context30.n = 1;
                 break;
               }
-              return _context26.a(2);
+              return _context30.a(2);
             case 1:
-              _context26.p = 1;
+              _context30.p = 1;
               // Build OR query for all user cities/states
               cityFilters = userCities.map(function (c) {
                 return "city.ilike.%".concat(c, "%");
@@ -10190,26 +11095,26 @@ function useRegionAlerts(user) {
                 return "state.eq.".concat(s);
               }).join(",");
               orFilter = [cityFilters, stateFilters].filter(Boolean).join(",");
-              _context26.n = 2;
+              _context30.n = 2;
               return db.from("profiles").select("id,name,nick,place_name,city,state,avatar_url").neq("id", user.id).gt("created_at", since).or(orFilter).limit(5);
             case 2:
-              _yield$db$from$select = _context26.v;
+              _yield$db$from$select = _context30.v;
               data = _yield$db$from$select.data;
               if (data && data.length > 0) {
                 setAlerts(data);
                 setShowAlert(true);
                 lastCheck.current = new Date().toISOString();
               }
-              _context26.n = 4;
+              _context30.n = 4;
               break;
             case 3:
-              _context26.p = 3;
-              _t22 = _context26.v;
-              console.log("Alert check error:", _t22);
+              _context30.p = 3;
+              _t26 = _context30.v;
+              console.log("Alert check error:", _t26);
             case 4:
-              return _context26.a(2);
+              return _context30.a(2);
           }
-        }, _callee26, null, [[1, 3]]);
+        }, _callee30, null, [[1, 3]]);
       }));
       return _checkNewProfiles.apply(this, arguments);
     }
@@ -10229,10 +11134,10 @@ function useRegionAlerts(user) {
 }
 
 // ── Componente: Banner de Alerta ──────────────────────────────
-function AlertaBanner(_ref44) {
-  var alerts = _ref44.alerts,
-    onDismiss = _ref44.onDismiss,
-    onView = _ref44.onView;
+function AlertaBanner(_ref45) {
+  var alerts = _ref45.alerts,
+    onDismiss = _ref45.onDismiss,
+    onView = _ref45.onView;
   if (!alerts || alerts.length === 0) return null;
   var first = alerts[0];
   var others = alerts.length - 1;
@@ -10337,13 +11242,13 @@ function AlertaBanner(_ref44) {
 }
 
 // ── Modal: Adicionar Lugar ────────────────────────────────────
-function ModalAdicionarLugar(_ref45) {
-  var user = _ref45.user,
-    onClose = _ref45.onClose,
-    onSave = _ref45.onSave;
+function ModalAdicionarLugar(_ref46) {
+  var user = _ref46.user,
+    onClose = _ref46.onClose,
+    onSave = _ref46.onSave;
   var temaCor = getTema(user).main;
   var temaBg = getTema(user).bg;
-  var _useState149 = useState({
+  var _useState171 = useState({
       placeType: "escola",
       placeName: "",
       addrSearch: "",
@@ -10357,29 +11262,29 @@ function ModalAdicionarLugar(_ref45) {
       y2: "",
       era: "passado"
     }),
-    _useState150 = _slicedToArray(_useState149, 2),
-    d = _useState150[0],
-    setD = _useState150[1];
-  var _useState151 = useState(false),
-    _useState152 = _slicedToArray(_useState151, 2),
-    saving = _useState152[0],
-    setSaving = _useState152[1];
-  var _useState153 = useState(false),
-    _useState154 = _slicedToArray(_useState153, 2),
-    done = _useState154[0],
-    setDone = _useState154[1];
+    _useState172 = _slicedToArray(_useState171, 2),
+    d = _useState172[0],
+    setD = _useState172[1];
+  var _useState173 = useState(false),
+    _useState174 = _slicedToArray(_useState173, 2),
+    saving = _useState174[0],
+    setSaving = _useState174[1];
+  var _useState175 = useState(false),
+    _useState176 = _slicedToArray(_useState175, 2),
+    done = _useState176[0],
+    setDone = _useState176[1];
   var timer = useRef();
-  function searchAddr(_x28) {
+  function searchAddr(_x32) {
     return _searchAddr2.apply(this, arguments);
   }
   function _searchAddr2() {
-    _searchAddr2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27(q) {
-      var r, data, _t23;
-      return _regenerator().w(function (_context27) {
-        while (1) switch (_context27.p = _context27.n) {
+    _searchAddr2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee31(q) {
+      var r, data, _t27;
+      return _regenerator().w(function (_context31) {
+        while (1) switch (_context31.p = _context31.n) {
           case 0:
             if (!(q.length < 3)) {
-              _context27.n = 1;
+              _context31.n = 1;
               break;
             }
             setD(function (v) {
@@ -10387,42 +11292,42 @@ function ModalAdicionarLugar(_ref45) {
                 addrSugs: []
               });
             });
-            return _context27.a(2);
+            return _context31.a(2);
           case 1:
             setD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 addrLoading: true
               });
             });
-            _context27.p = 2;
-            _context27.n = 3;
+            _context31.p = 2;
+            _context31.n = 3;
             return fetch("https://nominatim.openstreetmap.org/search?q=".concat(encodeURIComponent(q + ", Brasil"), "&format=json&addressdetails=1&limit=4&accept-language=pt-BR"));
           case 3:
-            r = _context27.v;
-            _context27.n = 4;
+            r = _context31.v;
+            _context31.n = 4;
             return r.json();
           case 4:
-            data = _context27.v;
+            data = _context31.v;
             setD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 addrSugs: data,
                 addrLoading: false
               });
             });
-            _context27.n = 6;
+            _context31.n = 6;
             break;
           case 5:
-            _context27.p = 5;
-            _t23 = _context27.v;
+            _context31.p = 5;
+            _t27 = _context31.v;
             setD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 addrLoading: false
               });
             });
           case 6:
-            return _context27.a(2);
+            return _context31.a(2);
         }
-      }, _callee27, null, [[2, 5]]);
+      }, _callee31, null, [[2, 5]]);
     }));
     return _searchAddr2.apply(this, arguments);
   }
@@ -10486,16 +11391,16 @@ function ModalAdicionarLugar(_ref45) {
     return _salvar3.apply(this, arguments);
   }
   function _salvar3() {
-    _salvar3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28() {
-      var novoLugar, lugaresAtuais, novosLugares, _t24;
-      return _regenerator().w(function (_context28) {
-        while (1) switch (_context28.p = _context28.n) {
+    _salvar3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32() {
+      var novoLugar, lugaresAtuais, novosLugares, _t28;
+      return _regenerator().w(function (_context32) {
+        while (1) switch (_context32.p = _context32.n) {
           case 0:
             if (!(!canSave || !user)) {
-              _context28.n = 1;
+              _context32.n = 1;
               break;
             }
-            return _context28.a(2);
+            return _context32.a(2);
           case 1:
             setSaving(true);
             novoLugar = {
@@ -10511,18 +11416,18 @@ function ModalAdicionarLugar(_ref45) {
             };
             lugaresAtuais = user.lugares || [];
             novosLugares = [].concat(_toConsumableArray(lugaresAtuais), [novoLugar]);
-            _context28.p = 2;
-            _context28.n = 3;
+            _context32.p = 2;
+            _context32.n = 3;
             return db.from("profiles").update({
               lugares: novosLugares
             }).eq("id", user.id);
           case 3:
-            _context28.n = 5;
+            _context32.n = 5;
             break;
           case 4:
-            _context28.p = 4;
-            _t24 = _context28.v;
-            console.log("erro:", _t24);
+            _context32.p = 4;
+            _t28 = _context32.v;
+            console.log("erro:", _t28);
           case 5:
             // Sincroniza o novo lugar pra tabela places + place_profiles
             syncLugaresToPlaces(user.id, [novoLugar])["catch"](function (e) {
@@ -10534,9 +11439,9 @@ function ModalAdicionarLugar(_ref45) {
             setSaving(false);
             setDone(true);
           case 6:
-            return _context28.a(2);
+            return _context32.a(2);
         }
-      }, _callee28, null, [[2, 4]]);
+      }, _callee32, null, [[2, 4]]);
     }));
     return _salvar3.apply(this, arguments);
   }
@@ -10925,12 +11830,12 @@ function ModalAdicionarLugar(_ref45) {
 }
 
 // ── Modal: Menu Rápido (+) ────────────────────────────────────
-function MenuRapido(_ref46) {
-  var onClose = _ref46.onClose,
-    onNovoLugar = _ref46.onNovoLugar,
-    onMomento = _ref46.onMomento,
-    onAgendaVisita = _ref46.onAgendaVisita,
-    user = _ref46.user;
+function MenuRapido(_ref47) {
+  var onClose = _ref47.onClose,
+    onNovoLugar = _ref47.onNovoLugar,
+    onMomento = _ref47.onMomento,
+    onAgendaVisita = _ref47.onAgendaVisita,
+    user = _ref47.user;
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
@@ -11153,54 +12058,54 @@ function MenuRapido(_ref46) {
 }
 
 // ── Modal: Registrar Momento ──────────────────────────────────
-function ModalMomento(_ref47) {
-  var user = _ref47.user,
-    onClose = _ref47.onClose,
-    onSave = _ref47.onSave,
-    onUpdateUser = _ref47.onUpdateUser;
+function ModalMomento(_ref48) {
+  var user = _ref48.user,
+    onClose = _ref48.onClose,
+    onSave = _ref48.onSave,
+    onUpdateUser = _ref48.onUpdateUser;
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
-  var _useState155 = useState(""),
-    _useState156 = _slicedToArray(_useState155, 2),
-    texto = _useState156[0],
-    setTexto = _useState156[1];
-  var _useState157 = useState(""),
-    _useState158 = _slicedToArray(_useState157, 2),
-    lugar = _useState158[0],
-    setLugar = _useState158[1];
-  var _useState159 = useState([]),
-    _useState160 = _slicedToArray(_useState159, 2),
-    fotos = _useState160[0],
-    setFotos = _useState160[1];
-  var _useState161 = useState([]),
-    _useState162 = _slicedToArray(_useState161, 2),
-    fotosFiles = _useState162[0],
-    setFotosFiles = _useState162[1];
-  var _useState163 = useState(false),
-    _useState164 = _slicedToArray(_useState163, 2),
-    saving = _useState164[0],
-    setSaving = _useState164[1];
-  var _useState165 = useState("contatos"),
-    _useState166 = _slicedToArray(_useState165, 2),
-    privMomento = _useState166[0],
-    setPrivMomento = _useState166[1];
-  var _useState167 = useState(false),
-    _useState168 = _slicedToArray(_useState167, 2),
-    capsulaAtiva = _useState168[0],
-    setCapsulaAtiva = _useState168[1];
-  var _useState169 = useState(""),
-    _useState170 = _slicedToArray(_useState169, 2),
-    revelarEm = _useState170[0],
-    setRevelarEm = _useState170[1];
-  function handleFotos(_x29) {
+  var _useState177 = useState(""),
+    _useState178 = _slicedToArray(_useState177, 2),
+    texto = _useState178[0],
+    setTexto = _useState178[1];
+  var _useState179 = useState(""),
+    _useState180 = _slicedToArray(_useState179, 2),
+    lugar = _useState180[0],
+    setLugar = _useState180[1];
+  var _useState181 = useState([]),
+    _useState182 = _slicedToArray(_useState181, 2),
+    fotos = _useState182[0],
+    setFotos = _useState182[1];
+  var _useState183 = useState([]),
+    _useState184 = _slicedToArray(_useState183, 2),
+    fotosFiles = _useState184[0],
+    setFotosFiles = _useState184[1];
+  var _useState185 = useState(false),
+    _useState186 = _slicedToArray(_useState185, 2),
+    saving = _useState186[0],
+    setSaving = _useState186[1];
+  var _useState187 = useState("contatos"),
+    _useState188 = _slicedToArray(_useState187, 2),
+    privMomento = _useState188[0],
+    setPrivMomento = _useState188[1];
+  var _useState189 = useState(false),
+    _useState190 = _slicedToArray(_useState189, 2),
+    capsulaAtiva = _useState190[0],
+    setCapsulaAtiva = _useState190[1];
+  var _useState191 = useState(""),
+    _useState192 = _slicedToArray(_useState191, 2),
+    revelarEm = _useState192[0],
+    setRevelarEm = _useState192[1];
+  function handleFotos(_x33) {
     return _handleFotos.apply(this, arguments);
   }
   function _handleFotos() {
-    _handleFotos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29(e) {
+    _handleFotos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee33(e) {
       var files, previews;
-      return _regenerator().w(function (_context29) {
-        while (1) switch (_context29.n) {
+      return _regenerator().w(function (_context33) {
+        while (1) switch (_context33.n) {
           case 0:
             files = Array.from(e.target.files).slice(0, 30);
             previews = files.map(function (f) {
@@ -11213,9 +12118,9 @@ function ModalMomento(_ref47) {
               return [].concat(_toConsumableArray(prev), _toConsumableArray(files)).slice(0, 30);
             });
           case 1:
-            return _context29.a(2);
+            return _context33.a(2);
         }
-      }, _callee29);
+      }, _callee33);
     }));
     return _handleFotos.apply(this, arguments);
   }
@@ -11235,26 +12140,26 @@ function ModalMomento(_ref47) {
     return _salvar4.apply(this, arguments);
   }
   function _salvar4() {
-    _salvar4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30() {
-      var photoUrls, uploadPromise, timeoutPromise, momento, fotosAtuais, novasFotos, _t25, _t26, _t27;
-      return _regenerator().w(function (_context30) {
-        while (1) switch (_context30.p = _context30.n) {
+    _salvar4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34() {
+      var photoUrls, uploadPromise, timeoutPromise, momento, fotosAtuais, novasFotos, _t29, _t30, _t31;
+      return _regenerator().w(function (_context34) {
+        while (1) switch (_context34.p = _context34.n) {
           case 0:
             if (!(!texto.trim() && fotos.length === 0)) {
-              _context30.n = 1;
+              _context34.n = 1;
               break;
             }
-            return _context30.a(2);
+            return _context34.a(2);
           case 1:
             setSaving(true);
 
             // Upload das fotos do momento (com timeout de 15s)
             photoUrls = [];
             if (!(fotosFiles.length > 0)) {
-              _context30.n = 5;
+              _context34.n = 5;
               break;
             }
-            _context30.p = 2;
+            _context34.p = 2;
             uploadPromise = Promise.all(fotosFiles.map(function (file) {
               return uploadImage(file, "photos", user.id);
             }));
@@ -11263,25 +12168,25 @@ function ModalMomento(_ref47) {
                 return reject(new Error("Upload timeout"));
               }, 15000);
             });
-            _context30.n = 3;
+            _context34.n = 3;
             return Promise.race([uploadPromise, timeoutPromise]);
           case 3:
-            photoUrls = _context30.v;
-            _context30.n = 5;
+            photoUrls = _context34.v;
+            _context34.n = 5;
             break;
           case 4:
-            _context30.p = 4;
-            _t25 = _context30.v;
-            console.error("Falha no upload das fotos do momento:", _t25);
+            _context34.p = 4;
+            _t29 = _context34.v;
+            console.error("Falha no upload das fotos do momento:", _t29);
             // Continua sem fotos em vez de travar — salva só o texto
             photoUrls = [];
             if (texto.trim()) {
-              _context30.n = 5;
+              _context34.n = 5;
               break;
             }
             alert("Não consegui enviar as fotos. Tente com uma imagem menor ou registre só um texto.");
             setSaving(false);
-            return _context30.a(2);
+            return _context34.a(2);
           case 5:
             momento = {
               id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
@@ -11293,25 +12198,25 @@ function ModalMomento(_ref47) {
               fotos: photoUrls,
               ts: new Date().toISOString()
             }; // Salva no banco de momentos
-            _context30.p = 6;
-            _context30.n = 7;
+            _context34.p = 6;
+            _context34.n = 7;
             return db.from("momentos").insert(momento);
           case 7:
-            _context30.n = 9;
+            _context34.n = 9;
             break;
           case 8:
-            _context30.p = 8;
-            _t26 = _context30.v;
-            console.log("Erro insert momento:", _t26);
+            _context34.p = 8;
+            _t30 = _context34.v;
+            console.log("Erro insert momento:", _t30);
           case 9:
             if (!(photoUrls.length > 0)) {
-              _context30.n = 13;
+              _context34.n = 13;
               break;
             }
-            _context30.p = 10;
+            _context34.p = 10;
             fotosAtuais = user.photos || [];
             novasFotos = [].concat(_toConsumableArray(fotosAtuais), _toConsumableArray(photoUrls)).slice(0, 50);
-            _context30.n = 11;
+            _context34.n = 11;
             return db.from("profiles").update({
               photos: novasFotos
             }).eq("id", user.id);
@@ -11319,20 +12224,20 @@ function ModalMomento(_ref47) {
             if (onUpdateUser) onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
               photos: novasFotos
             }));
-            _context30.n = 13;
+            _context34.n = 13;
             break;
           case 12:
-            _context30.p = 12;
-            _t27 = _context30.v;
-            console.log("Erro ao salvar fotos no perfil:", _t27);
+            _context34.p = 12;
+            _t31 = _context34.v;
+            console.log("Erro ao salvar fotos no perfil:", _t31);
           case 13:
             onSave(momento);
             setSaving(false);
             onClose();
           case 14:
-            return _context30.a(2);
+            return _context34.a(2);
         }
-      }, _callee30, null, [[10, 12], [6, 8], [2, 4]]);
+      }, _callee34, null, [[10, 12], [6, 8], [2, 4]]);
     }));
     return _salvar4.apply(this, arguments);
   }
@@ -11619,42 +12524,42 @@ function ModalMomento(_ref47) {
 }
 
 // ── Tela de Login / Auth ──────────────────────────────────────
-function TelaLogin(_ref48) {
-  var onClose = _ref48.onClose,
-    onLoggedIn = _ref48.onLoggedIn;
-  var _useState171 = useState("opcoes"),
-    _useState172 = _slicedToArray(_useState171, 2),
-    modo = _useState172[0],
-    setModo = _useState172[1]; // opcoes | email
-  var _useState173 = useState(""),
-    _useState174 = _slicedToArray(_useState173, 2),
-    email = _useState174[0],
-    setEmail = _useState174[1];
-  var _useState175 = useState(false),
-    _useState176 = _slicedToArray(_useState175, 2),
-    loading = _useState176[0],
-    setLoading = _useState176[1];
-  var _useState177 = useState(false),
-    _useState178 = _slicedToArray(_useState177, 2),
-    enviado = _useState178[0],
-    setEnviado = _useState178[1];
-  var _useState179 = useState(""),
-    _useState180 = _slicedToArray(_useState179, 2),
-    erro = _useState180[0],
-    setErro = _useState180[1];
+function TelaLogin(_ref49) {
+  var onClose = _ref49.onClose,
+    onLoggedIn = _ref49.onLoggedIn;
+  var _useState193 = useState("opcoes"),
+    _useState194 = _slicedToArray(_useState193, 2),
+    modo = _useState194[0],
+    setModo = _useState194[1]; // opcoes | email
+  var _useState195 = useState(""),
+    _useState196 = _slicedToArray(_useState195, 2),
+    email = _useState196[0],
+    setEmail = _useState196[1];
+  var _useState197 = useState(false),
+    _useState198 = _slicedToArray(_useState197, 2),
+    loading = _useState198[0],
+    setLoading = _useState198[1];
+  var _useState199 = useState(false),
+    _useState200 = _slicedToArray(_useState199, 2),
+    enviado = _useState200[0],
+    setEnviado = _useState200[1];
+  var _useState201 = useState(""),
+    _useState202 = _slicedToArray(_useState201, 2),
+    erro = _useState202[0],
+    setErro = _useState202[1];
   function loginGoogle() {
     return _loginGoogle.apply(this, arguments);
   }
   function _loginGoogle() {
-    _loginGoogle = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee31() {
-      var _yield$db$auth$signIn, error, _t28;
-      return _regenerator().w(function (_context31) {
-        while (1) switch (_context31.p = _context31.n) {
+    _loginGoogle = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee35() {
+      var _yield$db$auth$signIn, error, _t32;
+      return _regenerator().w(function (_context35) {
+        while (1) switch (_context35.p = _context35.n) {
           case 0:
             setLoading(true);
             setErro("");
-            _context31.p = 1;
-            _context31.n = 2;
+            _context35.p = 1;
+            _context35.n = 2;
             return db.auth.signInWithOAuth({
               provider: "google",
               options: {
@@ -11662,25 +12567,25 @@ function TelaLogin(_ref48) {
               }
             });
           case 2:
-            _yield$db$auth$signIn = _context31.v;
+            _yield$db$auth$signIn = _context35.v;
             error = _yield$db$auth$signIn.error;
             if (!error) {
-              _context31.n = 3;
+              _context35.n = 3;
               break;
             }
             throw error;
           case 3:
-            _context31.n = 5;
+            _context35.n = 5;
             break;
           case 4:
-            _context31.p = 4;
-            _t28 = _context31.v;
-            setErro("Erro ao conectar com Google: " + _t28.message);
+            _context35.p = 4;
+            _t32 = _context35.v;
+            setErro("Erro ao conectar com Google: " + _t32.message);
             setLoading(false);
           case 5:
-            return _context31.a(2);
+            return _context35.a(2);
         }
-      }, _callee31, null, [[1, 4]]);
+      }, _callee35, null, [[1, 4]]);
     }));
     return _loginGoogle.apply(this, arguments);
   }
@@ -11688,22 +12593,22 @@ function TelaLogin(_ref48) {
     return _loginEmail.apply(this, arguments);
   }
   function _loginEmail() {
-    _loginEmail = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32() {
-      var _yield$db$auth$signIn2, error, _t29;
-      return _regenerator().w(function (_context32) {
-        while (1) switch (_context32.p = _context32.n) {
+    _loginEmail = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee36() {
+      var _yield$db$auth$signIn2, error, _t33;
+      return _regenerator().w(function (_context36) {
+        while (1) switch (_context36.p = _context36.n) {
           case 0:
             if (!(!email.trim() || !email.includes("@"))) {
-              _context32.n = 1;
+              _context36.n = 1;
               break;
             }
             setErro("Digite um email válido");
-            return _context32.a(2);
+            return _context36.a(2);
           case 1:
             setLoading(true);
             setErro("");
-            _context32.p = 2;
-            _context32.n = 3;
+            _context36.p = 2;
+            _context36.n = 3;
             return db.auth.signInWithOtp({
               email: email.trim(),
               options: {
@@ -11711,27 +12616,27 @@ function TelaLogin(_ref48) {
               }
             });
           case 3:
-            _yield$db$auth$signIn2 = _context32.v;
+            _yield$db$auth$signIn2 = _context36.v;
             error = _yield$db$auth$signIn2.error;
             if (!error) {
-              _context32.n = 4;
+              _context36.n = 4;
               break;
             }
             throw error;
           case 4:
             setEnviado(true);
-            _context32.n = 6;
+            _context36.n = 6;
             break;
           case 5:
-            _context32.p = 5;
-            _t29 = _context32.v;
-            setErro("Erro: " + _t29.message);
+            _context36.p = 5;
+            _t33 = _context36.v;
+            setErro("Erro: " + _t33.message);
           case 6:
             setLoading(false);
           case 7:
-            return _context32.a(2);
+            return _context36.a(2);
         }
-      }, _callee32, null, [[2, 5]]);
+      }, _callee36, null, [[2, 5]]);
     }));
     return _loginEmail.apply(this, arguments);
   }
@@ -12040,10 +12945,10 @@ function TelaLogin(_ref48) {
 
 // ── Hook: Notificações de Região ──────────────────────────────
 function useRegionNotifications(user, contacts) {
-  var _useState181 = useState(null),
-    _useState182 = _slicedToArray(_useState181, 2),
-    notif = _useState182[0],
-    setNotif = _useState182[1]; // {type,profile,message}
+  var _useState203 = useState(null),
+    _useState204 = _slicedToArray(_useState203, 2),
+    notif = _useState204[0],
+    setNotif = _useState204[1]; // {type,profile,message}
   var lastCheck = useRef(null);
   var checked = useRef(new Set());
   useEffect(function () {
@@ -12052,10 +12957,10 @@ function useRegionNotifications(user, contacts) {
       return _check.apply(this, arguments);
     }
     function _check() {
-      _check = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee33() {
-        var since, lugares, cidades, estados, orFilter, _yield$db$from$select2, data, novo, _user$name, meuSobrenome, sobrenomeIgual, _t30;
-        return _regenerator().w(function (_context33) {
-          while (1) switch (_context33.p = _context33.n) {
+      _check = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee37() {
+        var since, lugares, cidades, estados, orFilter, _yield$db$from$select2, data, novo, _user$name, meuSobrenome, sobrenomeIgual, _t34;
+        return _regenerator().w(function (_context37) {
+          while (1) switch (_context37.p = _context37.n) {
             case 0:
               since = lastCheck.current || new Date(Date.now() - 3600000).toISOString();
               lugares = user.lugares || [];
@@ -12066,21 +12971,21 @@ function useRegionNotifications(user, contacts) {
                 return l.uf;
               }))).filter(Boolean)));
               if (!(cidades.length === 0 && estados.length === 0)) {
-                _context33.n = 1;
+                _context37.n = 1;
                 break;
               }
-              return _context33.a(2);
+              return _context37.a(2);
             case 1:
-              _context33.p = 1;
+              _context37.p = 1;
               orFilter = [].concat(_toConsumableArray(cidades.map(function (c) {
                 return "city.ilike.%".concat(c, "%");
               })), _toConsumableArray(estados.map(function (s) {
                 return "state.eq.".concat(s);
               }))).join(",");
-              _context33.n = 2;
+              _context37.n = 2;
               return db.from("profiles").select("id,name,first_name,last_name,nick,place_name,city,state,year_start,year_end,avatar_url,era").neq("id", user.id).gt("created_at", since).or(orFilter).limit(3);
             case 2:
-              _yield$db$from$select2 = _context33.v;
+              _yield$db$from$select2 = _context37.v;
               data = _yield$db$from$select2.data;
               if (data && data.length > 0) {
                 novo = data.find(function (p) {
@@ -12099,16 +13004,16 @@ function useRegionNotifications(user, contacts) {
                 }
               }
               lastCheck.current = new Date().toISOString();
-              _context33.n = 4;
+              _context37.n = 4;
               break;
             case 3:
-              _context33.p = 3;
-              _t30 = _context33.v;
-              console.log("notif error:", _t30);
+              _context37.p = 3;
+              _t34 = _context37.v;
+              console.log("notif error:", _t34);
             case 4:
-              return _context33.a(2);
+              return _context37.a(2);
           }
-        }, _callee33, null, [[1, 3]]);
+        }, _callee37, null, [[1, 3]]);
       }));
       return _check.apply(this, arguments);
     }
@@ -12127,11 +13032,11 @@ function useRegionNotifications(user, contacts) {
 }
 
 // ── Banner de Notificação ─────────────────────────────────────
-function BannerNotificacao(_ref49) {
+function BannerNotificacao(_ref50) {
   var _notif$profile;
-  var notif = _ref49.notif,
-    onDismiss = _ref49.onDismiss,
-    onView = _ref49.onView;
+  var notif = _ref50.notif,
+    onDismiss = _ref50.onDismiss,
+    onView = _ref50.onView;
   if (!notif) return null;
   var isAniv = notif.type === "aniversario";
   return /*#__PURE__*/React.createElement("div", {
@@ -12220,14 +13125,14 @@ function BannerNotificacao(_ref49) {
 }
 
 // ── Cadastro Simples (3 passos) ──────────────────────────────
-function CadastroSimples(_ref50) {
-  var onDone = _ref50.onDone,
-    onLogin = _ref50.onLogin;
-  var _useState183 = useState(false),
-    _useState184 = _slicedToArray(_useState183, 2),
-    saving = _useState184[0],
-    setSaving = _useState184[1];
-  var _useState185 = useState({
+function CadastroSimples(_ref51) {
+  var onDone = _ref51.onDone,
+    onLogin = _ref51.onLogin;
+  var _useState205 = useState(false),
+    _useState206 = _slicedToArray(_useState205, 2),
+    saving = _useState206[0],
+    setSaving = _useState206[1];
+  var _useState207 = useState({
       firstName: "",
       placeName: "",
       city: "",
@@ -12236,13 +13141,13 @@ function CadastroSimples(_ref50) {
       y1: "",
       y2: ""
     }),
-    _useState186 = _slicedToArray(_useState185, 2),
-    f = _useState186[0],
-    setF = _useState186[1];
-  var _useState187 = useState([]),
-    _useState188 = _slicedToArray(_useState187, 2),
-    addrSugs = _useState188[0],
-    setAddrSugs = _useState188[1];
+    _useState208 = _slicedToArray(_useState207, 2),
+    f = _useState208[0],
+    setF = _useState208[1];
+  var _useState209 = useState([]),
+    _useState210 = _slicedToArray(_useState209, 2),
+    addrSugs = _useState210[0],
+    setAddrSugs = _useState210[1];
   var addrTimer = useRef(null);
 
   // Autocomplete de lugar (mundial — sem forçar Brasil)
@@ -12252,31 +13157,31 @@ function CadastroSimples(_ref50) {
       return;
     }
     clearTimeout(addrTimer.current);
-    addrTimer.current = setTimeout(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34() {
-      var r, data, _t31;
-      return _regenerator().w(function (_context34) {
-        while (1) switch (_context34.p = _context34.n) {
+    addrTimer.current = setTimeout(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee38() {
+      var r, data, _t35;
+      return _regenerator().w(function (_context38) {
+        while (1) switch (_context38.p = _context38.n) {
           case 0:
-            _context34.p = 0;
-            _context34.n = 1;
+            _context38.p = 0;
+            _context38.n = 1;
             return fetch("https://nominatim.openstreetmap.org/search?q=".concat(encodeURIComponent(q), "&format=json&addressdetails=1&limit=5&accept-language=pt-BR"));
           case 1:
-            r = _context34.v;
-            _context34.n = 2;
+            r = _context38.v;
+            _context38.n = 2;
             return r.json();
           case 2:
-            data = _context34.v;
+            data = _context38.v;
             setAddrSugs(data || []);
-            _context34.n = 4;
+            _context38.n = 4;
             break;
           case 3:
-            _context34.p = 3;
-            _t31 = _context34.v;
+            _context38.p = 3;
+            _t35 = _context38.v;
             setAddrSugs([]);
           case 4:
-            return _context34.a(2);
+            return _context38.a(2);
         }
-      }, _callee34, null, [[0, 3]]);
+      }, _callee38, null, [[0, 3]]);
     })), 500);
   }
   function selectAddr(s) {
@@ -12328,33 +13233,33 @@ function CadastroSimples(_ref50) {
     return _salvar5.apply(this, arguments);
   }
   function _salvar5() {
-    _salvar5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee35() {
-      var authId, _yield$db$auth$getSes, session, nome, payload, saved, _yield$db$from$insert, data, error, _yield$db$from$upsert, _data, _t32, _t33, _t34;
-      return _regenerator().w(function (_context35) {
-        while (1) switch (_context35.p = _context35.n) {
+    _salvar5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee39() {
+      var authId, _yield$db$auth$getSes, session, nome, payload, saved, _yield$db$from$insert2, data, error, _yield$db$from$upsert, _data, _t36, _t37, _t38;
+      return _regenerator().w(function (_context39) {
+        while (1) switch (_context39.p = _context39.n) {
           case 0:
             if (!(!f.firstName.trim() || !f.placeName.trim() || !f.y1)) {
-              _context35.n = 1;
+              _context39.n = 1;
               break;
             }
-            return _context35.a(2);
+            return _context39.a(2);
           case 1:
             setSaving(true);
 
             // Busca auth_id
             authId = null;
-            _context35.p = 2;
-            _context35.n = 3;
+            _context39.p = 2;
+            _context39.n = 3;
             return db.auth.getSession();
           case 3:
-            _yield$db$auth$getSes = _context35.v;
+            _yield$db$auth$getSes = _context39.v;
             session = _yield$db$auth$getSes.data.session;
             if (session !== null && session !== void 0 && session.user) authId = session.user.id;
-            _context35.n = 5;
+            _context39.n = 5;
             break;
           case 4:
-            _context35.p = 4;
-            _t32 = _context35.v;
+            _context39.p = 4;
+            _t36 = _context39.v;
           case 5:
             nome = f.firstName.trim();
             payload = {
@@ -12383,39 +13288,39 @@ function CadastroSimples(_ref50) {
               }]
             };
             saved = null;
-            _context35.p = 6;
-            _context35.n = 7;
+            _context39.p = 6;
+            _context39.n = 7;
             return db.from("profiles").insert(payload).select().single();
           case 7:
-            _yield$db$from$insert = _context35.v;
-            data = _yield$db$from$insert.data;
-            error = _yield$db$from$insert.error;
+            _yield$db$from$insert2 = _context39.v;
+            data = _yield$db$from$insert2.data;
+            error = _yield$db$from$insert2.error;
             if (!error) {
-              _context35.n = 8;
+              _context39.n = 8;
               break;
             }
             throw error;
           case 8:
             saved = data;
-            _context35.n = 13;
+            _context39.n = 13;
             break;
           case 9:
-            _context35.p = 9;
-            _t33 = _context35.v;
-            console.error("Erro ao salvar perfil:", _t33);
-            _context35.p = 10;
-            _context35.n = 11;
+            _context39.p = 9;
+            _t37 = _context39.v;
+            console.error("Erro ao salvar perfil:", _t37);
+            _context39.p = 10;
+            _context39.n = 11;
             return db.from("profiles").upsert(payload).select().single();
           case 11:
-            _yield$db$from$upsert = _context35.v;
+            _yield$db$from$upsert = _context39.v;
             _data = _yield$db$from$upsert.data;
             saved = _data;
-            _context35.n = 13;
+            _context39.n = 13;
             break;
           case 12:
-            _context35.p = 12;
-            _t34 = _context35.v;
-            console.error("Erro no upsert:", _t34);
+            _context39.p = 12;
+            _t38 = _context39.v;
+            console.error("Erro no upsert:", _t38);
             saved = _objectSpread(_objectSpread({}, payload), {}, {
               id: "local_" + Date.now()
             });
@@ -12433,9 +13338,9 @@ function CadastroSimples(_ref50) {
             setSaving(false);
             onDone(saved || payload);
           case 14:
-            return _context35.a(2);
+            return _context39.a(2);
         }
-      }, _callee35, null, [[10, 12], [6, 9], [2, 4]]);
+      }, _callee39, null, [[10, 12], [6, 9], [2, 4]]);
     }));
     return _salvar5.apply(this, arguments);
   }
@@ -12691,15 +13596,15 @@ function CadastroSimples(_ref50) {
 // ── Tela de Curiosidade (antes do cadastro) ───────────────────
 
 // ── Memória do Dia (Stories 24h) ─────────────────────────────
-function MemoriaDoDia(_ref52) {
+function MemoriaDoDia(_ref53) {
   var _user$name2;
-  var user = _ref52.user,
-    contacts = _ref52.contacts,
-    onView = _ref52.onView;
-  var _useState189 = useState([]),
-    _useState190 = _slicedToArray(_useState189, 2),
-    memorias = _useState190[0],
-    setMemorias = _useState190[1];
+  var user = _ref53.user,
+    contacts = _ref53.contacts,
+    onView = _ref53.onView;
+  var _useState211 = useState([]),
+    _useState212 = _slicedToArray(_useState211, 2),
+    memorias = _useState212[0],
+    setMemorias = _useState212[1];
   useEffect(function () {
     if (!user && (!contacts || contacts.length === 0)) return;
     // Generate memories from user + contacts profiles
@@ -12852,21 +13757,21 @@ function MemoriaDoDia(_ref52) {
 }
 
 // ── Quem Passou Por Aqui ──────────────────────────────────────
-function QuemPassouPorAqui(_ref53) {
-  var user = _ref53.user;
-  var _useState191 = useState(0),
-    _useState192 = _slicedToArray(_useState191, 2),
-    count = _useState192[0],
-    setCount = _useState192[1];
-  var _useState193 = useState([]),
-    _useState194 = _slicedToArray(_useState193, 2),
-    exemplos = _useState194[0],
-    setExemplos = _useState194[1];
+function QuemPassouPorAqui(_ref54) {
+  var user = _ref54.user;
+  var _useState213 = useState(0),
+    _useState214 = _slicedToArray(_useState213, 2),
+    count = _useState214[0],
+    setCount = _useState214[1];
+  var _useState215 = useState([]),
+    _useState216 = _slicedToArray(_useState215, 2),
+    exemplos = _useState216[0],
+    setExemplos = _useState216[1];
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.city) && !(user !== null && user !== void 0 && user.state)) return;
     var filtro = user.city ? "city.ilike.%".concat(user.city, "%") : "state.eq.".concat(user.state);
-    dbRead.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref54) {
-      var data = _ref54.data;
+    dbRead.from("profiles").select("id,name,first_name,avatar_url,year_start,year_end,era").or(filtro).neq("id", user.id).limit(5).then(function (_ref55) {
+      var data = _ref55.data;
       setCount((data === null || data === void 0 ? void 0 : data.length) || 0);
       setExemplos((data === null || data === void 0 ? void 0 : data.slice(0, 4)) || []);
     })["catch"](function () {});
@@ -12952,25 +13857,25 @@ function QuemPassouPorAqui(_ref53) {
 }
 
 // ── Pergunta da Comunidade ────────────────────────────────────
-function PerguntaComunidade(_ref55) {
+function PerguntaComunidade(_ref56) {
   var _user$intencao6, _user$intencao7, _user$intencao8, _user$intencao9;
-  var user = _ref55.user;
-  var _useState195 = useState(""),
-    _useState196 = _slicedToArray(_useState195, 2),
-    resposta = _useState196[0],
-    setResposta = _useState196[1];
-  var _useState197 = useState(false),
-    _useState198 = _slicedToArray(_useState197, 2),
-    respondeu = _useState198[0],
-    setRespondeu = _useState198[1];
-  var _useState199 = useState(false),
-    _useState200 = _slicedToArray(_useState199, 2),
-    saving = _useState200[0],
-    setSaving = _useState200[1];
-  var _useState201 = useState(0),
-    _useState202 = _slicedToArray(_useState201, 2),
-    totalRespostas = _useState202[0],
-    setTotalRespostas = _useState202[1];
+  var user = _ref56.user;
+  var _useState217 = useState(""),
+    _useState218 = _slicedToArray(_useState217, 2),
+    resposta = _useState218[0],
+    setResposta = _useState218[1];
+  var _useState219 = useState(false),
+    _useState220 = _slicedToArray(_useState219, 2),
+    respondeu = _useState220[0],
+    setRespondeu = _useState220[1];
+  var _useState221 = useState(false),
+    _useState222 = _slicedToArray(_useState221, 2),
+    saving = _useState222[0],
+    setSaving = _useState222[1];
+  var _useState223 = useState(0),
+    _useState224 = _slicedToArray(_useState223, 2),
+    totalRespostas = _useState224[0],
+    setTotalRespostas = _useState224[1];
 
   // Perguntas inteligentes baseadas no perfil + intenção
   var perguntas = [(user === null || user === void 0 ? void 0 : user.city) && "Quem lembra de algum ponto de encontro famoso em ".concat(user.city, "?"), (user === null || user === void 0 ? void 0 : user.place_name) && "Quem tem fotos antigas d".concat(user.place_type === "escola" ? "a" : "o", " ").concat(user.place_name, "?"), (user === null || user === void 0 || (_user$intencao6 = user.intencao) === null || _user$intencao6 === void 0 ? void 0 : _user$intencao6.includes("reencontrar")) && (user === null || user === void 0 ? void 0 : user.city) && "Quem mais quer se reencontrar com pessoas de ".concat(user.city, "?"), (user === null || user === void 0 || (_user$intencao7 = user.intencao) === null || _user$intencao7 === void 0 ? void 0 : _user$intencao7.includes("relembrar")) && "Qual foi o momento mais marcante do lugar onde você cresceu?", (user === null || user === void 0 || (_user$intencao8 = user.intencao) === null || _user$intencao8 === void 0 ? void 0 : _user$intencao8.includes("visitar")) && (user === null || user === void 0 ? void 0 : user.city) && "Tem fotos recentes de ".concat(user.city, " para compartilhar?"), (user === null || user === void 0 || (_user$intencao9 = user.intencao) === null || _user$intencao9 === void 0 ? void 0 : _user$intencao9.includes("reconectar")) && "Quem ainda mantém contato com pessoas do mesmo lugar?", (user === null || user === void 0 ? void 0 : user.city) && "Tem algu\xE9m de ".concat(user.city, " morando fora do Brasil?"), (user === null || user === void 0 ? void 0 : user.last_name) && "Tem mais algu\xE9m da fam\xEDlia ".concat(user.last_name, " aqui no Tempnext?")].filter(Boolean);
@@ -12981,8 +13886,8 @@ function PerguntaComunidade(_ref55) {
     if (!pergunta) return;
     db.from("momentos").select("id", {
       count: "exact"
-    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref56) {
-      var count = _ref56.count;
+    }).ilike("texto", "%".concat(pergunta.substring(0, 20), "%")).then(function (_ref57) {
+      var count = _ref57.count;
       return setTotalRespostas(count || 0);
     })["catch"](function () {});
   }, [pergunta]);
@@ -12990,24 +13895,24 @@ function PerguntaComunidade(_ref55) {
     return _responder.apply(this, arguments);
   }
   function _responder() {
-    _responder = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee36() {
-      var _t35;
-      return _regenerator().w(function (_context36) {
-        while (1) switch (_context36.p = _context36.n) {
+    _responder = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee40() {
+      var _t39;
+      return _regenerator().w(function (_context40) {
+        while (1) switch (_context40.p = _context40.n) {
           case 0:
             if (!(!resposta.trim() || saving)) {
-              _context36.n = 1;
+              _context40.n = 1;
               break;
             }
-            return _context36.a(2);
+            return _context40.a(2);
           case 1:
             setSaving(true);
-            _context36.p = 2;
+            _context40.p = 2;
             if (!user) {
-              _context36.n = 3;
+              _context40.n = 3;
               break;
             }
-            _context36.n = 3;
+            _context40.n = 3;
             return db.from("momentos").insert({
               user_id: user.id,
               user_name: user.name,
@@ -13018,18 +13923,18 @@ function PerguntaComunidade(_ref55) {
             });
           case 3:
             setRespondeu(true);
-            _context36.n = 5;
+            _context40.n = 5;
             break;
           case 4:
-            _context36.p = 4;
-            _t35 = _context36.v;
+            _context40.p = 4;
+            _t39 = _context40.v;
             setRespondeu(true);
           case 5:
             setSaving(false);
           case 6:
-            return _context36.a(2);
+            return _context40.a(2);
         }
-      }, _callee36, null, [[2, 4]]);
+      }, _callee40, null, [[2, 4]]);
     }));
     return _responder.apply(this, arguments);
   }
@@ -13125,10 +14030,10 @@ function PerguntaComunidade(_ref55) {
 }
 
 // ── Agenda de Visita (Futuro) ─────────────────────────────────
-function AgendaVisita(_ref57) {
-  var user = _ref57.user,
-    onSave = _ref57.onSave;
-  var _useState203 = useState({
+function AgendaVisita(_ref58) {
+  var user = _ref58.user,
+    onSave = _ref58.onSave;
+  var _useState225 = useState({
       data: "",
       hora: "",
       cidade: (user === null || user === void 0 ? void 0 : user.city) || "",
@@ -13140,35 +14045,35 @@ function AgendaVisita(_ref57) {
       revelarEm: "",
       selecionados: []
     }),
-    _useState204 = _slicedToArray(_useState203, 2),
-    f = _useState204[0],
-    setF = _useState204[1];
-  var _useState205 = useState(false),
-    _useState206 = _slicedToArray(_useState205, 2),
-    saving = _useState206[0],
-    setSaving = _useState206[1];
-  var _useState207 = useState(false),
-    _useState208 = _slicedToArray(_useState207, 2),
-    saved = _useState208[0],
-    setSaved = _useState208[1];
+    _useState226 = _slicedToArray(_useState225, 2),
+    f = _useState226[0],
+    setF = _useState226[1];
+  var _useState227 = useState(false),
+    _useState228 = _slicedToArray(_useState227, 2),
+    saving = _useState228[0],
+    setSaving = _useState228[1];
+  var _useState229 = useState(false),
+    _useState230 = _slicedToArray(_useState229, 2),
+    saved = _useState230[0],
+    setSaved = _useState230[1];
   function salvar() {
     return _salvar6.apply(this, arguments);
   }
   function _salvar6() {
-    _salvar6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee37() {
-      var _t36;
-      return _regenerator().w(function (_context37) {
-        while (1) switch (_context37.p = _context37.n) {
+    _salvar6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee41() {
+      var _t40;
+      return _regenerator().w(function (_context41) {
+        while (1) switch (_context41.p = _context41.n) {
           case 0:
             if (!(!f.cidade || !f.data)) {
-              _context37.n = 1;
+              _context41.n = 1;
               break;
             }
-            return _context37.a(2);
+            return _context41.a(2);
           case 1:
             setSaving(true);
-            _context37.p = 2;
-            _context37.n = 3;
+            _context41.p = 2;
+            _context41.n = 3;
             return db.from("momentos").insert({
               user_id: user === null || user === void 0 ? void 0 : user.id,
               user_name: user === null || user === void 0 ? void 0 : user.name,
@@ -13191,18 +14096,18 @@ function AgendaVisita(_ref57) {
           case 3:
             setSaved(true);
             onSave && onSave(f);
-            _context37.n = 5;
+            _context41.n = 5;
             break;
           case 4:
-            _context37.p = 4;
-            _t36 = _context37.v;
+            _context41.p = 4;
+            _t40 = _context41.v;
             setSaved(true);
           case 5:
             setSaving(false);
           case 6:
-            return _context37.a(2);
+            return _context41.a(2);
         }
-      }, _callee37, null, [[2, 4]]);
+      }, _callee41, null, [[2, 4]]);
     }));
     return _salvar6.apply(this, arguments);
   }
@@ -13634,23 +14539,23 @@ function AgendaVisita(_ref57) {
 }
 
 // ── Alerta de Região ──────────────────────────────────────────
-function AlertaRegiao(_ref58) {
-  var cidade = _ref58.cidade,
-    estado = _ref58.estado,
-    user = _ref58.user;
-  var _useState209 = useState(0),
-    _useState210 = _slicedToArray(_useState209, 2),
-    count = _useState210[0],
-    setCount = _useState210[1];
-  var _useState211 = useState([]),
-    _useState212 = _slicedToArray(_useState211, 2),
-    visitantes = _useState212[0],
-    setVisitantes = _useState212[1];
+function AlertaRegiao(_ref59) {
+  var cidade = _ref59.cidade,
+    estado = _ref59.estado,
+    user = _ref59.user;
+  var _useState231 = useState(0),
+    _useState232 = _slicedToArray(_useState231, 2),
+    count = _useState232[0],
+    setCount = _useState232[1];
+  var _useState233 = useState([]),
+    _useState234 = _slicedToArray(_useState233, 2),
+    visitantes = _useState234[0],
+    setVisitantes = _useState234[1];
   useEffect(function () {
     if (!cidade && !estado) return;
     // Busca agendas de visita para essa região
-    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref59) {
-      var data = _ref59.data;
+    db.from("momentos").select("user_id,user_name,avatar,meta").eq("tipo", "agenda_visita").neq("user_id", (user === null || user === void 0 ? void 0 : user.id) || "").then(function (_ref60) {
+      var data = _ref60.data;
       var filtrados = (data || []).filter(function (m) {
         try {
           var _meta$cidade;
@@ -13730,31 +14635,31 @@ function AlertaRegiao(_ref58) {
 
 // ── Seguir Lugares (Supabase) ─────────────────────────────────
 function useSeguirLugar(placeId, userId) {
-  var _useState213 = useState(false),
-    _useState214 = _slicedToArray(_useState213, 2),
-    seguindo = _useState214[0],
-    setSeguindo = _useState214[1];
-  var _useState215 = useState(false),
-    _useState216 = _slicedToArray(_useState215, 2),
-    loading = _useState216[0],
-    setLoading = _useState216[1];
-  var _useState217 = useState(0),
-    _useState218 = _slicedToArray(_useState217, 2),
-    totalSeguidores = _useState218[0],
-    setTotalSeguidores = _useState218[1];
+  var _useState235 = useState(false),
+    _useState236 = _slicedToArray(_useState235, 2),
+    seguindo = _useState236[0],
+    setSeguindo = _useState236[1];
+  var _useState237 = useState(false),
+    _useState238 = _slicedToArray(_useState237, 2),
+    loading = _useState238[0],
+    setLoading = _useState238[1];
+  var _useState239 = useState(0),
+    _useState240 = _slicedToArray(_useState239, 2),
+    totalSeguidores = _useState240[0],
+    setTotalSeguidores = _useState240[1];
   useEffect(function () {
     if (!placeId) return;
     // Busca total de seguidores deste lugar
     dbRead.from("followed_places").select("id", {
       count: "exact"
-    }).eq("place_id", placeId).then(function (_ref60) {
-      var count = _ref60.count;
+    }).eq("place_id", placeId).then(function (_ref61) {
+      var count = _ref61.count;
       return setTotalSeguidores(count || 0);
     })["catch"](function () {});
     // Verifica se o user segue
     if (!userId) return;
-    dbRead.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref61) {
-      var data = _ref61.data;
+    dbRead.from("followed_places").select("id").eq("user_id", userId).eq("place_id", placeId).maybeSingle().then(function (_ref62) {
+      var data = _ref62.data;
       return setSeguindo(!!data);
     })["catch"](function () {});
   }, [placeId, userId]);
@@ -13762,34 +14667,34 @@ function useSeguirLugar(placeId, userId) {
     return _toggleSeguir.apply(this, arguments);
   }
   function _toggleSeguir() {
-    _toggleSeguir = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee38() {
-      var _t37;
-      return _regenerator().w(function (_context38) {
-        while (1) switch (_context38.p = _context38.n) {
+    _toggleSeguir = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee42() {
+      var _t41;
+      return _regenerator().w(function (_context42) {
+        while (1) switch (_context42.p = _context42.n) {
           case 0:
             if (!(!userId || !placeId)) {
-              _context38.n = 1;
+              _context42.n = 1;
               break;
             }
-            return _context38.a(2);
+            return _context42.a(2);
           case 1:
             setLoading(true);
-            _context38.p = 2;
+            _context42.p = 2;
             if (!seguindo) {
-              _context38.n = 4;
+              _context42.n = 4;
               break;
             }
-            _context38.n = 3;
+            _context42.n = 3;
             return db.from("followed_places")["delete"]().eq("user_id", userId).eq("place_id", placeId);
           case 3:
             setSeguindo(false);
             setTotalSeguidores(function (v) {
               return Math.max(0, v - 1);
             });
-            _context38.n = 6;
+            _context42.n = 6;
             break;
           case 4:
-            _context38.n = 5;
+            _context42.n = 5;
             return db.from("followed_places").insert({
               user_id: userId,
               place_id: placeId
@@ -13800,18 +14705,18 @@ function useSeguirLugar(placeId, userId) {
               return v + 1;
             });
           case 6:
-            _context38.n = 8;
+            _context42.n = 8;
             break;
           case 7:
-            _context38.p = 7;
-            _t37 = _context38.v;
-            console.error("Erro ao seguir/deseguir lugar:", _t37);
+            _context42.p = 7;
+            _t41 = _context42.v;
+            console.error("Erro ao seguir/deseguir lugar:", _t41);
           case 8:
             setLoading(false);
           case 9:
-            return _context38.a(2);
+            return _context42.a(2);
         }
-      }, _callee38, null, [[2, 7]]);
+      }, _callee42, null, [[2, 7]]);
     }));
     return _toggleSeguir.apply(this, arguments);
   }
@@ -13824,20 +14729,20 @@ function useSeguirLugar(placeId, userId) {
 }
 
 // ── Cápsulas do User (carregadas do banco) ───────────────────
-function CapsulasUser(_ref62) {
-  var user = _ref62.user,
-    onOpenAgenda = _ref62.onOpenAgenda;
-  var _useState219 = useState([]),
-    _useState220 = _slicedToArray(_useState219, 2),
-    capsulas = _useState220[0],
-    setCapsulas = _useState220[1];
+function CapsulasUser(_ref63) {
+  var user = _ref63.user,
+    onOpenAgenda = _ref63.onOpenAgenda;
+  var _useState241 = useState([]),
+    _useState242 = _slicedToArray(_useState241, 2),
+    capsulas = _useState242[0],
+    setCapsulas = _useState242[1];
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
     // Busca momentos marcados como cápsula do user
     dbRead.from("momentos").select("*").eq("user_id", user.id).eq("tipo", "capsula").order("ts", {
       ascending: false
-    }).limit(20).then(function (_ref63) {
-      var data = _ref63.data;
+    }).limit(20).then(function (_ref64) {
+      var data = _ref64.data;
       if (data) setCapsulas(data);else {
         // Fallback: localStorage
         try {
@@ -13942,22 +14847,22 @@ function CapsulasUser(_ref62) {
 }
 
 // ── Cápsula no Perfil (individual) ───────────────────────────
-function CapsulaPerfil(_ref64) {
-  var capsula = _ref64.capsula,
-    index = _ref64.index,
-    userId = _ref64.userId;
-  var _useState221 = useState(false),
-    _useState222 = _slicedToArray(_useState221, 2),
-    editando = _useState222[0],
-    setEditando = _useState222[1];
-  var _useState223 = useState({
+function CapsulaPerfil(_ref65) {
+  var capsula = _ref65.capsula,
+    index = _ref65.index,
+    userId = _ref65.userId;
+  var _useState243 = useState(false),
+    _useState244 = _slicedToArray(_useState243, 2),
+    editando = _useState244[0],
+    setEditando = _useState244[1];
+  var _useState245 = useState({
       revelarEm: capsula.revelarEm || "",
       capsulVis: capsula.capsulVis || "ninguem",
       texto: capsula.texto || ""
     }),
-    _useState224 = _slicedToArray(_useState223, 2),
-    f = _useState224[0],
-    setF = _useState224[1];
+    _useState246 = _slicedToArray(_useState245, 2),
+    f = _useState246[0],
+    setF = _useState246[1];
   function salvarEdicao() {
     try {
       var capsulas = JSON.parse(localStorage.getItem("tn_capsulas_" + userId) || "[]");
@@ -14122,42 +15027,42 @@ function CapsulaPerfil(_ref64) {
 }
 
 // ── Perfil do Lugar ───────────────────────────────────────────
-function PerfilLugar(_ref65) {
-  var lugar = _ref65.lugar,
-    lugarId = _ref65.lugarId,
-    user = _ref65.user,
-    onBack = _ref65.onBack,
-    onView = _ref65.onView;
-  var _useState225 = useState(null),
-    _useState226 = _slicedToArray(_useState225, 2),
-    place = _useState226[0],
-    setPlace = _useState226[1];
-  var _useState227 = useState([]),
-    _useState228 = _slicedToArray(_useState227, 2),
-    profiles = _useState228[0],
-    setProfiles = _useState228[1];
-  var _useState229 = useState([]),
-    _useState230 = _slicedToArray(_useState229, 2),
-    momentos = _useState230[0],
-    setMomentos = _useState230[1];
-  var _useState231 = useState([]),
-    _useState232 = _slicedToArray(_useState231, 2),
-    agendas = _useState232[0],
-    setAgendas = _useState232[1];
-  var _useState233 = useState(true),
-    _useState234 = _slicedToArray(_useState233, 2),
-    loading = _useState234[0],
-    setLoading = _useState234[1];
-  var _useState235 = useState(null),
-    _useState236 = _slicedToArray(_useState235, 2),
-    decadaSel = _useState236[0],
-    setDecadaSel = _useState236[1];
+function PerfilLugar(_ref66) {
+  var lugar = _ref66.lugar,
+    lugarId = _ref66.lugarId,
+    user = _ref66.user,
+    onBack = _ref66.onBack,
+    onView = _ref66.onView;
+  var _useState247 = useState(null),
+    _useState248 = _slicedToArray(_useState247, 2),
+    place = _useState248[0],
+    setPlace = _useState248[1];
+  var _useState249 = useState([]),
+    _useState250 = _slicedToArray(_useState249, 2),
+    profiles = _useState250[0],
+    setProfiles = _useState250[1];
+  var _useState251 = useState([]),
+    _useState252 = _slicedToArray(_useState251, 2),
+    momentos = _useState252[0],
+    setMomentos = _useState252[1];
+  var _useState253 = useState([]),
+    _useState254 = _slicedToArray(_useState253, 2),
+    agendas = _useState254[0],
+    setAgendas = _useState254[1];
+  var _useState255 = useState(true),
+    _useState256 = _slicedToArray(_useState255, 2),
+    loading = _useState256[0],
+    setLoading = _useState256[1];
+  var _useState257 = useState(null),
+    _useState258 = _slicedToArray(_useState257, 2),
+    decadaSel = _useState258[0],
+    setDecadaSel = _useState258[1];
 
   // Resolve placeId: pode vir direto ou buscar pelo nome
-  var _useState237 = useState(lugarId || null),
-    _useState238 = _slicedToArray(_useState237, 2),
-    resolvedId = _useState238[0],
-    setResolvedId = _useState238[1];
+  var _useState259 = useState(lugarId || null),
+    _useState260 = _slicedToArray(_useState259, 2),
+    resolvedId = _useState260[0],
+    setResolvedId = _useState260[1];
   useEffect(function () {
     if (lugarId) {
       setResolvedId(lugarId);
@@ -14165,8 +15070,8 @@ function PerfilLugar(_ref65) {
     }
     if (!lugar) return;
     // Busca place pelo nome
-    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref66) {
-      var data = _ref66.data;
+    dbRead.from("places").select("*").or("name.ilike.%".concat(lugar, "%,city.ilike.%").concat(lugar, "%")).limit(1).maybeSingle().then(function (_ref67) {
+      var data = _ref67.data;
       if (data) {
         setPlace(data);
         setResolvedId(data.id);
@@ -14181,29 +15086,29 @@ function PerfilLugar(_ref65) {
     if (!resolvedId) return;
     setLoading(true);
     var buscarDados = /*#__PURE__*/function () {
-      var _ref67 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee39() {
-        var _yield$dbRead$from$se, p, _yield$dbRead$from$se2, pp, vinculados, lugarNome, _yield$dbRead$from$se3, m, _yield$dbRead$from$se4, a;
-        return _regenerator().w(function (_context39) {
-          while (1) switch (_context39.n) {
+      var _ref68 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee43() {
+        var _yield$dbRead$from$se2, p, _yield$dbRead$from$se3, pp, vinculados, lugarNome, _yield$dbRead$from$se4, m, _yield$dbRead$from$se5, a;
+        return _regenerator().w(function (_context43) {
+          while (1) switch (_context43.n) {
             case 0:
               if (place) {
-                _context39.n = 2;
+                _context43.n = 2;
                 break;
               }
-              _context39.n = 1;
+              _context43.n = 1;
               return dbRead.from("places").select("*").eq("id", resolvedId).maybeSingle();
             case 1:
-              _yield$dbRead$from$se = _context39.v;
-              p = _yield$dbRead$from$se.data;
+              _yield$dbRead$from$se2 = _context43.v;
+              p = _yield$dbRead$from$se2.data;
               if (p) setPlace(p);
             case 2:
-              _context39.n = 3;
+              _context43.n = 3;
               return dbRead.from("place_profiles").select("year_start, year_end, place_type, era, profiles!place_profiles_profile_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era)").eq("place_id", resolvedId).order("year_start", {
                 ascending: true
               });
             case 3:
-              _yield$dbRead$from$se2 = _context39.v;
-              pp = _yield$dbRead$from$se2.data;
+              _yield$dbRead$from$se3 = _context43.v;
+              pp = _yield$dbRead$from$se3.data;
               vinculados = (pp || []).map(function (r) {
                 return _objectSpread(_objectSpread({}, r.profiles), {}, {
                   pp_year_start: r.year_start,
@@ -14217,32 +15122,32 @@ function PerfilLugar(_ref65) {
               // Busca momentos deste lugar (por nome, fallback)
               lugarNome = (place === null || place === void 0 ? void 0 : place.name) || lugar || "";
               if (!lugarNome) {
-                _context39.n = 6;
+                _context43.n = 6;
                 break;
               }
-              _context39.n = 4;
+              _context43.n = 4;
               return dbRead.from("momentos").select("*").ilike("lugar", "%".concat(lugarNome, "%")).order("ts", {
                 ascending: false
               }).limit(20);
             case 4:
-              _yield$dbRead$from$se3 = _context39.v;
-              m = _yield$dbRead$from$se3.data;
+              _yield$dbRead$from$se4 = _context43.v;
+              m = _yield$dbRead$from$se4.data;
               setMomentos(m || []);
-              _context39.n = 5;
+              _context43.n = 5;
               return dbRead.from("momentos").select("*").eq("tipo", "agenda_visita").ilike("lugar", "%".concat(lugarNome, "%")).limit(5);
             case 5:
-              _yield$dbRead$from$se4 = _context39.v;
-              a = _yield$dbRead$from$se4.data;
+              _yield$dbRead$from$se5 = _context43.v;
+              a = _yield$dbRead$from$se5.data;
               setAgendas(a || []);
             case 6:
               setLoading(false);
             case 7:
-              return _context39.a(2);
+              return _context43.a(2);
           }
-        }, _callee39);
+        }, _callee43);
       }));
       return function buscarDados() {
-        return _ref67.apply(this, arguments);
+        return _ref68.apply(this, arguments);
       };
     }();
     buscarDados()["catch"](function () {
@@ -14753,43 +15658,43 @@ function PerfilLugar(_ref65) {
 }
 
 // ── Painel Pessoal ───────────────────────────────────────────
-function PainelPessoal(_ref68) {
+function PainelPessoal(_ref69) {
   var _momentoTop$fotos, _momentoTop$texto;
-  var user = _ref68.user,
-    onBack = _ref68.onBack;
-  var _useState239 = useState({
+  var user = _ref69.user,
+    onBack = _ref69.onBack;
+  var _useState261 = useState({
       fotos: 0,
       momentos: 0,
       conexoes: 0,
       lugares: 0
     }),
-    _useState240 = _slicedToArray(_useState239, 2),
-    stats = _useState240[0],
-    setStats = _useState240[1];
-  var _useState241 = useState(null),
-    _useState242 = _slicedToArray(_useState241, 2),
-    fotoTop = _useState242[0],
-    setFotoTop = _useState242[1];
-  var _useState243 = useState(null),
-    _useState244 = _slicedToArray(_useState243, 2),
-    momentoTop = _useState244[0],
-    setMomentoTop = _useState244[1];
-  var _useState245 = useState(null),
-    _useState246 = _slicedToArray(_useState245, 2),
-    lugarTop = _useState246[0],
-    setLugarTop = _useState246[1];
-  var _useState247 = useState(0),
-    _useState248 = _slicedToArray(_useState247, 2),
-    nascRegiao = _useState248[0],
-    setNascRegiao = _useState248[1];
-  var _useState249 = useState(null),
-    _useState250 = _slicedToArray(_useState249, 2),
-    lugarRelevante = _useState250[0],
-    setLugarRelevante = _useState250[1];
-  var _useState251 = useState([]),
-    _useState252 = _slicedToArray(_useState251, 2),
-    pessoasLugar = _useState252[0],
-    setPessoasLugar = _useState252[1];
+    _useState262 = _slicedToArray(_useState261, 2),
+    stats = _useState262[0],
+    setStats = _useState262[1];
+  var _useState263 = useState(null),
+    _useState264 = _slicedToArray(_useState263, 2),
+    fotoTop = _useState264[0],
+    setFotoTop = _useState264[1];
+  var _useState265 = useState(null),
+    _useState266 = _slicedToArray(_useState265, 2),
+    momentoTop = _useState266[0],
+    setMomentoTop = _useState266[1];
+  var _useState267 = useState(null),
+    _useState268 = _slicedToArray(_useState267, 2),
+    lugarTop = _useState268[0],
+    setLugarTop = _useState268[1];
+  var _useState269 = useState(0),
+    _useState270 = _slicedToArray(_useState269, 2),
+    nascRegiao = _useState270[0],
+    setNascRegiao = _useState270[1];
+  var _useState271 = useState(null),
+    _useState272 = _slicedToArray(_useState271, 2),
+    lugarRelevante = _useState272[0],
+    setLugarRelevante = _useState272[1];
+  var _useState273 = useState([]),
+    _useState274 = _slicedToArray(_useState273, 2),
+    pessoasLugar = _useState274[0],
+    setPessoasLugar = _useState274[1];
   useEffect(function () {
     var _user$photos2, _user$lugares4, _user$lugares5, _user$photos3;
     if (!(user !== null && user !== void 0 && user.id)) return;
@@ -14806,8 +15711,8 @@ function PainelPessoal(_ref68) {
     // Busca momentos do usuário
     dbRead.from("momentos").select("*").eq("user_id", user.id).order("ts", {
       ascending: false
-    }).limit(20).then(function (_ref69) {
-      var data = _ref69.data;
+    }).limit(20).then(function (_ref70) {
+      var data = _ref70.data;
       if (data) {
         setStats(function (s) {
           return _objectSpread(_objectSpread({}, s), {}, {
@@ -14819,8 +15724,8 @@ function PainelPessoal(_ref68) {
     })["catch"](function () {});
 
     // Busca contatos
-    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref70) {
-      var data = _ref70.data;
+    dbRead.from("contacts").select("contact_id").eq("user_id", user.id).then(function (_ref71) {
+      var data = _ref71.data;
       if (data) setStats(function (s) {
         return _objectSpread(_objectSpread({}, s), {}, {
           conexoes: data.length
@@ -14833,8 +15738,8 @@ function PainelPessoal(_ref68) {
       dbRead.from("profiles").select("id", {
         count: "exact",
         head: true
-      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref71) {
-        var count = _ref71.count;
+      }).gte("birth_year", user.birth_year - 5).lte("birth_year", user.birth_year + 5).ilike("city", "%".concat(user.city, "%")).neq("id", user.id).then(function (_ref72) {
+        var count = _ref72.count;
         setNascRegiao(count || 0);
       })["catch"](function () {});
     }
@@ -14854,8 +15759,8 @@ function PainelPessoal(_ref68) {
 
       // Busca pessoas que também viveram nesse lugar
       if (cidadeLugar) {
-        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref72) {
-          var data = _ref72.data;
+        dbRead.from("profiles").select("id,name,first_name,avatar_url").ilike("city", "%".concat(cidadeLugar, "%")).neq("id", user.id).limit(10).then(function (_ref73) {
+          var data = _ref73.data;
           if (data) setPessoasLugar(data);
         })["catch"](function () {});
       }
@@ -15404,39 +16309,39 @@ function PainelPessoal(_ref68) {
 
 // ── Root App ──────────────────────────────────────────────────
 function App() {
-  var _useState253 = useState("inicio"),
-    _useState254 = _slicedToArray(_useState253, 2),
-    tela = _useState254[0],
-    setTela = _useState254[1];
-  var _useState255 = useState({}),
-    _useState256 = _slicedToArray(_useState255, 2),
-    msgs = _useState256[0],
-    setMsgs = _useState256[1];
-  var _useState257 = useState([]),
-    _useState258 = _slicedToArray(_useState257, 2),
-    contacts = _useState258[0],
-    setContacts = _useState258[1];
-  var _useState259 = useState(false),
-    _useState260 = _slicedToArray(_useState259, 2),
-    showLogin = _useState260[0],
-    setShowLogin = _useState260[1];
-  var _useState261 = useState(false),
-    _useState262 = _slicedToArray(_useState261, 2),
-    showLoginPreview = _useState262[0],
-    setShowLoginPreview = _useState262[1];
-  var _useState263 = useState(null),
-    _useState264 = _slicedToArray(_useState263, 2),
-    perfilLugarAtual = _useState264[0],
-    setPerfilLugarAtual = _useState264[1];
-  var _useState265 = useState(false),
-    _useState266 = _slicedToArray(_useState265, 2),
-    showCuriosidade = _useState266[0],
-    setShowCuriosidade = _useState266[1];
-  var _useState267 = useState(true),
-    _useState268 = _slicedToArray(_useState267, 2),
-    useCadastroSimples = _useState268[0],
-    setUseCadastroSimples = _useState268[1];
-  var _useState269 = useState(function () {
+  var _useState275 = useState("inicio"),
+    _useState276 = _slicedToArray(_useState275, 2),
+    tela = _useState276[0],
+    setTela = _useState276[1];
+  var _useState277 = useState({}),
+    _useState278 = _slicedToArray(_useState277, 2),
+    msgs = _useState278[0],
+    setMsgs = _useState278[1];
+  var _useState279 = useState([]),
+    _useState280 = _slicedToArray(_useState279, 2),
+    contacts = _useState280[0],
+    setContacts = _useState280[1];
+  var _useState281 = useState(false),
+    _useState282 = _slicedToArray(_useState281, 2),
+    showLogin = _useState282[0],
+    setShowLogin = _useState282[1];
+  var _useState283 = useState(false),
+    _useState284 = _slicedToArray(_useState283, 2),
+    showLoginPreview = _useState284[0],
+    setShowLoginPreview = _useState284[1];
+  var _useState285 = useState(null),
+    _useState286 = _slicedToArray(_useState285, 2),
+    perfilLugarAtual = _useState286[0],
+    setPerfilLugarAtual = _useState286[1];
+  var _useState287 = useState(false),
+    _useState288 = _slicedToArray(_useState287, 2),
+    showCuriosidade = _useState288[0],
+    setShowCuriosidade = _useState288[1];
+  var _useState289 = useState(true),
+    _useState290 = _slicedToArray(_useState289, 2),
+    useCadastroSimples = _useState290[0],
+    setUseCadastroSimples = _useState290[1];
+  var _useState291 = useState(function () {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
@@ -15444,45 +16349,45 @@ function App() {
         return null;
       }
     }),
-    _useState270 = _slicedToArray(_useState269, 2),
-    user = _useState270[0],
-    setUser = _useState270[1];
-  var _useState271 = useState(null),
-    _useState272 = _slicedToArray(_useState271, 2),
-    modal = _useState272[0],
-    setModal = _useState272[1];
-  var _useState273 = useState(null),
-    _useState274 = _slicedToArray(_useState273, 2),
-    chat = _useState274[0],
-    setChat = _useState274[1];
-  var _useState275 = useState(false),
-    _useState276 = _slicedToArray(_useState275, 2),
-    showReencontrar = _useState276[0],
-    setShowReencontrar = _useState276[1];
-  var _useState277 = useState(null),
-    _useState278 = _slicedToArray(_useState277, 2),
-    filtroReencontrar = _useState278[0],
-    setFiltroReencontrar = _useState278[1];
-  var _useState279 = useState(false),
-    _useState280 = _slicedToArray(_useState279, 2),
-    showMenuRapido = _useState280[0],
-    setShowMenuRapido = _useState280[1];
-  var _useState281 = useState(false),
-    _useState282 = _slicedToArray(_useState281, 2),
-    showAdicionarLugar = _useState282[0],
-    setShowAdicionarLugar = _useState282[1];
-  var _useState283 = useState(false),
-    _useState284 = _slicedToArray(_useState283, 2),
-    showAgendaVisita = _useState284[0],
-    setShowAgendaVisita = _useState284[1];
-  var _useState285 = useState(false),
-    _useState286 = _slicedToArray(_useState285, 2),
-    showMomento = _useState286[0],
-    setShowMomento = _useState286[1];
-  var _useState287 = useState(false),
-    _useState288 = _slicedToArray(_useState287, 2),
-    confirmandoSaida = _useState288[0],
-    setConfirmandoSaida = _useState288[1];
+    _useState292 = _slicedToArray(_useState291, 2),
+    user = _useState292[0],
+    setUser = _useState292[1];
+  var _useState293 = useState(null),
+    _useState294 = _slicedToArray(_useState293, 2),
+    modal = _useState294[0],
+    setModal = _useState294[1];
+  var _useState295 = useState(null),
+    _useState296 = _slicedToArray(_useState295, 2),
+    chat = _useState296[0],
+    setChat = _useState296[1];
+  var _useState297 = useState(false),
+    _useState298 = _slicedToArray(_useState297, 2),
+    showReencontrar = _useState298[0],
+    setShowReencontrar = _useState298[1];
+  var _useState299 = useState(null),
+    _useState300 = _slicedToArray(_useState299, 2),
+    filtroReencontrar = _useState300[0],
+    setFiltroReencontrar = _useState300[1];
+  var _useState301 = useState(false),
+    _useState302 = _slicedToArray(_useState301, 2),
+    showMenuRapido = _useState302[0],
+    setShowMenuRapido = _useState302[1];
+  var _useState303 = useState(false),
+    _useState304 = _slicedToArray(_useState303, 2),
+    showAdicionarLugar = _useState304[0],
+    setShowAdicionarLugar = _useState304[1];
+  var _useState305 = useState(false),
+    _useState306 = _slicedToArray(_useState305, 2),
+    showAgendaVisita = _useState306[0],
+    setShowAgendaVisita = _useState306[1];
+  var _useState307 = useState(false),
+    _useState308 = _slicedToArray(_useState307, 2),
+    showMomento = _useState308[0],
+    setShowMomento = _useState308[1];
+  var _useState309 = useState(false),
+    _useState310 = _slicedToArray(_useState309, 2),
+    confirmandoSaida = _useState310[0],
+    setConfirmandoSaida = _useState310[1];
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
@@ -15501,35 +16406,35 @@ function App() {
       window.history.replaceState({}, "", window.location.pathname);
       return;
     }
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee40() {
-      var _yield$dbRead$from$se5, data, _t38;
-      return _regenerator().w(function (_context40) {
-        while (1) switch (_context40.p = _context40.n) {
+    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee44() {
+      var _yield$dbRead$from$se6, data, _t42;
+      return _regenerator().w(function (_context44) {
+        while (1) switch (_context44.p = _context44.n) {
           case 0:
-            _context40.p = 0;
-            _context40.n = 1;
+            _context44.p = 0;
+            _context44.n = 1;
             return dbRead.from("profiles").select("*").eq("id", perfilId).maybeSingle();
           case 1:
-            _yield$dbRead$from$se5 = _context40.v;
-            data = _yield$dbRead$from$se5.data;
+            _yield$dbRead$from$se6 = _context44.v;
+            data = _yield$dbRead$from$se6.data;
             if (data) {
               setModal(data);
             }
-            _context40.n = 3;
+            _context44.n = 3;
             break;
           case 2:
-            _context40.p = 2;
-            _t38 = _context40.v;
-            console.log("Deep link perfil não encontrado:", _t38.message || _t38);
+            _context44.p = 2;
+            _t42 = _context44.v;
+            console.log("Deep link perfil não encontrado:", _t42.message || _t42);
           case 3:
-            _context40.p = 3;
+            _context44.p = 3;
             // Limpa a URL pra não ficar o ?perfil= na barra
             window.history.replaceState({}, "", window.location.pathname);
-            return _context40.f(3);
+            return _context44.f(3);
           case 4:
-            return _context40.a(2);
+            return _context44.a(2);
         }
-      }, _callee40, null, [[0, 2, 3, 4]]);
+      }, _callee44, null, [[0, 2, 3, 4]]);
     }))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user === null || user === void 0 ? void 0 : user.id]);
@@ -15640,11 +16545,11 @@ function App() {
       return _init.apply(this, arguments);
     }
     function _init() {
-      _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee42() {
+      _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee46() {
         var _session;
-        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, _yield$dbRead$from$se7, data, _yield$dbRead$from$se8, _data2, updated, _yield$dbRead$from$se9, _data3, _t41, _t42, _t43, _t44;
-        return _regenerator().w(function (_context42) {
-          while (1) switch (_context42.p = _context42.n) {
+        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, _yield$dbRead$from$se8, data, _yield$dbRead$from$se9, _data2, updated, _yield$dbRead$from$se0, _data3, _t45, _t46, _t47, _t48;
+        return _regenerator().w(function (_context46) {
+          while (1) switch (_context46.p = _context46.n) {
             case 0:
               // 1. Carrega user do localStorage como base (nunca perde)
               localUser = null;
@@ -15658,73 +16563,73 @@ function App() {
 
               // 2. Verifica sessão Google (com timeout de 5s)
               session = null;
-              _context42.p = 1;
+              _context46.p = 1;
               sessionPromise = db.auth.getSession();
               timeoutPromise = new Promise(function (_, reject) {
                 return setTimeout(function () {
                   return reject(new Error("getSession timeout"));
                 }, 5000);
               });
-              _context42.n = 2;
+              _context46.n = 2;
               return Promise.race([sessionPromise, timeoutPromise]);
             case 2:
-              res = _context42.v;
+              res = _context46.v;
               session = (_res$data = res.data) === null || _res$data === void 0 ? void 0 : _res$data.session;
-              _context42.n = 4;
+              _context46.n = 4;
               break;
             case 3:
-              _context42.p = 3;
-              _t41 = _context42.v;
-              console.log("Sessão Google indisponível:", _t41.message || _t41);
+              _context46.p = 3;
+              _t45 = _context46.v;
+              console.log("Sessão Google indisponível:", _t45.message || _t45);
               // Já setou localUser acima, continua sem sessão
-              return _context42.a(2);
+              return _context46.a(2);
             case 4:
               if (!((_session = session) !== null && _session !== void 0 && _session.user)) {
-                _context42.n = 17;
+                _context46.n = 17;
                 break;
               }
-              _context42.p = 5;
-              _context42.n = 6;
+              _context46.p = 5;
+              _context46.n = 6;
               return dbRead.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle();
             case 6:
-              _yield$dbRead$from$se7 = _context42.v;
-              data = _yield$dbRead$from$se7.data;
+              _yield$dbRead$from$se8 = _context46.v;
+              data = _yield$dbRead$from$se8.data;
               if (!data) {
-                _context42.n = 7;
+                _context46.n = 7;
                 break;
               }
               setUser(data);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(data));
               } catch (_unused35) {}
-              return _context42.a(2);
+              return _context46.a(2);
             case 7:
-              _context42.n = 9;
+              _context46.n = 9;
               break;
             case 8:
-              _context42.p = 8;
-              _t42 = _context42.v;
-              console.log("Erro ao buscar perfil por auth_id:", _t42);
+              _context46.p = 8;
+              _t46 = _context46.v;
+              console.log("Erro ao buscar perfil por auth_id:", _t46);
             case 9:
               if (!(localUser && localUser.id && !localUser.id.toString().startsWith("local_"))) {
-                _context42.n = 15;
+                _context46.n = 15;
                 break;
               }
-              _context42.p = 10;
-              _context42.n = 11;
+              _context46.p = 10;
+              _context46.n = 11;
               return dbRead.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
             case 11:
-              _yield$dbRead$from$se8 = _context42.v;
-              _data2 = _yield$dbRead$from$se8.data;
+              _yield$dbRead$from$se9 = _context46.v;
+              _data2 = _yield$dbRead$from$se9.data;
               if (!_data2) {
-                _context42.n = 13;
+                _context46.n = 13;
                 break;
               }
               if (_data2.auth_id) {
-                _context42.n = 12;
+                _context46.n = 12;
                 break;
               }
-              _context42.n = 12;
+              _context46.n = 12;
               return db.from("profiles").update({
                 auth_id: session.user.id
               }).eq("id", _data2.id)["catch"](function () {});
@@ -15736,71 +16641,71 @@ function App() {
               try {
                 localStorage.setItem("tn_user", JSON.stringify(updated));
               } catch (_unused36) {}
-              return _context42.a(2);
+              return _context46.a(2);
             case 13:
-              _context42.n = 15;
+              _context46.n = 15;
               break;
             case 14:
-              _context42.p = 14;
-              _t43 = _context42.v;
-              console.log("Erro ao buscar perfil por id:", _t43);
+              _context46.p = 14;
+              _t47 = _context46.v;
+              console.log("Erro ao buscar perfil por id:", _t47);
             case 15:
               if (!localUser) {
-                _context42.n = 16;
+                _context46.n = 16;
                 break;
               }
               setUser(localUser);
-              return _context42.a(2);
+              return _context46.a(2);
             case 16:
-              _context42.n = 23;
+              _context46.n = 23;
               break;
             case 17:
               if (!localUser) {
-                _context42.n = 23;
+                _context46.n = 23;
                 break;
               }
               if (!(localUser.id && !localUser.id.toString().startsWith("local_"))) {
-                _context42.n = 22;
+                _context46.n = 22;
                 break;
               }
-              _context42.p = 18;
-              _context42.n = 19;
+              _context46.p = 18;
+              _context46.n = 19;
               return dbRead.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
             case 19:
-              _yield$dbRead$from$se9 = _context42.v;
-              _data3 = _yield$dbRead$from$se9.data;
+              _yield$dbRead$from$se0 = _context46.v;
+              _data3 = _yield$dbRead$from$se0.data;
               if (!_data3) {
-                _context42.n = 20;
+                _context46.n = 20;
                 break;
               }
               setUser(_data3);
               try {
                 localStorage.setItem("tn_user", JSON.stringify(_data3));
               } catch (_unused37) {}
-              return _context42.a(2);
+              return _context46.a(2);
             case 20:
-              _context42.n = 22;
+              _context46.n = 22;
               break;
             case 21:
-              _context42.p = 21;
-              _t44 = _context42.v;
-              console.log("Erro ao buscar perfil do banco:", _t44);
+              _context46.p = 21;
+              _t48 = _context46.v;
+              console.log("Erro ao buscar perfil do banco:", _t48);
             case 22:
               // Se não conseguiu buscar do banco, usa o local mesmo
               if (!user) setUser(localUser);
             case 23:
-              return _context42.a(2);
+              return _context46.a(2);
           }
-        }, _callee42, null, [[18, 21], [10, 14], [5, 8], [1, 3]]);
+        }, _callee46, null, [[18, 21], [10, 14], [5, 8], [1, 3]]);
       }));
       return _init.apply(this, arguments);
     }
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
-        var _ref74 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee41(event, session) {
-          var _yield$dbRead$from$se6, data, localU, s, updated, _s, _t39, _t40;
-          return _regenerator().w(function (_context41) {
-            while (1) switch (_context41.p = _context41.n) {
+        var _ref75 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee45(event, session) {
+          var _yield$dbRead$from$se7, data, localU, s, updated, _s, _t43, _t44;
+          return _regenerator().w(function (_context45) {
+            while (1) switch (_context45.p = _context45.n) {
               case 0:
                 if (event === "SIGNED_OUT") {
                   setUser(null);
@@ -15813,24 +16718,24 @@ function App() {
                   } catch (_unused29) {}
                 }
                 if (!(event === "SIGNED_IN" && session !== null && session !== void 0 && session.user)) {
-                  _context41.n = 9;
+                  _context45.n = 9;
                   break;
                 }
-                _context41.p = 1;
-                _context41.n = 2;
+                _context45.p = 1;
+                _context45.n = 2;
                 return dbRead.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle();
               case 2:
-                _yield$dbRead$from$se6 = _context41.v;
-                data = _yield$dbRead$from$se6.data;
+                _yield$dbRead$from$se7 = _context45.v;
+                data = _yield$dbRead$from$se7.data;
                 if (!data) {
-                  _context41.n = 3;
+                  _context45.n = 3;
                   break;
                 }
                 setUser(data);
                 try {
                   localStorage.setItem("tn_user", JSON.stringify(data));
                 } catch (_unused30) {}
-                _context41.n = 7;
+                _context45.n = 7;
                 break;
               case 3:
                 // Não tem perfil vinculado — tenta vincular perfil local
@@ -15840,11 +16745,11 @@ function App() {
                   if (s) localU = JSON.parse(s);
                 } catch (_unused31) {}
                 if (!(localU && localU.id && !localU.id.toString().startsWith("local_"))) {
-                  _context41.n = 7;
+                  _context45.n = 7;
                   break;
                 }
-                _context41.p = 4;
-                _context41.n = 5;
+                _context45.p = 4;
+                _context45.n = 5;
                 return db.from("profiles").update({
                   auth_id: session.user.id
                 }).eq("id", localU.id);
@@ -15857,33 +16762,33 @@ function App() {
                   localStorage.setItem("tn_user", JSON.stringify(updated));
                 } catch (_unused32) {}
                 console.log("Perfil local vinculado ao Google:", localU.id);
-                _context41.n = 7;
+                _context45.n = 7;
                 break;
               case 6:
-                _context41.p = 6;
-                _t39 = _context41.v;
-                console.log("Erro ao vincular perfil local:", _t39);
+                _context45.p = 6;
+                _t43 = _context45.v;
+                console.log("Erro ao vincular perfil local:", _t43);
                 // Mantém o perfil local mesmo sem vincular
                 setUser(localU);
               case 7:
-                _context41.n = 9;
+                _context45.n = 9;
                 break;
               case 8:
-                _context41.p = 8;
-                _t40 = _context41.v;
-                console.log("Erro no auth state change:", _t40);
+                _context45.p = 8;
+                _t44 = _context45.v;
+                console.log("Erro no auth state change:", _t44);
                 // Fallback: usa perfil local se existir
                 try {
                   _s = localStorage.getItem("tn_user");
                   if (_s) setUser(JSON.parse(_s));
                 } catch (_unused33) {}
               case 9:
-                return _context41.a(2);
+                return _context45.a(2);
             }
-          }, _callee41, null, [[4, 6], [1, 8]]);
+          }, _callee45, null, [[4, 6], [1, 8]]);
         }));
-        return function (_x30, _x31) {
-          return _ref74.apply(this, arguments);
+        return function (_x34, _x35) {
+          return _ref75.apply(this, arguments);
         };
       }()),
       subscription = _db$auth$onAuthStateC.data.subscription;
@@ -15895,20 +16800,20 @@ function App() {
   // Load contacts from Supabase (with localStorage fallback)
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
-    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee43() {
-      var _yield$dbRead$from$se0, data, error, loaded, c, local, rows, _t45;
-      return _regenerator().w(function (_context43) {
-        while (1) switch (_context43.p = _context43.n) {
+    _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee47() {
+      var _yield$dbRead$from$se1, data, error, loaded, c, local, rows, _t49;
+      return _regenerator().w(function (_context47) {
+        while (1) switch (_context47.p = _context47.n) {
           case 0:
-            _context43.p = 0;
-            _context43.n = 1;
+            _context47.p = 0;
+            _context47.n = 1;
             return dbRead.from("contacts").select("contact_id, rel, profiles!contacts_contact_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type)").eq("user_id", user.id);
           case 1:
-            _yield$dbRead$from$se0 = _context43.v;
-            data = _yield$dbRead$from$se0.data;
-            error = _yield$dbRead$from$se0.error;
+            _yield$dbRead$from$se1 = _context47.v;
+            data = _yield$dbRead$from$se1.data;
+            error = _yield$dbRead$from$se1.error;
             if (!(!error && data && data.length > 0)) {
-              _context43.n = 2;
+              _context47.n = 2;
               break;
             }
             loaded = data.map(function (c) {
@@ -15920,14 +16825,14 @@ function App() {
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(loaded));
             } catch (_unused38) {}
-            return _context43.a(2);
+            return _context47.a(2);
           case 2:
-            _context43.n = 4;
+            _context47.n = 4;
             break;
           case 3:
-            _context43.p = 3;
-            _t45 = _context43.v;
-            console.log("Erro ao carregar contatos do Supabase:", _t45);
+            _context47.p = 3;
+            _t49 = _context47.v;
+            console.log("Erro ao carregar contatos do Supabase:", _t49);
           case 4:
             // Fallback: localStorage (migra pro Supabase se tiver dados locais)
             try {
@@ -15953,9 +16858,9 @@ function App() {
               }
             } catch (_unused39) {}
           case 5:
-            return _context43.a(2);
+            return _context47.a(2);
         }
-      }, _callee43, null, [[0, 3]]);
+      }, _callee47, null, [[0, 3]]);
     }))();
   }, [user === null || user === void 0 ? void 0 : user.id]);
   function salvar(p) {
@@ -15965,32 +16870,32 @@ function App() {
     } catch (_unused40) {}
     setTela("perfil");
   }
-  function addContact(_x32) {
+  function addContact(_x36) {
     return _addContact.apply(this, arguments);
   }
   function _addContact() {
-    _addContact = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee44(p) {
+    _addContact = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee48(p) {
       var rel,
         updated,
-        _args44 = arguments,
-        _t46;
-      return _regenerator().w(function (_context44) {
-        while (1) switch (_context44.p = _context44.n) {
+        _args48 = arguments,
+        _t50;
+      return _regenerator().w(function (_context48) {
+        while (1) switch (_context48.p = _context48.n) {
           case 0:
-            rel = _args44.length > 1 && _args44[1] !== undefined ? _args44[1] : "conhecido";
+            rel = _args48.length > 1 && _args48[1] !== undefined ? _args48[1] : "conhecido";
             if (user !== null && user !== void 0 && user.id) {
-              _context44.n = 1;
+              _context48.n = 1;
               break;
             }
-            return _context44.a(2);
+            return _context48.a(2);
           case 1:
             if (!contacts.find(function (c) {
               return c.id === p.id;
             })) {
-              _context44.n = 2;
+              _context48.n = 2;
               break;
             }
-            return _context44.a(2);
+            return _context48.a(2);
           case 2:
             updated = [].concat(_toConsumableArray(contacts), [_objectSpread(_objectSpread({}, p), {}, {
               _rel: rel
@@ -16000,8 +16905,8 @@ function App() {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
             } catch (_unused50) {}
             // Persiste no Supabase
-            _context44.p = 3;
-            _context44.n = 4;
+            _context48.p = 3;
+            _context48.n = 4;
             return db.from("contacts").upsert({
               user_id: user.id,
               contact_id: p.id,
@@ -16010,27 +16915,27 @@ function App() {
               onConflict: "user_id,contact_id"
             });
           case 4:
-            _context44.n = 6;
+            _context48.n = 6;
             break;
           case 5:
-            _context44.p = 5;
-            _t46 = _context44.v;
-            console.error("Erro ao salvar contato:", _t46);
+            _context48.p = 5;
+            _t50 = _context48.v;
+            console.error("Erro ao salvar contato:", _t50);
           case 6:
-            return _context44.a(2);
+            return _context48.a(2);
         }
-      }, _callee44, null, [[3, 5]]);
+      }, _callee48, null, [[3, 5]]);
     }));
     return _addContact.apply(this, arguments);
   }
-  function updateContactRel(_x33, _x34) {
+  function updateContactRel(_x37, _x38) {
     return _updateContactRel.apply(this, arguments);
   }
   function _updateContactRel() {
-    _updateContactRel = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee45(id, rel) {
-      var updated, _t47;
-      return _regenerator().w(function (_context45) {
-        while (1) switch (_context45.p = _context45.n) {
+    _updateContactRel = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee49(id, rel) {
+      var updated, _t51;
+      return _regenerator().w(function (_context49) {
+        while (1) switch (_context49.p = _context49.n) {
           case 0:
             updated = contacts.map(function (c) {
               return c.id === id ? _objectSpread(_objectSpread({}, c), {}, {
@@ -16043,25 +16948,25 @@ function App() {
             } catch (_unused51) {}
             // Atualiza no Supabase
             if (!(user !== null && user !== void 0 && user.id)) {
-              _context45.n = 4;
+              _context49.n = 4;
               break;
             }
-            _context45.p = 1;
-            _context45.n = 2;
+            _context49.p = 1;
+            _context49.n = 2;
             return db.from("contacts").update({
               rel: rel
             }).eq("user_id", user.id).eq("contact_id", id);
           case 2:
-            _context45.n = 4;
+            _context49.n = 4;
             break;
           case 3:
-            _context45.p = 3;
-            _t47 = _context45.v;
-            console.error("Erro ao atualizar rel:", _t47);
+            _context49.p = 3;
+            _t51 = _context49.v;
+            console.error("Erro ao atualizar rel:", _t51);
           case 4:
-            return _context45.a(2);
+            return _context49.a(2);
         }
-      }, _callee45, null, [[1, 3]]);
+      }, _callee49, null, [[1, 3]]);
     }));
     return _updateContactRel.apply(this, arguments);
   }
@@ -16145,18 +17050,18 @@ function App() {
         family_ref: p.family_ref || null,
         how_iam: p.how_iam || null
       };
-      db.from("profiles").upsert(safe).then(function (_ref76) {
-        var error = _ref76.error;
+      db.from("profiles").upsert(safe).then(function (_ref77) {
+        var error = _ref77.error;
         if (error) console.log("Erro ao sincronizar perfil:", error.message);
       })["catch"](function () {});
     }
   }
 
   // Estado de loading inicial
-  var _useState289 = useState(false),
-    _useState290 = _slicedToArray(_useState289, 2),
-    appReady = _useState290[0],
-    setAppReady = _useState290[1];
+  var _useState311 = useState(false),
+    _useState312 = _slicedToArray(_useState311, 2),
+    appReady = _useState312[0],
+    setAppReady = _useState312[1];
 
   // Marca app como pronto após init
   useEffect(function () {
@@ -16172,10 +17077,10 @@ function App() {
       return c.id === p.id;
     });
   };
-  var unreadCount = Object.entries(msgs).filter(function (_ref77) {
-    var _ref78 = _slicedToArray(_ref77, 2),
-      id = _ref78[0],
-      ms = _ref78[1];
+  var unreadCount = Object.entries(msgs).filter(function (_ref78) {
+    var _ref79 = _slicedToArray(_ref78, 2),
+      id = _ref79[0],
+      ms = _ref79[1];
     return user && id.split("_").includes(String(user.id)) && ms.some(function (m) {
       return m.from !== user.id;
     });
