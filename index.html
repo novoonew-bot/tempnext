@@ -4838,7 +4838,6 @@ function ModalEditarPerfil(_ref26) {
       currentState: user.current_state || "",
       currentCountry: user.current_country || "Brasil",
       intencao: user.intencao || [],
-      available: user.available || "sim",
       interests: user.interests || [],
       tema: user.tema || "amber"
     }),
@@ -4869,7 +4868,6 @@ function ModalEditarPerfil(_ref26) {
               current_state: f.currentState || null,
               current_country: f.currentCountry || null,
               intencao: f.intencao.length > 0 ? f.intencao : null,
-              available: f.available,
               interests: f.interests.length > 0 ? f.interests : null,
               tema: f.tema || "amber"
             });
@@ -4883,7 +4881,6 @@ function ModalEditarPerfil(_ref26) {
               current_state: updated.current_state,
               current_country: updated.current_country,
               intencao: updated.intencao,
-              available: updated.available,
               interests: updated.interests,
               tema: updated.tema
             }).eq("id", user.id);
@@ -5182,43 +5179,7 @@ function ModalEditarPerfil(_ref26) {
       color: T.muted,
       marginTop: 8
     }
-  }, "Pode escolher os dois")), /*#__PURE__*/React.createElement(STitle, null, "Como voc\xEA est\xE1 dispon\xEDvel"), /*#__PURE__*/React.createElement(FRow, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 8
-    }
-  }, [{
-    v: "sim",
-    l: "Aberto a reencontros"
-  }, {
-    v: "mensagem",
-    l: "Só mensagens"
-  }, {
-    v: "nao",
-    l: "Só observando"
-  }].map(function (o) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: o.v,
-      onClick: function onClick() {
-        return setF(_objectSpread(_objectSpread({}, f), {}, {
-          available: o.v
-        }));
-      },
-      style: {
-        flex: 1,
-        padding: "10px 6px",
-        borderRadius: 10,
-        cursor: "pointer",
-        textAlign: "center",
-        border: "1.5px solid ".concat(f.available === o.v ? T.accent : T.border),
-        background: f.available === o.v ? T.accentBg : "#fff",
-        fontSize: 11,
-        fontWeight: f.available === o.v ? 700 : 400,
-        color: f.available === o.v ? T.accent : T.muted,
-        transition: "all .15s"
-      }
-    }, o.l);
-  }))), /*#__PURE__*/React.createElement(STitle, {
+  }, "Pode escolher os dois")), /*#__PURE__*/React.createElement(STitle, {
     style: {
       color: T.accent
     }
@@ -9243,28 +9204,7 @@ function ModalPerfil(_ref38) {
       color: T.text,
       fontWeight: 700
     }
-  }, stats.momentos), " ", stats.momentos === 1 ? "momento" : "momentos")), p.available && p.available !== "nao" && /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 10,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 7
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 6,
-      height: 6,
-      borderRadius: "50%",
-      background: T.green
-    }
-  }), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 11,
-      color: T.sub,
-      fontWeight: 500
-    }
-  }, p.available === "sim" ? "Aberto a reencontros" : p.available === "mensagem" ? "Aberto a mensagens" : ""))), /*#__PURE__*/React.createElement("div", {
+  }, stats.momentos), " ", stats.momentos === 1 ? "momento" : "momentos"))), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "18px 20px 32px",
       display: "flex",
