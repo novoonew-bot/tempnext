@@ -15798,42 +15798,51 @@ function PerfilLugar(_ref72) {
       padding: "2px 7px",
       borderRadius: 6
     }
-  }, "foto \xB7 ", place.photo_credit_name)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      margin: "-8px 4px 18px",
-      padding: "0 4px"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: T.sub,
-      fontFamily: "Georgia,serif",
-      fontStyle: "italic"
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontWeight: 600,
-      color: T.text,
-      fontStyle: "normal"
-    }
-  }, profiles.length), " ", profiles.length === 1 ? "pessoa esteve aqui" : "pessoas estiveram aqui"), /*#__PURE__*/React.createElement("button", {
-    onClick: toggleSeguir,
-    style: {
-      padding: "5px 12px",
-      borderRadius: 16,
-      cursor: "pointer",
-      background: seguindo ? T.accentBg : "#fff",
-      color: seguindo ? T.accentDk : T.blueStrong,
-      fontSize: 11,
-      fontWeight: 600,
-      fontFamily: "inherit",
-      border: "1px solid ".concat(seguindo ? T.accent + "50" : T.blueStrong + "50"),
-      transition: "all .2s"
-    }
-  }, seguindo ? "✓ Seguindo" : "+ Seguir")), suaConexao && /*#__PURE__*/React.createElement("div", {
+  }, "foto \xB7 ", place.photo_credit_name)), function () {
+    var outrosCount = profiles.filter(function (p) {
+      return !user || p.id !== user.id;
+    }).length;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        margin: "-8px 4px 18px",
+        padding: "0 4px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        color: T.sub,
+        fontFamily: "Georgia,serif",
+        fontStyle: "italic"
+      }
+    }, outrosCount === 0 ? /*#__PURE__*/React.createElement("span", null, "ningu\xE9m mais passou por aqui ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: T.muted
+      }
+    }, "\u2014 seja o primeiro a compartilhar")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 600,
+        color: T.text,
+        fontStyle: "normal"
+      }
+    }, outrosCount), " ", outrosCount === 1 ? "pessoa esteve aqui" : "pessoas estiveram aqui")), /*#__PURE__*/React.createElement("button", {
+      onClick: toggleSeguir,
+      style: {
+        padding: "5px 12px",
+        borderRadius: 16,
+        cursor: "pointer",
+        background: seguindo ? T.accentBg : "#fff",
+        color: seguindo ? T.accentDk : T.blueStrong,
+        fontSize: 11,
+        fontWeight: 600,
+        fontFamily: "inherit",
+        border: "1px solid ".concat(seguindo ? T.accent + "50" : T.blueStrong + "50"),
+        transition: "all .2s"
+      }
+    }, seguindo ? "✓ Seguindo" : "+ Seguir"));
+  }(), suaConexao && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 16,
@@ -16103,6 +16112,7 @@ function PerfilLugar(_ref72) {
       if (contactIds.has(p.id)) itensContatos.push(item);else itensOutros.push(item);
     });
     momentos.forEach(function (m) {
+      if (user && m.user_id === user.id) return; // não lista momentos próprios
       var ano = m.ano || new Date(m.created_at).getFullYear();
       itensOutros.push({
         tipo: "momento",
