@@ -17072,7 +17072,22 @@ function App() {
     window.history.pushState({
       tn: "root"
     }, "", window.location.href);
+
+    // Flag: só ativa handler de popstate depois que o app estabilizou
+    // (evita que o redirect do OAuth dispare o modal de "sair")
+    var ativo = false;
+    var timerAtivo = setTimeout(function () {
+      ativo = true;
+    }, 1500);
     var handlePop = function handlePop(e) {
+      if (!ativo) {
+        // Popstate aconteceu antes do app estabilizar — provavelmente OAuth
+        // Re-empurra o estado pra não perder proteção
+        window.history.pushState({
+          tn: "root"
+        }, "", window.location.href);
+        return;
+      }
       // Prioridade: fechar o que estiver aberto primeiro
       if (modal) {
         setModal(null);
@@ -17160,7 +17175,8 @@ function App() {
     };
     window.addEventListener("popstate", handlePop);
     return function () {
-      return window.removeEventListener("popstate", handlePop);
+      clearTimeout(timerAtivo);
+      window.removeEventListener("popstate", handlePop);
     };
   }, [modal, chat, showReencontrar, showMenuRapido, showAdicionarLugar, showAgendaVisita, showMomento, showCuriosidade, showLogin, showLoginPreview, tela]);
 
