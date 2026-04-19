@@ -44,7 +44,7 @@ input:focus,select:focus,textarea:focus{
     <div style="font-family:Georgia,serif;font-size:32px;font-weight:300;letter-spacing:-0.5px;line-height:1">
       <span style="color:#C17E3A;font-weight:700">Temp</span><span style="color:#1E88E5;font-weight:700">next</span>
     </div>
-    <div style="font-size:11px;color:#8C8478;margin-top:8px;font-style:italic;font-family:Georgia,serif">guarda história, marca o presente e aproxima o futuro</div>
+    <div style="font-size:11px;color:#8C8478;margin-top:8px;font-style:italic;font-family:Georgia,serif">guarda histórias, marca o presente e aproxima o futuro</div>
   </div>
   <!-- Bolinhas -->
   <div style="display:flex;gap:6px;margin-top:28px">
@@ -940,7 +940,7 @@ function Logo(_ref) {
       fontStyle: "italic",
       fontFamily: "Georgia,serif"
     }
-  }, "guarda hist\xF3ria, marca o presente e aproxima o futuro")));
+  }, "guarda hist\xF3rias, marca o presente e aproxima o futuro")));
 }
 
 // ── Logo Nova: Tempnext limpa ────────────────────────────────────
@@ -1057,16 +1057,10 @@ function Btn(_ref3) {
 
 // ── Prova social: mostra quantas pessoas estão no Tempnext ──
 function SocialProof() {
-  var _useState = useState({
-      pessoas: 0,
-      lugares: 0,
-      momentos: 0,
-      videos: 0,
-      carregou: false
-    }),
+  var _useState = useState(null),
     _useState2 = _slicedToArray(_useState, 2),
-    stats = _useState2[0],
-    setStats = _useState2[1];
+    total = _useState2[0],
+    setTotal = _useState2[1];
   useEffect(function () {
     Promise.all([dbRead.from("profiles").select("id", {
       count: "exact",
@@ -1086,75 +1080,37 @@ function SocialProof() {
         l = _ref5[1],
         m = _ref5[2],
         v = _ref5[3];
-      setStats({
-        pessoas: p.count || 0,
-        lugares: l.count || 0,
-        momentos: m.count || 0,
-        videos: v.count || 0,
-        carregou: true
-      });
+      var soma = (p.count || 0) + (l.count || 0) + (m.count || 0) + (v.count || 0);
+      setTotal(soma);
     })["catch"](function () {
-      return setStats(function (s) {
-        return _objectSpread(_objectSpread({}, s), {}, {
-          carregou: true
-        });
-      });
+      return setTotal(0);
     });
   }, []);
 
-  // Só mostra se já carregou e tem pelo menos algum dado
-  if (!stats.carregou) return null;
-  var tudoZero = stats.pessoas === 0 && stats.lugares === 0 && stats.momentos === 0 && stats.videos === 0;
-  if (tudoZero) return null;
-  var items = [{
-    n: stats.pessoas,
-    l: "pessoas"
-  }, {
-    n: stats.lugares,
-    l: "lugares"
-  }, {
-    n: stats.momentos,
-    l: "momentos"
-  }, {
-    n: stats.videos,
-    l: "vídeos"
-  }].filter(function (x) {
-    return x.n > 0;
-  });
+  // Esconde se ainda não carregou ou se for muito pequeno (parece app vazio)
+  if (total === null || total < 5) return null;
   return /*#__PURE__*/React.createElement("div", {
     style: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 18,
-      marginTop: 24,
-      flexWrap: "wrap"
+      textAlign: "center"
     }
-  }, items.map(function (it, i) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        textAlign: "center"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontFamily: "Georgia,serif",
-        fontSize: 20,
-        fontWeight: 500,
-        color: T.text,
-        lineHeight: 1
-      }
-    }, it.n), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 9,
-        color: T.muted,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        fontWeight: 600,
-        marginTop: 4
-      }
-    }, it.l));
-  }));
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "Georgia,serif",
+      fontSize: 28,
+      fontWeight: 500,
+      color: T.blueStrong,
+      lineHeight: 1
+    }
+  }, total), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: "#5A4F38",
+      letterSpacing: "0.1em",
+      textTransform: "uppercase",
+      fontWeight: 600,
+      marginTop: 6
+    }
+  }, "mem\xF3rias"));
 }
 
 // ── Comunidade: stats reais do app ──
@@ -17838,7 +17794,7 @@ function App() {
         fontStyle: "italic",
         fontFamily: "Georgia,serif"
       }
-    }, "guarda hist\xF3ria, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
+    }, "guarda hist\xF3rias, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         gap: 6,
@@ -17901,7 +17857,7 @@ function App() {
         maxWidth: 430,
         margin: "0 auto",
         minHeight: "100vh",
-        background: lastWp ? "transparent" : lastBg,
+        background: lastWp ? "transparent" : "linear-gradient(to bottom, #FFFEFB 0%, #FFFEFB 25%, #F4ECDB 50%, #E5D8B8 75%, #E5D8B8 100%)",
         display: "flex",
         flexDirection: "column",
         position: "relative",
@@ -17914,9 +17870,7 @@ function App() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "0 32px",
-        position: "relative",
-        zIndex: 1
+        padding: "48px 32px 12px"
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
@@ -17925,7 +17879,7 @@ function App() {
         color: T.text,
         letterSpacing: "-0.5px",
         fontFamily: "Georgia,serif",
-        marginBottom: 4
+        marginBottom: 6
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
@@ -17947,14 +17901,16 @@ function App() {
         maxWidth: 300,
         lineHeight: 1.55
       }
-    }, "guarda hist\xF3ria, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
+    }, "guarda hist\xF3rias, marca o presente e aproxima o futuro")), /*#__PURE__*/React.createElement("div", {
       style: {
-        width: 32,
-        height: 1,
-        background: T.border,
-        margin: "32px 0"
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "12px 32px"
       }
-    }), /*#__PURE__*/React.createElement("button", {
+    }, /*#__PURE__*/React.createElement("button", {
       onClick: function onClick() {
         db.auth.signInWithOAuth({
           provider: "google",
@@ -17967,7 +17923,7 @@ function App() {
         width: "100%",
         padding: "15px 20px",
         borderRadius: 16,
-        border: "1px solid ".concat(T.border),
+        border: "1px solid rgba(0,0,0,0.08)",
         background: "#fff",
         cursor: "pointer",
         display: "flex",
@@ -17978,7 +17934,7 @@ function App() {
         fontWeight: 500,
         color: T.text,
         fontFamily: "inherit",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
+        boxShadow: "0 2px 14px rgba(0,0,0,0.06)"
       }
     }, /*#__PURE__*/React.createElement("svg", {
       width: "18",
@@ -17996,7 +17952,7 @@ function App() {
     }), /*#__PURE__*/React.createElement("path", {
       fill: "#FBBC05",
       d: "M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-    })), "Continuar com Google"), /*#__PURE__*/React.createElement(SocialProof, null), /*#__PURE__*/React.createElement("div", {
+    })), "Continuar com Google"), /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 10,
         color: T.muted,
@@ -18005,14 +17961,24 @@ function App() {
         lineHeight: 1.7,
         fontWeight: 300
       }
-    }, "Ao entrar voc\xEA concorda com os termos.", /*#__PURE__*/React.createElement("br", null), "Seus dados ficam seguros."), /*#__PURE__*/React.createElement("div", {
+    }, "Ao entrar voc\xEA concorda com os termos.", /*#__PURE__*/React.createElement("br", null), "Seus dados ficam seguros.")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "12px 32px 60px"
+      }
+    }, /*#__PURE__*/React.createElement(SocialProof, null), /*#__PURE__*/React.createElement("div", {
       style: {
         position: "absolute",
         bottom: 20,
         left: 0,
         right: 0,
         fontSize: 9,
-        color: T.muted,
+        color: "#4A3F2A",
+        opacity: 0.5,
         fontWeight: 300,
         textAlign: "center"
       }
@@ -18371,7 +18337,7 @@ function App() {
       maxWidth: 260,
       lineHeight: 1.5
     }
-  }, "guarda hist\xF3ria, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
+  }, "guarda hist\xF3rias, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
     style: {
       width: 32,
       height: 1,
