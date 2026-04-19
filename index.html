@@ -38,11 +38,11 @@ input:focus,select:focus,textarea:focus{
 </head>
 <body>
 <div id="root"></div>
-<div id="loading" style="position:fixed;inset:0;background:#FAF7F2;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:-apple-system,sans-serif">
+<div id="loading" style="position:fixed;inset:0;background:linear-gradient(to bottom, #FFFEFB 0%, #FFFEFB 25%, #F4ECDB 50%, #E5D8B8 75%, #E5D8B8 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:-apple-system,sans-serif">
   <!-- Logo nova -->
   <div style="text-align:center">
-    <div style="font-family:Georgia,serif;font-size:32px;font-weight:300;letter-spacing:-0.5px;line-height:1">
-      <span style="color:#C17E3A;font-weight:700">Temp</span><span style="color:#1E88E5;font-weight:700">next</span>
+    <div style="font-family:Georgia,serif;font-size:38px;font-weight:300;letter-spacing:-0.5px;line-height:1">
+      <span style="color:#C17E3A;font-weight:700">Temp</span><span style="color:#1E88E5;font-weight:700">nexT</span>
     </div>
     <div style="font-size:11px;color:#8C8478;margin-top:8px;font-style:italic;font-family:Georgia,serif">guarda histórias, marca o presente e aproxima o futuro</div>
   </div>
@@ -13064,7 +13064,7 @@ function TelaLogin(_ref55) {
       color: T.blueStrong,
       fontWeight: 700
     }
-  }, "next")), /*#__PURE__*/React.createElement("button", {
+  }, "nexT")), /*#__PURE__*/React.createElement("button", {
     onClick: onClose,
     style: {
       background: "none",
@@ -13712,7 +13712,7 @@ function CadastroSimples(_ref57) {
     style: {
       padding: "60px 28px 40px",
       minHeight: "100vh",
-      background: T.bg,
+      background: "linear-gradient(to bottom, #FFFEFB 0%, #FFFEFB 25%, #F4ECDB 50%, #E5D8B8 75%, #E5D8B8 100%)",
       display: "flex",
       flexDirection: "column"
     }
@@ -17745,9 +17745,9 @@ function App() {
 
   // ── Splash Screen ──
   if (!appReady) {
-    var splashBg = T.bg,
-      splashWp = null,
-      splashOp = 0.6;
+    var splashWp = null,
+      splashOp = 0.6,
+      splashBg = T.bg;
     try {
       var s = localStorage.getItem("tn_user_prefs");
       if (s) {
@@ -17785,7 +17785,7 @@ function App() {
         maxWidth: 430,
         margin: "0 auto",
         minHeight: "100vh",
-        background: splashWp ? "transparent" : splashBg,
+        background: splashWp ? "transparent" : "linear-gradient(to bottom, #FFFEFB 0%, #FFFEFB 25%, #F4ECDB 50%, #E5D8B8 75%, #E5D8B8 100%)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -17795,7 +17795,7 @@ function App() {
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 32,
+        fontSize: 38,
         fontWeight: 300,
         color: T.text,
         letterSpacing: "-0.5px",
@@ -17811,19 +17811,22 @@ function App() {
         color: T.blueStrong,
         fontWeight: 700
       }
-    }, "next")), /*#__PURE__*/React.createElement("div", {
+    }, "nexT")), /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 11,
         color: T.muted,
         marginTop: 8,
         fontStyle: "italic",
-        fontFamily: "Georgia,serif"
+        fontFamily: "Georgia,serif",
+        textAlign: "center",
+        maxWidth: 300,
+        padding: "0 32px"
       }
     }, "guarda hist\xF3rias, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         gap: 6,
-        marginTop: 28
+        marginTop: 32
       }
     }, [0, 1, 2].map(function (i) {
       return /*#__PURE__*/React.createElement("div", {
