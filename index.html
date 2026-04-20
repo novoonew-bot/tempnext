@@ -7419,10 +7419,6 @@ function calcularProgresso(user) {
     label: "Data de nascimento",
     feito: !!user.birth_year
   }, {
-    id: "capa",
-    label: "Foto de capa",
-    feito: !!(user.photos && user.photos.length > 0)
-  }, {
     id: "tema",
     label: "Cor do app",
     feito: !!user.tema
@@ -8589,7 +8585,7 @@ function ModalGravarVideo(_ref38) {
 
 // ── Screen: Perfil ──────────────────────────────────────────
 function Perfil(_ref39) {
-  var _user$photos5, _user$intencao5, _user$lugares2, _user$interests, _user$lugares3;
+  var _user$photos5, _user$photos6, _user$intencao5, _user$lugares2, _user$interests, _user$lugares3;
   var user = _ref39.user,
     onLogout = _ref39.onLogout,
     onCadastrar = _ref39.onCadastrar,
@@ -9085,16 +9081,55 @@ function Perfil(_ref39) {
       marginBottom: 12
     }
   }, /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      return setCompletarCampo("capa");
+    },
     style: {
       height: 120,
       background: (_user$photos5 = user.photos) !== null && _user$photos5 !== void 0 && _user$photos5[0] ? "url(".concat(user.photos[0], ") center/cover") : "linear-gradient(135deg,".concat(T.accentBg, ",rgba(21,101,192,0.1))"),
-      position: "relative"
-    }
+      position: "relative",
+      cursor: "pointer"
+    },
+    title: (_user$photos6 = user.photos) !== null && _user$photos6 !== void 0 && _user$photos6[0] ? "Trocar foto de capa" : "Adicionar foto de capa"
   }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      top: 10,
+      right: 10,
+      width: 28,
+      height: 28,
+      borderRadius: "50%",
+      background: "rgba(0,0,0,0.35)",
+      backdropFilter: "blur(6px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z",
+    stroke: "#fff",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "13",
+    r: "4",
+    stroke: "#fff",
+    strokeWidth: "2"
+  }))), /*#__PURE__*/React.createElement("div", {
     style: {
       position: "absolute",
       bottom: -38,
       left: 20
+    },
+    onClick: function onClick(e) {
+      return e.stopPropagation();
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -17105,10 +17140,10 @@ function PainelPessoal(_ref76) {
     pessoasLugar = _useState290[0],
     setPessoasLugar = _useState290[1];
   useEffect(function () {
-    var _user$photos6, _user$lugares4, _user$lugares5, _user$photos7;
+    var _user$photos7, _user$lugares4, _user$lugares5, _user$photos8;
     if (!(user !== null && user !== void 0 && user.id)) return;
     // Stats básicos
-    var nFotos = ((_user$photos6 = user.photos) === null || _user$photos6 === void 0 ? void 0 : _user$photos6.length) || 0;
+    var nFotos = ((_user$photos7 = user.photos) === null || _user$photos7 === void 0 ? void 0 : _user$photos7.length) || 0;
     var nLugares = ((_user$lugares4 = user.lugares) === null || _user$lugares4 === void 0 ? void 0 : _user$lugares4.length) || 1;
     setStats(function (s) {
       return _objectSpread(_objectSpread({}, s), {}, {
@@ -17176,7 +17211,7 @@ function PainelPessoal(_ref76) {
     }
 
     // Foto mais curtida — por enquanto pega a primeira (likes virão depois)
-    if (((_user$photos7 = user.photos) === null || _user$photos7 === void 0 ? void 0 : _user$photos7.length) > 0) setFotoTop(user.photos[0]);
+    if (((_user$photos8 = user.photos) === null || _user$photos8 === void 0 ? void 0 : _user$photos8.length) > 0) setFotoTop(user.photos[0]);
   }, [user === null || user === void 0 ? void 0 : user.id]);
   var initials = function initials(n) {
     return (n || "?").split(" ").map(function (w) {
