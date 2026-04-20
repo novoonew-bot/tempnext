@@ -2260,7 +2260,8 @@ function Inicio(_ref18) {
     onLugar = _ref18.onLugar,
     contacts = _ref18.contacts,
     onConexoes = _ref18.onConexoes,
-    onPainel = _ref18.onPainel;
+    onPainel = _ref18.onPainel,
+    onAcaoBloqueada = _ref18.onAcaoBloqueada;
   var _useState23 = useState([]),
     _useState24 = _slicedToArray(_useState23, 2),
     profiles = _useState24[0],
@@ -2669,7 +2670,11 @@ function Inicio(_ref18) {
     return g.isMe;
   }) && /*#__PURE__*/React.createElement("div", {
     onClick: function onClick() {
-      return setPostarVideo(true);
+      if (perfilIncompleto(user)) {
+        onAcaoBloqueada && onAcaoBloqueada();
+        return;
+      }
+      setPostarVideo(true);
     },
     style: {
       flexShrink: 0,
@@ -8462,7 +8467,8 @@ function Perfil(_ref38) {
     onLogout = _ref38.onLogout,
     onCadastrar = _ref38.onCadastrar,
     onUpdateUser = _ref38.onUpdateUser,
-    onLogin = _ref38.onLogin;
+    onLogin = _ref38.onLogin,
+    onAcaoBloqueada = _ref38.onAcaoBloqueada;
   var _useState123 = useState(false),
     _useState124 = _slicedToArray(_useState123, 2),
     editando = _useState124[0],
@@ -9034,7 +9040,12 @@ function Perfil(_ref38) {
   }, user.name)))), /*#__PURE__*/React.createElement(CapsulasUser, {
     user: user,
     onOpenAgenda: function onOpenAgenda() {
-      return setShowAgendaVisita(true);
+      if (perfilIncompleto(user)) {
+        onAcaoBloqueada && onAcaoBloqueada();
+        return;
+      }
+      // Nota: setShowAgendaVisita existe no App, não aqui. Clique será no-op por ora.
+      // Usuário deve abrir agenda pelo MenuRapido (+) global.
     }
   }), ((_user$intencao5 = user.intencao) === null || _user$intencao5 === void 0 ? void 0 : _user$intencao5.length) > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
@@ -9291,7 +9302,11 @@ function Perfil(_ref38) {
     }
   }, "somem depois do tempo escolhido")), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
-      return setGravarVideo(true);
+      if (perfilIncompleto(user)) {
+        onAcaoBloqueada && onAcaoBloqueada();
+        return;
+      }
+      setGravarVideo(true);
     },
     style: {
       padding: "7px 14px",
@@ -17646,19 +17661,19 @@ function App() {
   var _useState321 = useState(false),
     _useState322 = _slicedToArray(_useState321, 2),
     showMenuRapido = _useState322[0],
-    setShowMenuRapido = _useState322[1];
+    setShowMenuRapidoRaw = _useState322[1];
   var _useState323 = useState(false),
     _useState324 = _slicedToArray(_useState323, 2),
     showAdicionarLugar = _useState324[0],
-    setShowAdicionarLugar = _useState324[1];
+    setShowAdicionarLugarRaw = _useState324[1];
   var _useState325 = useState(false),
     _useState326 = _slicedToArray(_useState325, 2),
     showAgendaVisita = _useState326[0],
-    setShowAgendaVisita = _useState326[1];
+    setShowAgendaVisitaRaw = _useState326[1];
   var _useState327 = useState(false),
     _useState328 = _slicedToArray(_useState327, 2),
     showMomento = _useState328[0],
-    setShowMomento = _useState328[1];
+    setShowMomentoRaw = _useState328[1];
   var _useState329 = useState(false),
     _useState330 = _slicedToArray(_useState329, 2),
     confirmandoSaida = _useState330[0],
@@ -17667,6 +17682,37 @@ function App() {
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
     dismissAlert = _useRegionAlerts.dismiss;
+
+  // Setters guardados: só abrem modais de ação se perfil estiver completo
+  // Fechar (false) sempre funciona, abrir (true) passa pelo guardrail
+  var setShowMenuRapido = function setShowMenuRapido(v) {
+    if (v === true && perfilIncompleto(user)) {
+      setBloqueioPerfilIncompleto(true);
+      return;
+    }
+    setShowMenuRapidoRaw(v);
+  };
+  var setShowAdicionarLugar = function setShowAdicionarLugar(v) {
+    if (v === true && perfilIncompleto(user)) {
+      setBloqueioPerfilIncompleto(true);
+      return;
+    }
+    setShowAdicionarLugarRaw(v);
+  };
+  var setShowAgendaVisita = function setShowAgendaVisita(v) {
+    if (v === true && perfilIncompleto(user)) {
+      setBloqueioPerfilIncompleto(true);
+      return;
+    }
+    setShowAgendaVisitaRaw(v);
+  };
+  var setShowMomento = function setShowMomento(v) {
+    if (v === true && perfilIncompleto(user)) {
+      setBloqueioPerfilIncompleto(true);
+      return;
+    }
+    setShowMomentoRaw(v);
+  };
   var _useRegionNotificatio = useRegionNotifications(user, contacts),
     notif = _useRegionNotificatio.notif,
     dismissNotif = _useRegionNotificatio.dismiss;
@@ -18812,6 +18858,9 @@ function App() {
     },
     onPainel: function onPainel() {
       return setTela("painel");
+    },
+    onAcaoBloqueada: function onAcaoBloqueada() {
+      return setBloqueioPerfilIncompleto(true);
     }
   }), tela === "painel" && /*#__PURE__*/React.createElement(PainelPessoal, {
     user: user,
@@ -18864,6 +18913,9 @@ function App() {
     onUpdateUser: updateUser,
     onLogin: function onLogin() {
       return setShowLoginPreview(true);
+    },
+    onAcaoBloqueada: function onAcaoBloqueada() {
+      return setBloqueioPerfilIncompleto(true);
     }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
