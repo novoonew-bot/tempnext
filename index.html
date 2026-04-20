@@ -2247,7 +2247,7 @@ function CarrosselLugares(_ref18) {
     style: {
       display: "flex",
       gap: 10,
-      padding: "24px 40% 24px 40%",
+      padding: "18px 40% 18px 40%",
       overflowX: "auto",
       WebkitOverflowScrolling: "touch",
       scrollSnapType: "x mandatory"
@@ -2276,7 +2276,7 @@ function CarrosselLugares(_ref18) {
     }, /*#__PURE__*/React.createElement("div", {
       style: {
         width: 160,
-        height: 110,
+        height: 100,
         borderRadius: 14,
         overflow: "hidden",
         background: l.photo ? "url(".concat(l.photo, ") center/cover") : cores[i % cores.length],
@@ -2285,23 +2285,16 @@ function CarrosselLugares(_ref18) {
     }), /*#__PURE__*/React.createElement("div", {
       style: {
         fontFamily: "Georgia,serif",
-        fontSize: 14,
+        fontSize: 12,
         fontStyle: "italic",
         color: T.text,
-        marginTop: 10,
+        marginTop: 6,
         maxWidth: 160,
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis"
       }
-    }, l.city), l.uf && /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: T.muted,
-        marginTop: 2,
-        letterSpacing: "0.06em"
-      }
-    }, l.uf, " \xB7 ", l.total || 0, " ", l.total === 1 ? "pessoa" : "pessoas"));
+    }, l.city, l.uf ? ", ".concat(l.uf) : ""));
   }));
 }
 
@@ -3626,18 +3619,37 @@ function Inicio(_ref22) {
     }, razao.texto));
   }))), /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "0 16px",
-      marginBottom: 28
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      margin: "8px 20px 14px"
     }
-  }, /*#__PURE__*/React.createElement(MomentosFeed, {
-    user: user,
-    onView: onView
-  })), /*#__PURE__*/React.createElement(DestaqueMomento, {
-    user: user,
-    onView: onView
-  }), lugaresEmAlta.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 14,
+      flex: 1,
+      height: 1,
+      background: T.borderMd,
+      opacity: 0.25
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 4,
+      height: 4,
+      borderRadius: "50%",
+      background: T.accent,
+      opacity: 0.35
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      height: 1,
+      background: T.borderMd,
+      opacity: 0.25
+    }
+  })), lugaresEmAlta.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 26,
       position: "relative"
     }
   }, /*#__PURE__*/React.createElement("div", {
@@ -3662,7 +3674,18 @@ function Inicio(_ref22) {
   })), /*#__PURE__*/React.createElement(CarrosselLugares, {
     lugares: lugaresEmAlta,
     onLugar: onLugar
-  })), loading && profiles.length === 0 && /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0 16px",
+      marginBottom: 28
+    }
+  }, /*#__PURE__*/React.createElement(MomentosFeed, {
+    user: user,
+    onView: onView
+  })), /*#__PURE__*/React.createElement(DestaqueMomento, {
+    user: user,
+    onView: onView
+  }), loading && profiles.length === 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "24px",
       textAlign: "center"
@@ -20246,7 +20269,7 @@ function App() {
     var col = t.color || T.muted;
     // Botão Perfil: mostra avatar do usuário em vez do texto simples
     if (t.id === "perfil" && user) {
-      var avatarSize = active ? 32 : 28;
+      var avatarSize = active ? 40 : 36;
       return /*#__PURE__*/React.createElement("button", {
         key: t.id,
         onClick: function onClick() {
@@ -20261,7 +20284,7 @@ function App() {
           flexDirection: "column",
           alignItems: "center",
           gap: 3,
-          padding: "4px 2px",
+          padding: "2px 2px",
           position: "relative"
         }
       }, /*#__PURE__*/React.createElement("div", {
@@ -20275,7 +20298,7 @@ function App() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 11,
+          fontSize: 13,
           fontWeight: 600,
           color: col,
           fontFamily: "Georgia,serif",
