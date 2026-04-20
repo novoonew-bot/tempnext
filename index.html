@@ -509,6 +509,15 @@ function detectarEra(y1, y2) {
   if (fim >= ano && inicio <= ano) return "presente";
   return "passado";
 }
+
+// Perfil incompleto: falta cidade OU falta época
+// (mínimo viável pro Tempnext funcionar - lugar + tempo)
+function perfilIncompleto(u) {
+  if (!u) return false;
+  var semCidade = !u.city || u.city.trim().length === 0;
+  var semEpoca = !u.year_start;
+  return semCidade || semEpoca;
+}
 var placeLabel = function placeLabel(v) {
   var _PLACES$find;
   return ((_PLACES$find = PLACES.find(function (p) {
@@ -17591,19 +17600,23 @@ function App() {
     _useState302 = _slicedToArray(_useState301, 2),
     googleUserSemPerfil = _useState302[0],
     setGoogleUserSemPerfil = _useState302[1]; // {id, email, name, avatar_url} quando precisa cadastrar
-  var _useState303 = useState(null),
+  var _useState303 = useState(false),
     _useState304 = _slicedToArray(_useState303, 2),
-    perfilLugarAtual = _useState304[0],
-    setPerfilLugarAtual = _useState304[1];
-  var _useState305 = useState(false),
+    bloqueioPerfilIncompleto = _useState304[0],
+    setBloqueioPerfilIncompleto = _useState304[1]; // modal bloqueante quando tenta ação sem perfil completo
+  var _useState305 = useState(null),
     _useState306 = _slicedToArray(_useState305, 2),
-    showCuriosidade = _useState306[0],
-    setShowCuriosidade = _useState306[1];
-  var _useState307 = useState(true),
+    perfilLugarAtual = _useState306[0],
+    setPerfilLugarAtual = _useState306[1];
+  var _useState307 = useState(false),
     _useState308 = _slicedToArray(_useState307, 2),
-    useCadastroSimples = _useState308[0],
-    setUseCadastroSimples = _useState308[1];
-  var _useState309 = useState(function () {
+    showCuriosidade = _useState308[0],
+    setShowCuriosidade = _useState308[1];
+  var _useState309 = useState(true),
+    _useState310 = _slicedToArray(_useState309, 2),
+    useCadastroSimples = _useState310[0],
+    setUseCadastroSimples = _useState310[1];
+  var _useState311 = useState(function () {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
@@ -17611,45 +17624,45 @@ function App() {
         return null;
       }
     }),
-    _useState310 = _slicedToArray(_useState309, 2),
-    user = _useState310[0],
-    setUser = _useState310[1];
-  var _useState311 = useState(null),
     _useState312 = _slicedToArray(_useState311, 2),
-    modal = _useState312[0],
-    setModal = _useState312[1];
+    user = _useState312[0],
+    setUser = _useState312[1];
   var _useState313 = useState(null),
     _useState314 = _slicedToArray(_useState313, 2),
-    chat = _useState314[0],
-    setChat = _useState314[1];
-  var _useState315 = useState(false),
+    modal = _useState314[0],
+    setModal = _useState314[1];
+  var _useState315 = useState(null),
     _useState316 = _slicedToArray(_useState315, 2),
-    showReencontrar = _useState316[0],
-    setShowReencontrar = _useState316[1];
-  var _useState317 = useState(null),
+    chat = _useState316[0],
+    setChat = _useState316[1];
+  var _useState317 = useState(false),
     _useState318 = _slicedToArray(_useState317, 2),
-    filtroReencontrar = _useState318[0],
-    setFiltroReencontrar = _useState318[1];
-  var _useState319 = useState(false),
+    showReencontrar = _useState318[0],
+    setShowReencontrar = _useState318[1];
+  var _useState319 = useState(null),
     _useState320 = _slicedToArray(_useState319, 2),
-    showMenuRapido = _useState320[0],
-    setShowMenuRapido = _useState320[1];
+    filtroReencontrar = _useState320[0],
+    setFiltroReencontrar = _useState320[1];
   var _useState321 = useState(false),
     _useState322 = _slicedToArray(_useState321, 2),
-    showAdicionarLugar = _useState322[0],
-    setShowAdicionarLugar = _useState322[1];
+    showMenuRapido = _useState322[0],
+    setShowMenuRapido = _useState322[1];
   var _useState323 = useState(false),
     _useState324 = _slicedToArray(_useState323, 2),
-    showAgendaVisita = _useState324[0],
-    setShowAgendaVisita = _useState324[1];
+    showAdicionarLugar = _useState324[0],
+    setShowAdicionarLugar = _useState324[1];
   var _useState325 = useState(false),
     _useState326 = _slicedToArray(_useState325, 2),
-    showMomento = _useState326[0],
-    setShowMomento = _useState326[1];
+    showAgendaVisita = _useState326[0],
+    setShowAgendaVisita = _useState326[1];
   var _useState327 = useState(false),
     _useState328 = _slicedToArray(_useState327, 2),
-    confirmandoSaida = _useState328[0],
-    setConfirmandoSaida = _useState328[1];
+    showMomento = _useState328[0],
+    setShowMomento = _useState328[1];
+  var _useState329 = useState(false),
+    _useState330 = _slicedToArray(_useState329, 2),
+    confirmandoSaida = _useState330[0],
+    setConfirmandoSaida = _useState330[1];
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
@@ -18168,6 +18181,16 @@ function App() {
     } catch (_unused43) {}
     setTela("perfil");
   }
+
+  // Guardrail: intercepta tentativas de ação se perfil estiver incompleto
+  // Retorna true se pode prosseguir, false se bloqueou
+  function verificarPerfilCompleto() {
+    if (perfilIncompleto(user)) {
+      setBloqueioPerfilIncompleto(true);
+      return false;
+    }
+    return true;
+  }
   function addContact(_x36) {
     return _addContact.apply(this, arguments);
   }
@@ -18187,14 +18210,20 @@ function App() {
             }
             return _context48.a(2);
           case 1:
-            if (!contacts.find(function (c) {
-              return c.id === p.id;
-            })) {
+            if (verificarPerfilCompleto()) {
               _context48.n = 2;
               break;
             }
             return _context48.a(2);
           case 2:
+            if (!contacts.find(function (c) {
+              return c.id === p.id;
+            })) {
+              _context48.n = 3;
+              break;
+            }
+            return _context48.a(2);
+          case 3:
             updated = [].concat(_toConsumableArray(contacts), [_objectSpread(_objectSpread({}, p), {}, {
               _rel: rel
             })]);
@@ -18203,8 +18232,8 @@ function App() {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
             } catch (_unused53) {}
             // Persiste no Supabase
-            _context48.p = 3;
-            _context48.n = 4;
+            _context48.p = 4;
+            _context48.n = 5;
             return db.from("contacts").upsert({
               user_id: user.id,
               contact_id: p.id,
@@ -18212,17 +18241,17 @@ function App() {
             }, {
               onConflict: "user_id,contact_id"
             });
-          case 4:
-            _context48.n = 6;
-            break;
           case 5:
-            _context48.p = 5;
+            _context48.n = 7;
+            break;
+          case 6:
+            _context48.p = 6;
             _t52 = _context48.v;
             console.error("Erro ao salvar contato:", _t52);
-          case 6:
+          case 7:
             return _context48.a(2);
         }
-      }, _callee48, null, [[3, 5]]);
+      }, _callee48, null, [[4, 6]]);
     }));
     return _addContact.apply(this, arguments);
   }
@@ -18356,10 +18385,10 @@ function App() {
   }
 
   // Estado de loading inicial
-  var _useState329 = useState(false),
-    _useState330 = _slicedToArray(_useState329, 2),
-    appReady = _useState330[0],
-    setAppReady = _useState330[1];
+  var _useState331 = useState(false),
+    _useState332 = _slicedToArray(_useState331, 2),
+    appReady = _useState332[0],
+    setAppReady = _useState332[1];
 
   // Marca app como pronto após init
   useEffect(function () {
@@ -18767,7 +18796,7 @@ function App() {
       return setTela("perfil");
     },
     onMomento: function onMomento() {
-      return setShowMomento(true);
+      if (verificarPerfilCompleto()) setShowMomento(true);
     },
     onView: setModal,
     onAdd: function onAdd(p) {
@@ -18862,7 +18891,7 @@ function App() {
       }
     }, /*#__PURE__*/React.createElement("button", {
       onClick: function onClick() {
-        return setShowMenuRapido(true);
+        if (verificarPerfilCompleto()) setShowMenuRapido(true);
       },
       style: {
         width: 44,
@@ -19184,7 +19213,91 @@ function App() {
     onClose: function onClose() {
       return setChat(null);
     }
-  }), confirmandoSaida && /*#__PURE__*/React.createElement("div", {
+  }), bloqueioPerfilIncompleto && /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      return setBloqueioPerfilIncompleto(false);
+    },
+    style: {
+      position: "fixed",
+      inset: 0,
+      background: "rgba(28,28,30,0.55)",
+      zIndex: 310,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "24px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick(e) {
+      return e.stopPropagation();
+    },
+    style: {
+      background: "#fff",
+      borderRadius: 18,
+      padding: "28px 26px 22px",
+      maxWidth: 360,
+      width: "100%",
+      boxShadow: "0 20px 60px rgba(0,0,0,0.25)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "Georgia,serif",
+      fontSize: 22,
+      fontWeight: 400,
+      color: T.text,
+      marginBottom: 10,
+      letterSpacing: "-0.01em"
+    }
+  }, "Complete seu perfil primeiro"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: T.sub,
+      lineHeight: 1.6,
+      marginBottom: 22,
+      fontWeight: 400,
+      fontFamily: "Georgia,serif",
+      fontStyle: "italic"
+    }
+  }, "Pra interagir no Tempnext, precisamos saber onde e quando voc\xEA viveu. \xC9 r\xE1pido."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setBloqueioPerfilIncompleto(false);
+    },
+    style: {
+      flex: 1,
+      padding: "12px",
+      borderRadius: 11,
+      background: T.faint,
+      border: "1px solid ".concat(T.border),
+      color: T.sub,
+      fontSize: 13,
+      fontWeight: 500,
+      cursor: "pointer",
+      fontFamily: "inherit"
+    }
+  }, "Agora n\xE3o"), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      setBloqueioPerfilIncompleto(false);
+      setTela("perfil");
+    },
+    style: {
+      flex: 2,
+      padding: "12px",
+      borderRadius: 11,
+      background: "linear-gradient(145deg,".concat(T.accent, "cc,").concat(T.accentDk, ")"),
+      border: "none",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: "pointer",
+      fontFamily: "inherit",
+      boxShadow: "0 4px 14px rgba(193,126,58,0.25)"
+    }
+  }, "Completar perfil")))), confirmandoSaida && /*#__PURE__*/React.createElement("div", {
     onClick: function onClick() {
       return setConfirmandoSaida(false);
     },
