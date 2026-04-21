@@ -2158,7 +2158,11 @@ function DestaqueMomento(_ref16) {
     }
   }, fraseContemplativa)), /*#__PURE__*/React.createElement("div", {
     onClick: function onClick() {
-      return onView && onView(momento);
+      if (window.__onVerMomento) {
+        window.__onVerMomento(momento);
+      } else if (onView) {
+        onView(momento);
+      }
     },
     style: {
       background: "#FFFBF0",
@@ -2382,7 +2386,9 @@ function MomentosFeed(_ref19) {
     return /*#__PURE__*/React.createElement("div", {
       key: m.id || i,
       onClick: function onClick() {
-        return setFullscreen(i);
+        if (window.__onVerMomento) {
+          window.__onVerMomento(m);
+        }
       },
       style: {
         flexShrink: 0,
@@ -2476,14 +2482,7 @@ function MomentosFeed(_ref19) {
     return renderCard(m, momentos.findIndex(function (x) {
       return x.id === m.id;
     }));
-  })), fullscreen !== null && /*#__PURE__*/React.createElement(MomentoFullscreen, {
-    momentos: momentos,
-    indiceInicial: fullscreen,
-    onClose: function onClose() {
-      return setFullscreen(null);
-    },
-    user: user
-  }));
+  })));
 }
 
 // ── Momento em tela cheia imersiva (Modelo C) ───────────────
@@ -12302,7 +12301,11 @@ function Perfil(_ref54) {
           cursor: "pointer"
         },
         onClick: function onClick() {
-          return setMomentoAberto(m);
+          if (window.__onVerMomento) {
+            window.__onVerMomento(m);
+          } else {
+            setMomentoAberto(m);
+          }
         }
       }, (_m$fotos9 = m.fotos) !== null && _m$fotos9 !== void 0 && _m$fotos9[0] ? /*#__PURE__*/React.createElement("img", {
         src: m.fotos[0],
@@ -12503,14 +12506,37 @@ function Perfil(_ref54) {
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
         fontSize: 11,
         fontWeight: 700,
         color: T.muted,
         textTransform: "uppercase",
-        letterSpacing: "0.08em",
-        marginBottom: 10
+        letterSpacing: "0.08em"
       }
-    }, "Onde voc\xEA viveu"), /*#__PURE__*/React.createElement("div", {
+    }, "Onde voc\xEA viveu"), !modoVisualizacao && /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        if (typeof window !== "undefined" && window.__onAdicionarLugar) {
+          window.__onAdicionarLugar();
+        }
+      },
+      style: {
+        padding: "5px 12px",
+        borderRadius: 14,
+        fontSize: 11,
+        fontWeight: 600,
+        fontFamily: "inherit",
+        background: T.faint,
+        color: T.accent,
+        border: "1px solid ".concat(T.border),
+        cursor: "pointer"
+      }
+    }, "+ adicionar")), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         flexDirection: "column",
@@ -15872,38 +15898,34 @@ function ModalAdicionarLugar(_ref70) {
 // ── Modal: Menu Rápido (+) ────────────────────────────────────
 function MenuRapido(_ref71) {
   var onClose = _ref71.onClose,
-    onNovoLugar = _ref71.onNovoLugar,
     onMomento = _ref71.onMomento,
-    onAgendaVisita = _ref71.onAgendaVisita,
+    onPassagem = _ref71.onPassagem,
+    onOndeVouEstar = _ref71.onOndeVouEstar,
     user = _ref71.user;
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
   var acoes = [{
     icon: /*#__PURE__*/React.createElement("svg", {
-      width: "22",
-      height: "22",
+      width: "20",
+      height: "20",
       viewBox: "0 0 22 22",
       fill: "none"
     }, /*#__PURE__*/React.createElement("path", {
-      d: "M11 4C7.1 4 4 7.1 4 11c0 5 7 11 7 11s7-6 7-11c0-3.9-3.1-7-7-7z",
+      d: "M14 3l5 5-11 11H3v-5L14 3z",
       stroke: temaCor,
       strokeWidth: "1.8",
+      strokeLinejoin: "round",
       fill: temaBg
-    }), /*#__PURE__*/React.createElement("circle", {
-      cx: "11",
-      cy: "11",
-      r: "2.5",
-      fill: temaCor
     })),
-    label: "Adicionar lugar",
-    desc: "Inclua mais um lugar onde você viveu",
-    action: onNovoLugar,
+    label: "Momento",
+    desc: "foto, frase, lembrança",
+    action: onMomento,
     needsUser: true
   }, {
     icon: /*#__PURE__*/React.createElement("svg", {
-      width: "22",
-      height: "22",
+      width: "20",
+      height: "20",
       viewBox: "0 0 22 22",
       fill: "none"
     }, /*#__PURE__*/React.createElement("circle", {
@@ -15914,39 +15936,29 @@ function MenuRapido(_ref71) {
       strokeWidth: "1.8",
       fill: temaBg
     }), /*#__PURE__*/React.createElement("path", {
-      d: "M11 7v4l3 3",
-      stroke: temaCor,
-      strokeWidth: "1.8",
-      strokeLinecap: "round"
+      d: "M9 7l6 4-6 4V7z",
+      fill: temaCor
     })),
-    label: "Registrar momento",
-    desc: "Estou aqui agora — quem mais está?",
-    action: onMomento,
+    label: "Passagem",
+    desc: "vídeo que some em horas",
+    action: onPassagem,
     needsUser: true
   }, {
     icon: /*#__PURE__*/React.createElement("svg", {
-      width: "22",
-      height: "22",
+      width: "20",
+      height: "20",
       viewBox: "0 0 22 22",
       fill: "none"
-    }, /*#__PURE__*/React.createElement("rect", {
-      x: "3",
-      y: "4",
-      width: "16",
-      height: "15",
-      rx: "2",
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M11 2l2.5 6.5L20 9l-5 4.5 1.5 6.5L11 16.5 5.5 20l1.5-6.5L2 9l6.5-.5L11 2z",
       stroke: temaCor,
-      strokeWidth: "1.8",
+      strokeWidth: "1.4",
+      strokeLinejoin: "round",
       fill: temaBg
-    }), /*#__PURE__*/React.createElement("path", {
-      d: "M7 2v4M15 2v4M3 9h16",
-      stroke: temaCor,
-      strokeWidth: "1.8",
-      strokeLinecap: "round"
     })),
-    label: "Agendar visita",
-    desc: "Planeje sua próxima visita a um lugar",
-    action: onAgendaVisita || function () {},
+    label: "Onde vou estar",
+    desc: "marque um lugar do seu futuro",
+    action: onOndeVouEstar || function () {},
     needsUser: true
   }];
   var userBg = getUserBg(user);
@@ -15957,7 +15969,7 @@ function MenuRapido(_ref71) {
     style: {
       position: "fixed",
       inset: 0,
-      background: "rgba(0,0,0,0.35)",
+      background: "rgba(0,0,0,0.4)",
       zIndex: 90,
       display: "flex",
       alignItems: "flex-end",
@@ -15974,20 +15986,15 @@ function MenuRapido(_ref71) {
       borderRadius: "22px 22px 0 0",
       width: "100%",
       maxWidth: 430,
-      padding: "0 20px 24px",
+      padding: "14px 20px 24px",
       maxHeight: "70vh",
       overflowY: "auto"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: "14px 0 0",
       display: "flex",
       justifyContent: "center",
-      marginBottom: 16,
-      position: "sticky",
-      top: 0,
-      background: userBg,
-      zIndex: 1
+      marginBottom: 16
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -15998,22 +16005,17 @@ function MenuRapido(_ref71) {
     }
   })), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: 700,
       color: T.text,
-      marginBottom: 4
+      fontFamily: "Georgia,serif",
+      marginBottom: 14
     }
-  }, "O que deseja fazer?"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      color: T.muted,
-      marginBottom: 20
-    }
-  }, "Escolha uma a\xE7\xE3o"), /*#__PURE__*/React.createElement("div", {
+  }, "O que voc\xEA quer guardar?"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       flexDirection: "column",
-      gap: 10
+      gap: 8
     }
   }, acoes.map(function (a, i) {
     return /*#__PURE__*/React.createElement("div", {
@@ -16028,11 +16030,11 @@ function MenuRapido(_ref71) {
       },
       style: {
         display: "flex",
-        gap: 14,
+        gap: 12,
         alignItems: "center",
         background: cardBg,
         borderRadius: 14,
-        padding: "14px 16px",
+        padding: "13px 14px",
         border: "1px solid ".concat(T.border),
         cursor: "pointer",
         transition: "all .15s",
@@ -16046,8 +16048,8 @@ function MenuRapido(_ref71) {
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        width: 44,
-        height: 44,
+        width: 42,
+        height: 42,
         borderRadius: 12,
         background: temaBg,
         display: "flex",
@@ -16061,28 +16063,21 @@ function MenuRapido(_ref71) {
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: 600,
-        color: T.text
+        color: T.text,
+        fontFamily: "Georgia,serif"
       }
     }, a.label), /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 12,
+        fontSize: 11,
         color: T.muted,
-        marginTop: 2
+        marginTop: 2,
+        fontStyle: "italic",
+        fontFamily: "Georgia,serif",
+        lineHeight: 1.4
       }
-    }, a.desc)), /*#__PURE__*/React.createElement("svg", {
-      width: "7",
-      height: "12",
-      viewBox: "0 0 7 12",
-      fill: "none"
-    }, /*#__PURE__*/React.createElement("path", {
-      d: "M1 1l5 5-5 5",
-      stroke: T.muted,
-      strokeWidth: "1.5",
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    })));
+    }, a.desc)));
   })), !user && /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 16,
@@ -21727,8 +21722,12 @@ function App() {
     setShowMomentoRaw = _useState386[1];
   var _useState387 = useState(false),
     _useState388 = _slicedToArray(_useState387, 2),
-    confirmandoSaida = _useState388[0],
-    setConfirmandoSaida = _useState388[1];
+    showPassagem = _useState388[0],
+    setShowPassagem = _useState388[1];
+  var _useState389 = useState(false),
+    _useState390 = _slicedToArray(_useState389, 2),
+    confirmandoSaida = _useState390[0],
+    setConfirmandoSaida = _useState390[1];
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
     showAlert = _useRegionAlerts.showAlert,
@@ -21746,9 +21745,13 @@ function App() {
       setMomentoVisualizando(m);
       setTela("momento_perfil");
     };
+    window.__onAdicionarLugar = function () {
+      setShowAdicionarLugar(true);
+    };
     return function () {
       delete window.__onVerPerfilOutro;
       delete window.__onVerMomento;
+      delete window.__onAdicionarLugar;
     };
   }, []);
 
@@ -22500,10 +22503,10 @@ function App() {
   }
 
   // Estado de loading inicial
-  var _useState389 = useState(false),
-    _useState390 = _slicedToArray(_useState389, 2),
-    appReady = _useState390[0],
-    setAppReady = _useState390[1];
+  var _useState391 = useState(false),
+    _useState392 = _slicedToArray(_useState391, 2),
+    appReady = _useState392[0],
+    setAppReady = _useState392[1];
 
   // Marca app como pronto após init
   useEffect(function () {
@@ -23392,18 +23395,17 @@ function App() {
     onClose: function onClose() {
       return setShowMenuRapido(false);
     },
-    onNovoLugar: function onNovoLugar() {
-      setShowMenuRapido(false);
-      setShowAdicionarLugar(true);
-    },
     onMomento: function onMomento() {
       return setShowMomento(true);
     },
-    onAgendaVisita: function onAgendaVisita() {
+    onPassagem: function onPassagem() {
+      return setShowPassagem(true);
+    },
+    onOndeVouEstar: function onOndeVouEstar() {
       return setShowAgendaVisita(true);
     }
   }), showAgendaVisita && user && /*#__PURE__*/React.createElement(Modal, {
-    title: "Agenda de Visita",
+    title: "Onde vou estar",
     onClose: function onClose() {
       return setShowAgendaVisita(false);
     }
@@ -23414,7 +23416,15 @@ function App() {
         return setShowAgendaVisita(false);
       }, 2000);
     }
-  })), showAdicionarLugar && user && /*#__PURE__*/React.createElement(ModalAdicionarLugar, {
+  })), showPassagem && user && /*#__PURE__*/React.createElement(ModalGravarVideo, {
+    user: user,
+    onClose: function onClose() {
+      return setShowPassagem(false);
+    },
+    onPosted: function onPosted() {
+      return setShowPassagem(false);
+    }
+  }), showAdicionarLugar && user && /*#__PURE__*/React.createElement(ModalAdicionarLugar, {
     user: user,
     onClose: function onClose() {
       return setShowAdicionarLugar(false);
