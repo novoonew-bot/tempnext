@@ -1,0 +1,72 @@
+{
+  "name": "Tempnext",
+  "short_name": "Tempnext",
+  "description": "Conta história, marca o presente e reserva o futuro",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF7F2",
+  "theme_color": "#FAF7F2",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/tempnext_icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/tempnext_icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/tempnext_icon_maskable_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Novo momento",
+      "short_name": "Momento",
+      "description": "Registrar um novo momento",
+      "url": "/?acao=novo_momento",
+      "icons": [
+        {
+          "src": "/tempnext_icon_192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Olhar",
+      "short_name": "Olhar",
+      "description": "Encontrar pessoas, lugares e épocas",
+      "url": "/?tela=buscar",
+      "icons": [
+        {
+          "src": "/tempnext_icon_192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Painel",
+      "short_name": "Painel",
+      "description": "Sua trilha pelo Tempnext",
+      "url": "/?tela=painel",
+      "icons": [
+        {
+          "src": "/tempnext_icon_192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "categories": ["social", "lifestyle", "photo"]
+}
