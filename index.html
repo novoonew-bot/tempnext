@@ -340,31 +340,65 @@ function formatarLugarComTipo(placeType,placeName){var nome=(placeName||"").trim
 // v207: Cálculo de cruzamento entre dois usuários
 // Retorna informação sobre se eles "cruzaram" (mesma cidade na mesma época).
 // Tipos de cruzamento:
-//   - forte: 3+ anos juntos na mesma cidade
-//   - medio: 1-2 anos juntos
-//   - fraco: passaram perto (≤1 ano de distância)
-//   - nenhum: sem cruzamento
+//   - forte: score ≥ 80
+//   - medio: score 45-79
+//   - fraco: score 18-44
+//   - nenhum: score < 18
+// (substituído pelo bloco v209 abaixo)
 // ──────────────────────────────────────────────────────────
-// Normaliza string de cidade pra comparação tolerante (sem acento, sem case, sem espaços extras)
-function tnNormCidade(c){if(!c)return"";return String(c).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim();}// Extrai todas as estadias de um user (principal + array lugares)
-// Retorna [{cidade, y1, y2}]
+// ──────────────────────────────────────────────────────────
+// v209: Cruzamento com SCORE NUMÉRICO (0-100)
+// Modelo: score = curvaTemporal(anos) × multiplicadorGeografico
+// Razão: tempo sem lugar não é cruzamento, lugar sem tempo também não.
+// Multiplicar reflete essa interdependência (se um zera, score zera).
+// ──────────────────────────────────────────────────────────
+// Normalização genérica: lower + sem acento + sem pontuação + 1 espaço
+function tnNorm(s){if(!s)return"";return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ").trim();}// Mantém alias por compatibilidade (qualquer outro uso no código)
+function tnNormCidade(c){return tnNorm(c);}// Normaliza CEP: só dígitos
+function tnNormCep(c){if(!c)return"";var d=String(c).replace(/\D/g,"");return d.length===8?d:"";}// Extrai todas as estadias de um user (principal + array lugares)
+// v209: agora carrega placeName, placeType, uf, cep
+// Retorna [{cidade, placeName, placeType, uf, cep, y1, y2}]
 function tnEstadiasUser(u){if(!u)return[];var out=[];// Estadia principal (campos diretos do profile)
-if(u.city||u.place_name){var y1=parseInt(u.year_start)||0;var y2=parseInt(u.year_end)||0;out.push({cidade:u.city||"",y1:y1,y2:y2});}// Estadias adicionais
-if(Array.isArray(u.lugares)){u.lugares.forEach(function(l){if(l&&l.city){out.push({cidade:l.city,y1:parseInt(l.y1||l.year_start)||0,y2:parseInt(l.y2||l.year_end)||0});}});}// Filtra estadias inválidas (sem cidade ou sem anos)
-return out.filter(function(e){return e.cidade&&(e.y1>0||e.y2>0);});}// Calcula cruzamento entre 2 estadias (mesma cidade, intersecção de anos)
-function tnCruzamentoEstadias(eA,eB){// Cidades têm que ser próximas
-var cA=tnNormCidade(eA.cidade);var cB=tnNormCidade(eB.cidade);if(!cA||!cB)return null;if(cA!==cB)return null;// futura: tolerância maior aqui
-// Calcula intersecção temporal
-// Normaliza: se y2 é 0 mas y1 existe, considera estadia pontual (y2=y1)
-var ay1=eA.y1||eA.y2;var ay2=eA.y2||eA.y1;var by1=eB.y1||eB.y2;var by2=eB.y2||eB.y1;if(!ay1||!by1)return null;// Intersecção [max(ini), min(fim)]
-var inicio=Math.max(ay1,by1);var fim=Math.min(ay2,by2);var anosJuntos=fim-inicio+1;// Distância entre faixas (positiva se não há sobreposição)
-var distancia=0;if(anosJuntos<1){if(ay2<by1)distancia=by1-ay2;else if(by2<ay1)distancia=ay1-by2;}return{cidade:eA.cidade,// mantém capitalização original do A
-anosJuntos:Math.max(0,anosJuntos),distancia:distancia,periodo:anosJuntos>0?{inicio:inicio,fim:fim}:null};}// Função principal: retorna o cruzamento mais forte entre user A e user B
-// Retorna {tipo, cidade, anos, periodo, texto} ou {tipo: "nenhum"}
-function calcularCruzamento(userA,userB){if(!userA||!userB)return{tipo:"nenhum"};if(userA.id&&userB.id&&userA.id===userB.id)return{tipo:"nenhum"};var estadiasA=tnEstadiasUser(userA);var estadiasB=tnEstadiasUser(userB);if(estadiasA.length===0||estadiasB.length===0)return{tipo:"nenhum"};// Calcula todos os cruzamentos possíveis
-var cruzamentos=[];estadiasA.forEach(function(eA){estadiasB.forEach(function(eB){var c=tnCruzamentoEstadias(eA,eB);if(c)cruzamentos.push(c);});});if(cruzamentos.length===0)return{tipo:"nenhum"};// Pega o melhor: prioriza maior número de anos juntos, depois menor distância
-cruzamentos.sort(function(a,b){if(b.anosJuntos!==a.anosJuntos)return b.anosJuntos-a.anosJuntos;return a.distancia-b.distancia;});var melhor=cruzamentos[0];// Classifica
-var tipo,texto;if(melhor.anosJuntos>=3){tipo="forte";texto="".concat(melhor.anosJuntos," anos juntos em ").concat(melhor.cidade);}else if(melhor.anosJuntos>=1){tipo="medio";texto=melhor.anosJuntos===1?"1 ano cruzados em ".concat(melhor.cidade):"".concat(melhor.anosJuntos," anos cruzados em ").concat(melhor.cidade);}else if(melhor.distancia<=1){tipo="fraco";texto="passou perto em ".concat(melhor.cidade);}else{return{tipo:"nenhum"};}return{tipo:tipo,cidade:melhor.cidade,anos:melhor.anosJuntos,periodo:melhor.periodo,texto:texto};}var eraInfo=function eraInfo(v){return ERAS.find(function(e){return e.value===v;})||ERAS[0];};var initials=function initials(n){return(n||"").trim().split(" ").filter(Boolean).slice(0,2).map(function(w){return w[0]?w[0].toUpperCase():"";}).join("")||"?";};// v182: handler pra quando imagem de avatar quebra (URL inválida/expirada)
+if(u.city||u.place_name){var y1=parseInt(u.year_start)||0;var y2=parseInt(u.year_end)||0;out.push({cidade:u.city||"",placeName:u.place_name||"",placeType:u.place_type||"",uf:u.state||"",cep:"",y1:y1,y2:y2});}// Estadias adicionais (jsonb lugares)
+if(Array.isArray(u.lugares)){u.lugares.forEach(function(l){if(l&&(l.city||l.placeName)){out.push({cidade:l.city||"",placeName:l.placeName||l.place_name||"",placeType:l.placeType||l.place_type||"",uf:l.uf||l.state||"",cep:l.cep||"",y1:parseInt(l.y1||l.year_start)||0,y2:parseInt(l.y2||l.year_end)||0});}});}// Filtra estadias inválidas (precisa ter alguma referência geográfica E alguma temporal)
+return out.filter(function(e){return(e.cidade||e.placeName)&&(e.y1>0||e.y2>0);});}// Multiplicador geográfico: 0.0 a 1.0
+// Ordem: testa primeiro o sinal mais forte. Primeiro que bater, ganha.
+function tnMultGeo(eA,eB){// 1. Mesmo CEP (sinal quase determinístico) → 1.0
+var cepA=tnNormCep(eA.cep);var cepB=tnNormCep(eB.cep);if(cepA&&cepB&&cepA===cepB)return{mult:1.0,via:"cep"};var cityA=tnNorm(eA.cidade);var cityB=tnNorm(eB.cidade);var placeA=tnNorm(eA.placeName);var placeB=tnNorm(eB.placeName);var ufA=tnNorm(eA.uf);var ufB=tnNorm(eB.uf);// Cuidado: placeName que é igual à cidade (ex: "Cuiabá" / "São Paulo") não conta como place específico
+var placeEhSoCidade_A=placeA&&placeA===cityA;var placeEhSoCidade_B=placeB&&placeB===cityB;var placeRealA=placeA&&!placeEhSoCidade_A?placeA:"";var placeRealB=placeB&&!placeEhSoCidade_B?placeB:"";// 2. Mesmo placeName real + mesma cidade → 1.0
+if(placeRealA&&placeRealB&&placeRealA===placeRealB&&cityA&&cityA===cityB){return{mult:1.0,via:"place_full"};}// 3. Mesmo placeName real, cidade diferente ou não declarada → 0.85
+if(placeRealA&&placeRealB&&placeRealA===placeRealB){return{mult:0.85,via:"place"};}// 4. Mesma cidade + ambos placeType "bairro" → 0.7 (bairros do mesmo nome ou não, é sinal de granularidade fina)
+if(cityA&&cityA===cityB&&eA.placeType==="bairro"&&eB.placeType==="bairro"){return{mult:0.7,via:"bairro"};}// 5. Mesma cidade + mesmo UF → 0.5
+if(cityA&&cityA===cityB&&ufA&&ufB&&ufA===ufB){return{mult:0.5,via:"city_uf"};}// 6. Mesma cidade (UF diferente ou nulo em algum lado) → 0.35
+if(cityA&&cityA===cityB){return{mult:0.35,via:"city"};}// 7. Mesmo UF, cidades diferentes → 0.10 (vínculo regional fraco)
+if(ufA&&ufB&&ufA===ufB){return{mult:0.10,via:"uf"};}// 8. Nada
+return{mult:0,via:"none"};}// Curva temporal não-linear: premia continuidade, decresce o ganho marginal
+// 1 ano  → 25
+// 2 anos → 45
+// 3 anos → 60
+// 4 anos → 72
+// 5 anos → 82
+// 6 anos → 88
+// 7 anos → 94
+// 8+     → 100
+function tnCurvaTemporal(anos){if(anos<=0)return 0;if(anos>=8)return 100;var tabela=[0,25,45,60,72,82,88,94];return tabela[anos];}// Calcula cruzamento entre 2 estadias
+// Retorna {score, anosJuntos, distancia, periodo, cidade, placeName, via} ou null
+function tnCruzamentoEstadias(eA,eB){// Calcula intersecção temporal primeiro (sem isso não há cruzamento)
+// Se y2 é 0 mas y1 existe, considera estadia pontual (y2=y1)
+var ay1=eA.y1||eA.y2;var ay2=eA.y2||eA.y1;var by1=eB.y1||eB.y2;var by2=eB.y2||eB.y1;if(!ay1||!by1)return null;var inicio=Math.max(ay1,by1);var fim=Math.min(ay2,by2);var anosJuntos=Math.max(0,fim-inicio+1);// Distância (pra cruzamentos "passou perto" geo-fortes mas temporalmente vizinhos)
+var distancia=0;if(anosJuntos<1){if(ay2<by1)distancia=by1-ay2;else if(by2<ay1)distancia=ay1-by2;}// Geografia
+var geo=tnMultGeo(eA,eB);if(geo.mult===0)return null;// Score base: temporal × geográfico
+var baseTemporal=tnCurvaTemporal(anosJuntos);var score=baseTemporal*geo.mult;// "Passou perto" geo-forte: anos vizinhos (1-2 anos de distância) com geo ≥ 0.7
+// Preserva o sinal "fraco" do v207 sem deixar dominar
+if(anosJuntos===0&&distancia>=1&&distancia<=2&&geo.mult>=0.7){score=15*geo.mult;// máximo 15 → fica em "fraco"
+}if(score<1)return null;return{score:Math.round(score),anosJuntos:anosJuntos,distancia:distancia,periodo:anosJuntos>0?{inicio:inicio,fim:fim}:null,cidade:eA.cidade||eB.cidade,placeName:eA.placeName&&eA.placeName!==eA.cidade?eA.placeName:eB.placeName&&eB.placeName!==eB.cidade?eB.placeName:"",via:geo.via};}// Classifica score em tipo (mantém compat com v207: forte/medio/fraco/nenhum)
+function tnClassificarScore(score){if(score>=80)return"forte";if(score>=45)return"medio";if(score>=18)return"fraco";return"nenhum";}// Monta texto contextual baseado no melhor match
+function tnTextoCruzamento(m){var lugar=m.placeName?"".concat(m.placeName,", ").concat(m.cidade):m.cidade;if(m.anosJuntos>=3){return"".concat(m.anosJuntos," anos juntos em ").concat(lugar);}if(m.anosJuntos>=1){return m.anosJuntos===1?"1 ano cruzados em ".concat(lugar):"".concat(m.anosJuntos," anos cruzados em ").concat(lugar);}// Sem sobreposição mas geo forte: "passou perto"
+return"passou perto em ".concat(lugar);}// Função principal v209: retorna o cruzamento mais forte entre user A e user B
+// Retorna {tipo, score, cidade, placeName, anos, periodo, texto, via} ou {tipo: "nenhum", score: 0}
+function calcularCruzamento(userA,userB){if(!userA||!userB)return{tipo:"nenhum",score:0};if(userA.id&&userB.id&&userA.id===userB.id)return{tipo:"nenhum",score:0};var estadiasA=tnEstadiasUser(userA);var estadiasB=tnEstadiasUser(userB);if(estadiasA.length===0||estadiasB.length===0)return{tipo:"nenhum",score:0};// Itera sobre todos os pares (estadia de A × estadia de B)
+// Pega o de maior score — cruzamento é relacional ao par lugar+tempo, não ao perfil inteiro
+var melhor=null;estadiasA.forEach(function(eA){estadiasB.forEach(function(eB){var c=tnCruzamentoEstadias(eA,eB);if(c&&(!melhor||c.score>melhor.score))melhor=c;});});if(!melhor)return{tipo:"nenhum",score:0};var tipo=tnClassificarScore(melhor.score);if(tipo==="nenhum")return{tipo:"nenhum",score:melhor.score};return{tipo:tipo,score:melhor.score,cidade:melhor.cidade,placeName:melhor.placeName,anos:melhor.anosJuntos,periodo:melhor.periodo,texto:tnTextoCruzamento(melhor),via:melhor.via};}var eraInfo=function eraInfo(v){return ERAS.find(function(e){return e.value===v;})||ERAS[0];};var initials=function initials(n){return(n||"").trim().split(" ").filter(Boolean).slice(0,2).map(function(w){return w[0]?w[0].toUpperCase():"";}).join("")||"?";};// v182: handler pra quando imagem de avatar quebra (URL inválida/expirada)
 // Esconde a img e mostra as iniciais do sibling .avatar-fallback
 var onAvatarError=function onAvatarError(e){try{var img=e.currentTarget;img.style.display="none";// Procura sibling com classe "avatar-fallback" e mostra
 var parent=img.parentNode;if(parent){var fallback=parent.querySelector(".avatar-fallback");if(fallback)fallback.style.display="flex";else{// Se não tem fallback, coloca fundo cinza claro pra não mostrar nuvem
@@ -763,7 +797,7 @@ function _contarPerfisPorLugar(){_contarPerfisPorLugar=_asyncToGenerator(/*#__PU
 function Buscar(_ref80){var user=_ref80.user,onView=_ref80.onView,onAdd=_ref80.onAdd,onLugar=_ref80.onLugar,contacts=_ref80.contacts;var _useState179=useState(""),_useState180=_slicedToArray(_useState179,2),termo=_useState180[0],setTermo=_useState180[1];var _useState181=useState(false),_useState182=_slicedToArray(_useState181,2),mostrarFiltros=_useState182[0],setMostrarFiltros=_useState182[1];var _useState183=useState("tudo"),_useState184=_slicedToArray(_useState183,2),tipoFiltro=_useState184[0],setTipoFiltro=_useState184[1];var ANO_MIN_ABS=1900;var ANO_MAX_ABS=new Date().getFullYear();var ANO_INPUT_MIN=1000;var _useState185=useState(ANO_MIN_ABS),_useState186=_slicedToArray(_useState185,2),anoMin=_useState186[0],setAnoMin=_useState186[1];var _useState187=useState(ANO_MAX_ABS),_useState188=_slicedToArray(_useState187,2),anoMax=_useState188[0],setAnoMax=_useState188[1];var _useState189=useState(""),_useState190=_slicedToArray(_useState189,2),anoMinInput=_useState190[0],setAnoMinInput=_useState190[1];var _useState191=useState(""),_useState192=_slicedToArray(_useState191,2),anoMaxInput=_useState192[0],setAnoMaxInput=_useState192[1];var _useState193=useState(false),_useState194=_slicedToArray(_useState193,2),filtroAnosAtivo=_useState194[0],setFiltroAnosAtivo=_useState194[1];var _useState195=useState([]),_useState196=_slicedToArray(_useState195,2),resPessoas=_useState196[0],setResPessoas=_useState196[1];var _useState197=useState([]),_useState198=_slicedToArray(_useState197,2),resLugares=_useState198[0],setResLugares=_useState198[1];var _useState199=useState(false),_useState200=_slicedToArray(_useState199,2),loading=_useState200[0],setLoading=_useState200[1];var _useState201=useState(false),_useState202=_slicedToArray(_useState201,2),searched=_useState202[0],setSearched=_useState202[1];var _useState203=useState([]),_useState204=_slicedToArray(_useState203,2),lugaresAlta=_useState204[0],setLugaresAlta=_useState204[1];var _useState205=useState(getBuscasRecentes()),_useState206=_slicedToArray(_useState205,2),recentes=_useState206[0],setRecentes=_useState206[1];var timer=useRef();var contactIds=new Set(contacts.map(function(c){return String(c.id);}));// Carrega lugares em alta ao montar
 useEffect(function(){carregarLugaresEmAlta(6).then(setLugaresAlta);},[]);// Auto-busca enquanto digita (debounced)
 useEffect(function(){clearTimeout(timer.current);if(!termo.trim()){setResPessoas([]);setResLugares([]);setSearched(false);return;}timer.current=setTimeout(function(){return executarBusca();},500);return function(){return clearTimeout(timer.current);};// eslint-disable-next-line react-hooks/exhaustive-deps
-},[termo,tipoFiltro,anoMin,anoMax,filtroAnosAtivo]);function executarBusca(){return _executarBusca.apply(this,arguments);}function _executarBusca(){_executarBusca=_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee36(){var termoTrim,_user$intencao4,queries,_yield$Promise$all,_yield$Promise$all2,pessoasRes,lugaresRes,pessoas,lugares,peso,counts,temContagem,_t40;return _regenerator().w(function(_context36){while(1)switch(_context36.p=_context36.n){case 0:setLoading(true);termoTrim=termo.trim();_context36.p=1;queries=[];// v206: Busca pessoas via RPC fuzzy (tolerante a acento/typo)
+},[termo,tipoFiltro,anoMin,anoMax,filtroAnosAtivo]);function executarBusca(){return _executarBusca.apply(this,arguments);}function _executarBusca(){_executarBusca=_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee36(){var termoTrim,_user$intencao4,queries,_yield$Promise$all,_yield$Promise$all2,pessoasRes,lugaresRes,pessoas,lugares,counts,temContagem,_t40;return _regenerator().w(function(_context36){while(1)switch(_context36.p=_context36.n){case 0:setLoading(true);termoTrim=termo.trim();_context36.p=1;queries=[];// v206: Busca pessoas via RPC fuzzy (tolerante a acento/typo)
 // Fallback pra ilike caso a RPC ainda não exista no banco
 if(tipoFiltro==="tudo"||tipoFiltro==="pessoas"){queries.push(dbRead.rpc("search_profiles_fuzzy",{termo:termoTrim,limite:60,score_min:0.2}).then(function(r){if(r.error){console.warn("[BUSCAR] fuzzy profiles falhou, fallback ilike:",r.error.message);// Fallback se RPC não existir
 return dbRead.from("profiles").select("*").or("name.ilike.%".concat(termoTrim,"%,nick.ilike.%").concat(termoTrim,"%,first_name.ilike.%").concat(termoTrim,"%,last_name.ilike.%").concat(termoTrim,"%,place_name.ilike.%").concat(termoTrim,"%,city.ilike.%").concat(termoTrim,"%,state.ilike.%").concat(termoTrim,"%")).limit(60);}return r;}));}else{queries.push(Promise.resolve({data:[]}));}// v206: Busca lugares via RPC fuzzy (mesmo padrão)
@@ -773,10 +807,9 @@ if(ys==null&&ye==null)return true;// Intersecção de faixas: [ys..ye] ∩ [anoM
 var inicio=ys!=null?ys:ye!=null?ye:anoMin;var fim=ye!=null?ye:ys!=null?ys:anoMax;return fim>=anoMin&&inicio<=anoMax;});// Aplica limit após filtro
 pessoas=pessoas.slice(0,30);}else{pessoas=pessoas.slice(0,30);}// v206: Ordenação já vem da RPC (por score). Só aplica calcularRelevancia se user tem intenção e precisa reordenar
 if((user===null||user===void 0||(_user$intencao4=user.intencao)===null||_user$intencao4===void 0?void 0:_user$intencao4.length)>0){pessoas=pessoas.sort(function(a,b){var relA=calcularRelevancia(a,user);var relB=calcularRelevancia(b,user);// Combina score da busca com relevância por intenção
-var combA=(a.score||0)*0.6+relA*0.4;var combB=(b.score||0)*0.6+relB*0.4;return combB-combA;});}// v207: Ordenação adicional por força do cruzamento — cruzados aparecem primeiro
-// (forte > médio > fraco > nenhum). Dentro do mesmo nível, mantém ordem anterior.
-if(user){peso={forte:3,medio:2,fraco:1,nenhum:0};pessoas=pessoas.map(function(p,idx){return{p:p,cruz:calcularCruzamento(user,p),idx:idx};}).sort(function(a,b){var pa=peso[a.cruz.tipo]||0;var pb=peso[b.cruz.tipo]||0;if(pa!==pb)return pb-pa;return a.idx-b.idx;// mantém ordem original como tiebreaker
-}).map(function(x){return x.p;});}// Hidrata lugares com contagem de perfis
+var combA=(a.score||0)*0.6+relA*0.4;var combB=(b.score||0)*0.6+relB*0.4;return combB-combA;});}// v209: Ordenação por SCORE numérico (0-100) — ordenação mais fina que peso 3/2/1
+// Cruzados aparecem primeiro, ordenados por força real. Tiebreaker = ordem original.
+if(user){pessoas=pessoas.map(function(p,idx){return{p:p,cruz:calcularCruzamento(user,p),idx:idx};}).sort(function(a,b){var sa=a.cruz.score||0;var sb=b.cruz.score||0;if(sa!==sb)return sb-sa;return a.idx-b.idx;}).map(function(x){return x.p;});}// Hidrata lugares com contagem de perfis
 if(!(lugares.length>0)){_context36.n=4;break;}_context36.n=3;return contarPerfisPorLugar(lugares.map(function(l){return l.id;}));case 3:counts=_context36.v;lugares=lugares.map(function(l){return _objectSpread(_objectSpread({},l),{},{_count:counts[l.id]||0});});// v206: Mantém ordem por score (vinda da RPC) se não houver contagem relevante,
 // senão ordena por popularidade do lugar
 temContagem=lugares.some(function(l){return l._count>0;});if(temContagem){lugares=lugares.sort(function(a,b){return b._count-a._count;});}case 4:setResPessoas(pessoas);setResLugares(lugares);setSearched(true);addBuscaRecente(termoTrim);setRecentes(getBuscasRecentes());_context36.n=6;break;case 5:_context36.p=5;_t40=_context36.v;console.log("Busca erro:",_t40);case 6:setLoading(false);case 7:return _context36.a(2);}},_callee36,null,[[1,5]]);}));return _executarBusca.apply(this,arguments);}function limpar(){setTermo("");setResPessoas([]);setResLugares([]);setSearched(false);}function aplicarRecente(t){setTermo(t);}function limparRecentes(){clearBuscasRecentes();setRecentes([]);}var temFiltrosAtivos=tipoFiltro!=="tudo"||filtroAnosAtivo;var totalRes=resPessoas.length+resLugares.length;// Handlers sincronizados entre slider e inputs
