@@ -1,0 +1,6 @@
+segredos/ 
+Tempsegredos/ 
+*.env 
+*key*.txt 
+*secret*.txt 
+*.pem 
