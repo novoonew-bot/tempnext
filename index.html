@@ -234,7 +234,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v251 — Card Mapa-Vida (RAW vs GEO + UF fallback) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v252 — Botão Registros (preparação livro) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -532,7 +532,7 @@ React.createElement("div",{className:"cmv-stat-grid"},[{id:"lugares",num:(_dados
 renderSub(),// quote em destaque
 quote?React.createElement(React.Fragment,null,React.createElement("div",{className:"cmv-quote"},"\"",quote.texto,"\""),React.createElement("div",{className:"cmv-quote-meta"},React.createElement("span",{className:"cmv-quote-ass"},"— ",(pessoa===null||pessoa===void 0?void 0:pessoa.name)||"—",quote.cidade?", em ".concat(quote.cidade):""),quote.ano?" \xB7 ".concat(quote.ano):"")):null,// foot
 footTxt?React.createElement("div",{className:"cmv-foot"},footTxt):null),// BOTÃO EXPLORAR (placeholder — etapa 4 implementa o livro)
-onExplorar?React.createElement("button",{className:"cmv-explorar-btn",onClick:function onClick(){return onExplorar();}},React.createElement("span",null,"explorar a vida ",ehDono?"":"de ",ehDono?"":(pessoa===null||pessoa===void 0||(_pessoa$name=pessoa.name)===null||_pessoa$name===void 0?void 0:_pessoa$name.split(" ")[0])||""),React.createElement("span",{className:"cmv-arrow"},"›")):null,// v245: BOTÃO SEGUIR/EDITAR no fim (depois do explorar)
+onExplorar?React.createElement("button",{className:"cmv-explorar-btn",onClick:function onClick(){return onExplorar();}},React.createElement("span",null,ehDono?"Meus Registros":"Registros de ".concat((pessoa===null||pessoa===void 0||(_pessoa$name=pessoa.name)===null||_pessoa$name===void 0?void 0:_pessoa$name.split(" ")[0])||"")),React.createElement("span",{className:"cmv-arrow"},"›")):null,// v245: BOTÃO SEGUIR/EDITAR no fim (depois do explorar)
 !ehDono?React.createElement("button",{className:"cmv-acao-btn"+(isContact?" cmv-acao-seguindo":""),onClick:function onClick(){if(!isContact&&onSeguir)onSeguir();}},isContact?"✓ Seguindo":"+ Seguir"):onEditarPerfil?React.createElement("button",{className:"cmv-acao-btn cmv-acao-editar",onClick:onEditarPerfil},"editar perfil"):null);}// Hook React: lê paleta afetiva do user, sincroniza CSS vars.
 function usePaletaAfetiva(user){var id=user!==null&&user!==void 0&&user.paleta_cor&&PALETAS_AFETIVAS[user.paleta_cor]?user.paleta_cor:PALETA_AFETIVA_DEFAULT;React.useEffect(function(){aplicarPaletaAfetivaCSS(id);},[id]);return _objectSpread({id:id},PALETAS_AFETIVAS[id]);}// Componente picker visual: 6 swatches circulares.
 // Click salva no banco via onUpdateUser e aplica imediatamente.
