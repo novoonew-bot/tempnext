@@ -435,17 +435,18 @@ input:focus,select:focus,textarea:focus{
 .mem-feed-scroll{flex:1;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 .mem-feed-scroll::-webkit-scrollbar{width:0;display:none}
 
-/* Cada memória ocupa 100% da altura disponível */
-.mem-feed-page{scroll-snap-align:start;scroll-snap-stop:always;min-height:100%;display:flex;flex-direction:column;background:#FAF7F2}
+/* v263: cada memória ocupa 88vh — sobra 12vh visível da próxima embaixo (espiada) */
+.mem-feed-page{scroll-snap-align:start;scroll-snap-stop:always;min-height:88vh;display:flex;flex-direction:column;background:#FAF7F2;padding-bottom:6px}
 
-.mem-feed-foto{width:100%;height:42vh;background-size:cover;background-position:center;flex-shrink:0}
+/* v263: foto maior pra mais imersão (42vh → 56vh) */
+.mem-feed-foto{width:100%;height:56vh;background-size:cover;background-position:center;flex-shrink:0}
 .mem-feed-sem-foto{display:flex;align-items:center;justify-content:center}
 
 /* v261/v262: row logo abaixo da foto — nome+lugar+ano esquerda · coração direita */
 .mem-feed-foto-row{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:11px 18px 4px;gap:14px}
 .mem-feed-foto-nome{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:14px;color:#2a201a;letter-spacing:0.2px;line-height:1.3;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-.mem-feed-body{flex:1;padding:18px 20px 16px;display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.mem-feed-body{flex:1;padding:14px 20px 12px;display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .mem-feed-body::-webkit-scrollbar{width:0;display:none}
 
 /* v261: quote em verso-serif (estilo cápsulas) */
@@ -465,7 +466,7 @@ input:focus,select:focus,textarea:focus{
 .mem-feed-cruz-tx{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:12.5px;color:#4a3828;line-height:1.5}
 
 /* Indicador de scroll: "n de N + setinha ↓" */
-.mem-feed-indicador{margin-top:auto;padding:18px 0 14px;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:11px;color:rgba(42,32,26,0.4)}
+.mem-feed-indicador{margin-top:auto;padding:12px 0 4px;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:10.5px;color:rgba(42,32,26,0.38)}
 .mem-feed-num{margin-bottom:5px}
 .mem-feed-arrow{font-size:16px;color:var(--user-color-deep);opacity:0.55;animation:mem-feed-arrow-bounce 2s infinite}
 .mem-feed-fim{font-size:11px;color:rgba(42,32,26,0.35);letter-spacing:0.4px;text-transform:uppercase}
@@ -496,7 +497,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v262 — Coração paleta + 5 batidas + header limpo ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v263 — Foto maior + espiada da próxima ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
