@@ -488,7 +488,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v265 — Feed de Lugares (camada 4a) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v266 — Fix bug navegação entre perfis ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -1211,11 +1211,16 @@ var touchStart=useRef(null);function onTouchStart(e){touchStart.current=e.touche
 function PerfilOutroFiltrado(_ref54){var pessoa=_ref54.pessoa,userLogado=_ref54.userLogado,onBack=_ref54.onBack,onFollow=_ref54.onFollow,onMsg=_ref54.onMsg,isContact=_ref54.isContact,onVasculhar=_ref54.onVasculhar,onLugar=_ref54.onLugar,onView=_ref54.onView;var _useState27=useState([]),_useState28=_slicedToArray(_useState27,2),triangulacao=_useState28[0],setTriangulacao=_useState28[1];var _useState29=useState([]),_useState30=_slicedToArray(_useState29,2),momentosDela=_useState30[0],setMomentosDela=_useState30[1];var _useState31=useState([]),_useState32=_slicedToArray(_useState31,2),lugaresDela=_useState32[0],setLugaresDela=_useState32[1];var _useState33=useState(null),_useState34=_slicedToArray(_useState33,2),destaqueMom=_useState34[0],setDestaqueMom=_useState34[1];var _useState35=useState(true),_useState36=_slicedToArray(_useState35,2),loading=_useState36[0],setLoading=_useState36[1];// v254: estado do livro (camada 2)
 var _useState37=useState(false),_useState38=_slicedToArray(_useState37,2),mostrandoLivro=_useState38[0],setMostrandoLivro=_useState38[1];// v255: capítulo aberto (camada 3) — null/lugares/memorias/capsulas/pessoas
 var _useState39=useState(null),_useState40=_slicedToArray(_useState39,2),capituloAberto=_useState40[0],setCapituloAberto=_useState40[1];// v259: item aberto (camada 4) — {tipo:'memoria'|'lugar'|'capsula', dados:{...}}
-var _useState41=useState(null),_useState42=_slicedToArray(_useState41,2),itemAberto=_useState42[0],setItemAberto=_useState42[1];var _useState43=useState({passado:[],presente:[],futuro:[]}),_useState44=_slicedToArray(_useState43,2),capsulasReais=_useState44[0],setCapsulasReais=_useState44[1];var _useState45=useState(0),_useState46=_slicedToArray(_useState45,2),pessoasReaisCount=_useState46[0],setPessoasReaisCount=_useState46[1];// v254/v255: ao montar, lê URL → reabre camadas conforme params
-useEffect(function(){var params=new URLSearchParams(window.location.search);if(params.get("livro")==="1"){setMostrandoLivro(true);// v255: também pode estar num capítulo expandido
-var cap=params.get("cap");if(cap==="lugares"||cap==="memorias"||cap==="capsulas"||cap==="pessoas"){setCapituloAberto(cap);// v259/v265: se tem &id= reabre item da camada 4
-var id=params.get("id");if(id&&cap==="memorias"){setItemAberto({tipo:"memoria",id:id,_aguardandoCarga:true});}else if(id&&cap==="lugares"){// v265: deep link de lugar — encontra direto em pessoa.lugares (não precisa esperar carga)
-setItemAberto({tipo:"lugar",id:id,_aguardandoCarga:true});}}}},[]);// v254/v255/v259: popstate handler local — voltar Android desce na hierarquia
+var _useState41=useState(null),_useState42=_slicedToArray(_useState41,2),itemAberto=_useState42[0],setItemAberto=_useState42[1];var _useState43=useState({passado:[],presente:[],futuro:[]}),_useState44=_slicedToArray(_useState43,2),capsulasReais=_useState44[0],setCapsulasReais=_useState44[1];var _useState45=useState(0),_useState46=_slicedToArray(_useState45,2),pessoasReaisCount=_useState46[0],setPessoasReaisCount=_useState46[1];// v254/v255/v266: lê URL e reseta states quando pessoa muda (corrige bug de navegação)
+// - Mount inicial: lê URL e abre o que pediu (deep link)
+// - Mudou pessoa.id (ex: clicou em pessoa do Cap V): reseta states pra perfil limpo
+// - Se URL ainda aponta pra livro/cap/item, respeita o deep link
+useEffect(function(){var params=new URLSearchParams(window.location.search);// Sempre reseta itemAberto ao trocar de pessoa (não tem como o id ser válido entre perfis)
+setItemAberto(null);// Lê URL e abre conforme params (cobre tanto mount quanto troca de perfil)
+if(params.get("livro")==="1"){setMostrandoLivro(true);var cap=params.get("cap");if(cap==="lugares"||cap==="memorias"||cap==="capsulas"||cap==="pessoas"){setCapituloAberto(cap);// v259/v265: se tem &id= reabre item da camada 4
+var id=params.get("id");if(id&&cap==="memorias"){setItemAberto({tipo:"memoria",id:id,_aguardandoCarga:true});}else if(id&&cap==="lugares"){setItemAberto({tipo:"lugar",id:id,_aguardandoCarga:true});}}else{// URL diz livro=1 mas sem cap → fecha capítulo se tinha
+setCapituloAberto(null);}}else{// URL não tem livro=1 → reseta tudo (perfil limpo)
+setMostrandoLivro(false);setCapituloAberto(null);}},[pessoa===null||pessoa===void 0?void 0:pessoa.id]);// v254/v255/v259: popstate handler local — voltar Android desce na hierarquia
 useEffect(function(){if(!mostrandoLivro&&!capituloAberto&&!itemAberto)return;function onPop(){// Hierarquia: itemAberto → capituloAberto → livro → perfil
 if(itemAberto){setItemAberto(null);}else if(capituloAberto){setCapituloAberto(null);}else if(mostrandoLivro){setMostrandoLivro(false);}}window.addEventListener("popstate",onPop);return function(){return window.removeEventListener("popstate",onPop);};},[mostrandoLivro,capituloAberto,itemAberto]);// Função que abre o livro (botão Registros)
 function abrirLivro(){setMostrandoLivro(true);try{var params=new URLSearchParams(window.location.search);params.set("livro","1");window.history.pushState({tn:"livro",id:pessoa===null||pessoa===void 0?void 0:pessoa.id},"","?".concat(params.toString()));}catch(_unused8){}}// Função que fecha o livro (botão Voltar do header do livro)
