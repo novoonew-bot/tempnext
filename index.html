@@ -1454,8 +1454,11 @@ eseuTambem?React.createElement("div",{className:"mem-feed-cruz"},React.createEle
 // - FUTURA: capa colorida embaçada + frase "abre em X tempo" + coração com promessa
 // ═════════════════════════════════════════════════════════════════
 // Helper: classifica cápsula por estado temporal
-function classificarCapsula(capsula){if(!(capsula!==null&&capsula!==void 0&&capsula.capsula_revela_em))return"passada";// sem data → tratada como passada
-var hoje=new Date();var abertura=new Date(capsula.capsula_revela_em);var sessentaDias=60*24*60*60*1000;if(abertura>hoje)return"futura";if(hoje-abertura<sessentaDias)return"presente";return"passada";}// Helper: tempo restante até abertura (humanizado)
+function classificarCapsula(capsula){// v329f: aceita ambos os campos (capsula_data_referencia é o usado em insert/seed,
+// capsula_revela_em pode aparecer em código antigo). Sem isso, cápsulas futuras
+// viravam "passada" e renderizavam com coração/comentário em vez do sininho lacrado.
+var dataAbertura=(capsula===null||capsula===void 0?void 0:capsula.capsula_data_referencia)||(capsula===null||capsula===void 0?void 0:capsula.capsula_revela_em);if(!dataAbertura)return"passada";// sem data → tratada como passada
+var hoje=new Date();var abertura=new Date(dataAbertura);var sessentaDias=60*24*60*60*1000;if(abertura>hoje)return"futura";if(hoje-abertura<sessentaDias)return"presente";return"passada";}// Helper: tempo restante até abertura (humanizado)
 function tempoAteAbertura(dataAbertura){if(!dataAbertura)return"";var agora=new Date();var alvo=new Date(dataAbertura);var diff=alvo-agora;if(diff<=0)return"abre agora";var dias=Math.floor(diff/(24*60*60*1000));var horas=Math.floor(diff%(24*60*60*1000)/(60*60*1000));var anos=Math.floor(dias/365);var meses=Math.floor(dias%365/30);// Mais de 1 ano → "em X anos e Y meses"
 if(anos>0){var partes=["".concat(anos," ").concat(anos===1?"ano":"anos")];if(meses>0)partes.push("".concat(meses," ").concat(meses===1?"mês":"meses"));return"em "+partes.join(" e ");}// Mais de 30 dias → "em X meses"
 if(dias>=30){var m=Math.floor(dias/30);return"em ".concat(m," ").concat(m===1?"mês":"meses");}// Mais de 1 dia → "em X dias"
@@ -3365,7 +3368,9 @@ setHeroImersivo(_objectSpread(_objectSpread({},t),{},{_lugarHero:t._lugarHero||(
 var m=t._momento||t._momentoHero;if(m){setMomentoGaleriaPilha(function(p){return[].concat(_toConsumableArray(p),[m]);});try{window.history.pushState({tnMomGal:1},"",window.location.href);}catch(_unused83){}}return;}if(_tipo==="contemplativo"){var subtipo=hv9DetectarSubtipoContemplativo(t);if(!subtipo)return;// v327b: se já estamos dentro da subcamada do mesmo subtipo, abre tela final
 if(subTipoContemplativo===subtipo){if(subtipo==="texto"){// Abre tela limpa de leitura
 setTextoContemplativoAberto(t);try{window.history.pushState({tnTextoContemp:1},"",window.location.href);}catch(_unused84){}}else if(subtipo==="capsula"){// v327c: abre tela imersiva da cápsula (CapsulasFeed)
-var cap=t._capsulaHero||t._capsula;if(cap){setCapsulaImersivaAberta(cap);try{window.history.pushState({tnCapImersiva:1},"",window.location.href);}catch(_unused85){}}}else if(subtipo==="mapa"){// v327d: abre tela do mapa expandido
+// v329f: normaliza alias capsula_revela_em (CapsulasFeed espera esse nome
+// em vários pontos; sem o alias, classificarCapsula trata futura como passada).
+var capRaw=t._capsulaHero||t._capsula;if(capRaw){var cap=_objectSpread(_objectSpread({},capRaw),{},{capsula_revela_em:capRaw.capsula_revela_em||capRaw.capsula_data_referencia});setCapsulaImersivaAberta(cap);try{window.history.pushState({tnCapImersiva:1},"",window.location.href);}catch(_unused85){}}}else if(subtipo==="mapa"){// v327d: abre tela do mapa expandido
 // Aceita _mapaHero (placeRef + pessoas) ou _cruz (pins)
 var mapaInfo=t._mapaHero||null;var cruzInfo=t._cruz||null;if(mapaInfo||cruzInfo){setMapaExpandidoAberto({mapa:mapaInfo,cruz:cruzInfo});try{window.history.pushState({tnMapaExp:1},"",window.location.href);}catch(_unused86){}}}return;}// v327a: click em contemplativo dentro da Camada 1 → entra na subcamada dedicada
 setSubTipoContemplativo(subtipo);setCardClicadoUid(t._uid||null);setScrollExtra(0);try{window.history.pushState({tnSubContemp:1},"",window.location.href);}catch(_unused87){}return;}// Fallback
