@@ -1461,7 +1461,28 @@ React.createElement("div",{className:"tn-coment-nome-linha"},React.createElement
 editandoEste?React.createElement("div",{className:"tn-coment-edit-row"},React.createElement("input",{type:"text",value:textoEditado,onChange:function onChange(e){return setTextoEditado(e.target.value);},onKeyDown:function onKeyDown(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();salvarEdicao(c);}if(e.key==="Escape"){e.preventDefault();cancelarEdicao();}},autoFocus:true,className:"tn-coment-edit-input",disabled:salvandoEdit}),React.createElement("button",{className:"tn-coment-edit-btn salvar",onClick:function onClick(){return salvarEdicao(c);},disabled:salvandoEdit||!textoEditado.trim()},"salvar"),React.createElement("button",{className:"tn-coment-edit-btn cancelar",onClick:cancelarEdicao,disabled:salvandoEdit},"cancelar")):confirmandoEste?React.createElement("div",{className:"tn-coment-confirm-row"},React.createElement("div",{className:"tn-coment-texto tn-coment-texto-fade"},c.texto),React.createElement("div",{className:"tn-coment-confirm-pergunta"},"apagar este comentário?",React.createElement("button",{className:"tn-coment-confirm-btn sim",onClick:function onClick(){return executarRemocao(c);}},"sim"),React.createElement("button",{className:"tn-coment-confirm-btn nao",onClick:function onClick(){return setConfirmandoDelete(null);}},"não"))):React.createElement("div",{className:"tn-coment-texto"},c.texto)),// Botões de ação — só pros próprios comentários, e só fora do modo edição/confirmação
 ehMeu&&!editandoEste&&!confirmandoEste?React.createElement("div",{className:"tn-coment-acoes"},React.createElement("button",{className:"tn-coment-btn-acao",onClick:function onClick(){return iniciarEdicao(c);},title:"Editar comentário","aria-label":"Editar"},// Lápis (edit)
 React.createElement("svg",{width:13,height:13,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:1.7,strokeLinecap:"round",strokeLinejoin:"round"},React.createElement("path",{d:"M12 20h9"}),React.createElement("path",{d:"M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"}))),React.createElement("button",{className:"tn-coment-btn-acao tn-coment-btn-del",onClick:function onClick(){return setConfirmandoDelete(c.id);},disabled:removendoId===c.id,title:"Apagar comentário","aria-label":"Apagar"},// Lixeira
-React.createElement("svg",{width:13,height:13,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:1.7,strokeLinecap:"round",strokeLinejoin:"round"},React.createElement("path",{d:"M3 6h18"}),React.createElement("path",{d:"M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"}),React.createElement("path",{d:"M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"})))):null);})));}function MemoriasFeed(_ref39){var memorias=_ref39.memorias,memoriaInicialId=_ref39.memoriaInicialId,pessoa=_ref39.pessoa,userLogado=_ref39.userLogado,onBack=_ref39.onBack,onMemoriaVisivel=_ref39.onMemoriaVisivel;var ehDono=userLogado&&pessoa&&userLogado.id===pessoa.id;var nomePrimeiro=((pessoa===null||pessoa===void 0?void 0:pessoa.name)||"").split(" ")[0]||"";var containerRef=React.useRef(null);var meses=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];// v274: Set de IDs de memórias com comentários abertos (oculto por padrão)
+React.createElement("svg",{width:13,height:13,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:1.7,strokeLinecap:"round",strokeLinejoin:"round"},React.createElement("path",{d:"M3 6h18"}),React.createElement("path",{d:"M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"}),React.createElement("path",{d:"M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"})))):null);})));}// ═════════════════════════════════════════════════════════════════
+// MemoriasFeed — TELA IMERSIVA FULLSCREEN COM SCROLL SNAP
+//
+// ⚠️ DECISÃO ARQUITETURAL (v330g, mai/2026):
+// Este componente NÃO usa <TelaPadrao> propositalmente.
+//
+// Motivo: feed de consumo intenso, sem distrações (estilo Reels/Stories
+// do Instagram, For You do TikTok). Cada memória ocupa 88vh com snap
+// vertical, header próprio mínimo, SEM nav inferior, SEM sinos.
+//
+// Padrão da indústria: Apps profissionais (Instagram, TikTok, Spotify)
+// usam 2 padrões DIFERENTES coexistindo:
+//   - Scaffold (nosso TelaPadrao) → telas de navegação/ação
+//   - Imersivo fullscreen → telas de consumo de conteúdo
+//
+// CSS responsável: .mem-feed (display:flex column height:100vh) +
+// .mem-feed-scroll (scroll-snap-type:y mandatory) + .mem-feed-page (88vh)
+//
+// Mexer aqui pra "padronizar com TelaPadrao" quebra UX por design.
+// Esta é arquitetura pensada, NÃO débito técnico.
+// ═════════════════════════════════════════════════════════════════
+function MemoriasFeed(_ref39){var memorias=_ref39.memorias,memoriaInicialId=_ref39.memoriaInicialId,pessoa=_ref39.pessoa,userLogado=_ref39.userLogado,onBack=_ref39.onBack,onMemoriaVisivel=_ref39.onMemoriaVisivel;var ehDono=userLogado&&pessoa&&userLogado.id===pessoa.id;var nomePrimeiro=((pessoa===null||pessoa===void 0?void 0:pessoa.name)||"").split(" ")[0]||"";var containerRef=React.useRef(null);var meses=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];// v274: Set de IDs de memórias com comentários abertos (oculto por padrão)
 var _React$useState87=React.useState(function(){return new Set();}),_React$useState88=_slicedToArray(_React$useState87,2),abertos=_React$useState88[0],setAbertos=_React$useState88[1];// v273: incrementa quando um comentário é enviado, força re-checagem do BotaoComentario
 var _React$useState89=React.useState(0),_React$useState90=_slicedToArray(_React$useState89,2),coRefresh=_React$useState90[0],setCoRefresh=_React$useState90[1];// v329z: edição in-loco — guarda id da memória sendo editada e o texto sendo digitado
 var _React$useState91=React.useState(null),_React$useState92=_slicedToArray(_React$useState91,2),editandoId=_React$useState92[0],setEditandoId=_React$useState92[1];var _React$useState93=React.useState(""),_React$useState94=_slicedToArray(_React$useState93,2),textoEditado=_React$useState94[0],setTextoEditado=_React$useState94[1];var _React$useState95=React.useState(false),_React$useState96=_slicedToArray(_React$useState95,2),salvando=_React$useState96[0],setSalvando=_React$useState96[1];// Memórias atualizadas localmente após edição (override do banco até reload)
@@ -1496,6 +1517,13 @@ eseuTambem?React.createElement("div",{className:"mem-feed-cruz"},React.createEle
 // Cada PASSAGEM é uma página (não cidade única — Caminho 1).
 // Foto buscada da tabela `places` (matching textual).
 // Coração via interacoes com alvo_tipo='lugar'.
+//
+// ⚠️ DECISÃO ARQUITETURAL (v330g, mai/2026):
+// NÃO usa <TelaPadrao> propositalmente — é tela imersiva fullscreen
+// com scroll snap (estilo Reels/Stories). Padrão da indústria pra
+// telas de consumo de conteúdo (Instagram Reels, TikTok For You).
+// Mexer pra padronizar quebra UX por design. Ver MemoriasFeed pra
+// rationale completo.
 // ═════════════════════════════════════════════════════════════════
 function LugaresFeed(_ref40){var lugares=_ref40.lugares,lugarInicialId=_ref40.lugarInicialId,pessoa=_ref40.pessoa,userLogado=_ref40.userLogado,onBack=_ref40.onBack,onLugarVisivel=_ref40.onLugarVisivel,onEditarLugar=_ref40.onEditarLugar,onRemoverLugar=_ref40.onRemoverLugar;var ehDono=userLogado&&pessoa&&userLogado.id===pessoa.id;var nomePrimeiro=((pessoa===null||pessoa===void 0?void 0:pessoa.name)||"").split(" ")[0]||"";var containerRef=React.useRef(null);var _React$useState99=React.useState({}),_React$useState100=_slicedToArray(_React$useState99,2),fotosMap=_React$useState100[0],setFotosMap=_React$useState100[1];// v274: Set de IDs de lugares com comentários abertos
 var _React$useState101=React.useState(function(){return new Set();}),_React$useState102=_slicedToArray(_React$useState101,2),abertos=_React$useState102[0],setAbertos=_React$useState102[1];// v273: incrementa quando um comentário é enviado
@@ -1571,7 +1599,22 @@ function CapsulaPassadaCard(_ref45){var capsula=_ref45.capsula,pessoa=_ref45.pes
 // v274: toggle inline em vez de modal
 React.createElement("div",{style:{display:"flex",alignItems:"center",gap:6}},userLogado?React.createElement(BotaoComentario,{alvoTipo:"capsula",alvoId:capsula.id,userLogado:userLogado,refreshKey:coRefresh,onClick:function onClick(){return onToggleComentarios&&onToggleComentarios();}}):null,React.createElement(CoracaoCapsula,{capsula:capsula,pessoa:pessoa,userLogado:userLogado,ehFutura:false}))),capsula.texto?React.createElement("p",{className:"verso-serif verso-capitalize mem-feed-quote"},"\"".concat(capsula.texto,"\"")):null,// v274: ComentariosInline
 React.createElement(ComentariosInline,{alvoTipo:"capsula",alvoId:capsula.id,alvoUserId:pessoa===null||pessoa===void 0?void 0:pessoa.id,userLogado:userLogado,aberto:!!comentariosAbertos,onChange:onComentarioEnviado,onFechar:onToggleComentarios// v279
-}));}// FEED principal — snap horizontal
+}));}// ═════════════════════════════════════════════════════════════════
+// CapsulasFeed — TELA IMERSIVA FULLSCREEN COM SCROLL SNAP HORIZONTAL
+//
+// ⚠️ DECISÃO ARQUITETURAL (v330g, mai/2026):
+// NÃO usa <TelaPadrao> propositalmente — é tela imersiva fullscreen
+// com snap HORIZONTAL (única do app). Cada cápsula = uma página de
+// 92vw com 8vw de peek lateral. 3 atmosferas distintas (passado=carta
+// antiga, presente=editorial, futuro=cosmológico) que tomam a tela
+// inteira pra criar o ritual de "abrir uma cápsula no tempo".
+//
+// TopBar normal quebraria a metáfora de "carta selada/cápsula"
+// — o user precisa estar IMERSO no objeto, não distraído com sinos.
+//
+// Ver MemoriasFeed pra rationale completo sobre dualidade Scaffold
+// vs Imersivo em apps profissionais escaláveis.
+// ═════════════════════════════════════════════════════════════════
 function CapsulasFeed(_ref46){var capsulas=_ref46.capsulas,capsulaInicialId=_ref46.capsulaInicialId,pessoa=_ref46.pessoa,userLogado=_ref46.userLogado,onBack=_ref46.onBack,onCapsulaVisivel=_ref46.onCapsulaVisivel;var meses=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];var containerRef=React.useRef(null);var ehDono=userLogado&&pessoa&&userLogado.id===pessoa.id;// v274: Set de IDs de cápsulas com comentários abertos
 var _React$useState113=React.useState(function(){return new Set();}),_React$useState114=_slicedToArray(_React$useState113,2),abertos=_React$useState114[0],setAbertos=_React$useState114[1];// v273: incrementa quando um comentário é enviado
 var _React$useState115=React.useState(0),_React$useState116=_slicedToArray(_React$useState115,2),coRefresh=_React$useState116[0],setCoRefresh=_React$useState116[1];// v328b: state pro kebab menu (compartilhar) + cápsula atualmente visível
@@ -3603,6 +3646,31 @@ boxShadow:"0 0 0 2px rgba(74,176,232,0.35)"}})))));}// v322e: Wrapper que pega h
 function TempnexTopBarConectada(_ref300){var user=_ref300.user,_ref300$naoLidas=_ref300.naoLidas,naoLidas=_ref300$naoLidas===void 0?0:_ref300$naoLidas,alertasRegiao=_ref300.alertasRegiao,titulo=_ref300.titulo,onBack=_ref300.onBack;var handlers=typeof window!=="undefined"&&window.__tnTopBar||{};// Fallback: se prop não veio, usa o count global publicado pelo App
 var alertasFinal=typeof alertasRegiao==="number"?alertasRegiao:handlers.alertasRegiaoCount||0;return React.createElement(TempnexTopBar,{user:user,naoLidas:naoLidas,alertasRegiao:alertasFinal,titulo:titulo,onBack:onBack,onUpdateUser:handlers.onUpdateUser,onNotificacoes:handlers.onNotificacoes,onAlertasRegiao:handlers.onAlertasRegiao});}// ═════════════════════════════════════════════════════════════════
 // v330a/d: COMPONENTE WRAPPER TelaPadrao
+//
+// ┌─ ARQUITETURA DE TELAS DO TEMPNEXT ──────────────────────────┐
+// │ O app usa 2 padrões DIFERENTES coexistindo (decisão correta │
+// │ de UX, igual Instagram/TikTok/Spotify):                     │
+// │                                                              │
+// │ 1. TelaPadrao (Scaffold) — telas de navegação/ação:         │
+// │    Olhar, Notif, Alertas, Buscar, MeusLugares, Contatos,    │
+// │    PerfilLugar, PainelPessoal, Guardar, Perfil,             │
+// │    PerfilMomentoFiltrado, VerTudoCapituloI, 4 Capítulos     │
+// │    → 16 telas migradas (mai/2026)                           │
+// │    → TopBar com sinos clicáveis, voltar, paleta             │
+// │    → Padding inferior reservado pra nav                     │
+// │                                                              │
+// │ 2. Imersivo fullscreen (CSS próprio com scroll snap):       │
+// │    MemoriasFeed (.mem-feed snap V), LugaresFeed (.lug-feed  │
+// │    snap V), CapsulasFeed (.cap-feed snap H)                 │
+// │    → Telas de CONSUMO de conteúdo, sem distrações           │
+// │    → Cada item ocupa 88-92vw, scroll snap                   │
+// │    → SEM TopBar com sinos (quebraria contemplação)          │
+// │                                                              │
+// │ 3. Casos especiais (não migrados, motivo registrado):       │
+// │    HV9Relacionados — overlay imersivo position:fixed        │
+// │    Cápsula lacrada (early-return PerfilMomentoFiltrado) —   │
+// │       ritual sem TopBar (botões revelar/agora não)          │
+// └──────────────────────────────────────────────────────────────┘
 //
 // Padrão único pra todas as telas internas do app. Substitui os ~24
 // headers "Voltar" custom espalhados pelo código por uma estrutura
