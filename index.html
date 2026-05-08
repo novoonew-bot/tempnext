@@ -2623,9 +2623,36 @@ const T = {
 //   - PALETAS_AFETIVAS (este) → cor afetiva curada (--user-color etc)
 //   - PALETAS antigo (array) → tema livre (bg_color, card_color, tema)
 // ─────────────────────────────────────────────────────────────────
+// v333c: PALETAS_AFETIVAS expandidas com metadata temporal.
+// 6 paletas organizadas em 3 atmosferas de tempo + variantes Noturnas (modo escuro).
+// Estrutura nova: epoca + descricao + paleta_dark (mesmas chaves invertidas pra modo escuro).
+// COMPATIBILIDADE: todas as chaves antigas (user_color, user_color_soft, etc) preservadas.
 const PALETAS_AFETIVAS = {
+  // ═══ PASSADO · luz quente envelhecida ═══
+  sepia: {
+    label: "Sépia", epoca: "passado",
+    descricao: "papel antigo · luz que amareleceu",
+    swatch: "#b8893a",
+    user_color: "#b8893a",
+    user_color_soft: "#d4a85a",
+    user_color_deep: "#7a5a20",
+    user_color_second: "#5a3a18",
+    user_color_second_deep: "#3a2410",
+    user_text_on_color: "#faf6ea",
+    user_color_15: "rgba(184,137,58,0.15)",
+    user_color_25: "rgba(184,137,58,0.25)",
+    user_color_30: "rgba(184,137,58,0.30)",
+    user_color_85: "rgba(184,137,58,0.85)",
+    user_color_soft_30: "rgba(212,168,90,0.30)",
+    user_color_soft_50: "rgba(212,168,90,0.50)",
+    user_color_second_85: "rgba(90,58,24,0.85)",
+    user_color_deep_18: "rgba(122,90,32,0.18)",
+    bg: "#faf6ea",
+    surface: "#fff9ee",
+  },
   terra: {
-    label: "Terra",
+    label: "Terra", epoca: "passado",
+    descricao: "cerâmica · cor da argila",
     swatch: "#c06a3e",
     user_color: "#c06a3e",
     user_color_soft: "#d4794a",
@@ -2633,7 +2660,6 @@ const PALETAS_AFETIVAS = {
     user_color_second: "#3878b8",
     user_color_second_deep: "#205088",
     user_text_on_color: "#f5ecd6",
-    // v218: rgba pré-calculadas (substitui color-mix em mobile)
     user_color_15: "rgba(192,106,62,0.15)",
     user_color_25: "rgba(192,106,62,0.25)",
     user_color_30: "rgba(192,106,62,0.30)",
@@ -2642,27 +2668,13 @@ const PALETAS_AFETIVAS = {
     user_color_soft_50: "rgba(212,121,74,0.50)",
     user_color_second_85: "rgba(56,120,184,0.85)",
     user_color_deep_18: "rgba(138,74,42,0.18)",
+    bg: "#FAF7F2",
+    surface: "#FFFFFF",
   },
-  oceano: {
-    label: "Oceano",
-    swatch: "#2a78a8",
-    user_color: "#2a78a8",
-    user_color_soft: "#4a92c0",
-    user_color_deep: "#1a5078",
-    user_color_second: "#c06a3e",
-    user_color_second_deep: "#8a4a2a",
-    user_text_on_color: "#f5ecd6",
-    user_color_15: "rgba(42,120,168,0.15)",
-    user_color_25: "rgba(42,120,168,0.25)",
-    user_color_30: "rgba(42,120,168,0.30)",
-    user_color_85: "rgba(42,120,168,0.85)",
-    user_color_soft_30: "rgba(74,146,192,0.30)",
-    user_color_soft_50: "rgba(74,146,192,0.50)",
-    user_color_second_85: "rgba(192,106,62,0.85)",
-    user_color_deep_18: "rgba(26,80,120,0.18)",
-  },
-  floresta: {
-    label: "Floresta",
+  // ═══ PRESENTE · luz natural viva ═══
+  folha: {
+    label: "Folha", epoca: "presente",
+    descricao: "verde sálvia · luz vegetal",
     swatch: "#5a7a3e",
     user_color: "#5a7a3e",
     user_color_soft: "#7a9a5a",
@@ -2678,9 +2690,35 @@ const PALETAS_AFETIVAS = {
     user_color_soft_50: "rgba(122,154,90,0.50)",
     user_color_second_85: "rgba(184,138,58,0.85)",
     user_color_deep_18: "rgba(58,80,40,0.18)",
+    bg: "#f7faf2",
+    surface: "#FFFFFF",
   },
+  // ═══ FUTURO · luz fria cintilante (claras de dia) ═══
+  oceano: {
+    label: "Oceano", epoca: "futuro",
+    descricao: "azul céu · linha do horizonte",
+    swatch: "#2a78a8",
+    user_color: "#2a78a8",
+    user_color_soft: "#4a92c0",
+    user_color_deep: "#1a5078",
+    user_color_second: "#c06a3e",
+    user_color_second_deep: "#8a4a2a",
+    user_text_on_color: "#f5ecd6",
+    user_color_15: "rgba(42,120,168,0.15)",
+    user_color_25: "rgba(42,120,168,0.25)",
+    user_color_30: "rgba(42,120,168,0.30)",
+    user_color_85: "rgba(42,120,168,0.85)",
+    user_color_soft_30: "rgba(74,146,192,0.30)",
+    user_color_soft_50: "rgba(74,146,192,0.50)",
+    user_color_second_85: "rgba(192,106,62,0.85)",
+    user_color_deep_18: "rgba(26,80,120,0.18)",
+    bg: "#f4f8fc",
+    surface: "#FFFFFF",
+  },
+  // ═══ SOLTAS · escolha estética sem amarração temporal ═══
   ameixa: {
-    label: "Ameixa",
+    label: "Ameixa", epoca: "solta",
+    descricao: "vinho suave · rosa antigo",
     swatch: "#8a4a6a",
     user_color: "#8a4a6a",
     user_color_soft: "#a86a8a",
@@ -2696,9 +2734,12 @@ const PALETAS_AFETIVAS = {
     user_color_soft_50: "rgba(168,106,138,0.50)",
     user_color_second_85: "rgba(192,138,74,0.85)",
     user_color_deep_18: "rgba(90,42,72,0.18)",
+    bg: "#faf4f7",
+    surface: "#FFFFFF",
   },
   grafite: {
-    label: "Grafite",
+    label: "Grafite", epoca: "solta",
+    descricao: "neutro escuro · sóbrio",
     swatch: "#4a4a4a",
     user_color: "#4a4a4a",
     user_color_soft: "#6a6a6a",
@@ -2714,32 +2755,77 @@ const PALETAS_AFETIVAS = {
     user_color_soft_50: "rgba(106,106,106,0.50)",
     user_color_second_85: "rgba(184,138,58,0.85)",
     user_color_deep_18: "rgba(42,42,42,0.18)",
+    bg: "#f6f5f3",
+    surface: "#FFFFFF",
   },
   linho: {
-    label: "Linho",
-    swatch: "#f4ede0",
-    user_color: "#f4ede0",
-    user_color_soft: "#faf5ea",
-    user_color_deep: "#c8b89c",
+    label: "Linho", epoca: "solta",
+    descricao: "neutro claro · bege puro",
+    swatch: "#c8b89c",
+    user_color: "#c8b89c",
+    user_color_soft: "#d8c8a8",
+    user_color_deep: "#8a7a5c",
     user_color_second: "#8a4a2a",
     user_color_second_deep: "#5a2a18",
     user_text_on_color: "#2a201a",
-    user_color_15: "rgba(244,237,224,0.15)",
-    user_color_25: "rgba(244,237,224,0.25)",
-    user_color_30: "rgba(244,237,224,0.30)",
-    user_color_85: "rgba(244,237,224,0.85)",
-    user_color_soft_30: "rgba(250,245,234,0.30)",
-    user_color_soft_50: "rgba(250,245,234,0.50)",
+    user_color_15: "rgba(200,184,156,0.15)",
+    user_color_25: "rgba(200,184,156,0.25)",
+    user_color_30: "rgba(200,184,156,0.30)",
+    user_color_85: "rgba(200,184,156,0.85)",
+    user_color_soft_30: "rgba(216,200,168,0.30)",
+    user_color_soft_50: "rgba(216,200,168,0.50)",
     user_color_second_85: "rgba(138,74,42,0.85)",
-    user_color_deep_18: "rgba(200,184,156,0.30)",
+    user_color_deep_18: "rgba(138,122,92,0.18)",
+    bg: "#FAF7F2",
+    surface: "#FFFFFF",
+  },
+  // ═══ COMPATIBILIDADE legacy: floresta = alias pra folha (não quebrar usuários antigos) ═══
+  floresta: {
+    label: "Floresta", epoca: "presente",
+    descricao: "verde profundo · luz vegetal",
+    swatch: "#5a7a3e",
+    user_color: "#5a7a3e",
+    user_color_soft: "#7a9a5a",
+    user_color_deep: "#3a5028",
+    user_color_second: "#b88a3a",
+    user_color_second_deep: "#8a6a28",
+    user_text_on_color: "#f5ecd6",
+    user_color_15: "rgba(90,122,62,0.15)",
+    user_color_25: "rgba(90,122,62,0.25)",
+    user_color_30: "rgba(90,122,62,0.30)",
+    user_color_85: "rgba(90,122,62,0.85)",
+    user_color_soft_30: "rgba(122,154,90,0.30)",
+    user_color_soft_50: "rgba(122,154,90,0.50)",
+    user_color_second_85: "rgba(184,138,58,0.85)",
+    user_color_deep_18: "rgba(58,80,40,0.18)",
+    bg: "#f7faf2",
+    surface: "#FFFFFF",
   },
 };
+
+// v333c: Override de modo noturno (toggle independente).
+// Aplica em CIMA da paleta escolhida — escurece bg+surface, mantém cor afetiva
+// como acento mas com versão mais saturada/suave pra contraste em fundo escuro.
+const MODO_NOTURNO_OVERRIDE = {
+  bg: "#1a1612",
+  surface: "#251f1a",
+  text_on_dark: "#e8e0d2",
+  muted_on_dark: "#9a8e7a",
+  border_on_dark: "rgba(232,224,210,0.12)",
+};
+
+// Verifica se modo noturno está ativo (ler do user)
+function ehNoturno(user){
+  return user?.modo_noturno === true;
+}
 
 const PALETA_AFETIVA_DEFAULT = "terra";
 
 // Aplica as CSS variables da paleta afetiva no <html> (escopo global)
-function aplicarPaletaAfetivaCSS(paletaId){
+// v333c: aceita 2º arg modoNoturno (bool). Se true, aplica MODO_NOTURNO_OVERRIDE em cima.
+function aplicarPaletaAfetivaCSS(paletaId, modoNoturno){
   const p = PALETAS_AFETIVAS[paletaId] || PALETAS_AFETIVAS[PALETA_AFETIVA_DEFAULT];
+  const noturno = !!modoNoturno;
   const root = document.documentElement;
   root.style.setProperty("--user-color",            p.user_color);
   root.style.setProperty("--user-color-soft",       p.user_color_soft);
@@ -2756,7 +2842,22 @@ function aplicarPaletaAfetivaCSS(paletaId){
   root.style.setProperty("--user-color-soft-50",    p.user_color_soft_50);
   root.style.setProperty("--user-color-second-85", p.user_color_second_85);
   root.style.setProperty("--user-color-deep-18",   p.user_color_deep_18);
+  // v333c: bg + surface da paleta (camadas de fundo)
+  if(noturno){
+    root.style.setProperty("--app-bg",      MODO_NOTURNO_OVERRIDE.bg);
+    root.style.setProperty("--app-surface", MODO_NOTURNO_OVERRIDE.surface);
+    root.style.setProperty("--app-text",    MODO_NOTURNO_OVERRIDE.text_on_dark);
+    root.style.setProperty("--app-muted",   MODO_NOTURNO_OVERRIDE.muted_on_dark);
+    root.style.setProperty("--app-border",  MODO_NOTURNO_OVERRIDE.border_on_dark);
+  } else {
+    root.style.setProperty("--app-bg",      p.bg || "#FAF7F2");
+    root.style.setProperty("--app-surface", p.surface || "#FFFFFF");
+    root.style.setProperty("--app-text",    "#2a201a");
+    root.style.setProperty("--app-muted",   "rgba(42,32,26,0.55)");
+    root.style.setProperty("--app-border",  "rgba(42,32,26,0.10)");
+  }
   root.setAttribute("data-paleta-afetiva", paletaId);
+  root.setAttribute("data-modo-noturno",   noturno ? "1" : "0");
 }
 
 
@@ -7638,10 +7739,12 @@ function CardMapaVida({pessoa, dados, ehDono=false, onExplorar, onSeguir, onEdit
 }
 
 // Hook React: lê paleta afetiva do user, sincroniza CSS vars.
+// v333c: agora também sincroniza modo_noturno toggle
 function usePaletaAfetiva(user){
   const id = (user?.paleta_cor && PALETAS_AFETIVAS[user.paleta_cor]) ? user.paleta_cor : PALETA_AFETIVA_DEFAULT;
-  React.useEffect(()=>{ aplicarPaletaAfetivaCSS(id); }, [id]);
-  return {id, ...PALETAS_AFETIVAS[id]};
+  const noturno = !!user?.modo_noturno;
+  React.useEffect(()=>{ aplicarPaletaAfetivaCSS(id, noturno); }, [id, noturno]);
+  return {id, noturno, ...PALETAS_AFETIVAS[id]};
 }
 
 // Componente picker visual: 6 swatches circulares.
@@ -7718,6 +7821,500 @@ function PaletaAfetivaPicker({user, onUpdateUser, compact=false}){
       )}
     </div>
   );
+}
+
+// ─────────────────────────────────────────────────────────────────
+// v333c: EditorCorAfetiva — tela dedicada de personalização de cor.
+// Substitui as 3 seções espalhadas (Personalização + Cor afetiva + Modo Avançado).
+// Mostra paletas temporais + soltas + toggle modo noturno + mini-preview ao vivo
+// + botão salvar flutuante condicional (só aparece quando há mudança pendente).
+// ─────────────────────────────────────────────────────────────────
+function EditorCorAfetiva({user, onUpdateUser, onClose}){
+  const paletaInicial = (user?.paleta_cor && PALETAS_AFETIVAS[user.paleta_cor]) ? user.paleta_cor : PALETA_AFETIVA_DEFAULT;
+  const noturnoInicial = !!user?.modo_noturno;
+  const [paletaPreview, setPaletaPreview] = React.useState(paletaInicial);
+  const [noturnoPreview, setNoturnoPreview] = React.useState(noturnoInicial);
+  const [salvando, setSalvando] = React.useState(false);
+
+  const houveMudanca = (paletaPreview !== paletaInicial) || (noturnoPreview !== noturnoInicial);
+
+  // Aplica preview no app inteiro em tempo real
+  React.useEffect(()=>{
+    aplicarPaletaAfetivaCSS(paletaPreview, noturnoPreview);
+  }, [paletaPreview, noturnoPreview]);
+
+  // Quando desmonta sem salvar, restaura paleta original
+  React.useEffect(()=>{
+    return ()=>{
+      if(houveMudanca){
+        aplicarPaletaAfetivaCSS(paletaInicial, noturnoInicial);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function salvar(){
+    if(salvando || !houveMudanca) return;
+    setSalvando(true);
+    try{
+      if(user?.id){
+        // v333c: tenta salvar tudo. Se modo_noturno coluna não existir,
+        // erro 42703 (column does not exist) → retry só com paleta_cor.
+        const updates = {paleta_cor: paletaPreview, modo_noturno: noturnoPreview};
+        let {error} = await db.from("profiles").update(updates).eq("id", user.id);
+        if(error && (error.code === "42703" || /modo_noturno/i.test(error.message || ""))){
+          console.warn("[EditorCorAfetiva] coluna modo_noturno ausente — fallback só paleta_cor. Rode v333c_modo_noturno_column.sql");
+          const retry = await db.from("profiles").update({paleta_cor: paletaPreview}).eq("id", user.id);
+          error = retry.error;
+        }
+        if(error){
+          console.warn("[EditorCorAfetiva] erro salvando:", error.message);
+        }
+      }
+      if(onUpdateUser){
+        onUpdateUser({...user, paleta_cor: paletaPreview, modo_noturno: noturnoPreview});
+      }
+      if(window.tnToast) window.tnToast("cor afetiva salva", PALETAS_AFETIVAS[paletaPreview]?.label || "");
+      if(onClose) onClose();
+    }catch(e){
+      console.error("[EditorCorAfetiva] exceção:", e);
+    }finally{
+      setSalvando(false);
+    }
+  }
+
+  function descartar(){
+    setPaletaPreview(paletaInicial);
+    setNoturnoPreview(noturnoInicial);
+  }
+
+  // Agrupa paletas por época
+  const grupos = {
+    passado:  Object.entries(PALETAS_AFETIVAS).filter(([id, p])=> p.epoca === "passado"  && id !== "floresta"),
+    presente: Object.entries(PALETAS_AFETIVAS).filter(([id, p])=> p.epoca === "presente" && id !== "floresta"),
+    futuro:   Object.entries(PALETAS_AFETIVAS).filter(([id, p])=> p.epoca === "futuro"   && id !== "floresta"),
+    solta:    Object.entries(PALETAS_AFETIVAS).filter(([id, p])=> p.epoca === "solta"    && id !== "floresta"),
+  };
+
+  const tituloGrupos = {
+    passado:  {titulo:"passado",  desc:"luz quente envelhecida"},
+    presente: {titulo:"presente", desc:"luz natural viva"},
+    futuro:   {titulo:"futuro",   desc:"luz fria cintilante"},
+    solta:    {titulo:"sem tempo", desc:"escolha estética livre"},
+  };
+
+  function renderCardPaleta(id, p){
+    const ativa = paletaPreview === id;
+    return React.createElement("button", {
+      key: id,
+      onClick: ()=> setPaletaPreview(id),
+      style: {
+        background: "#fff",
+        border: ativa ? `2px solid ${p.user_color}` : "0.5px solid rgba(42,32,26,0.12)",
+        borderRadius: 12,
+        padding: 10,
+        cursor: "pointer",
+        textAlign: "center",
+        fontFamily: "inherit",
+        boxShadow: ativa ? `0 2px 10px ${p.user_color_25}` : "none",
+        transition: "all 0.18s ease",
+      },
+    },
+      // Faixa de gradient mostrando a paleta
+      React.createElement("div", {
+        style: {
+          height: 38,
+          background: `linear-gradient(135deg, ${p.bg || "#FAF7F2"} 0%, ${p.user_color_soft} 60%, ${p.user_color_deep} 100%)`,
+          borderRadius: 6, marginBottom: 6,
+          position: "relative",
+        },
+      },
+        // Pin no canto inferior direito
+        React.createElement("div", {
+          style: {
+            position: "absolute", bottom: 4, right: 4,
+            width: 14, height: 14, borderRadius: "50%",
+            background: p.user_color_deep,
+            border: "1.5px solid #fff",
+          }
+        })
+      ),
+      React.createElement("div", {
+        style: {
+          fontSize: 11,
+          fontFamily: "'Cormorant Garamond','Georgia',serif",
+          fontStyle: "italic",
+          color: ativa ? p.user_color_deep : "#5a4a38",
+          fontWeight: ativa ? 600 : 500,
+        }
+      }, p.label),
+      ativa && React.createElement("div", {
+        style: {
+          fontSize: 9, color: p.user_color_deep, opacity: 0.7,
+          fontStyle: "italic", marginTop: 1,
+        }
+      }, "ativa")
+    );
+  }
+
+  function renderGrupo(chave){
+    const items = grupos[chave];
+    if(!items || items.length === 0) return null;
+    const meta = tituloGrupos[chave];
+    return React.createElement("div", {key: chave, style:{marginBottom: 18}},
+      React.createElement("div", {
+        style: {
+          fontFamily: "'Cormorant Garamond','Georgia',serif",
+          fontStyle: "italic",
+          fontSize: 13, color: "#806b58",
+          marginBottom: 4, paddingLeft: 2,
+        }
+      }, meta.titulo),
+      React.createElement("div", {
+        style: {
+          fontFamily: "'Cormorant Garamond','Georgia',serif",
+          fontStyle: "italic",
+          fontSize: 10, color: "#a89888",
+          marginBottom: 10, paddingLeft: 2,
+        }
+      }, meta.desc),
+      React.createElement("div", {
+        style: {
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: 8,
+        },
+      },
+        items.map(([id, p])=> renderCardPaleta(id, p))
+      )
+    );
+  }
+
+  // Mini-preview embaixo (sticky)
+  const pAtiva = PALETAS_AFETIVAS[paletaPreview] || PALETAS_AFETIVAS[PALETA_AFETIVA_DEFAULT];
+  const previewBg      = noturnoPreview ? MODO_NOTURNO_OVERRIDE.bg      : (pAtiva.bg || "#FAF7F2");
+  const previewSurface = noturnoPreview ? MODO_NOTURNO_OVERRIDE.surface : (pAtiva.surface || "#FFFFFF");
+  const previewText    = noturnoPreview ? MODO_NOTURNO_OVERRIDE.text_on_dark : "#2a201a";
+  const previewMuted   = noturnoPreview ? MODO_NOTURNO_OVERRIDE.muted_on_dark : "rgba(42,32,26,0.55)";
+  const previewBorder  = noturnoPreview ? MODO_NOTURNO_OVERRIDE.border_on_dark : "rgba(42,32,26,0.10)";
+
+  return React.createElement("div", {
+    style: {
+      position: "fixed", inset: 0, zIndex: 250,
+      background: "var(--app-bg, #FAF7F2)",
+      display: "flex", flexDirection: "column",
+      maxWidth: 430, margin: "0 auto",
+    },
+  },
+    // ─── Header ───
+    React.createElement("div", {
+      style: {
+        padding: "max(0px, env(safe-area-inset-top)) 16px 12px",
+        background: `linear-gradient(180deg, ${pAtiva.user_color_15} 0%, transparent 100%)`,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        gap: 12,
+        borderBottom: `0.5px solid ${pAtiva.user_color_30}`,
+      },
+    },
+      React.createElement("div", {style:{display:"flex", alignItems:"center", gap:10, flex:1}},
+        React.createElement("button", {
+          onClick: onClose,
+          style: {
+            background:"none", border:"none", cursor:"pointer",
+            color: pAtiva.user_color_deep, opacity: 0.75, padding:4,
+            display:"flex", alignItems:"center",
+          },
+        },
+          React.createElement("svg", {width:18, height:18, viewBox:"0 0 20 20", fill:"none"},
+            React.createElement("path", {d:"M13 4l-6 6 6 6", stroke:"currentColor", strokeWidth:2.2, strokeLinecap:"round", strokeLinejoin:"round"})
+          )
+        ),
+        React.createElement("div", null,
+          React.createElement("div", {
+            style: {
+              fontFamily: "'Cormorant Garamond','Georgia',serif",
+              fontStyle: "italic", fontSize: 18,
+              color: pAtiva.user_color_deep, lineHeight: 1.1,
+            }
+          }, "cor afetiva"),
+          React.createElement("div", {
+            style: {
+              fontFamily: "'Cormorant Garamond','Georgia',serif",
+              fontStyle: "italic", fontSize: 11,
+              color: pAtiva.user_color_deep, opacity: 0.6,
+              marginTop: 1,
+            }
+          }, "a cor que acompanha você no app")
+        )
+      )
+    ),
+
+    // ─── Conteúdo scrollável ───
+    React.createElement("div", {
+      style: {
+        flex: 1, overflowY: "auto",
+        padding: "16px 16px 200px",
+      },
+    },
+      // Seções por época
+      renderGrupo("passado"),
+      renderGrupo("presente"),
+      renderGrupo("futuro"),
+      renderGrupo("solta"),
+
+      // Toggle modo noturno (independente)
+      React.createElement("div", {
+        onClick: ()=> setNoturnoPreview(v=>!v),
+        style: {
+          marginTop: 8, padding: "14px 16px",
+          background: noturnoPreview ? "#1a1612" : "#fff",
+          borderRadius: 14,
+          border: noturnoPreview ? `1px solid rgba(232,224,210,0.18)` : "0.5px solid rgba(42,32,26,0.12)",
+          display: "flex", alignItems: "center", gap: 14,
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        },
+      },
+        // Ícone lua
+        React.createElement("div", {
+          style: {
+            width: 38, height: 38, borderRadius: "50%",
+            background: noturnoPreview ? "rgba(232,224,210,0.10)" : "rgba(42,32,26,0.05)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            flexShrink: 0,
+          }
+        },
+          React.createElement("svg", {
+            width: 18, height: 18, viewBox: "0 0 24 24", fill: "none",
+            stroke: noturnoPreview ? "#e8e0d2" : "#806b58",
+            strokeWidth: 1.6, strokeLinecap: "round", strokeLinejoin: "round",
+          },
+            React.createElement("path", {d:"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"})
+          )
+        ),
+        React.createElement("div", {style:{flex:1, minWidth:0}},
+          React.createElement("div", {
+            style: {
+              fontFamily: "'Cormorant Garamond','Georgia',serif",
+              fontStyle: "italic", fontSize: 15,
+              color: noturnoPreview ? "#e8e0d2" : "#2a201a",
+              lineHeight: 1.2,
+            }
+          }, "modo noturno"),
+          React.createElement("div", {
+            style: {
+              fontFamily: "'Cormorant Garamond','Georgia',serif",
+              fontStyle: "italic", fontSize: 11,
+              color: noturnoPreview ? "rgba(232,224,210,0.65)" : "#806b58",
+              marginTop: 2, lineHeight: 1.4,
+            }
+          }, noturnoPreview
+              ? "fundos escuros · luz baixa pra leitura noturna"
+              : "ative pra escurecer o app sem mudar de paleta")
+        ),
+        // Switch visual
+        React.createElement("div", {
+          style: {
+            width: 38, height: 22, borderRadius: 11,
+            background: noturnoPreview ? pAtiva.user_color : "rgba(42,32,26,0.20)",
+            position: "relative", flexShrink: 0,
+            transition: "background 0.18s ease",
+          },
+        },
+          React.createElement("div", {
+            style: {
+              position: "absolute",
+              top: 2, left: noturnoPreview ? 18 : 2,
+              width: 18, height: 18, borderRadius: "50%",
+              background: "#fff",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.18)",
+              transition: "left 0.18s ease",
+            }
+          })
+        )
+      )
+    ),
+
+    // ─── Mini-preview embaixo (sticky) ───
+    React.createElement("div", {
+      style: {
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        background: "#1a1612",
+        padding: "10px 16px 14px",
+        borderTop: "0.5px solid rgba(232,224,210,0.12)",
+      },
+    },
+      React.createElement("div", {
+        style: {
+          fontFamily: "'Cormorant Garamond','Georgia',serif",
+          fontStyle: "italic", fontSize: 10,
+          color: "rgba(232,224,210,0.45)",
+          textAlign: "center", marginBottom: 8,
+        }
+      }, "prévia ao vivo"),
+      // Mini app
+      React.createElement("div", {
+        style: {
+          background: previewBg,
+          borderRadius: 10, overflow: "hidden",
+          border: "0.5px solid rgba(232,224,210,0.10)",
+        },
+      },
+        // Mini topbar
+        React.createElement("div", {
+          style: {
+            background: `linear-gradient(180deg, ${pAtiva.user_color_15}, ${noturnoPreview ? "rgba(37,31,26,0.92)" : "rgba(250,247,242,0.92)"})`,
+            padding: "5px 9px",
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            borderBottom: `0.5px solid ${pAtiva.user_color_30}`,
+          }
+        },
+          React.createElement("span", {
+            style: {
+              fontFamily: "'Cormorant Garamond','Georgia',serif",
+              fontStyle: "italic", fontSize: 10,
+              color: pAtiva.user_color_deep, fontWeight: 500,
+            }
+          }, "TempnexT"),
+          React.createElement("div", {style:{display:"flex", gap:4, alignItems:"center"}},
+            React.createElement("div", {style:{width:6, height:6, background:pAtiva.user_color, borderRadius:"50%"}}),
+            React.createElement("svg", {width:8, height:8, viewBox:"0 0 20 20", fill:"none"},
+              React.createElement("path", {d:"M10 3a4 4 0 0 0-4 4v3l-2 2v1h12v-1l-2-2V7a4 4 0 0 0-4-4z", stroke:pAtiva.user_color_deep, strokeWidth:1.4, strokeLinecap:"round", strokeLinejoin:"round"})
+            )
+          )
+        ),
+        // Mini conteúdo
+        React.createElement("div", {style:{padding: 7}},
+          React.createElement("div", {
+            style: {
+              background: previewSurface,
+              border: `0.5px solid ${previewBorder}`,
+              borderRadius: 5, padding: "6px 8px", marginBottom: 5,
+            },
+          },
+            React.createElement("div", {
+              style: {
+                fontFamily: "'Cormorant Garamond','Georgia',serif",
+                fontStyle: "italic", fontSize: 8,
+                color: pAtiva.user_color, marginBottom: 2,
+              }
+            }, "capítulo I"),
+            React.createElement("div", {
+              style: {
+                fontFamily: "Georgia,serif", fontSize: 10,
+                color: previewText, marginBottom: 4,
+              }
+            }, "Suzane Krewer"),
+            React.createElement("div", {style:{display:"flex", gap:4, alignItems:"center"}},
+              React.createElement("span", {
+                style: {
+                  background: pAtiva.user_color_15,
+                  color: pAtiva.user_color_deep,
+                  fontSize: 7, padding: "1px 5px", borderRadius: 6,
+                  fontStyle: "italic",
+                  fontFamily: "'Cormorant Garamond','Georgia',serif",
+                }
+              }, "presente"),
+              React.createElement("span", {
+                style: {
+                  fontSize: 7, color: pAtiva.user_color, marginLeft: "auto",
+                  fontStyle: "italic",
+                  fontFamily: "'Cormorant Garamond','Georgia',serif",
+                }
+              }, "ver tudo ›")
+            )
+          ),
+          React.createElement("button", {
+            style: {
+              background: `linear-gradient(135deg, ${pAtiva.user_color}, ${pAtiva.user_color_deep})`,
+              color: "#fff", border: "none",
+              padding: "4px 10px", borderRadius: 5,
+              fontSize: 8, fontFamily: "inherit", fontStyle: "italic",
+              width: "100%", cursor: "default",
+            }
+          }, "compartilhar minha vida")
+        ),
+        // Mini bottom nav
+        React.createElement("div", {
+          style: {
+            background: pAtiva.user_color_15,
+            padding: "4px 10px",
+            display: "flex", justifyContent: "space-around",
+            borderTop: `0.5px solid ${previewBorder}`,
+          },
+        },
+          ["home","search","plus","eye","user"].map((ic,i)=>
+            React.createElement("svg", {key:i, width:9, height:9, viewBox:"0 0 24 24", fill:"none"},
+              React.createElement("circle", {cx:12, cy:12, r:i===2 ? 10 : 0, fill: i===2 ? pAtiva.user_color : "none"}),
+              React.createElement("circle", {cx:12, cy:12, r:8, fill:"none", stroke: i===0 ? pAtiva.user_color_deep : previewMuted, strokeWidth:1.6})
+            )
+          )
+        )
+      )
+    ),
+
+    // ─── Botão flutuante salvar (condicional) ───
+    houveMudanca && React.createElement("div", {
+      style: {
+        position: "absolute",
+        bottom: 220, left: 16, right: 16,
+        zIndex: 251,
+        background: "#fff",
+        borderRadius: 14,
+        boxShadow: "0 8px 32px rgba(42,32,26,0.20)",
+        border: `1px solid ${pAtiva.user_color_30}`,
+        padding: "10px 14px",
+        display: "flex", alignItems: "center", gap: 10,
+        animation: "tnFadeInUp 0.28s ease-out",
+      },
+    },
+      React.createElement("div", {style:{flex:1, minWidth:0}},
+        React.createElement("div", {
+          style: {
+            fontFamily: "'Cormorant Garamond','Georgia',serif",
+            fontStyle: "italic", fontSize: 13,
+            color: "#2a201a",
+          }
+        }, `experimentando ${pAtiva.label}${noturnoPreview ? " noturno" : ""}`),
+        React.createElement("div", {
+          style: {
+            fontFamily: "'Cormorant Garamond','Georgia',serif",
+            fontStyle: "italic", fontSize: 10,
+            color: "#806b58", marginTop: 1,
+          }
+        }, "salvar a mudança?")
+      ),
+      React.createElement("button", {
+        onClick: descartar,
+        style: {
+          background: "none", border: "none", cursor: "pointer",
+          color: "#806b58", fontSize: 12, fontFamily: "inherit",
+          padding: "6px 10px",
+        }
+      }, "descartar"),
+      React.createElement("button", {
+        onClick: salvar,
+        disabled: salvando,
+        style: {
+          background: pAtiva.user_color,
+          color: pAtiva.user_text_on_color,
+          border: "none", borderRadius: 10,
+          padding: "8px 16px",
+          fontSize: 12, fontWeight: 600,
+          fontFamily: "inherit", cursor: salvando ? "wait" : "pointer",
+          opacity: salvando ? 0.6 : 1,
+        }
+      }, salvando ? "salvando…" : "salvar")
+    )
+  );
+}
+
+// Animação fade-in (usado pelo banner flutuante)
+if(typeof document !== "undefined" && !document.getElementById("tn-anim-fade-in-up")){
+  const style = document.createElement("style");
+  style.id = "tn-anim-fade-in-up";
+  style.textContent = "@keyframes tnFadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}";
+  document.head.appendChild(style);
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -20594,11 +21191,13 @@ function Buscar({user,onView,onAdd,onLugar,contacts,onAbrirContatos,onAbrirLugar
                   </svg>
                 </div>
                 <div style={{flex:1, minWidth:0}}>
+                  {/* v333: vocab — "cruzamentos" é vocabulário banido visível ao user.
+                     Trocado por "encontros" que mantém peso conceitual sem o termo agressivo. */}
                   <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:"italic", fontSize:17, color:T.text, fontWeight:500, letterSpacing:"0.01em"}}>
-                    cruzamentos
+                    encontros no tempo
                   </div>
                   <div style={{fontSize:11, color:T.muted, marginTop:2, fontStyle:"italic", fontFamily:"Georgia,serif"}}>
-                    pessoas que viveram seu tempo e seu lugar
+                    pessoas que viveram o seu tempo e o seu lugar
                   </div>
                 </div>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{flexShrink:0}}>
@@ -22193,8 +22792,11 @@ function Cruzamentos({user, onBack, onAbrirLivro, onAdd, contacts, onLugar}){
           {queroIrCruz.length > 0 && (
             <>
               <SectionHeader
-                titulo="caminhos futuros que se tocam"
-                subtitulo="vocês marcaram o mesmo lugar pro futuro"
+                /* v333: era "caminhos futuros que se tocam" / "vocês marcaram o mesmo lugar pro futuro".
+                   "se tocam" sugere contato físico — banido junto com cruzamento. Substituído por
+                   imagem de caminhos que convergem (encontros futuros possíveis). */
+                titulo="caminhos que se aproximam"
+                subtitulo="vocês marcaram o mesmo lugar para o futuro"
                 count={queroIrCruz.length}
               />
               <div style={{display:"flex", flexDirection:"column", gap:10}}>
@@ -22224,6 +22826,7 @@ function Cruzamentos({user, onBack, onAbrirLivro, onAdd, contacts, onLugar}){
                           {cidadeOrigem && <span style={{fontWeight:400, color:T.muted, fontSize:11}}> · {cidadeOrigem}</span>}
                         </div>
                         <div style={{fontSize:11, color:T.muted, marginTop:2, fontStyle:"italic", fontFamily:"Georgia,serif"}}>
+                          {/* v333: era "também vai a X em Y/Z" — texto OK, mantido. */}
                           também vai a {q.cidade} em {periodo}
                         </div>
                       </div>
@@ -22427,6 +23030,16 @@ function ModalConfiguracoes({user, onClose, onUpdateUser, onLogin, onLogout}){
   const [confirmandoLogout, setConfirmandoLogout] = useState(false);
   // v314: Painel virou sub-tela cheia dentro de Configurações
   const [mostrandoPainel, setMostrandoPainel] = useState(false);
+  // v333c: Editor de Cor Afetiva como sub-tela cheia
+  const [mostrandoEditorCor, setMostrandoEditorCor] = useState(false);
+
+  // v333c: Sub-tela Editor de Cor Afetiva
+  if(mostrandoEditorCor){
+    return React.createElement(EditorCorAfetiva, {
+      user, onUpdateUser,
+      onClose: ()=> setMostrandoEditorCor(false),
+    });
+  }
 
   // v314: Sub-tela Painel — abre em cima do modal Configurações, botão Voltar volta pras config
   if(mostrandoPainel){
@@ -22535,19 +23148,47 @@ function ModalConfiguracoes({user, onClose, onUpdateUser, onLogin, onLogout}){
           letterSpacing:"0.02em",
         }}>aparência</div>
 
-        {/* Personalização do tema (componente existente) */}
-        <PersonalizacaoPerfil user={user} onUpdateUser={onUpdateUser} onLogin={onLogin}/>
-
-        {/* Cor afetiva (componente existente) */}
-        <div style={{
-          background:T.surface,
-          border:`1px solid ${T.border}`,
-          borderRadius:14,
-          padding:"16px 18px",
-          marginTop:14,
-        }}>
-          <PaletaAfetivaPicker user={user} onUpdateUser={onUpdateUser}/>
-        </div>
+        {/* v333c: entrada única "cor afetiva ›" que abre o EditorCorAfetiva.
+            Substitui as 3 seções espalhadas (PersonalizacaoPerfil + PaletaAfetivaPicker + Modo Avançado).
+            A nova tela tem paletas temporais + soltas + toggle modo noturno + preview ao vivo. */}
+        <button
+          onClick={()=>setMostrandoEditorCor(true)}
+          style={{
+            width:"100%", padding:"14px 16px",
+            background:"#fff",
+            border:`0.5px solid ${T.border}`,
+            borderRadius:14,
+            cursor:"pointer", fontFamily:"inherit",
+            display:"flex", alignItems:"center", gap:14,
+            textAlign:"left",
+            transition:"all 0.18s ease",
+          }}
+        >
+          {/* Bolinha amostra da paleta atual */}
+          <div style={{
+            width:38, height:38, borderRadius:"50%",
+            background:`linear-gradient(135deg, var(--user-color-soft), var(--user-color-deep))`,
+            border:`1.5px solid var(--user-color-30)`,
+            flexShrink:0,
+          }}/>
+          <div style={{flex:1, minWidth:0}}>
+            <div style={{
+              fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:"italic",
+              fontSize:15, color:T.text, fontWeight:500,
+            }}>cor afetiva</div>
+            <div style={{
+              fontFamily:"'Cormorant Garamond',Georgia,serif", fontStyle:"italic",
+              fontSize:11, color:T.muted, marginTop:1,
+            }}>
+              {(PALETAS_AFETIVAS[user?.paleta_cor]?.label) || "Terra"}
+              {user?.modo_noturno ? " · noturno" : ""}
+              {" · paleta + modo escuro"}
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style={{flexShrink:0,color:T.muted}}>
+            <path d="M7 4l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
 
         {/* ─── CONTA ─── */}
         <div style={{
@@ -26290,7 +26931,8 @@ function ModalChat({user,dest,type="msg",msgs,onSend,onClose}){
         <AvatarSmart userId={dest.id} name={dest.name} src={dest.avatar_url} size={38}/>
         <div style={{flex:1}}>
           <div style={{fontWeight:700,fontSize:15,color:T.text}}>{dest.name}</div>
-          <div style={{color:T.muted,fontSize:11,marginTop:1}}>Conversa privada</div>
+          {/* v333: subtitle em italic Cormorant minúsculo (era plain sans capitalizado). */}
+          <div style={{color:T.muted,fontSize:12,marginTop:1,fontFamily:"'Cormorant Garamond','Georgia',serif",fontStyle:"italic"}}>conversa privada</div>
         </div>
         <button onClick={()=>{}} style={{width:34,height:34,borderRadius:"50%",background:T.faint,border:`1px solid ${T.border}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 2C5.5 2 3 5 3 7.5c0 3 2.5 6 7.5 7 3 0 6-2.5 6-2.5L14.5 9.5l-3 .8S10 9 9.5 8.5 9 6.5 9 6.5L9.5 4 5.5 2z" stroke={T.sub} strokeWidth="1.3" strokeLinejoin="round"/></svg>
@@ -26323,7 +26965,14 @@ function ModalChat({user,dest,type="msg",msgs,onSend,onClose}){
 
       {/* Mensagens */}
       <div style={{flex:1,overflowY:"auto",padding:"18px 18px 8px",display:"flex",flexDirection:"column",gap:10}}>
-        {ms.length===0&&<div style={{textAlign:"center",color:T.muted,fontSize:13,marginTop:40,lineHeight:1.7}}>Nenhuma mensagem ainda.<br/>Diga olá!</div>}
+        {/* v333: era "Nenhuma mensagem ainda. Diga olá!" sans-serif, plano, plástico (parece WhatsApp).
+            Agora poético em italic Cormorant, sem exclamação, condizente com tom contemplativo do app. */}
+        {ms.length===0&&(
+          <div style={{textAlign:"center",color:T.muted,fontSize:15,marginTop:60,lineHeight:1.7,
+            fontFamily:"'Cormorant Garamond','Georgia',serif",fontStyle:"italic"}}>
+            o silêncio espera a primeira palavra
+          </div>
+        )}
         {ms.map((m,i)=>{
           const mine=m.from===user.id;
           return(
@@ -31303,7 +31952,8 @@ function PerfilLugar({lugar, lugarId, user, onBack, onView}){
           return(
             <div style={{background:"#fff",borderRadius:16,padding:"14px 16px",border:`1px solid ${T.border}`,marginBottom:14}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:8}}>
-                <div style={{fontSize:10,fontWeight:700,color:T.muted,letterSpacing:"0.1em",textTransform:"uppercase"}}>Linha do tempo</div>
+                {/* v333: era CAPS com letterSpacing — agora italic minúsculo, padrão híbrido. */}
+                <div style={{fontSize:13,fontFamily:"'Cormorant Garamond','Georgia',serif",fontStyle:"italic",fontWeight:500,color:T.muted,letterSpacing:"0.01em"}}>linha do tempo</div>
                 <div style={{fontSize:10,color:T.muted,fontStyle:"italic",fontFamily:"Georgia,serif"}}>
                   {anoMin === anoMax ? anoMin : `${anoMin} — ${anoMax}`}
                 </div>
@@ -33757,7 +34407,8 @@ function HV9LugarImersivo({hero, user, onFechar}){
       }}>
         <div style={{position:"absolute", inset:0, background:"linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.7) 100%)"}}/>
         <div style={{position:"relative", padding:"0 18px 18px", color:"#fff", width:"100%"}}>
-          <div style={{fontFamily:"Georgia,serif", fontSize:11, opacity:0.7, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:4}}>um lugar</div>
+          {/* v333: era CAPS letterSpacing — agora italic minúsculo padrão híbrido (rótulo de tipo). */}
+          <div style={{fontFamily:"'Cormorant Garamond','Georgia',serif", fontSize:14, fontStyle:"italic", opacity:0.75, letterSpacing:"0.01em", marginBottom:4, fontWeight:500}}>um lugar</div>
           <div style={{fontFamily:"Georgia,serif", fontSize:26, fontWeight:500, lineHeight:1.05, letterSpacing:"-0.01em"}}>{lugarNome}</div>
           {(lugarUF || lugarPais) && (
             <div style={{fontFamily:"Georgia,serif", fontSize:11, opacity:0.65, fontStyle:"italic", marginTop:3}}>
@@ -33900,7 +34551,8 @@ function HV9LugarImersivo({hero, user, onFechar}){
       {/* 5. Header da grid + indicador de filtro ativo */}
       <div style={{padding:"0 18px 6px", display:"flex", alignItems:"center", gap:10}}>
         <div style={{flex:1, height:0.5, background:"rgba(255,255,255,0.12)"}}/>
-        <div style={{fontSize:9, color:"rgba(255,255,255,0.5)", letterSpacing:"0.16em", textTransform:"uppercase", fontWeight:500}}>registros</div>
+        {/* v333: era CAPS — agora italic Cormorant minúsculo, padrão híbrido (sub-header). */}
+        <div style={{fontSize:13, color:"rgba(255,255,255,0.5)", fontFamily:"'Cormorant Garamond','Georgia',serif", fontStyle:"italic", fontWeight:500, letterSpacing:"0.01em"}}>registros</div>
         <div style={{flex:1, height:0.5, background:"rgba(255,255,255,0.12)"}}/>
       </div>
       {anoFiltrado && (
@@ -36707,12 +37359,16 @@ function TempnexTopBar({user, onUpdateUser, naoLidas=0, onNotificacoes, alertasR
     style:{
       // v322i: SEM margin negativo (causava overflow horizontal no mobile com overflowX:hidden, cortando "perfil"/"buscar")
       // A barra agora ocupa a largura NATURAL do container pai. Padding interno cuida do espaço.
+      // v333: era background sólido var(--user-color). Em paletas vibrantes (Oceano/Rosa Antigo)
+      // ficava brilhante demais brigando com o bege. Agora é gradiente bem sutil que integra
+      // a cor afetiva no fundo bege sem dominar. Mantém identidade da paleta sem agressividade.
       width: "100%",
       padding:"max(0px, env(safe-area-inset-top)) 14px 0",
-      background:"var(--user-color)",
-      color:"var(--user-text-on-color)",
-      borderBottom:"1px solid var(--user-color-deep-18)",
+      background:"linear-gradient(180deg, var(--user-color-soft) 0%, rgba(250,247,242,0.92) 100%)",
+      color:"var(--user-color-deep, #2a201a)",
+      borderBottom:"0.5px solid var(--user-color-30, rgba(42,32,26,0.10))",
       boxSizing:"border-box",
+      backdropFilter:"saturate(120%) blur(2px)",
     }
   },
     React.createElement("div", {
@@ -36727,7 +37383,8 @@ function TempnexTopBar({user, onUpdateUser, naoLidas=0, onNotificacoes, alertasR
         onBack && React.createElement("button", {
           onClick: onBack,
           title: "Voltar",
-          style:{background:"none", border:"none", color:"var(--user-text-on-color)", cursor:"pointer", opacity:.75, padding:2, display:"flex", alignItems:"center"}
+          /* v333: cor do botão voltar — agora fundo claro, ícone escuro */
+          style:{background:"none", border:"none", color:"var(--user-color-deep, #2a201a)", cursor:"pointer", opacity:.75, padding:2, display:"flex", alignItems:"center"}
         },
           React.createElement("svg", {width:14, height:14, viewBox:"0 0 20 20", fill:"none"},
             React.createElement("path", {d:"M13 4l-6 6 6 6", stroke:"currentColor", strokeWidth:2.2, strokeLinecap:"round", strokeLinejoin:"round"})
@@ -36737,7 +37394,8 @@ function TempnexTopBar({user, onUpdateUser, naoLidas=0, onNotificacoes, alertasR
           style:{
             fontFamily:"'Cormorant Garamond',Georgia,serif",
             fontSize:18, fontWeight:500,
-            color:"var(--user-text-on-color)",
+            /* v333: texto TempnexT em cor afetiva profunda (não branco sobre claro) */
+            color:"var(--user-color-deep, #2a201a)",
             letterSpacing:"-0.01em",
             userSelect:"none", lineHeight:1,
           }
@@ -36749,9 +37407,11 @@ function TempnexTopBar({user, onUpdateUser, naoLidas=0, onNotificacoes, alertasR
         React.createElement("button", {
           onClick: (e)=>{ e.stopPropagation(); setPaletaPickerAberto(v=>!v); },
           title: "Trocar paleta",
+          /* v333b fix: era borda branca translúcida pra contrastar com fundo cor cheia.
+             Agora fundo é claro/translúcido, borda escura é necessária pra delimitar o swatch. */
           style:{
             width:22, height:22, borderRadius:"50%",
-            border: paletaPickerAberto ? "2px solid #fff" : "1.5px solid rgba(255,255,255,0.35)",
+            border: paletaPickerAberto ? "2px solid var(--user-color-deep, #2a201a)" : "1.5px solid var(--user-color-30, rgba(42,32,26,0.25))",
             background:"var(--user-color-deep)",
             cursor:"pointer", padding:0, flexShrink:0,
             transition:"border 0.15s ease",
@@ -36764,12 +37424,16 @@ function TempnexTopBar({user, onUpdateUser, naoLidas=0, onNotificacoes, alertasR
             style:{position:"fixed", inset:0, zIndex:200, background:"transparent"}
           }),
           React.createElement("div", {
+            /* v333b fix: zIndex bem maior pra ficar acima de tabs sticky em outras telas
+               (notificações tem TabsGeralEu sticky com zIndex 5, mas em contextos com
+               backdrop-filter o cálculo de stacking context muda — segurança extra).
+               Background branco puro: contrasta limpo com qualquer paleta da topbar. */
             style:{
-              position:"absolute", top:"calc(100% + 8px)", right:0, zIndex:201,
-              background:"#FAF7F2",
-              border:"0.5px solid rgba(42,32,26,0.12)",
+              position:"absolute", top:"calc(100% + 8px)", right:0, zIndex:9999,
+              background:"#fff",
+              border:"1px solid rgba(42,32,26,0.18)",
               borderRadius:14, padding:"14px 14px 12px",
-              boxShadow:"0 12px 32px rgba(42,32,26,0.18)",
+              boxShadow:"0 12px 32px rgba(42,32,26,0.22), 0 4px 12px rgba(42,32,26,0.10)",
               minWidth:240,
             }
           },
@@ -36795,12 +37459,13 @@ function TempnexTopBar({user, onUpdateUser, naoLidas=0, onNotificacoes, alertasR
         React.createElement("button", {
           onClick: onNotificacoes,
           title: "Notificações",
+          /* v333: cor do sino — fundo agora claro, ícone escuro com cor afetiva profunda */
           style:{
             width:28, height:28, borderRadius:"50%",
             border:"none", background:"transparent",
             cursor:"pointer", padding:0,
             display:"flex", alignItems:"center", justifyContent:"center",
-            color:"var(--user-text-on-color)", position:"relative",
+            color:"var(--user-color-deep, #2a201a)", position:"relative",
           }
         },
           React.createElement("svg", {width:15, height:15, viewBox:"0 0 20 20", fill:"none"},
@@ -36824,7 +37489,8 @@ function TempnexTopBar({user, onUpdateUser, naoLidas=0, onNotificacoes, alertasR
             border:"none", background:"transparent",
             cursor:"pointer", padding:0,
             display:"flex", alignItems:"center", justifyContent:"center",
-            color:"var(--user-text-on-color)", position:"relative",
+            /* v333: cor do sino azul para fundo claro */
+            color:"var(--user-color-deep, #2a201a)", position:"relative",
             // v323a: pulso suave quando há alertas regionais novos
             animation: alertasRegiao > 0 ? "tn-pulse 1.6s ease-in-out infinite" : "none",
           }
@@ -36964,12 +37630,17 @@ function TelaPadrao({user, titulo, subtitulo, onVoltar, acoes, semNav=false, top
       style: {
         width: "100%",
         padding: "max(0px, env(safe-area-inset-top)) 14px 0",
-        background: topBarTransparente ? "transparent" : "var(--user-color)",
-        color: topBarTransparente ? "inherit" : "var(--user-text-on-color)",
-        borderBottom: topBarTransparente ? "none" : "1px solid var(--user-color-deep-18)",
+        /* v333: era background:var(--user-color) puro. Agora gradient sutil que integra
+           com o bege do app sem dominar a tela. Mesma decisão da TempnexTopBar. */
+        background: topBarTransparente
+          ? "transparent"
+          : "linear-gradient(180deg, var(--user-color-soft) 0%, rgba(250,247,242,0.92) 100%)",
+        color: topBarTransparente ? "inherit" : "var(--user-color-deep, #2a201a)",
+        borderBottom: topBarTransparente ? "none" : "0.5px solid var(--user-color-30, rgba(42,32,26,0.10))",
         boxSizing: "border-box",
         position: "relative",
         zIndex: 5,
+        backdropFilter: topBarTransparente ? "none" : "saturate(120%) blur(2px)",
       },
     },
       React.createElement("div", {
@@ -36987,7 +37658,8 @@ function TelaPadrao({user, titulo, subtitulo, onVoltar, acoes, semNav=false, top
             title: "Voltar",
             style: {
               background:"none", border:"none",
-              color: topBarTransparente ? "inherit" : "var(--user-text-on-color)",
+              /* v333: cor do botão voltar — fundo claro, ícone escuro */
+              color: topBarTransparente ? "inherit" : "var(--user-color-deep, #2a201a)",
               cursor:"pointer", opacity:.75, padding:2,
               display:"flex", alignItems:"center",
             },
@@ -37003,7 +37675,8 @@ function TelaPadrao({user, titulo, subtitulo, onVoltar, acoes, semNav=false, top
             style:{
               fontFamily:"'Cormorant Garamond',Georgia,serif",
               fontSize:18, fontWeight:500,
-              color: topBarTransparente ? "inherit" : "var(--user-text-on-color)",
+              /* v333: cor do título — escuro sobre fundo claro */
+              color: topBarTransparente ? "inherit" : "var(--user-color-deep, #2a201a)",
               letterSpacing:"-0.01em",
               lineHeight:1.1,
               overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap",
@@ -37013,8 +37686,9 @@ function TelaPadrao({user, titulo, subtitulo, onVoltar, acoes, semNav=false, top
             style:{
               fontFamily:"'Cormorant Garamond',serif",
               fontStyle:"italic", fontSize:11,
-              color: topBarTransparente ? "inherit" : "var(--user-text-on-color)",
-              opacity:.85, marginTop:2, lineHeight:1.3,
+              /* v333: cor do subtítulo — escuro sobre fundo claro */
+              color: topBarTransparente ? "inherit" : "var(--user-color-deep, #2a201a)",
+              opacity:.7, marginTop:2, lineHeight:1.3,
               overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap",
             },
           }, subtitulo) : null
