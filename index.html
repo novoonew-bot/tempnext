@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v339b — fix erro 400: query de momentos no Olhar pedia coluna/FK inexistente ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v340 — remove foto de stock do lugar (mostrava foto generica errada) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -13910,7 +13910,7 @@ function syncLugaresToPlaces(_x73, _x74) {
 //   - Senão → abre perfil
 function _syncLugaresToPlaces() {
   _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee206(profileId, lugares) {
-    var _iterator48, _step48, l, nome, cidade, estado, pais, _yield$db$from$select2, existing, placeId, foto, photoFields, _foto, _yield$db$from$insert18, created, error, _foto2, _t234, _t235;
+    var _iterator48, _step48, l, nome, cidade, estado, pais, _yield$db$from$select2, existing, placeId, photoFields, _yield$db$from$insert18, created, error, foto, _t234, _t235;
     return _regenerator().w(function (_context208) {
       while (1) switch (_context208.p = _context208.n) {
         case 0:
@@ -13925,7 +13925,7 @@ function _syncLugaresToPlaces() {
           _iterator48.s();
         case 3:
           if ((_step48 = _iterator48.n()).done) {
-            _context208.n = 18;
+            _context208.n = 13;
             break;
           }
           l = _step48.value;
@@ -13937,7 +13937,7 @@ function _syncLugaresToPlaces() {
             _context208.n = 4;
             break;
           }
-          return _context208.a(3, 17);
+          return _context208.a(3, 12);
         case 4:
           _context208.p = 4;
           _context208.n = 5;
@@ -13947,54 +13947,20 @@ function _syncLugaresToPlaces() {
           existing = _yield$db$from$select2.data;
           placeId = void 0;
           if (!existing) {
-            _context208.n = 9;
+            _context208.n = 6;
             break;
           }
           placeId = existing.id;
-          // Se já existe mas sem foto e é cidade, tenta buscar agora
-          if (!(!existing.photo_url && nome.toLowerCase() === cidade.toLowerCase())) {
-            _context208.n = 8;
-            break;
-          }
-          _context208.n = 6;
-          return buscarFotoLugarUnsplash(cidade, estado, pais);
-        case 6:
-          foto = _context208.v;
-          if (!foto) {
-            _context208.n = 8;
-            break;
-          }
-          _context208.n = 7;
-          return db.from("places").update({
-            photo_url: foto.url,
-            photo_credit_name: foto.photographer,
-            photo_credit_url: foto.photographerUrl
-          }).eq("id", placeId);
-        case 7:
-          unsplashTrackDownload(foto.downloadLocation);
-        case 8:
-          _context208.n = 14;
+          // v340 (caminho A): removida a busca automática de foto no Unsplash.
+          // Para cidade pequena a API ignorava os termos e devolvia foto genérica
+          // de outro lugar (ex.: Rio em "Primavera do Leste") — mostrar lugar errado
+          // viola "verdade do banco". Lugar sem foto cai no mapa/gradiente real.
+          _context208.n = 9;
           break;
-        case 9:
-          // Novo lugar: busca foto se for cidade (nome ~= cidade)
-          photoFields = {};
-          if (!(nome.toLowerCase() === cidade.toLowerCase() && cidade)) {
-            _context208.n = 11;
-            break;
-          }
-          _context208.n = 10;
-          return buscarFotoLugarUnsplash(cidade, estado, pais);
-        case 10:
-          _foto = _context208.v;
-          if (_foto) {
-            photoFields = {
-              photo_url: _foto.url,
-              photo_credit_name: _foto.photographer,
-              photo_credit_url: _foto.photographerUrl
-            };
-          }
-        case 11:
-          _context208.n = 12;
+        case 6:
+          // Novo lugar
+          photoFields = {}; // Cria o lugar (com foto se conseguiu)
+          _context208.n = 7;
           return db.from("places").insert(_objectSpread({
             name: nome,
             city: cidade,
@@ -14005,31 +13971,31 @@ function _syncLugaresToPlaces() {
             lat: l.lat != null ? l.lat : null,
             lng: l.lng != null ? l.lng : null
           }, photoFields)).select("id").single();
-        case 12:
+        case 7:
           _yield$db$from$insert18 = _context208.v;
           created = _yield$db$from$insert18.data;
           error = _yield$db$from$insert18.error;
           if (!error) {
-            _context208.n = 13;
+            _context208.n = 8;
             break;
           }
           console.error("Erro ao criar lugar:", error);
-          return _context208.a(3, 17);
-        case 13:
+          return _context208.a(3, 12);
+        case 8:
           placeId = created.id;
           // Notifica download do Unsplash (exigência de atribuição)
           if (photoFields.photo_url) {
-            _foto2 = {
+            foto = {
               downloadLocation: null
             }; // já foi notificado na inserção? Precisa guardar. Re-busca link.
             // Como não guardamos downloadLocation aqui, o tracking é best-effort. OK pra Demo.
           }
-        case 14:
+        case 9:
           if (!placeId) {
-            _context208.n = 15;
+            _context208.n = 10;
             break;
           }
-          _context208.n = 15;
+          _context208.n = 10;
           return db.from("place_profiles").upsert({
             place_id: placeId,
             profile_id: profileId,
@@ -14040,31 +14006,31 @@ function _syncLugaresToPlaces() {
           }, {
             onConflict: "place_id,profile_id,year_start"
           });
-        case 15:
-          _context208.n = 17;
+        case 10:
+          _context208.n = 12;
           break;
-        case 16:
-          _context208.p = 16;
+        case 11:
+          _context208.p = 11;
           _t234 = _context208.v;
           console.error("Erro syncLugares:", _t234);
-        case 17:
+        case 12:
           _context208.n = 3;
           break;
-        case 18:
-          _context208.n = 20;
+        case 13:
+          _context208.n = 15;
           break;
-        case 19:
-          _context208.p = 19;
+        case 14:
+          _context208.p = 14;
           _t235 = _context208.v;
           _iterator48.e(_t235);
-        case 20:
-          _context208.p = 20;
+        case 15:
+          _context208.p = 15;
           _iterator48.f();
-          return _context208.f(20);
-        case 21:
+          return _context208.f(15);
+        case 16:
           return _context208.a(2);
       }
-    }, _callee206, null, [[4, 16], [2, 19, 20, 21]]);
+    }, _callee206, null, [[4, 11], [2, 14, 15, 16]]);
   }));
   return _syncLugaresToPlaces.apply(this, arguments);
 }
