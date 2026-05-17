@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v342 — fix erro 400 em places: coluna era created_by, nao user_id ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v343 — fix foto sumida no capitulo memorias: array fotos nao era mapeado ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -16109,7 +16109,10 @@ function PerfilOutroFiltrado(_ref82) {
         texto: m.texto,
         lugar: (m.lugar || "").split(",")[0].trim(),
         ano: m.ts ? new Date(m.ts).getFullYear() : null,
-        foto_url: m.foto_url || m.imagem_url || null
+        // v343: o banco grava a foto no array `fotos` — antes só `foto_url`
+        // era copiado (sempre null), e getFotoUrl não achava a imagem → card vazio.
+        fotos: Array.isArray(m.fotos) ? m.fotos : [],
+        foto_url: m.foto_url || m.imagem_url || Array.isArray(m.fotos) && m.fotos[0] || null
       };
     }),
     capsulasCompletas: capsulasReais,
@@ -35277,7 +35280,9 @@ function Perfil(_ref156) {
           texto: m.texto,
           lugar: (m.lugar || "").split(",")[0].trim(),
           ano: m.ts ? new Date(m.ts).getFullYear() : null,
-          foto_url: m.foto_url || m.imagem_url || null
+          // v343: inclui o array `fotos` (onde o banco grava a imagem).
+          fotos: Array.isArray(m.fotos) ? m.fotos : [],
+          foto_url: m.foto_url || m.imagem_url || Array.isArray(m.fotos) && m.fotos[0] || null
         };
       }),
       capsulasCompletas: minhasCapsulas,
