@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v338b — fix tela branca: guards nos componentes de hero/mapa quando nao ha dado real ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v339 — feed infinito so cicla com pool suficiente (fim da repeticao do mesmo card) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -57105,9 +57105,14 @@ function HomeV9Preview(_ref265) {
     var tilesPool = pools.tiles;
     if (tilesPool.length === 0) return null;
     var extras = [];
+    // v339 (caminho B): só cicla o feed infinito se houver pool suficiente
+    // (>=6 tiles reais). Com poucos tiles, ciclar repetiria o mesmo card —
+    // mostra cada tile no máximo uma vez e para.
+    var podeCiclar = tilesPool.length >= 6;
+    var limite = podeCiclar ? scrollExtra : Math.min(scrollExtra, tilesPool.length);
     // v326b: ciclo 3x mais longo — re-shuffle só após 3 voltas inteiras
     var tamanhoCiclo = tilesPool.length * 10;
-    for (var i = 0; i < scrollExtra; i++) {
+    for (var i = 0; i < limite; i++) {
       var ciclo = Math.floor(i / tamanhoCiclo);
       var idxNoCiclo = i % tilesPool.length;
       // Re-embaralha por ciclo pra ordem variar (sem repetir mesma ordem)
@@ -57235,9 +57240,12 @@ function HomeV9Preview(_ref265) {
     }
     if (tilesPool.length === 0) return null;
     var extras = [];
+    // v339 (caminho B): só cicla se houver pool suficiente (>=6 tiles).
+    var podeCiclar = tilesPool.length >= 6;
+    var limite = podeCiclar ? scrollExtra : Math.min(scrollExtra, tilesPool.length);
     // v326b: ciclo 10x mais longo
     var tamanhoCiclo = tilesPool.length * 10;
-    for (var i = 0; i < scrollExtra; i++) {
+    for (var i = 0; i < limite; i++) {
       var ciclo = Math.floor(i / tamanhoCiclo);
       var idxNoCiclo = i % tilesPool.length;
       var cicloSeed = (seed + ciclo * 37) % 1000;
