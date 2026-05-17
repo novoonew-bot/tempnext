@@ -1,0 +1,93 @@
+{
+  "timestamp": "2026-05-14T23:51:07.099Z",
+  "target": "https://ahvmyhxromworlysqsam.supabase.co",
+  "tables": {
+    "profiles": {
+      "count": 3,
+      "file": "profiles.json",
+      "bytes": 8865
+    },
+    "momentos": {
+      "count": 0,
+      "file": "momentos.json",
+      "bytes": 2
+    },
+    "notificacoes": {
+      "count": 0,
+      "file": "notificacoes.json",
+      "bytes": 2
+    },
+    "capsula_aguardando": {
+      "count": 0,
+      "file": "capsula_aguardando.json",
+      "bytes": 2
+    },
+    "messages": {
+      "count": 0,
+      "file": "messages.json",
+      "bytes": 2
+    },
+    "respostas_afinidade": {
+      "count": 0,
+      "file": "respostas_afinidade.json",
+      "bytes": 2
+    },
+    "contacts": {
+      "count": 0,
+      "file": "contacts.json",
+      "bytes": 2
+    },
+    "followed_places": {
+      "count": 0,
+      "file": "followed_places.json",
+      "bytes": 2
+    },
+    "olhando_momentos": {
+      "count": 0,
+      "file": "olhando_momentos.json",
+      "bytes": 2
+    },
+    "registrando_agora": {
+      "count": 0,
+      "file": "registrando_agora.json",
+      "bytes": 2
+    },
+    "places": {
+      "count": 11,
+      "file": "places.json",
+      "bytes": 6436
+    },
+    "place_profiles": {
+      "count": 0,
+      "file": "place_profiles.json",
+      "bytes": 2
+    },
+    "interacoes": {
+      "count": 0,
+      "file": "interacoes.json",
+      "bytes": 2
+    },
+    "comentarios_momentos": {
+      "count": 0,
+      "file": "comentarios_momentos.json",
+      "bytes": 2
+    },
+    "likes": {
+      "count": 0,
+      "file": "likes.json",
+      "bytes": 2
+    },
+    "videos": {
+      "count": 0,
+      "file": "videos.json",
+      "bytes": 2
+    },
+    "place_suggestions_cache": {
+      "count": 22,
+      "file": "place_suggestions_cache.json",
+      "bytes": 77279
+    }
+  },
+  "total_rows": 36,
+  "total_errors": 0
+}

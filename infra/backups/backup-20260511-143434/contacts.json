@@ -1,0 +1,194 @@
+[
+  {
+    "id": "dbafa097-591e-4ba9-99c7-0e0f241730cf",
+    "user_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "contact_id": "ec7e970c-9dd4-405b-ad0c-a94f7d7c1183",
+    "rel": "conhecido",
+    "created_at": "2026-04-21T20:48:04.574621+00:00",
+    "is_family": false
+  },
+  {
+    "id": "d50d18a0-f4e8-4550-861e-e21f96e87663",
+    "user_id": "ec7e970c-9dd4-405b-ad0c-a94f7d7c1183",
+    "contact_id": "0a42f1bd-5fad-4e0f-899c-dcc8c399b545",
+    "rel": "familia",
+    "created_at": "2026-04-21T20:48:25.260178+00:00",
+    "is_family": false
+  },
+  {
+    "id": "48189aae-2c9d-406a-9cb6-f8e1fa339473",
+    "user_id": "ec7e970c-9dd4-405b-ad0c-a94f7d7c1183",
+    "contact_id": "c2c5bf56-8f56-44c8-b797-dfe67ca2fda9",
+    "rel": "conhecido",
+    "created_at": "2026-04-21T20:48:25.260178+00:00",
+    "is_family": false
+  },
+  {
+    "id": "3143e59e-b27e-474c-af23-99ec0170b2f7",
+    "user_id": "ec7e970c-9dd4-405b-ad0c-a94f7d7c1183",
+    "contact_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "rel": "conhecido",
+    "created_at": "2026-04-21T20:48:25.260178+00:00",
+    "is_family": false
+  },
+  {
+    "id": "60f6450f-eaf5-4cc6-9157-9c5fe5cb8afb",
+    "user_id": "ec7e970c-9dd4-405b-ad0c-a94f7d7c1183",
+    "contact_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "rel": "conhecido",
+    "created_at": "2026-04-21T20:48:25.260178+00:00",
+    "is_family": false
+  },
+  {
+    "id": "3df45698-803e-47f8-abda-da16d672da5a",
+    "user_id": "ec7e970c-9dd4-405b-ad0c-a94f7d7c1183",
+    "contact_id": "ec7e970c-9dd4-405b-ad0c-a94f7d7c1183",
+    "rel": "conhecido",
+    "created_at": "2026-04-21T20:48:25.260178+00:00",
+    "is_family": false
+  },
+  {
+    "id": "0b440e6e-4126-4b2f-88cb-b01cb13087e7",
+    "user_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "contact_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "rel": "familia",
+    "created_at": "2026-04-16T20:35:28.612283+00:00",
+    "is_family": false
+  },
+  {
+    "id": "b2c9d209-d69c-44e0-9d54-4ff8cd3ef960",
+    "user_id": "0a42f1bd-5fad-4e0f-899c-dcc8c399b545",
+    "contact_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "rel": "conhecido",
+    "created_at": "2026-04-17T00:27:01.18499+00:00",
+    "is_family": false
+  },
+  {
+    "id": "eacf6f42-20ac-4b37-84f2-88ac563267bc",
+    "user_id": "0a42f1bd-5fad-4e0f-899c-dcc8c399b545",
+    "contact_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "rel": "conhecido",
+    "created_at": "2026-04-17T00:27:03.171529+00:00",
+    "is_family": false
+  },
+  {
+    "id": "05c7b001-8252-4b38-9170-80f3c7bb3321",
+    "user_id": "c2c5bf56-8f56-44c8-b797-dfe67ca2fda9",
+    "contact_id": "0a42f1bd-5fad-4e0f-899c-dcc8c399b545",
+    "rel": "conhecido",
+    "created_at": "2026-04-17T01:25:02.602371+00:00",
+    "is_family": false
+  },
+  {
+    "id": "c258e7a4-f989-4108-8051-1ceff98ef614",
+    "user_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "contact_id": "0a42f1bd-5fad-4e0f-899c-dcc8c399b545",
+    "rel": "familia",
+    "created_at": "2026-04-17T01:22:24.564796+00:00",
+    "is_family": false
+  },
+  {
+    "id": "5b94771d-5d3e-4029-9114-fb67c074999e",
+    "user_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "contact_id": "c2c5bf56-8f56-44c8-b797-dfe67ca2fda9",
+    "rel": "conhecido",
+    "created_at": "2026-04-17T22:41:30.66458+00:00",
+    "is_family": false
+  },
+  {
+    "id": "5232b52e-e248-4ab0-8a0a-6dbeb00726bd",
+    "user_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "contact_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "rel": "conhecido",
+    "created_at": "2026-04-17T22:41:35.648095+00:00",
+    "is_family": false
+  },
+  {
+    "id": "f086bb33-095d-4062-958c-63467acf7cc8",
+    "user_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "contact_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "rel": "conhecido",
+    "created_at": "2026-04-18T02:38:18.374428+00:00",
+    "is_family": false
+  },
+  {
+    "id": "4d9c7865-31b5-425f-84a0-880cc89f6de7",
+    "user_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "contact_id": "c2c5bf56-8f56-44c8-b797-dfe67ca2fda9",
+    "rel": "conhecido",
+    "created_at": "2026-04-18T22:29:07.569673+00:00",
+    "is_family": false
+  },
+  {
+    "id": "a3fbf6eb-8482-4f50-9efd-ec062e5b5027",
+    "user_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "contact_id": "0a42f1bd-5fad-4e0f-899c-dcc8c399b545",
+    "rel": "conhecido",
+    "created_at": "2026-04-18T22:29:22.376078+00:00",
+    "is_family": false
+  },
+  {
+    "id": "ce9f116b-8421-49b9-a027-4a06223942a1",
+    "user_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "contact_id": "ec7e970c-9dd4-405b-ad0c-a94f7d7c1183",
+    "rel": "conhecido",
+    "created_at": "2026-04-30T07:39:33.450902+00:00",
+    "is_family": false
+  },
+  {
+    "id": "4b1c8956-ce7c-4332-bcdf-6ebdc33b1f50",
+    "user_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "contact_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "rel": "conhecido",
+    "created_at": "2026-05-01T22:02:44.931484+00:00",
+    "is_family": false
+  },
+  {
+    "id": "39160a8b-f5aa-4614-b9c0-ad8bd1b78d4f",
+    "user_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "contact_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "rel": "conhecido",
+    "created_at": "2026-05-01T18:43:15.188555+00:00",
+    "is_family": false
+  },
+  {
+    "id": "acf7bc78-654f-4fa6-a713-aa249f9a75c4",
+    "user_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "contact_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "rel": "conhecido",
+    "created_at": "2026-05-01T18:57:21.671303+00:00",
+    "is_family": false
+  },
+  {
+    "id": "22dd9613-cf9f-4f82-a6e1-75088986adcc",
+    "user_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "contact_id": "0a42f1bd-5fad-4e0f-899c-dcc8c399b545",
+    "rel": "conhecido",
+    "created_at": "2026-05-01T18:43:10.309789+00:00",
+    "is_family": true
+  },
+  {
+    "id": "67075941-3f8a-480d-9b91-6b655b8feb60",
+    "user_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "contact_id": "c2c5bf56-8f56-44c8-b797-dfe67ca2fda9",
+    "rel": "amigo",
+    "created_at": "2026-05-01T18:43:18.79882+00:00",
+    "is_family": true
+  },
+  {
+    "id": "46b91358-7158-4880-9884-24a27ed3b9d2",
+    "user_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "contact_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "rel": "familia",
+    "created_at": "2026-05-01T21:45:38.443543+00:00",
+    "is_family": false
+  },
+  {
+    "id": "3d748bbf-c30b-4379-a3de-46567b6bec1d",
+    "user_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "contact_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "rel": "familia",
+    "created_at": "2026-05-01T18:43:13.949886+00:00",
+    "is_family": true
+  }
+]

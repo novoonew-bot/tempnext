@@ -1,0 +1,6 @@
+Backup pré-migration 007 — F1.B
+Data: 2026-05-17T04:09:59.131Z
+Modo: anon (PARCIAL — RLS filtra)
+profiles: 3 linhas
+places: 13 linhas
+place_profiles: 3 linhas

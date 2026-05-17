@@ -1,0 +1,19 @@
+{
+  "name": "tempnext-infra",
+  "version": "0.1.0",
+  "description": "Infrastructure, migrations, and tests for Tempnext",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:rls": "node tests/rls/test_anon_access.js",
+    "inventory": "node tests/rls/inventory.js",
+    "backup": "node tests/rls/backup.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

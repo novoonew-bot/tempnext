@@ -1,0 +1,93 @@
+{
+  "timestamp": "2026-05-11T18:34:34.150Z",
+  "target": "https://ahvmyhxromworlysqsam.supabase.co",
+  "tables": {
+    "profiles": {
+      "count": 6,
+      "file": "profiles.json",
+      "bytes": 19435
+    },
+    "momentos": {
+      "count": 128,
+      "file": "momentos.json",
+      "bytes": 740674
+    },
+    "notificacoes": {
+      "count": 574,
+      "file": "notificacoes.json",
+      "bytes": 259316
+    },
+    "capsula_aguardando": {
+      "count": 43,
+      "file": "capsula_aguardando.json",
+      "bytes": 13966
+    },
+    "messages": {
+      "count": 79,
+      "file": "messages.json",
+      "bytes": 22285
+    },
+    "respostas_afinidade": {
+      "count": 22,
+      "file": "respostas_afinidade.json",
+      "bytes": 6512
+    },
+    "contacts": {
+      "count": 24,
+      "file": "contacts.json",
+      "bytes": 6534
+    },
+    "followed_places": {
+      "count": 18,
+      "file": "followed_places.json",
+      "bytes": 3925
+    },
+    "olhando_momentos": {
+      "count": 30,
+      "file": "olhando_momentos.json",
+      "bytes": 5011
+    },
+    "registrando_agora": {
+      "count": 15,
+      "file": "registrando_agora.json",
+      "bytes": 8163
+    },
+    "places": {
+      "count": 13,
+      "file": "places.json",
+      "bytes": 8010
+    },
+    "place_profiles": {
+      "count": 14,
+      "file": "place_profiles.json",
+      "bytes": 4515
+    },
+    "interacoes": {
+      "count": 167,
+      "file": "interacoes.json",
+      "bytes": 59493
+    },
+    "comentarios_momentos": {
+      "count": 129,
+      "file": "comentarios_momentos.json",
+      "bytes": 41573
+    },
+    "likes": {
+      "count": 9,
+      "file": "likes.json",
+      "bytes": 3145
+    },
+    "videos": {
+      "count": 11,
+      "file": "videos.json",
+      "bytes": 4960
+    },
+    "place_suggestions_cache": {
+      "count": 22,
+      "file": "place_suggestions_cache.json",
+      "bytes": 77279
+    }
+  },
+  "total_rows": 1304,
+  "total_errors": 0
+}

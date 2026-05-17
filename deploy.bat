@@ -1,6 +1,11 @@
 @echo off
 REM Tempnext - script de deploy
-REM Uso: deploy.bat v333r "descricao do commit"
+REM
+REM MODO 1 (Claude preparou o index.html direto em C:\tempnext):
+REM   deploy.bat v333u "descricao do commit"
+REM
+REM MODO 2 (voce baixou tempnext_vXXX.html em Downloads — fluxo antigo):
+REM   deploy.bat v333u "descricao" downloads
 
 setlocal
 
@@ -9,34 +14,43 @@ if "%~2"=="" goto :uso
 
 set VERSAO=%~1
 set DESCRICAO=%~2
-set ARQUIVO=tempnext_%VERSAO%.html
-set ORIGEM=C:\Users\%USERNAME%\Downloads\%ARQUIVO%
+set MODO=%~3
+
+cd /d C:\tempnext || goto :erro
 
 echo.
 echo === Tempnext deploy === %VERSAO% ===
 echo.
 
-if not exist "%ORIGEM%" (
-  echo [ERRO] Arquivo nao encontrado: %ORIGEM%
-  echo Coloque o %ARQUIVO% em Downloads e tente de novo.
-  goto :erro
+if /I "%MODO%"=="downloads" (
+  set ARQUIVO=tempnext_%VERSAO%.html
+  set ORIGEM=C:\Users\%USERNAME%\Downloads\%ARQUIVO%
+  if not exist "%ORIGEM%" (
+    echo [ERRO] Arquivo nao encontrado: %ORIGEM%
+    goto :erro
+  )
+  echo [1/7] Backup do orig em C:\backup_tempnext\
+  copy /Y "%ORIGEM%" "C:\backup_tempnext\%ARQUIVO%" || goto :erro
+  echo [2/7] Backup do orig em D:\
+  copy /Y "%ORIGEM%" "D:\%ARQUIVO%" 2>nul
+  echo [3/7] Copiando pra C:\tempnext\index.html
+  copy /Y "%ORIGEM%" index.html || goto :erro
+) else (
+  REM MODO 1: index.html ja esta em C:\tempnext, preparado pelo Claude.
+  REM Faz backup do proprio index.html como vXXX antes de compilar.
+  echo [1/7] Backup do orig em C:\backup_tempnext\
+  if not exist C:\backup_tempnext mkdir C:\backup_tempnext
+  copy /Y index.html "C:\backup_tempnext\tempnext_%VERSAO%.html" || goto :erro
+  echo [2/7] Backup do orig em D:\
+  copy /Y index.html "D:\tempnext_%VERSAO%.html" 2>nul
+  echo [3/7] index.html ja esta posicionado (modo Claude)
 )
 
-echo [1/7] Backup em C:\backup_tempnext\
-copy /Y "%ORIGEM%" "C:\backup_tempnext\%ARQUIVO%" || goto :erro
-
-echo [2/7] Backup em D:\
-copy /Y "%ORIGEM%" "D:\%ARQUIVO%" || goto :erro
-
-echo [3/7] Copiando pra C:\tempnext\index.html
-cd /d C:\tempnext || goto :erro
-copy /Y "%ORIGEM%" index.html || goto :erro
-
 echo [4/7] Compilando...
-call node compilar.js || goto :erro_compilar
+call node compilar.cjs || goto :erro_compilar
 
 if not exist index_compiled.html (
-  echo [ERRO] compilar.js rodou mas nao gerou index_compiled.html
+  echo [ERRO] compilar.cjs rodou mas nao gerou index_compiled.html
   goto :erro
 )
 
@@ -54,32 +68,30 @@ git push --force || goto :erro
 echo.
 echo === Deploy concluido: %VERSAO% ===
 echo Vercel vai detectar o push e atualizar em ~30s.
+echo IMPORTANTE: restaure o orig com Babel pra C:\tempnext\index.html
+echo   antes da proxima edicao (copy de C:\backup_tempnext\tempnext_%VERSAO%.html).
 echo.
 endlocal
 exit /b 0
 
 :uso
 echo.
-echo Uso: deploy.bat ^<versao^> "^<descricao^>"
-echo Exemplo: deploy.bat v333s "pin gota azul"
+echo Uso MODO 1 (Claude preparou index.html): deploy.bat ^<versao^> "^<descricao^>"
+echo Uso MODO 2 (arquivo em Downloads):        deploy.bat ^<versao^> "^<descricao^>" downloads
 echo.
-echo O arquivo tempnext_^<versao^>.html precisa estar em Downloads.
 endlocal
 exit /b 1
 
 :erro_compilar
 echo.
-echo [ERRO] compilar.js falhou. Index original ainda esta intacto.
-echo Conserte o erro de compilacao e rode de novo.
+echo [ERRO] compilar.cjs falhou. Index original ainda esta intacto.
+echo Se for "Cannot find module @babel/core", rode primeiro: npm install
 endlocal
 exit /b 1
 
 :erro_commit
 echo.
-echo [AVISO] Git commit falhou. Possiveis causas:
-echo   - Nada pra commitar (arquivo identico ao anterior)
-echo   - Conflito de merge
-echo Verifique com: git status
+echo [AVISO] Git commit falhou (nada pra commitar ou conflito). Verifique: git status
 endlocal
 exit /b 1
 

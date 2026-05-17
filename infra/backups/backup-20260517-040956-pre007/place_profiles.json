@@ -1,0 +1,41 @@
+[
+  {
+    "id": "29c1d777-e045-4e59-964a-7d1e9ef714e4",
+    "place_id": "2e423547-e272-4a6e-b39d-8f270719585d",
+    "profile_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "year_start": 2008,
+    "year_end": 2014,
+    "place_type": "cidade",
+    "era": "passado",
+    "created_at": "2026-05-16T21:02:19.533713+00:00",
+    "place_label": null,
+    "label_visibilidade": "privado",
+    "display_order": 0
+  },
+  {
+    "id": "04a90611-7202-4bb4-9e4f-04c1409c145f",
+    "place_id": "2467494f-1b56-4cc9-8f84-32d786f90f20",
+    "profile_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "year_start": 2015,
+    "year_end": 2020,
+    "place_type": "cidade",
+    "era": "passado",
+    "created_at": "2026-05-16T21:02:19.533713+00:00",
+    "place_label": null,
+    "label_visibilidade": "privado",
+    "display_order": 1
+  },
+  {
+    "id": "d966197e-6d47-4184-98b4-ed4fa6a86a0e",
+    "place_id": "2e423547-e272-4a6e-b39d-8f270719585d",
+    "profile_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "year_start": 2013,
+    "year_end": 2026,
+    "place_type": "cidade",
+    "era": "presente",
+    "created_at": "2026-05-15T01:43:53.251826+00:00",
+    "place_label": "Casa minha",
+    "label_visibilidade": "privado",
+    "display_order": 0
+  }
+]
