@@ -1,0 +1,22 @@
+[
+  {
+    "id": "e2c4622e-73d0-487b-b80b-eb04c11df775",
+    "user_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "tipo": "seguindo",
+    "actor_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "momento_id": null,
+    "meta": null,
+    "lida": false,
+    "ts": "2026-05-16T20:56:10.085687+00:00"
+  },
+  {
+    "id": "7f388725-e76b-4bc1-ac34-afe918c5251b",
+    "user_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "tipo": "seguindo",
+    "actor_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "momento_id": null,
+    "meta": null,
+    "lida": false,
+    "ts": "2026-05-16T23:13:45.438446+00:00"
+  }
+]

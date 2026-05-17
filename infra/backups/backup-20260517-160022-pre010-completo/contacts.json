@@ -1,0 +1,18 @@
+[
+  {
+    "id": "66f80470-55e5-4a63-84be-f968c3c9e1fe",
+    "user_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "contact_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "rel": "familia",
+    "created_at": "2026-05-16T20:56:09.991099+00:00",
+    "is_family": true
+  },
+  {
+    "id": "ecb39347-64dd-4da3-a8c9-fb767cba6782",
+    "user_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "contact_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "rel": "conhecido",
+    "created_at": "2026-05-16T23:13:45.208741+00:00",
+    "is_family": false
+  }
+]

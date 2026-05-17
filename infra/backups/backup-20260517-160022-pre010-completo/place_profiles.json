@@ -1,0 +1,80 @@
+[
+  {
+    "id": "29c1d777-e045-4e59-964a-7d1e9ef714e4",
+    "place_id": "2e423547-e272-4a6e-b39d-8f270719585d",
+    "profile_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "year_start": 2008,
+    "year_end": 2014,
+    "place_type": "cidade",
+    "era": "passado",
+    "created_at": "2026-05-16T21:02:19.533713+00:00",
+    "place_label": null,
+    "label_visibilidade": "privado",
+    "display_order": 0
+  },
+  {
+    "id": "04a90611-7202-4bb4-9e4f-04c1409c145f",
+    "place_id": "2467494f-1b56-4cc9-8f84-32d786f90f20",
+    "profile_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "year_start": 2015,
+    "year_end": 2020,
+    "place_type": "cidade",
+    "era": "passado",
+    "created_at": "2026-05-16T21:02:19.533713+00:00",
+    "place_label": null,
+    "label_visibilidade": "privado",
+    "display_order": 1
+  },
+  {
+    "id": "d966197e-6d47-4184-98b4-ed4fa6a86a0e",
+    "place_id": "2e423547-e272-4a6e-b39d-8f270719585d",
+    "profile_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "year_start": 2013,
+    "year_end": 2026,
+    "place_type": "cidade",
+    "era": "presente",
+    "created_at": "2026-05-15T01:43:53.251826+00:00",
+    "place_label": "Casa minha",
+    "label_visibilidade": "privado",
+    "display_order": 0
+  },
+  {
+    "id": "167ced00-5c71-4601-8ab3-ff0247bbcfaa",
+    "place_id": "a90cab2d-c6ae-44bd-bb14-614ddcf35b08",
+    "profile_id": "8e858623-46d0-427d-932e-37bb5ab36cb7",
+    "year_start": 1989,
+    "year_end": 2002,
+    "place_type": "cidade",
+    "era": "passado",
+    "created_at": "2026-05-17T04:12:36.846945+00:00",
+    "place_label": null,
+    "label_visibilidade": "privado",
+    "display_order": 0
+  },
+  {
+    "id": "02ce5920-eddf-45d9-91cf-517ba0b028a6",
+    "place_id": "2e423547-e272-4a6e-b39d-8f270719585d",
+    "profile_id": "fa5654f1-f68a-4ea3-8a80-62fc17d2e531",
+    "year_start": 2026,
+    "year_end": 2026,
+    "place_type": "cidade",
+    "era": "presente",
+    "created_at": "2026-05-17T04:12:36.846945+00:00",
+    "place_label": null,
+    "label_visibilidade": "privado",
+    "display_order": 0
+  },
+  {
+    "id": "5208d5e7-a9c6-44ca-9952-ed6de43509c6",
+    "place_id": "2362fd02-39ab-4c8d-8b1e-ab1c4fc20cdf",
+    "profile_id": "22863c75-4739-4ab7-b45d-009e543df4d8",
+    "year_start": 1993,
+    "year_end": 2002,
+    "place_type": "cidade",
+    "era": "passado",
+    "created_at": "2026-05-17T04:12:36.846945+00:00",
+    "place_label": null,
+    "label_visibilidade": "privado",
+    "display_order": 0
+  }
+]

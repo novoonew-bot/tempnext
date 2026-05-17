@@ -794,7 +794,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v335 — fix profile-fantasma: perfil deletado/inexistente não loga mais via cache localStorage ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v333s — pin gota azul (disco+haste) substitui círculo laranja em HV9LugarImersivo + HV9MapBlock ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -3093,7 +3093,7 @@ function revelarCapsula(_x22) {
 }
 function _revelarCapsula() {
   _revelarCapsula = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee188(_ref8) {
-    var capsulaId, userId, agora, _yield$dbRead$from$se84, existente, jaRevelaraAntes, _yield$db$from$update8, error, _yield$db$from$insert16, _error5, _yield$dbRead$from$se85, cap, _t213, _t214;
+    var capsulaId, userId, agora, _yield$dbRead$from$se84, existente, jaRevelaraAntes, _yield$db$from$update8, error, _yield$db$from$insert16, _error3, _yield$dbRead$from$se85, cap, _t213, _t214;
     return _regenerator().w(function (_context189) {
       while (1) switch (_context189.p = _context189.n) {
         case 0:
@@ -3156,17 +3156,17 @@ function _revelarCapsula() {
           });
         case 7:
           _yield$db$from$insert16 = _context189.v;
-          _error5 = _yield$db$from$insert16.error;
-          if (!(_error5 && _error5.code !== "23505")) {
+          _error3 = _yield$db$from$insert16.error;
+          if (!(_error3 && _error3.code !== "23505")) {
             _context189.n = 8;
             break;
           }
-          console.error("[REVELAR] erro insert:", _error5);
+          console.error("[REVELAR] erro insert:", _error3);
           return _context189.a(2, {
             ok: false
           });
         case 8:
-          if (!(_error5 && _error5.code === "23505")) {
+          if (!(_error3 && _error3.code === "23505")) {
             _context189.n = 9;
             break;
           }
@@ -5135,7 +5135,7 @@ function toggleLike(_x45, _x46, _x47, _x48, _x49) {
 }
 function _toggleLike() {
   _toggleLike = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee201(targetId, targetType, alvoUserId, userId, jaCurtiAgora) {
-    var _yield$dbRead$from$de, error, _yield$dbRead$from$in, _error6, _t229;
+    var _yield$dbRead$from$de, error, _yield$dbRead$from$in, _error4, _t229;
     return _regenerator().w(function (_context202) {
       while (1) switch (_context202.p = _context202.n) {
         case 0:
@@ -5173,12 +5173,12 @@ function _toggleLike() {
           });
         case 5:
           _yield$dbRead$from$in = _context202.v;
-          _error6 = _yield$dbRead$from$in.error;
-          if (!_error6) {
+          _error4 = _yield$dbRead$from$in.error;
+          if (!_error4) {
             _context202.n = 6;
             break;
           }
-          throw _error6;
+          throw _error4;
         case 6:
           return _context202.a(2, true);
         case 7:
@@ -14626,7 +14626,7 @@ function _carregarCapsulasAtivas() {
           window.__tnCapsulasAtivasListeners.forEach(function (fn) {
             try {
               fn();
-            } catch (_unused147) {}
+            } catch (_unused143) {}
           });
           _context208.n = 12;
           break;
@@ -58842,7 +58842,7 @@ function App() {
     function _init() {
       _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee165() {
         var _session;
-        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, bancoFalhou, _yield$dbRead$from$se75, data, error, _yield$dbRead$from$se76, _data7, _error3, updated, meta, ehLocalPuro, _yield$dbRead$from$se77, _data8, _error4, _t186, _t187, _t188, _t189, _t190;
+        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, _yield$dbRead$from$se75, data, _yield$dbRead$from$se76, _data7, updated, meta, _yield$dbRead$from$se77, _data8, _t186, _t187, _t188, _t189, _t190;
         return _regenerator().w(function (_context166) {
           while (1) switch (_context166.p = _context166.n) {
             case 0:
@@ -58880,7 +58880,7 @@ function App() {
               return _context166.a(2);
             case 4:
               if (!((_session = session) !== null && _session !== void 0 && _session.user)) {
-                _context166.n = 22;
+                _context166.n = 21;
                 break;
               }
               if (!(localUser && localUser.auth_id && localUser.auth_id !== session.user.id)) {
@@ -58910,21 +58910,14 @@ function App() {
               // window.tnToast && window.tnToast("Outra conta detectada","Faça login novamente.");
               return _context166.a(2);
             case 9:
-              // ────────────────────────────────────────────────────────────
-              // v335: bancoFalhou rastreia se alguma query de perfil teve erro
-              // (rede/banco offline). Distingue "perfil não existe" de "não deu
-              // pra checar" — só limpa o cache no primeiro caso.
-              bancoFalhou = false;
-              _context166.p = 10;
-              _context166.n = 11;
+              _context166.p = 9;
+              _context166.n = 10;
               return dbRead.from("profiles").select("*").eq("auth_id", session.user.id).maybeSingle();
-            case 11:
+            case 10:
               _yield$dbRead$from$se75 = _context166.v;
               data = _yield$dbRead$from$se75.data;
-              error = _yield$dbRead$from$se75.error;
-              if (error) bancoFalhou = true;
               if (!data) {
-                _context166.n = 12;
+                _context166.n = 11;
                 break;
               }
               setUser(data);
@@ -58932,40 +58925,37 @@ function App() {
                 localStorage.setItem("tn_user", JSON.stringify(data));
               } catch (_unused114) {}
               return _context166.a(2);
-            case 12:
-              _context166.n = 14;
+            case 11:
+              _context166.n = 13;
               break;
-            case 13:
-              _context166.p = 13;
+            case 12:
+              _context166.p = 12;
               _t188 = _context166.v;
-              bancoFalhou = true;
               tnLog("Erro ao buscar perfil por auth_id:", _t188);
-            case 14:
+            case 13:
               if (!(localUser && localUser.id && !localUser.id.toString().startsWith("local_"))) {
-                _context166.n = 20;
+                _context166.n = 19;
                 break;
               }
-              _context166.p = 15;
-              _context166.n = 16;
+              _context166.p = 14;
+              _context166.n = 15;
               return dbRead.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
-            case 16:
+            case 15:
               _yield$dbRead$from$se76 = _context166.v;
               _data7 = _yield$dbRead$from$se76.data;
-              _error3 = _yield$dbRead$from$se76.error;
-              if (_error3) bancoFalhou = true;
               if (!_data7) {
-                _context166.n = 18;
-                break;
-              }
-              if (_data7.auth_id) {
                 _context166.n = 17;
                 break;
               }
-              _context166.n = 17;
+              if (_data7.auth_id) {
+                _context166.n = 16;
+                break;
+              }
+              _context166.n = 16;
               return db.from("profiles").update({
                 auth_id: session.user.id
               }).eq("id", _data7.id)["catch"](function () {});
-            case 17:
+            case 16:
               updated = _objectSpread(_objectSpread({}, _data7), {}, {
                 auth_id: session.user.id
               });
@@ -58974,41 +58964,22 @@ function App() {
                 localStorage.setItem("tn_user", JSON.stringify(updated));
               } catch (_unused115) {}
               return _context166.a(2);
-            case 18:
-              _context166.n = 20;
+            case 17:
+              _context166.n = 19;
               break;
-            case 19:
-              _context166.p = 19;
+            case 18:
+              _context166.p = 18;
               _t189 = _context166.v;
-              bancoFalhou = true;
               tnLog("Erro ao buscar perfil por id:", _t189);
-            case 20:
-              if (!(bancoFalhou && localUser)) {
-                _context166.n = 21;
+            case 19:
+              if (!localUser) {
+                _context166.n = 20;
                 break;
               }
-              tnLog("[v335] banco indisponível na verificação de perfil — usando cache (offline)");
               setUser(localUser);
               return _context166.a(2);
-            case 21:
-              // v335: sessão Google ativa mas SEM perfil no banco.
-              // Pode ser (a) novo usuário Google que ainda não cadastrou, ou
-              // (b) perfil deletado/inexistente com tn_user fantasma no cache.
-              // Em ambos os casos NÃO se usa o localUser cacheado — ele aponta
-              // pra um perfil que não existe. Limpa o cache e trata como novo:
-              // mostra o onboarding (destino correto pra sessão sem perfil).
-              if (localUser) {
-                tnLog("[v335] sessão sem perfil no banco — tn_user cacheado é fantasma, limpando");
-                try {
-                  localStorage.removeItem("tn_user");
-                } catch (_unused116) {}
-                try {
-                  localStorage.removeItem("tn_contacts");
-                } catch (_unused117) {}
-                setUser(null);
-                setContacts([]);
-              }
-              // Novo usuário Google (ou ex-fantasma): precisa cadastrar.
+            case 20:
+              // Sem perfil no banco e sem localUser → novo usuário Google, precisa cadastrar
               meta = session.user.user_metadata || {};
               setGoogleUserSemPerfil({
                 auth_id: session.user.id,
@@ -59017,67 +58988,44 @@ function App() {
                 avatar_url: meta.avatar_url || meta.picture || ""
               });
               return _context166.a(2);
-            case 22:
+            case 21:
               if (!localUser) {
-                _context166.n = 29;
+                _context166.n = 27;
                 break;
               }
-              ehLocalPuro = !localUser.id || localUser.id.toString().startsWith("local_");
-              if (ehLocalPuro) {
-                _context166.n = 28;
-                break;
-              }
-              _context166.p = 23;
-              _context166.n = 24;
-              return dbRead.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
-            case 24:
-              _yield$dbRead$from$se77 = _context166.v;
-              _data8 = _yield$dbRead$from$se77.data;
-              _error4 = _yield$dbRead$from$se77.error;
-              if (!_data8) {
-                _context166.n = 25;
-                break;
-              }
-              // Perfil existe no banco — usa a versão fresca.
-              setUser(_data8);
-              try {
-                localStorage.setItem("tn_user", JSON.stringify(_data8));
-              } catch (_unused118) {}
-              return _context166.a(2);
-            case 25:
-              if (_error4) {
+              if (!(localUser.id && !localUser.id.toString().startsWith("local_"))) {
                 _context166.n = 26;
                 break;
               }
-              // v335: query OK mas perfil NÃO existe → tn_user é fantasma
-              // (perfil deletado). Limpa o cache e mostra login.
-              tnLog("[v335] perfil do tn_user não existe no banco — limpando cache fantasma");
+              _context166.p = 22;
+              _context166.n = 23;
+              return dbRead.from("profiles").select("*").eq("id", localUser.id).maybeSingle();
+            case 23:
+              _yield$dbRead$from$se77 = _context166.v;
+              _data8 = _yield$dbRead$from$se77.data;
+              if (!_data8) {
+                _context166.n = 24;
+                break;
+              }
+              setUser(_data8);
               try {
-                localStorage.removeItem("tn_user");
-              } catch (_unused119) {}
-              try {
-                localStorage.removeItem("tn_contacts");
-              } catch (_unused120) {}
-              setUser(null);
-              setContacts([]);
+                localStorage.setItem("tn_user", JSON.stringify(_data8));
+              } catch (_unused116) {}
               return _context166.a(2);
-            case 26:
-              // error != null → banco indisponível (offline). NÃO apaga o
-              // cache só por falha de rede — usa o local como fallback.
-              tnLog("[v335] banco indisponível, usando perfil local (offline):", _error4.message);
-              _context166.n = 28;
+            case 24:
+              _context166.n = 26;
               break;
-            case 27:
-              _context166.p = 27;
+            case 25:
+              _context166.p = 25;
               _t190 = _context166.v;
               tnLog("Erro ao buscar perfil do banco:", _t190);
-            case 28:
-              // Perfil puramente local (id local_) ou banco offline: usa o cache.
+            case 26:
+              // Se não conseguiu buscar do banco, usa o local mesmo
               if (!user) setUser(localUser);
-            case 29:
+            case 27:
               return _context166.a(2);
           }
-        }, _callee165, null, [[23, 27], [15, 19], [10, 13], [5, 7], [1, 3]]);
+        }, _callee165, null, [[22, 25], [14, 18], [9, 12], [5, 7], [1, 3]]);
       }));
       return _init.apply(this, arguments);
     }
@@ -59235,7 +59183,7 @@ function App() {
             setContacts(loaded);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(loaded));
-            } catch (_unused121) {}
+            } catch (_unused117) {}
             return _context167.a(2);
           case 2:
             _context167.n = 4;
@@ -59267,7 +59215,7 @@ function App() {
                   })["catch"](function () {});
                 }
               }
-            } catch (_unused122) {}
+            } catch (_unused118) {}
           case 5:
             return _context167.a(2);
         }
@@ -59336,7 +59284,7 @@ function App() {
             setUser(perfilFinal);
             try {
               localStorage.setItem("tn_user", JSON.stringify(perfilFinal));
-            } catch (_unused141) {}
+            } catch (_unused137) {}
             setTela("perfil");
           case 8:
             return _context173.a(2);
@@ -59397,7 +59345,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused142) {}
+            } catch (_unused138) {}
             // Persiste no Supabase
             _context174.p = 4;
             _context174.n = 5;
@@ -59448,7 +59396,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused143) {}
+            } catch (_unused139) {}
             // Atualiza no Supabase
             if (!(user !== null && user !== void 0 && user.id)) {
               _context175.n = 4;
@@ -59494,7 +59442,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused144) {}
+            } catch (_unused140) {}
             if (!(user !== null && user !== void 0 && user.id)) {
               _context176.n = 4;
               break;
@@ -59555,10 +59503,10 @@ function App() {
             setContacts([]);
             try {
               localStorage.removeItem("tn_user");
-            } catch (_unused145) {}
+            } catch (_unused141) {}
             try {
               localStorage.removeItem("tn_contacts");
-            } catch (_unused146) {}
+            } catch (_unused142) {}
             _context177.p = 1;
             _context177.n = 2;
             return db.auth.signOut();
@@ -59580,7 +59528,7 @@ function App() {
     setUser(p);
     try {
       localStorage.setItem("tn_user", JSON.stringify(p));
-    } catch (_unused123) {}
+    } catch (_unused119) {}
     // Guarda preferências pra tela de login manter o visual
     try {
       localStorage.setItem("tn_user_prefs", JSON.stringify({
@@ -59590,7 +59538,7 @@ function App() {
         card: (p === null || p === void 0 ? void 0 : p.card_color) || null,
         bgop: (p === null || p === void 0 ? void 0 : p.bg_opacity) != null ? p.bg_opacity : null
       }));
-    } catch (_unused124) {}
+    } catch (_unused120) {}
     // Sincroniza com Supabase em background — só campos seguros
     if (p !== null && p !== void 0 && p.id && !p.id.toString().startsWith("local_")) {
       var safe = {
@@ -59690,7 +59638,7 @@ function App() {
       if (s) {
         return JSON.parse(s).bg || T.bg;
       }
-    } catch (_unused125) {}
+    } catch (_unused121) {}
     return T.bg;
   }();
   useEffect(function () {
@@ -59711,7 +59659,7 @@ function App() {
         splashWp = p.wp || null;
         if (p.bgop != null) splashOp = p.bgop;
       }
-    } catch (_unused126) {}
+    } catch (_unused122) {}
     return /*#__PURE__*/React.createElement(React.Fragment, null, splashWp && /*#__PURE__*/React.createElement("div", {
       style: {
         position: "fixed",
@@ -59841,7 +59789,7 @@ function App() {
         lastWp = _p.wp || null;
         if (_p.bgop != null) lastOp = _p.bgop;
       }
-    } catch (_unused127) {}
+    } catch (_unused123) {}
     return /*#__PURE__*/React.createElement(React.Fragment, null, lastWp && /*#__PURE__*/React.createElement("div", {
       style: {
         position: "fixed",
@@ -60145,7 +60093,7 @@ function App() {
         window.history.pushState({
           tnExt: "lugar_perfil"
         }, "", window.location.href);
-      } catch (_unused128) {}
+      } catch (_unused124) {}
       setPerfilLugarAtual(typeof lugar === "string" ? lugar : lugar);
       setTela("lugar_perfil");
     },
@@ -60154,7 +60102,7 @@ function App() {
         window.history.pushState({
           tnExt: "buscar"
         }, "", window.location.href);
-      } catch (_unused129) {}
+      } catch (_unused125) {}
       setTela("buscar");
     },
     onAbrirPerfilProprio: function onAbrirPerfilProprio() {
@@ -60162,7 +60110,7 @@ function App() {
         window.history.pushState({
           tnExt: "perfil"
         }, "", window.location.href);
-      } catch (_unused130) {}
+      } catch (_unused126) {}
       setTela("perfil");
     }
     // v236: handlers da nova barra fina
@@ -60172,7 +60120,7 @@ function App() {
         window.history.pushState({
           tnExt: "notificacoes"
         }, "", window.location.href);
-      } catch (_unused131) {}
+      } catch (_unused127) {}
       setTela("notificacoes");
     },
     onAlertasRegiao: function onAlertasRegiao() {
@@ -60181,7 +60129,7 @@ function App() {
         window.history.pushState({
           tnExt: "alertas_regionais"
         }, "", window.location.href);
-      } catch (_unused132) {}
+      } catch (_unused128) {}
       setTela("alertas_regionais");
     },
     onPerfil: function onPerfil() {
@@ -60189,7 +60137,7 @@ function App() {
         window.history.pushState({
           tnExt: "perfil"
         }, "", window.location.href);
-      } catch (_unused133) {}
+      } catch (_unused129) {}
       setTela("perfil");
     },
     onUpdateUser: setUser,
@@ -60511,7 +60459,7 @@ function App() {
               if (window.__tnCapsulasAtivasListeners) window.__tnCapsulasAtivasListeners.forEach(function (fn) {
                 try {
                   fn();
-                } catch (_unused134) {}
+                } catch (_unused130) {}
               });
               if (window.tnReloadCapsulas) window.tnReloadCapsulas();
               // v324b: cria auto-notif (mesma lógica do momento_novo). Cápsula é momento c/ tipo='capsula'.
@@ -60805,7 +60753,7 @@ function App() {
               top: 0,
               behavior: "smooth"
             });
-          } catch (_unused135) {}
+          } catch (_unused131) {}
           return;
         }
         setTela(t.id);
@@ -61051,7 +60999,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused136) {}
+      } catch (_unused132) {}
       ;
       setShowAdicionarLugar(false);
     }
@@ -61065,7 +61013,7 @@ function App() {
       setUser(p);
       try {
         localStorage.setItem("tn_user", JSON.stringify(p));
-      } catch (_unused137) {}
+      } catch (_unused133) {}
     }
   }), modal && /*#__PURE__*/React.createElement(ModalPerfil, {
     p: modal,
@@ -61270,10 +61218,10 @@ function App() {
           case 4:
             try {
               localStorage.removeItem("tn_user");
-            } catch (_unused139) {}
+            } catch (_unused135) {}
             try {
               localStorage.removeItem("tn_contacts");
-            } catch (_unused140) {}
+            } catch (_unused136) {}
             setUser(null);
             setTela("inicio");
             setTimeout(function () {

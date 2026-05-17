@@ -1,0 +1,22 @@
+Backup COMPLETO pré-reset (migration 010_reset_dados)
+Data: 2026-05-17T16:00:25.731Z
+Modo: anon (PARCIAL — RLS filtra)
+Total: 27 linhas em 17 tabelas
+
+profiles: 3 linhas
+places: 14 linhas
+place_profiles: 6 linhas
+place_aliases: 0 linhas
+momentos: 0 linhas
+comentarios_momentos: 0 linhas
+contacts: 2 linhas
+messages: 0 linhas
+notificacoes: 2 linhas
+likes: 0 linhas
+interacoes: 0 linhas
+olhando_momentos: 0 linhas
+capsula_aguardando: 0 linhas
+registrando_agora: 0 linhas
+respostas_afinidade: 0 linhas
+followed_places: 0 linhas
+videos: 0 linhas
