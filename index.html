@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v340 — remove foto de stock do lugar (mostrava foto generica errada) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v341 — saves silenciosos corrigidos: cadastro, seguir, remover momento/capsula, Olhar ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -968,7 +968,7 @@ function moderarTexto(_x) {
 } // Toast contemplativo de moderação — mostra mensagem no topo da tela e some sozinho
 function _moderarTexto() {
   _moderarTexto = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee177(texto) {
-    var r, data, _t201;
+    var r, data, _t202;
     return _regenerator().w(function (_context179) {
       while (1) switch (_context179.p = _context179.n) {
         case 0:
@@ -1013,8 +1013,8 @@ function _moderarTexto() {
           return _context179.a(2, data);
         case 5:
           _context179.p = 5;
-          _t201 = _context179.v;
-          console.warn("[moderarTexto] erro fetch:", _t201);
+          _t202 = _context179.v;
+          console.warn("[moderarTexto] erro fetch:", _t202);
           // Falha de rede: deixa passar (não punir user por problema técnico)
           return _context179.a(2, {
             ok: true,
@@ -2432,7 +2432,7 @@ function preloadPrivacidadeCache(_x11, _x12) {
  */
 function _preloadPrivacidadeCache() {
   _preloadPrivacidadeCache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee179(criadorIds, userAtualId) {
-    var familiaPorCriador, contatosPorCriador, agora, idsParaFetch, _iterator39, _step39, _cid2, cached, _yield$dbRead$from$se81, rows, error, grupos, _i8, _idsParaFetch, cid, _iterator40, _step40, row, grupo, _iterator41, _step41, _step41$value, _cid, _grupo, _t202, _t203, _t204;
+    var familiaPorCriador, contatosPorCriador, agora, idsParaFetch, _iterator39, _step39, _cid2, cached, _yield$dbRead$from$se81, rows, error, grupos, _i8, _idsParaFetch, cid, _iterator40, _step40, row, grupo, _iterator41, _step41, _step41$value, _cid, _grupo, _t203, _t204, _t205;
     return _regenerator().w(function (_context181) {
       while (1) switch (_context181.p = _context181.n) {
         case 0:
@@ -2479,8 +2479,8 @@ function _preloadPrivacidadeCache() {
           break;
         case 7:
           _context181.p = 7;
-          _t202 = _context181.v;
-          _iterator39.e(_t202);
+          _t203 = _context181.v;
+          _iterator39.e(_t203);
         case 8:
           _context181.p = 8;
           _iterator39.f();
@@ -2549,8 +2549,8 @@ function _preloadPrivacidadeCache() {
           break;
         case 18:
           _context181.p = 18;
-          _t203 = _context181.v;
-          _iterator40.e(_t203);
+          _t204 = _context181.v;
+          _iterator40.e(_t204);
         case 19:
           _context181.p = 19;
           _iterator40.f();
@@ -2578,8 +2578,8 @@ function _preloadPrivacidadeCache() {
           break;
         case 21:
           _context181.p = 21;
-          _t204 = _context181.v;
-          console.warn("[PRIV] exceção carregando cache:", _t204);
+          _t205 = _context181.v;
+          console.warn("[PRIV] exceção carregando cache:", _t205);
         case 22:
           return _context181.a(2, {
             familiaPorCriador: familiaPorCriador,
@@ -2655,7 +2655,7 @@ function criarNotificacao(_x15) {
 //   CREATE INDEX idx_reg_agora_cidade_data ON registrando_agora(cidade, dt_inicio, dt_fim);
 function _criarNotificacao() {
   _criarNotificacao = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee181(_ref) {
-    var tipo, recipientId, actorId, _ref$momentoId, momentoId, _ref$meta, meta, _yield$db$from$insert14, data, error, _t205;
+    var tipo, recipientId, actorId, _ref$momentoId, momentoId, _ref$meta, meta, _yield$db$from$insert14, data, error, _t206;
     return _regenerator().w(function (_context183) {
       while (1) switch (_context183.p = _context183.n) {
         case 0:
@@ -2706,8 +2706,8 @@ function _criarNotificacao() {
           break;
         case 4:
           _context183.p = 4;
-          _t205 = _context183.v;
-          console.error("[NOTIF] exceção:", _t205);
+          _t206 = _context183.v;
+          console.error("[NOTIF] exceção:", _t206);
         case 5:
           return _context183.a(2);
       }
@@ -2720,7 +2720,7 @@ function criarRegistrandoAgora(_x16) {
 } // Busca outros usuários com período sobreposto na MESMA cidade
 function _criarRegistrandoAgora() {
   _criarRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee182(_ref2) {
-    var userId, cidade, uf, pais, regiao, lugar, dtInicio, dtFim, frase, privacidade, faltam, _yield$db$from$insert15, data, error, _t206;
+    var userId, cidade, uf, pais, regiao, lugar, dtInicio, dtFim, frase, privacidade, faltam, _yield$db$from$insert15, data, error, _t207;
     return _regenerator().w(function (_context184) {
       while (1) switch (_context184.p = _context184.n) {
         case 0:
@@ -2776,12 +2776,12 @@ function _criarRegistrandoAgora() {
           });
         case 4:
           _context184.p = 4;
-          _t206 = _context184.v;
-          console.error("[REG_AGORA] exceção:", _t206);
+          _t207 = _context184.v;
+          console.error("[REG_AGORA] exceção:", _t207);
           return _context184.a(2, {
             data: null,
             error: {
-              message: _t206.message || "erro desconhecido"
+              message: _t207.message || "erro desconhecido"
             }
           });
       }
@@ -2794,7 +2794,7 @@ function buscarCruzamentosRegistrandoAgora(_x17) {
 } // Cria notificações cruzadas pra todos os matches
 function _buscarCruzamentosRegistrandoAgora() {
   _buscarCruzamentosRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee183(_ref3) {
-    var cidade, dtInicio, dtFim, excluirUserId, _yield$dbRead$from$se82, data, error, _t207;
+    var cidade, dtInicio, dtFim, excluirUserId, _yield$dbRead$from$se82, data, error, _t208;
     return _regenerator().w(function (_context185) {
       while (1) switch (_context185.p = _context185.n) {
         case 0:
@@ -2824,8 +2824,8 @@ function _buscarCruzamentosRegistrandoAgora() {
           return _context185.a(2, data || []);
         case 4:
           _context185.p = 4;
-          _t207 = _context185.v;
-          console.error("[REG_AGORA] exceção busca:", _t207);
+          _t208 = _context185.v;
+          console.error("[REG_AGORA] exceção busca:", _t208);
           return _context185.a(2, []);
       }
     }, _callee183, null, [[1, 4]]);
@@ -2840,7 +2840,7 @@ function notificarCruzamentosRegistrandoAgora(_x18) {
 // Privado: o criador da cápsula não sabe quem marcou.
 function _notificarCruzamentosRegistrandoAgora() {
   _notificarCruzamentosRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee184(_ref4) {
-    var userId, cidade, dtInicio, dtFim, registroId, cruzamentos, _iterator43, _step43, c, _t208;
+    var userId, cidade, dtInicio, dtFim, registroId, cruzamentos, _iterator43, _step43, c, _t209;
     return _regenerator().w(function (_context186) {
       while (1) switch (_context186.p = _context186.n) {
         case 0:
@@ -2898,8 +2898,8 @@ function _notificarCruzamentosRegistrandoAgora() {
           break;
         case 7:
           _context186.p = 7;
-          _t208 = _context186.v;
-          _iterator43.e(_t208);
+          _t209 = _context186.v;
+          _iterator43.e(_t209);
         case 8:
           _context186.p = 8;
           _iterator43.f();
@@ -2916,7 +2916,7 @@ function aguardarCapsula(_x19) {
 }
 function _aguardarCapsula() {
   _aguardarCapsula = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee185(_ref5) {
-    var capsulaId, userId, _yield$db$from$insert16, data, error, _yield$dbRead$from$se83, cap, _t209, _t210;
+    var capsulaId, userId, _yield$db$from$insert16, data, error, _yield$dbRead$from$se83, cap, _t210, _t211;
     return _regenerator().w(function (_context187) {
       while (1) switch (_context187.p = _context187.n) {
         case 0:
@@ -3002,8 +3002,8 @@ function _aguardarCapsula() {
           break;
         case 9:
           _context187.p = 9;
-          _t209 = _context187.v;
-          console.warn("[AGUARDAR] notif dono falhou:", _t209);
+          _t210 = _context187.v;
+          console.warn("[AGUARDAR] notif dono falhou:", _t210);
         case 10:
           return _context187.a(2, {
             ok: true,
@@ -3011,11 +3011,11 @@ function _aguardarCapsula() {
           });
         case 11:
           _context187.p = 11;
-          _t210 = _context187.v;
-          console.error("[AGUARDAR] exceção:", _t210);
+          _t211 = _context187.v;
+          console.error("[AGUARDAR] exceção:", _t211);
           return _context187.a(2, {
             ok: false,
-            erro: _t210.message
+            erro: _t211.message
           });
       }
     }, _callee185, null, [[6, 9], [2, 11]]);
@@ -3027,7 +3027,7 @@ function desmarcarAguardo(_x20) {
 }
 function _desmarcarAguardo() {
   _desmarcarAguardo = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee186(_ref6) {
-    var capsulaId, userId, _t211;
+    var capsulaId, userId, _t212;
     return _regenerator().w(function (_context188) {
       while (1) switch (_context188.p = _context188.n) {
         case 0:
@@ -3049,8 +3049,8 @@ function _desmarcarAguardo() {
           });
         case 3:
           _context188.p = 3;
-          _t211 = _context188.v;
-          console.error("[DESMARCAR-AGUARDO] exceção:", _t211);
+          _t212 = _context188.v;
+          console.error("[DESMARCAR-AGUARDO] exceção:", _t212);
           return _context188.a(2, {
             ok: false
           });
@@ -3064,7 +3064,7 @@ function estouAguardando(_x21) {
 } // v193: Marcar cápsula como revelada pra este user (ritual de abertura)
 function _estouAguardando() {
   _estouAguardando = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee187(_ref7) {
-    var capsulaId, userId, _yield$dbRead$from$se84, data, error, _t212;
+    var capsulaId, userId, _yield$dbRead$from$se84, data, error, _t213;
     return _regenerator().w(function (_context189) {
       while (1) switch (_context189.p = _context189.n) {
         case 0:
@@ -3096,8 +3096,8 @@ function _estouAguardando() {
           return _context189.a(2, !!(data && data.length > 0));
         case 4:
           _context189.p = 4;
-          _t212 = _context189.v;
-          console.error("[AGUARDAR] exceção na leitura:", _t212);
+          _t213 = _context189.v;
+          console.error("[AGUARDAR] exceção na leitura:", _t213);
           return _context189.a(2, false);
       }
     }, _callee187, null, [[1, 4]]);
@@ -3109,7 +3109,7 @@ function revelarCapsula(_x22) {
 }
 function _revelarCapsula() {
   _revelarCapsula = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee188(_ref8) {
-    var capsulaId, userId, agora, _yield$dbRead$from$se85, existente, jaRevelaraAntes, _yield$db$from$update9, error, _yield$db$from$insert17, _error5, _yield$dbRead$from$se86, cap, _t213, _t214;
+    var capsulaId, userId, agora, _yield$dbRead$from$se85, existente, jaRevelaraAntes, _yield$db$from$update9, error, _yield$db$from$insert17, _error6, _yield$dbRead$from$se86, cap, _t214, _t215;
     return _regenerator().w(function (_context190) {
       while (1) switch (_context190.p = _context190.n) {
         case 0:
@@ -3172,17 +3172,17 @@ function _revelarCapsula() {
           });
         case 7:
           _yield$db$from$insert17 = _context190.v;
-          _error5 = _yield$db$from$insert17.error;
-          if (!(_error5 && _error5.code !== "23505")) {
+          _error6 = _yield$db$from$insert17.error;
+          if (!(_error6 && _error6.code !== "23505")) {
             _context190.n = 8;
             break;
           }
-          console.error("[REVELAR] erro insert:", _error5);
+          console.error("[REVELAR] erro insert:", _error6);
           return _context190.a(2, {
             ok: false
           });
         case 8:
-          if (!(_error5 && _error5.code === "23505")) {
+          if (!(_error6 && _error6.code === "23505")) {
             _context190.n = 9;
             break;
           }
@@ -3221,16 +3221,16 @@ function _revelarCapsula() {
           break;
         case 13:
           _context190.p = 13;
-          _t213 = _context190.v;
-          console.warn("[REVELAR] notif dono falhou:", _t213);
+          _t214 = _context190.v;
+          console.warn("[REVELAR] notif dono falhou:", _t214);
         case 14:
           return _context190.a(2, {
             ok: true
           });
         case 15:
           _context190.p = 15;
-          _t214 = _context190.v;
-          console.error("[REVELAR] exceção:", _t214);
+          _t215 = _context190.v;
+          console.error("[REVELAR] exceção:", _t215);
           return _context190.a(2, {
             ok: false
           });
@@ -3252,7 +3252,7 @@ function euJaRevelei(_x23) {
 //              data passou + não aguardou (e não dono) → "aberta" (v193 simplificado)
 function _euJaRevelei() {
   _euJaRevelei = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee189(_ref9) {
-    var capsulaId, userId, _yield$dbRead$from$se87, data, error, _t215;
+    var capsulaId, userId, _yield$dbRead$from$se87, data, error, _t216;
     return _regenerator().w(function (_context191) {
       while (1) switch (_context191.p = _context191.n) {
         case 0:
@@ -3280,7 +3280,7 @@ function _euJaRevelei() {
           return _context191.a(2, !!(data && data.length > 0 && data[0].revelada_em));
         case 4:
           _context191.p = 4;
-          _t215 = _context191.v;
+          _t216 = _context191.v;
           return _context191.a(2, false);
       }
     }, _callee189, null, [[1, 4]]);
@@ -3331,7 +3331,7 @@ function verificarCapsulasAguardadas(_x24) {
 } // ── Unsplash API (fotos automáticas pra cidades) ─────────────
 function _verificarCapsulasAguardadas() {
   _verificarCapsulasAguardadas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee190(userId) {
-    var _yield$dbRead$from$se88, aguardos, _iterator44, _step44, a, _yield$dbRead$from$se89, caps, cap, abreEm, alvo, _t216, _t217;
+    var _yield$dbRead$from$se88, aguardos, _iterator44, _step44, a, _yield$dbRead$from$se89, caps, cap, abreEm, alvo, _t217, _t218;
     return _regenerator().w(function (_context192) {
       while (1) switch (_context192.p = _context192.n) {
         case 0:
@@ -3419,8 +3419,8 @@ function _verificarCapsulasAguardadas() {
           break;
         case 14:
           _context192.p = 14;
-          _t216 = _context192.v;
-          _iterator44.e(_t216);
+          _t217 = _context192.v;
+          _iterator44.e(_t217);
         case 15:
           _context192.p = 15;
           _iterator44.f();
@@ -3430,8 +3430,8 @@ function _verificarCapsulasAguardadas() {
           break;
         case 17:
           _context192.p = 17;
-          _t217 = _context192.v;
-          console.error("[VERIFICAR-AGUARDADAS] exceção:", _t217);
+          _t218 = _context192.v;
+          console.error("[VERIFICAR-AGUARDADAS] exceção:", _t218);
         case 18:
           return _context192.a(2);
       }
@@ -3447,7 +3447,7 @@ function buscarFotoLugarUnsplash(_x25, _x26, _x27) {
 } // Notifica o Unsplash que uma foto foi "usada" (requisito de atribuição)
 function _buscarFotoLugarUnsplash() {
   _buscarFotoLugarUnsplash = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee191(cidade, estado, pais) {
-    var partes, query, _candidata$urls, _candidata$urls2, _candidata$urls3, _candidata$user, _candidata$user2, _candidata$links, r, data, candidata, _t218;
+    var partes, query, _candidata$urls, _candidata$urls2, _candidata$urls3, _candidata$user, _candidata$user2, _candidata$links, r, data, candidata, _t219;
     return _regenerator().w(function (_context193) {
       while (1) switch (_context193.p = _context193.n) {
         case 0:
@@ -3499,8 +3499,8 @@ function _buscarFotoLugarUnsplash() {
           });
         case 8:
           _context193.p = 8;
-          _t218 = _context193.v;
-          tnLog("Unsplash erro:", _t218.message || _t218);
+          _t219 = _context193.v;
+          tnLog("Unsplash erro:", _t219.message || _t219);
           return _context193.a(2, null);
       }
     }, _callee191, null, [[2, 8]]);
@@ -3554,7 +3554,7 @@ function tnBuscarLugaresLocal(_x28, _x29) {
 // Usa o cache em tabela place_suggestions_cache pra não estourar rate limit
 function _tnBuscarLugaresLocal() {
   _tnBuscarLugaresLocal = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee192(termo, cidade) {
-    var _yield$dbRead$rpc, data, error, _yield$dbRead$from$se90, fb, _t219;
+    var _yield$dbRead$rpc, data, error, _yield$dbRead$from$se90, fb, _t220;
     return _regenerator().w(function (_context194) {
       while (1) switch (_context194.p = _context194.n) {
         case 0:
@@ -3601,8 +3601,8 @@ function _tnBuscarLugaresLocal() {
           }));
         case 5:
           _context194.p = 5;
-          _t219 = _context194.v;
-          console.warn("[PLACES] exceção camada local:", _t219);
+          _t220 = _context194.v;
+          console.warn("[PLACES] exceção camada local:", _t220);
           return _context194.a(2, []);
       }
     }, _callee192, null, [[1, 5]]);
@@ -3616,7 +3616,7 @@ function tnBuscarLugaresOSM(_x30, _x31) {
 // Ordena por score, remove duplicatas óbvias.
 function _tnBuscarLugaresOSM() {
   _tnBuscarLugaresOSM = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee193(termo, cidade) {
-    var queryNorm, cityNorm, _yield$dbRead$from$se91, cached, q, r, raw, resultados, _t220, _t221, _t222;
+    var queryNorm, cityNorm, _yield$dbRead$from$se91, cached, q, r, raw, resultados, _t221, _t222, _t223;
     return _regenerator().w(function (_context195) {
       while (1) switch (_context195.p = _context195.n) {
         case 0:
@@ -3644,7 +3644,7 @@ function _tnBuscarLugaresOSM() {
           break;
         case 5:
           _context195.p = 5;
-          _t220 = _context195.v;
+          _t221 = _context195.v;
         case 6:
           _context195.p = 6;
           q = cidade ? "".concat(termo, ", ").concat(cidade, ", Brasil") : "".concat(termo, ", Brasil");
@@ -3703,13 +3703,13 @@ function _tnBuscarLugaresOSM() {
           break;
         case 13:
           _context195.p = 13;
-          _t221 = _context195.v;
+          _t222 = _context195.v;
         case 14:
           return _context195.a(2, resultados);
         case 15:
           _context195.p = 15;
-          _t222 = _context195.v;
-          console.warn("[PLACES] erro OSM:", _t222);
+          _t223 = _context195.v;
+          console.warn("[PLACES] erro OSM:", _t223);
           return _context195.a(2, []);
       }
     }, _callee193, null, [[11, 13], [6, 15], [2, 5]]);
@@ -3796,7 +3796,7 @@ function registrarAliasLugar(_x34, _x35) {
 //
 function _registrarAliasLugar() {
   _registrarAliasLugar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee195(placeId, termoDigitado) {
-    var _t223;
+    var _t224;
     return _regenerator().w(function (_context197) {
       while (1) switch (_context197.p = _context197.n) {
         case 0:
@@ -3818,7 +3818,7 @@ function _registrarAliasLugar() {
           break;
         case 3:
           _context197.p = 3;
-          _t223 = _context197.v;
+          _t224 = _context197.v;
         case 4:
           return _context197.a(2);
       }
@@ -3831,7 +3831,7 @@ function tnLugaresDoProfile(_x36) {
 } // Expõe no window pra teste manual via DevTools console (removível em prod)
 function _tnLugaresDoProfile() {
   _tnLugaresDoProfile = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee196(profileId) {
-    var _yield$dbRead$from$se92, data, error, _t224;
+    var _yield$dbRead$from$se92, data, error, _t225;
     return _regenerator().w(function (_context198) {
       while (1) switch (_context198.p = _context198.n) {
         case 0:
@@ -3894,8 +3894,8 @@ function _tnLugaresDoProfile() {
           }));
         case 5:
           _context198.p = 5;
-          _t224 = _context198.v;
-          console.warn("[tnLugaresDoProfile] exception:", _t224);
+          _t225 = _context198.v;
+          console.warn("[tnLugaresDoProfile] exception:", _t225);
           return _context198.a(2, []);
       }
     }, _callee196, null, [[1, 5]]);
@@ -3912,7 +3912,7 @@ function tnLugaresDeProfiles(_x37) {
 }
 function _tnLugaresDeProfiles() {
   _tnLugaresDeProfiles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee197(profileIds) {
-    var vazio, ids, _yield$dbRead$from$se93, data, error, mapa, _iterator45, _step45, id, _iterator46, _step46, pp, pl, lugar, arr, _t225;
+    var vazio, ids, _yield$dbRead$from$se93, data, error, mapa, _iterator45, _step45, id, _iterator46, _step46, pp, pl, lugar, arr, _t226;
     return _regenerator().w(function (_context199) {
       while (1) switch (_context199.p = _context199.n) {
         case 0:
@@ -4004,8 +4004,8 @@ function _tnLugaresDeProfiles() {
           return _context199.a(2, mapa);
         case 6:
           _context199.p = 6;
-          _t225 = _context199.v;
-          console.warn("[tnLugaresDeProfiles] exception:", _t225);
+          _t226 = _context199.v;
+          console.warn("[tnLugaresDeProfiles] exception:", _t226);
           return _context199.a(2, vazio);
       }
     }, _callee197, null, [[2, 6]]);
@@ -4313,7 +4313,7 @@ function reverseGeocode(_x38, _x39) {
 }
 function _reverseGeocode() {
   _reverseGeocode = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee198(lat, lng) {
-    var res, data, addr, cidade, estado, ufMap, uf, _t226;
+    var res, data, addr, cidade, estado, ufMap, uf, _t227;
     return _regenerator().w(function (_context200) {
       while (1) switch (_context200.p = _context200.n) {
         case 0:
@@ -4384,8 +4384,8 @@ function _reverseGeocode() {
           return _context200.a(2, estado || null);
         case 6:
           _context200.p = 6;
-          _t226 = _context200.v;
-          tnLog("Reverse geocode failed:", _t226);
+          _t227 = _context200.v;
+          tnLog("Reverse geocode failed:", _t227);
           return _context200.a(2, null);
       }
     }, _callee198, null, [[0, 6]]);
@@ -5084,7 +5084,7 @@ function jaCurti(_x40, _x41, _x42) {
 }
 function _jaCurti() {
   _jaCurti = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee199(targetId, targetType, userId) {
-    var _yield$dbRead$from$se94, data, _t227;
+    var _yield$dbRead$from$se94, data, _t228;
     return _regenerator().w(function (_context201) {
       while (1) switch (_context201.p = _context201.n) {
         case 0:
@@ -5103,8 +5103,8 @@ function _jaCurti() {
           return _context201.a(2, (data || []).length > 0);
         case 3:
           _context201.p = 3;
-          _t227 = _context201.v;
-          tnLog("jaCurti erro:", _t227.message);
+          _t228 = _context201.v;
+          tnLog("jaCurti erro:", _t228.message);
           return _context201.a(2, false);
       }
     }, _callee199, null, [[1, 3]]);
@@ -5116,7 +5116,7 @@ function contarLikes(_x43, _x44) {
 }
 function _contarLikes() {
   _contarLikes = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee200(targetId, targetType) {
-    var _yield$dbRead$from$se95, count, _t228;
+    var _yield$dbRead$from$se95, count, _t229;
     return _regenerator().w(function (_context202) {
       while (1) switch (_context202.p = _context202.n) {
         case 0:
@@ -5138,8 +5138,8 @@ function _contarLikes() {
           return _context202.a(2, count || 0);
         case 3:
           _context202.p = 3;
-          _t228 = _context202.v;
-          tnLog("contarLikes erro:", _t228.message);
+          _t229 = _context202.v;
+          tnLog("contarLikes erro:", _t229.message);
           return _context202.a(2, 0);
       }
     }, _callee200, null, [[1, 3]]);
@@ -5151,7 +5151,7 @@ function toggleLike(_x45, _x46, _x47, _x48, _x49) {
 }
 function _toggleLike() {
   _toggleLike = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee201(targetId, targetType, alvoUserId, userId, jaCurtiAgora) {
-    var _yield$dbRead$from$de, error, _yield$dbRead$from$in, _error6, _t229;
+    var _yield$dbRead$from$de, error, _yield$dbRead$from$in, _error7, _t230;
     return _regenerator().w(function (_context203) {
       while (1) switch (_context203.p = _context203.n) {
         case 0:
@@ -5189,12 +5189,12 @@ function _toggleLike() {
           });
         case 5:
           _yield$dbRead$from$in = _context203.v;
-          _error6 = _yield$dbRead$from$in.error;
-          if (!_error6) {
+          _error7 = _yield$dbRead$from$in.error;
+          if (!_error7) {
             _context203.n = 6;
             break;
           }
-          throw _error6;
+          throw _error7;
         case 6:
           return _context203.a(2, true);
         case 7:
@@ -5202,8 +5202,8 @@ function _toggleLike() {
           break;
         case 8:
           _context203.p = 8;
-          _t229 = _context203.v;
-          tnLog("toggleLike erro:", _t229.message);
+          _t230 = _context203.v;
+          tnLog("toggleLike erro:", _t230.message);
           return _context203.a(2, jaCurtiAgora);
         case 9:
           return _context203.a(2);
@@ -13636,7 +13636,7 @@ function uploadImage(_x63, _x64, _x65, _x66, _x67) {
 function _uploadImage() {
   _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee202(file, bucket, userId, maxW, quality) {
     var _blob$type;
-    var defaultW, defaultQ, blob, ts, rand, ext, filename, uploadPromise, timeoutPromise, _yield$Promise$race, error, _db$storage$from$getP, data, _t230;
+    var defaultW, defaultQ, blob, ts, rand, ext, filename, uploadPromise, timeoutPromise, _yield$Promise$race, error, _db$storage$from$getP, data, _t231;
     return _regenerator().w(function (_context204) {
       while (1) switch (_context204.p = _context204.n) {
         case 0:
@@ -13651,8 +13651,8 @@ function _uploadImage() {
           break;
         case 3:
           _context204.p = 3;
-          _t230 = _context204.v;
-          tnLog("fileToBlob falhou, tentando upload direto:", _t230);
+          _t231 = _context204.v;
+          tnLog("fileToBlob falhou, tentando upload direto:", _t231);
           // Fallback: sobe o arquivo original se for menor que 2MB
           if (!(file.size <= 2 * 1024 * 1024)) {
             _context204.n = 4;
@@ -13765,7 +13765,7 @@ function geocodificar(_x70, _x71, _x72) {
 // Roda no máximo 1 vez por hora, até 5 lugares por vez (respeita rate limit do Nominatim)
 function _geocodificar() {
   _geocodificar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee204(cidade, estado, pais) {
-    var q, r, data, _t231;
+    var q, r, data, _t232;
     return _regenerator().w(function (_context206) {
       while (1) switch (_context206.p = _context206.n) {
         case 0:
@@ -13798,8 +13798,8 @@ function _geocodificar() {
           break;
         case 5:
           _context206.p = 5;
-          _t231 = _context206.v;
-          tnLog("Geocodificação falhou:", cidade, _t231);
+          _t232 = _context206.v;
+          tnLog("Geocodificação falhou:", cidade, _t232);
         case 6:
           return _context206.a(2, null);
       }
@@ -13817,7 +13817,7 @@ function backfillCoordenadas() {
 // Não lê nem escreve profiles.lugares. Pode ser renomeada na Sessão D.
 function _backfillCoordenadas() {
   _backfillCoordenadas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee205() {
-    var _yield$dbRead$from$se96, lugares, _iterator47, _step47, l, coords, _t232, _t233;
+    var _yield$dbRead$from$se96, lugares, _iterator47, _step47, l, coords, _t233, _t234;
     return _regenerator().w(function (_context207) {
       while (1) switch (_context207.p = _context207.n) {
         case 0:
@@ -13877,8 +13877,8 @@ function _backfillCoordenadas() {
           break;
         case 12:
           _context207.p = 12;
-          _t232 = _context207.v;
-          _iterator47.e(_t232);
+          _t233 = _context207.v;
+          _iterator47.e(_t233);
         case 13:
           _context207.p = 13;
           _iterator47.f();
@@ -13888,8 +13888,8 @@ function _backfillCoordenadas() {
           break;
         case 15:
           _context207.p = 15;
-          _t233 = _context207.v;
-          tnLog("Backfill falhou:", _t233);
+          _t234 = _context207.v;
+          tnLog("Backfill falhou:", _t234);
         case 16:
           return _context207.a(2);
       }
@@ -13910,7 +13910,7 @@ function syncLugaresToPlaces(_x73, _x74) {
 //   - Senão → abre perfil
 function _syncLugaresToPlaces() {
   _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee206(profileId, lugares) {
-    var _iterator48, _step48, l, nome, cidade, estado, pais, _yield$db$from$select2, existing, placeId, photoFields, _yield$db$from$insert18, created, error, foto, _t234, _t235;
+    var _iterator48, _step48, l, nome, cidade, estado, pais, _yield$db$from$select2, existing, placeId, photoFields, _yield$db$from$insert18, created, error, foto, _t235, _t236;
     return _regenerator().w(function (_context208) {
       while (1) switch (_context208.p = _context208.n) {
         case 0:
@@ -14011,8 +14011,8 @@ function _syncLugaresToPlaces() {
           break;
         case 11:
           _context208.p = 11;
-          _t234 = _context208.v;
-          console.error("Erro syncLugares:", _t234);
+          _t235 = _context208.v;
+          console.error("Erro syncLugares:", _t235);
         case 12:
           _context208.n = 3;
           break;
@@ -14021,8 +14021,8 @@ function _syncLugaresToPlaces() {
           break;
         case 14:
           _context208.p = 14;
-          _t235 = _context208.v;
-          _iterator48.e(_t235);
+          _t236 = _context208.v;
+          _iterator48.e(_t236);
         case 15:
           _context208.p = 15;
           _iterator48.f();
@@ -14545,7 +14545,7 @@ function carregarCapsulasAtivas() {
 } // Dispara carregamento ao boot (1 vez)
 function _carregarCapsulasAtivas() {
   _carregarCapsulasAtivas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee207() {
-    var dLimite, _yield$dbRead$from$se97, data, error, mapa, _iterator49, _step49, c, _t236, _t237;
+    var dLimite, _yield$dbRead$from$se97, data, error, mapa, _iterator49, _step49, c, _t237, _t238;
     return _regenerator().w(function (_context209) {
       while (1) switch (_context209.p = _context209.n) {
         case 0:
@@ -14595,8 +14595,8 @@ function _carregarCapsulasAtivas() {
           break;
         case 8:
           _context209.p = 8;
-          _t236 = _context209.v;
-          _iterator49.e(_t236);
+          _t237 = _context209.v;
+          _iterator49.e(_t237);
         case 9:
           _context209.p = 9;
           _iterator49.f();
@@ -14608,14 +14608,14 @@ function _carregarCapsulasAtivas() {
           window.__tnCapsulasAtivasListeners.forEach(function (fn) {
             try {
               fn();
-            } catch (_unused147) {}
+            } catch (_unused148) {}
           });
           _context209.n = 12;
           break;
         case 11:
           _context209.p = 11;
-          _t237 = _context209.v;
-          console.warn("[capsulas ativas] falhou:", _t237);
+          _t238 = _context209.v;
+          console.warn("[capsulas ativas] falhou:", _t238);
         case 12:
           return _context209.a(2);
       }
@@ -16505,7 +16505,7 @@ function dispararNotifsCapsulaFutura(_x76, _x77) {
 // ════════════════════════════════════════════════════════════════════
 function _dispararNotifsCapsulaFutura() {
   _dispararNotifsCapsulaFutura = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee208(capsula, criadorUser) {
-    var dataAbreISO, anoAbre, lugarCapsula, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se98, outros, error, lugaresOutros, notificados, _iterator50, _step50, o, cruz, _t238, _t239;
+    var dataAbreISO, anoAbre, lugarCapsula, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se98, outros, error, lugaresOutros, notificados, _iterator50, _step50, o, cruz, _t239, _t240;
     return _regenerator().w(function (_context210) {
       while (1) switch (_context210.p = _context210.n) {
         case 0:
@@ -16629,8 +16629,8 @@ function _dispararNotifsCapsulaFutura() {
           break;
         case 15:
           _context210.p = 15;
-          _t238 = _context210.v;
-          _iterator50.e(_t238);
+          _t239 = _context210.v;
+          _iterator50.e(_t239);
         case 16:
           _context210.p = 16;
           _iterator50.f();
@@ -16641,8 +16641,8 @@ function _dispararNotifsCapsulaFutura() {
           break;
         case 18:
           _context210.p = 18;
-          _t239 = _context210.v;
-          console.error("[NOTIF CAPSULA FUTURA] erro:", _t239);
+          _t240 = _context210.v;
+          console.error("[NOTIF CAPSULA FUTURA] erro:", _t240);
         case 19:
           return _context210.a(2);
       }
@@ -16655,7 +16655,7 @@ function verificarCapsulasAbertas(_x78) {
 } // Processa UMA cápsula que abriu — dispara as 3 categorias de notificação
 function _verificarCapsulasAbertas() {
   _verificarCapsulasAbertas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee209(userLogado) {
-    var hojeISO, dataLimite, _yield$dbRead$from$se99, capsulas, error, _iterator51, _step51, capsula, _t240, _t241, _t242;
+    var hojeISO, dataLimite, _yield$dbRead$from$se99, capsulas, error, _iterator51, _step51, capsula, _t241, _t242, _t243;
     return _regenerator().w(function (_context211) {
       while (1) switch (_context211.p = _context211.n) {
         case 0:
@@ -16708,8 +16708,8 @@ function _verificarCapsulasAbertas() {
           break;
         case 9:
           _context211.p = 9;
-          _t240 = _context211.v;
-          console.error("[CAPSULA ABERTA] erro processando ".concat(capsula.id, ":"), _t240);
+          _t241 = _context211.v;
+          console.error("[CAPSULA ABERTA] erro processando ".concat(capsula.id, ":"), _t241);
         case 10:
           _context211.n = 6;
           break;
@@ -16718,8 +16718,8 @@ function _verificarCapsulasAbertas() {
           break;
         case 12:
           _context211.p = 12;
-          _t241 = _context211.v;
-          _iterator51.e(_t241);
+          _t242 = _context211.v;
+          _iterator51.e(_t242);
         case 13:
           _context211.p = 13;
           _iterator51.f();
@@ -16729,8 +16729,8 @@ function _verificarCapsulasAbertas() {
           break;
         case 15:
           _context211.p = 15;
-          _t242 = _context211.v;
-          console.error("[CAPSULA ABERTA] erro fatal:", _t242);
+          _t243 = _context211.v;
+          console.error("[CAPSULA ABERTA] erro fatal:", _t243);
         case 16:
           return _context211.a(2);
       }
@@ -16749,7 +16749,7 @@ function processarCapsulaAberta(_x79, _x80) {
 // ═══════════════════════════════════════════════════════════════════
 function _processarCapsulaAberta() {
   _processarCapsulaAberta = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee210(capsula, criadorUser) {
-    var lugar, trecho, _yield$dbRead$from$se100, aguardando, _iterator52, _step52, a, dataAbreISO, anoAbre, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se101, outros, notifRegiao, lugaresOutros, _yield$dbRead$from$se102, jaAguardando, idsJaNotif, _iterator53, _step53, o, cruz, _yield$db$from$update0, errMark, _t243, _t244, _t245, _t246, _t247;
+    var lugar, trecho, _yield$dbRead$from$se100, aguardando, _iterator52, _step52, a, dataAbreISO, anoAbre, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se101, outros, notifRegiao, lugaresOutros, _yield$dbRead$from$se102, jaAguardando, idsJaNotif, _iterator53, _step53, o, cruz, _yield$db$from$update0, errMark, _t244, _t245, _t246, _t247, _t248;
     return _regenerator().w(function (_context212) {
       while (1) switch (_context212.p = _context212.n) {
         case 0:
@@ -16810,8 +16810,8 @@ function _processarCapsulaAberta() {
           break;
         case 7:
           _context212.p = 7;
-          _t243 = _context212.v;
-          _iterator52.e(_t243);
+          _t244 = _context212.v;
+          _iterator52.e(_t244);
         case 8:
           _context212.p = 8;
           _iterator52.f();
@@ -16823,8 +16823,8 @@ function _processarCapsulaAberta() {
           break;
         case 11:
           _context212.p = 11;
-          _t244 = _context212.v;
-          console.warn("  \u26A0 erro buscar aguardando pra ".concat(capsula.id, ":"), _t244);
+          _t245 = _context212.v;
+          console.warn("  \u26A0 erro buscar aguardando pra ".concat(capsula.id, ":"), _t245);
         case 12:
           _context212.p = 12;
           dataAbreISO = capsula.capsula_data_referencia;
@@ -16922,8 +16922,8 @@ function _processarCapsulaAberta() {
           break;
         case 23:
           _context212.p = 23;
-          _t245 = _context212.v;
-          _iterator53.e(_t245);
+          _t246 = _context212.v;
+          _iterator53.e(_t246);
         case 24:
           _context212.p = 24;
           _iterator53.f();
@@ -16935,8 +16935,8 @@ function _processarCapsulaAberta() {
           break;
         case 27:
           _context212.p = 27;
-          _t246 = _context212.v;
-          console.warn("  \u26A0 erro notif regional pra ".concat(capsula.id, ":"), _t246);
+          _t247 = _context212.v;
+          console.warn("  \u26A0 erro notif regional pra ".concat(capsula.id, ":"), _t247);
         case 28:
           _context212.p = 28;
           _context212.n = 29;
@@ -16954,8 +16954,8 @@ function _processarCapsulaAberta() {
           break;
         case 30:
           _context212.p = 30;
-          _t247 = _context212.v;
-          console.error("  \u26A0 exce\xE7\xE3o marcando notificada_em:", _t247);
+          _t248 = _context212.v;
+          console.error("  \u26A0 exce\xE7\xE3o marcando notificada_em:", _t248);
         case 31:
           return _context212.a(2);
       }
@@ -26224,7 +26224,7 @@ function _carregarLugaresEmAlta() {
       _yield$dbRead$from$se104,
       places,
       _args213 = arguments,
-      _t248;
+      _t249;
     return _regenerator().w(function (_context213) {
       while (1) switch (_context213.p = _context213.n) {
         case 0:
@@ -26278,8 +26278,8 @@ function _carregarLugaresEmAlta() {
           }).filter(Boolean));
         case 7:
           _context213.p = 7;
-          _t248 = _context213.v;
-          tnLog("Lugares em alta:", _t248.message || _t248);
+          _t249 = _context213.v;
+          tnLog("Lugares em alta:", _t249.message || _t249);
           return _context213.a(2, []);
       }
     }, _callee211, null, [[1, 7]]);
@@ -26294,7 +26294,7 @@ function contarPerfisPorLugar(_x95) {
 // stubs no-op pra não quebrar chamadas existentes.
 function _contarPerfisPorLugar() {
   _contarPerfisPorLugar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee212(placeIds) {
-    var _yield$dbRead$from$se105, data, counts, _t249;
+    var _yield$dbRead$from$se105, data, counts, _t250;
     return _regenerator().w(function (_context214) {
       while (1) switch (_context214.p = _context214.n) {
         case 0:
@@ -26317,7 +26317,7 @@ function _contarPerfisPorLugar() {
           return _context214.a(2, counts);
         case 3:
           _context214.p = 3;
-          _t249 = _context214.v;
+          _t250 = _context214.v;
           return _context214.a(2, {});
       }
     }, _callee212, null, [[1, 3]]);
@@ -29918,10 +29918,11 @@ function Cruzamentos(_ref133) {
             }))));
             meusEstados = new Set([].concat(_toConsumableArray(user.state ? [user.state] : []), _toConsumableArray(estados))); // ─── Categoria 1: espaço-tempo ───
             promCruz = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee84() {
-              var orFilter, _yield$dbRead$from$se44, data, error, luPerfis;
+              var orFilter, _yield$dbRead$from$se44, data, error, luPerfis, _t87;
               return _regenerator().w(function (_context84) {
-                while (1) switch (_context84.n) {
+                while (1) switch (_context84.p = _context84.n) {
                   case 0:
+                    _context84.p = 0;
                     if (!(cidades.length === 0 && estados.length === 0)) {
                       _context84.n = 1;
                       break;
@@ -29963,11 +29964,16 @@ function Cruzamentos(_ref133) {
                     }).sort(function (a, b) {
                       return b.cruz.score - a.cruz.score;
                     }).slice(0, 12));
+                  case 5:
+                    _context84.p = 5;
+                    _t87 = _context84.v;
+                    console.warn("[Olhar cat1]", _t87);
+                    return _context84.a(2, []);
                 }
-              }, _callee84);
+              }, _callee84, null, [[0, 5]]);
             }))(); // ─── Categoria 4: cápsulas próximas a abrir (≤30 dias) na sua região ───
             promCapsulas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee85() {
-              var hoje, fim, _yield$dbRead$from$se45, caps, error, filtradas, _t87;
+              var hoje, fim, _yield$dbRead$from$se45, caps, error, filtradas, _t88;
               return _regenerator().w(function (_context85) {
                 while (1) switch (_context85.p = _context85.n) {
                   case 0:
@@ -30013,13 +30019,13 @@ function Cruzamentos(_ref133) {
                     return _context85.a(2, filtradas.slice(0, 5));
                   case 3:
                     _context85.p = 3;
-                    _t87 = _context85.v;
+                    _t88 = _context85.v;
                     return _context85.a(2, []);
                 }
               }, _callee85, null, [[0, 3]]);
             }))(); // ─── Categoria 5: sobrenome compartilhado em outra geografia ───
             promSobrenome = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee86() {
-              var _yield$dbRead$from$se46, data, error, _t88;
+              var _yield$dbRead$from$se46, data, error, _t89;
               return _regenerator().w(function (_context86) {
                 while (1) switch (_context86.p = _context86.n) {
                   case 0:
@@ -30052,7 +30058,7 @@ function Cruzamentos(_ref133) {
                     }).slice(0, 8));
                   case 4:
                     _context86.p = 4;
-                    _t88 = _context86.v;
+                    _t89 = _context86.v;
                     return _context86.a(2, []);
                 }
               }, _callee86, null, [[1, 4]]);
@@ -30061,7 +30067,7 @@ function Cruzamentos(_ref133) {
             // Rede ampla = contatos diretos UNION perfis que cruzam tempo+espaço.
             // Inclui cidades onde VOCÊ passou (com flag) — gera engajamento "também estive!"
             promLugaresRess = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee87() {
-              var contatosArr, perfisCruz, orFilter, _yield$dbRead$from$se47, data, redeAmpla, lugaresRedeMap, cidadesContagem, _iterator30, _step30, p, lugaresUser, todasCidades, seen, _iterator31, _step31, _step31$value, cidade, uf, key, cur, ress, _t89, _t90, _t91;
+              var contatosArr, perfisCruz, orFilter, _yield$dbRead$from$se47, data, redeAmpla, lugaresRedeMap, cidadesContagem, _iterator30, _step30, p, lugaresUser, todasCidades, seen, _iterator31, _step31, _step31$value, cidade, uf, key, cur, ress, _t90, _t91, _t92;
               return _regenerator().w(function (_context87) {
                 while (1) switch (_context87.p = _context87.n) {
                   case 0:
@@ -30167,8 +30173,8 @@ function Cruzamentos(_ref133) {
                     break;
                   case 13:
                     _context87.p = 13;
-                    _t89 = _context87.v;
-                    _iterator31.e(_t89);
+                    _t90 = _context87.v;
+                    _iterator31.e(_t90);
                   case 14:
                     _context87.p = 14;
                     _iterator31.f();
@@ -30181,8 +30187,8 @@ function Cruzamentos(_ref133) {
                     break;
                   case 17:
                     _context87.p = 17;
-                    _t90 = _context87.v;
-                    _iterator30.e(_t90);
+                    _t91 = _context87.v;
+                    _iterator30.e(_t91);
                   case 18:
                     _context87.p = 18;
                     _iterator30.f();
@@ -30197,14 +30203,14 @@ function Cruzamentos(_ref133) {
                     return _context87.a(2, ress);
                   case 20:
                     _context87.p = 20;
-                    _t91 = _context87.v;
-                    console.warn("[Olhar cat2]", _t91);
+                    _t92 = _context87.v;
+                    console.warn("[Olhar cat2]", _t92);
                     return _context87.a(2, []);
                 }
               }, _callee87, null, [[7, 13, 14, 15], [5, 17, 18, 19], [0, 20]]);
             }))(); // ─── Categoria 3: momentos da mesma era+lugar ───
             promMomentosEra = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee88() {
-              var meusMomentos, amostra, _yield$dbRead$from$se48, data, candidatos, _iterator32, _step32, _loop, _ret, _t93, _t94;
+              var meusMomentos, amostra, _yield$dbRead$from$se48, data, candidatos, _iterator32, _step32, _loop, _ret, _t94, _t95;
               return _regenerator().w(function (_context89) {
                 while (1) switch (_context89.p = _context89.n) {
                   case 0:
@@ -30235,7 +30241,7 @@ function Cruzamentos(_ref133) {
                     _iterator32 = _createForOfIteratorHelper(amostra.slice(0, 20));
                     _context89.p = 4;
                     _loop = /*#__PURE__*/_regenerator().m(function _loop() {
-                      var meu, cidadeMeu, anoMeu, dtIni, dtFim, _yield$dbRead$from$se49, momExt, idsAutores, _yield$dbRead$from$se50, perfisAutores, mapaPerfis, _iterator33, _step33, ext, anoExt, deltaAnos, cidadeExt, matchCidade, matchTempo, score, cur, _t92;
+                      var meu, cidadeMeu, anoMeu, dtIni, dtFim, _yield$dbRead$from$se49, momExt, idsAutores, _yield$dbRead$from$se50, perfisAutores, mapaPerfis, _iterator33, _step33, ext, anoExt, deltaAnos, cidadeExt, matchCidade, matchTempo, score, cur, _t93;
                       return _regenerator().w(function (_context88) {
                         while (1) switch (_context88.p = _context88.n) {
                           case 0:
@@ -30329,8 +30335,8 @@ function Cruzamentos(_ref133) {
                             break;
                           case 12:
                             _context88.p = 12;
-                            _t92 = _context88.v;
-                            _iterator33.e(_t92);
+                            _t93 = _context88.v;
+                            _iterator33.e(_t93);
                           case 13:
                             _context88.p = 13;
                             _iterator33.f();
@@ -30362,8 +30368,8 @@ function Cruzamentos(_ref133) {
                     break;
                   case 9:
                     _context89.p = 9;
-                    _t93 = _context89.v;
-                    _iterator32.e(_t93);
+                    _t94 = _context89.v;
+                    _iterator32.e(_t94);
                   case 10:
                     _context89.p = 10;
                     _iterator32.f();
@@ -30374,14 +30380,14 @@ function Cruzamentos(_ref133) {
                     }).slice(0, 5));
                   case 12:
                     _context89.p = 12;
-                    _t94 = _context89.v;
-                    console.warn("[Olhar cat3]", _t94);
+                    _t95 = _context89.v;
+                    console.warn("[Olhar cat3]", _t95);
                     return _context89.a(2, []);
                 }
               }, _callee88, null, [[4, 9, 10, 11], [0, 12]]);
             }))(); // ─── Categoria 6: quero ir cruzado (períodos sobrepostos) ───
             promQueroIrCruz = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee89() {
-              var hoje, _yield$dbRead$from$se51, meusQI, e1, matches, _iterator34, _step34, meu, _yield$dbRead$from$se52, outros, _iterator35, _step35, out, oI, oF, diasSobre, minhaDuracao, score, dedup, _i6, _matches, m, cur, _t95, _t96, _t97;
+              var hoje, _yield$dbRead$from$se51, meusQI, e1, matches, _iterator34, _step34, meu, _yield$dbRead$from$se52, outros, _iterator35, _step35, out, oI, oF, diasSobre, minhaDuracao, score, dedup, _i6, _matches, m, cur, _t96, _t97, _t98;
               return _regenerator().w(function (_context90) {
                 while (1) switch (_context90.p = _context90.n) {
                   case 0:
@@ -30457,8 +30463,8 @@ function Cruzamentos(_ref133) {
                     break;
                   case 12:
                     _context90.p = 12;
-                    _t95 = _context90.v;
-                    _iterator35.e(_t95);
+                    _t96 = _context90.v;
+                    _iterator35.e(_t96);
                   case 13:
                     _context90.p = 13;
                     _iterator35.f();
@@ -30471,8 +30477,8 @@ function Cruzamentos(_ref133) {
                     break;
                   case 16:
                     _context90.p = 16;
-                    _t96 = _context90.v;
-                    _iterator34.e(_t96);
+                    _t97 = _context90.v;
+                    _iterator34.e(_t97);
                   case 17:
                     _context90.p = 17;
                     _iterator34.f();
@@ -30490,8 +30496,8 @@ function Cruzamentos(_ref133) {
                     }).slice(0, 5));
                   case 19:
                     _context90.p = 19;
-                    _t97 = _context90.v;
-                    console.warn("[Olhar cat6]", _t97);
+                    _t98 = _context90.v;
+                    console.warn("[Olhar cat6]", _t98);
                     return _context90.a(2, []);
                 }
               }, _callee89, null, [[7, 12, 13, 14], [3, 16, 17, 18], [0, 19]]);
@@ -32041,7 +32047,7 @@ function ModalEditarPerfil(_ref148) {
   }
   function _buscarCidade2() {
     _buscarCidade2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee91(q) {
-      var escopo, r, data, cidades, _t98;
+      var escopo, r, data, cidades, _t99;
       return _regenerator().w(function (_context92) {
         while (1) switch (_context92.p = _context92.n) {
           case 0:
@@ -32073,7 +32079,7 @@ function ModalEditarPerfil(_ref148) {
             break;
           case 5:
             _context92.p = 5;
-            _t98 = _context92.v;
+            _t99 = _context92.v;
             setCityLoading(false);
           case 6:
             return _context92.a(2);
@@ -32142,7 +32148,7 @@ function ModalEditarPerfil(_ref148) {
   }
   function _handleCepChange() {
     _handleCepChange = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee92(e) {
-      var val, digits, r, data, _t99;
+      var val, digits, r, data, _t100;
       return _regenerator().w(function (_context93) {
         while (1) switch (_context93.p = _context93.n) {
           case 0:
@@ -32179,7 +32185,7 @@ function ModalEditarPerfil(_ref148) {
             break;
           case 4:
             _context93.p = 4;
-            _t99 = _context93.v;
+            _t100 = _context93.v;
           case 5:
             return _context93.a(2);
         }
@@ -32192,7 +32198,7 @@ function ModalEditarPerfil(_ref148) {
   } // v307: relógio temporal poético — anos, meses, dias
   function _salvar4() {
     _salvar4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee93() {
-      var okMod, nomeCompleto, updated, erroUpd, _yield$db$from$update7, error, _t100;
+      var okMod, nomeCompleto, updated, erroUpd, _yield$db$from$update7, error, _t101;
       return _regenerator().w(function (_context94) {
         while (1) switch (_context94.p = _context94.n) {
           case 0:
@@ -32288,8 +32294,8 @@ function ModalEditarPerfil(_ref148) {
             break;
           case 6:
             _context94.p = 6;
-            _t100 = _context94.v;
-            erroUpd = _t100;
+            _t101 = _context94.v;
+            erroUpd = _t101;
           case 7:
             if (!erroUpd) {
               _context94.n = 8;
@@ -33287,7 +33293,7 @@ function ModalCompletar(_ref151) {
   }
   function _salvar5() {
     _salvar5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee95() {
-      var url, updated, _url, newPhotos, _updated, sobrenome, nomeCompleto, _updated2, _updated3, _updated4, _t102;
+      var url, updated, _url, newPhotos, _updated, sobrenome, nomeCompleto, _updated2, _updated3, _updated4, _t103;
       return _regenerator().w(function (_context96) {
         while (1) switch (_context96.p = _context96.n) {
           case 0:
@@ -33405,8 +33411,8 @@ function ModalCompletar(_ref151) {
             break;
           case 15:
             _context96.p = 15;
-            _t102 = _context96.v;
-            console.error("Completar perfil:", _t102);
+            _t103 = _context96.v;
+            console.error("Completar perfil:", _t103);
             alert("Não consegui salvar agora. Tente novamente.");
             setSaving(false);
             return _context96.a(2);
@@ -33642,7 +33648,7 @@ function ModalCompletar(_ref151) {
     }
   }, filePreview ? "Escolher outra" : "Trocar foto"), /*#__PURE__*/React.createElement("button", {
     onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee94() {
-      var novas, updated, _t101;
+      var novas, updated, _t102;
       return _regenerator().w(function (_context95) {
         while (1) switch (_context95.p = _context95.n) {
           case 0:
@@ -33671,8 +33677,8 @@ function ModalCompletar(_ref151) {
             break;
           case 4:
             _context95.p = 4;
-            _t101 = _context95.v;
-            console.error("Erro remover capa:", _t101);
+            _t102 = _context95.v;
+            console.error("Erro remover capa:", _t102);
             alert("Não consegui remover agora. Tente novamente.");
           case 5:
             setSaving(false);
@@ -33891,7 +33897,7 @@ function ModalGravarVideo(_ref153) {
   function _onSelecionar() {
     _onSelecionar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee96(e) {
       var _e$target$files;
-      var file, dur, _t103;
+      var file, dur, _t104;
       return _regenerator().w(function (_context97) {
         while (1) switch (_context97.p = _context97.n) {
           case 0:
@@ -33936,7 +33942,7 @@ function ModalGravarVideo(_ref153) {
             break;
           case 6:
             _context97.p = 6;
-            _t103 = _context97.v;
+            _t104 = _context97.v;
             setErro("Não consegui ler o vídeo. Tente outro arquivo.");
           case 7:
             return _context97.a(2);
@@ -33950,7 +33956,7 @@ function ModalGravarVideo(_ref153) {
   }
   function _postar() {
     _postar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee97() {
-      var url, expira, _yield$db$from$insert8, error, _t104;
+      var url, expira, _yield$db$from$insert8, error, _t105;
       return _regenerator().w(function (_context98) {
         while (1) switch (_context98.p = _context98.n) {
           case 0:
@@ -33990,8 +33996,8 @@ function ModalGravarVideo(_ref153) {
             break;
           case 6:
             _context98.p = 6;
-            _t104 = _context98.v;
-            console.error("Erro ao postar vídeo:", _t104);
+            _t105 = _context98.v;
+            console.error("Erro ao postar vídeo:", _t105);
             setErro("Falha ao enviar. Tente novamente.");
             setPostando(false);
           case 7:
@@ -34638,7 +34644,7 @@ function Perfil(_ref156) {
   }
   function _carregarMeusVideos() {
     _carregarMeusVideos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee106() {
-      var _yield$dbRead$from$se55, data, _t112;
+      var _yield$dbRead$from$se55, data, _t113;
       return _regenerator().w(function (_context107) {
         while (1) switch (_context107.p = _context107.n) {
           case 0:
@@ -34661,8 +34667,8 @@ function Perfil(_ref156) {
             break;
           case 3:
             _context107.p = 3;
-            _t112 = _context107.v;
-            console.error("Erro ao carregar vídeos:", _t112);
+            _t113 = _context107.v;
+            console.error("Erro ao carregar vídeos:", _t113);
           case 4:
             return _context107.a(2);
         }
@@ -34680,7 +34686,7 @@ function Perfil(_ref156) {
   }
   function _carregarMeusMomentos() {
     _carregarMeusMomentos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee107() {
-      var _yield$dbRead$from$se56, data, _t113;
+      var _yield$dbRead$from$se56, data, _t114;
       return _regenerator().w(function (_context108) {
         while (1) switch (_context108.p = _context108.n) {
           case 0:
@@ -34703,7 +34709,7 @@ function Perfil(_ref156) {
             break;
           case 3:
             _context108.p = 3;
-            _t113 = _context108.v;
+            _t114 = _context108.v;
           case 4:
             return _context108.a(2);
         }
@@ -34720,7 +34726,7 @@ function Perfil(_ref156) {
     if (!(perfilExibido !== null && perfilExibido !== void 0 && perfilExibido.id)) return;
     var cancelled = false;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee98() {
-      var _yield$dbRead$from$se53, data, hoje, sessentaAtras, passado, presente, futuro, _t105;
+      var _yield$dbRead$from$se53, data, hoje, sessentaAtras, passado, presente, futuro, _t106;
       return _regenerator().w(function (_context99) {
         while (1) switch (_context99.p = _context99.n) {
           case 0:
@@ -34771,8 +34777,8 @@ function Perfil(_ref156) {
             break;
           case 3:
             _context99.p = 3;
-            _t105 = _context99.v;
-            tnLog("Cápsulas perfil próprio:", _t105.message);
+            _t106 = _context99.v;
+            tnLog("Cápsulas perfil próprio:", _t106.message);
           case 4:
             return _context99.a(2);
         }
@@ -34814,7 +34820,7 @@ function Perfil(_ref156) {
     if (!(perfilExibido !== null && perfilExibido !== void 0 && perfilExibido.id)) return;
     var cancelled = false;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee100() {
-      var cidadesPessoa, cidadesNorm, _yield$dbRead$from$se54, count, _t106;
+      var cidadesPessoa, cidadesNorm, _yield$dbRead$from$se54, count, _t107;
       return _regenerator().w(function (_context101) {
         while (1) switch (_context101.p = _context101.n) {
           case 0:
@@ -34845,8 +34851,8 @@ function Perfil(_ref156) {
             break;
           case 3:
             _context101.p = 3;
-            _t106 = _context101.v;
-            tnLog("Pessoas cruzaram:", _t106.message);
+            _t107 = _context101.v;
+            tnLog("Pessoas cruzaram:", _t107.message);
           case 4:
             return _context101.a(2);
         }
@@ -34867,7 +34873,7 @@ function Perfil(_ref156) {
   }
   function _carregarMeusItens() {
     _carregarMeusItens = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee108() {
-      var _yield$dbRead$from$se57, data, _t114;
+      var _yield$dbRead$from$se57, data, _t115;
       return _regenerator().w(function (_context109) {
         while (1) switch (_context109.p = _context109.n) {
           case 0:
@@ -34890,7 +34896,7 @@ function Perfil(_ref156) {
             break;
           case 3:
             _context109.p = 3;
-            _t114 = _context109.v;
+            _t115 = _context109.v;
           case 4:
             return _context109.a(2);
         }
@@ -34908,7 +34914,7 @@ function Perfil(_ref156) {
   }
   function _salvarDestaques() {
     _salvarDestaques = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee109(novosIds) {
-      var novoUser, _t115;
+      var novoUser, _t116;
       return _regenerator().w(function (_context110) {
         while (1) switch (_context110.p = _context110.n) {
           case 0:
@@ -34926,8 +34932,8 @@ function Perfil(_ref156) {
             break;
           case 3:
             _context110.p = 3;
-            _t115 = _context110.v;
-            tnLog("Erro salvar destaques (coluna pode não existir ainda):", _t115);
+            _t116 = _context110.v;
+            tnLog("Erro salvar destaques (coluna pode não existir ainda):", _t116);
           case 4:
             return _context110.a(2);
         }
@@ -34954,7 +34960,7 @@ function Perfil(_ref156) {
   }
   function _removerVideo() {
     _removerVideo = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee110(id) {
-      var _t116;
+      var _t117;
       return _regenerator().w(function (_context111) {
         while (1) switch (_context111.p = _context111.n) {
           case 0:
@@ -34971,8 +34977,8 @@ function Perfil(_ref156) {
             break;
           case 2:
             _context111.p = 2;
-            _t116 = _context111.v;
-            console.error("Erro ao remover vídeo:", _t116);
+            _t117 = _context111.v;
+            console.error("Erro ao remover vídeo:", _t117);
           case 3:
             return _context111.a(2);
         }
@@ -35007,7 +35013,7 @@ function Perfil(_ref156) {
   }
   function _handleNewAvatar() {
     _handleNewAvatar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee111(e) {
-      var file, url, updated, _t117, _t118;
+      var file, url, updated, _t118, _t119;
       return _regenerator().w(function (_context112) {
         while (1) switch (_context112.p = _context112.n) {
           case 0:
@@ -35037,15 +35043,15 @@ function Perfil(_ref156) {
             break;
           case 5:
             _context112.p = 5;
-            _t117 = _context112.v;
-            console.error("update profile avatar:", _t117);
+            _t118 = _context112.v;
+            console.error("update profile avatar:", _t118);
           case 6:
             _context112.n = 8;
             break;
           case 7:
             _context112.p = 7;
-            _t118 = _context112.v;
-            console.error("Falha no upload do avatar:", _t118);
+            _t119 = _context112.v;
+            console.error("Falha no upload do avatar:", _t119);
             alert("Não consegui enviar a foto. Tente novamente ou escolha outra imagem.");
           case 8:
             return _context112.a(2);
@@ -35060,7 +35066,7 @@ function Perfil(_ref156) {
   // v312: relógio temporal poético — versão que recebe user (usado no header do perfil)
   function _handleMorePhotos() {
     _handleMorePhotos = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee112(e) {
-      var files, urls, newPhotos, _t119, _t120;
+      var files, urls, newPhotos, _t120, _t121;
       return _regenerator().w(function (_context113) {
         while (1) switch (_context113.p = _context113.n) {
           case 0:
@@ -35092,15 +35098,15 @@ function Perfil(_ref156) {
             break;
           case 5:
             _context113.p = 5;
-            _t119 = _context113.v;
-            console.error("update profile photos:", _t119);
+            _t120 = _context113.v;
+            console.error("update profile photos:", _t120);
           case 6:
             _context113.n = 8;
             break;
           case 7:
             _context113.p = 7;
-            _t120 = _context113.v;
-            console.error("Falha no upload das fotos:", _t120);
+            _t121 = _context113.v;
+            console.error("Falha no upload das fotos:", _t121);
             alert("Não consegui enviar alguma das fotos. Tente novamente.");
           case 8:
             return _context113.a(2);
@@ -35148,7 +35154,7 @@ function Perfil(_ref156) {
   } // v313a: helpers para o Cap I — signo zodiacal a partir de dia/mês
   function _compartilharPerfil() {
     _compartilharPerfil = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee113() {
-      var url, nome, texto, _t121;
+      var url, nome, texto, _t122;
       return _regenerator().w(function (_context114) {
         while (1) switch (_context114.p = _context114.n) {
           case 0:
@@ -35179,8 +35185,8 @@ function Perfil(_ref156) {
             break;
           case 6:
             _context114.p = 6;
-            _t121 = _context114.v;
-            if (_t121.name !== "AbortError") console.error("Share:", _t121);
+            _t122 = _context114.v;
+            if (_t122.name !== "AbortError") console.error("Share:", _t122);
           case 7:
             return _context114.a(2);
         }
@@ -35401,7 +35407,7 @@ function Perfil(_ref156) {
     if (capituloAbertoPerfil === "lugares") {
       var removerLugar = /*#__PURE__*/function () {
         var _ref160 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee101(lugarOriginal) {
-          var _yield$db$from$delete7, error, lista, _t107;
+          var _yield$db$from$delete7, error, lista, _t108;
           return _regenerator().w(function (_context102) {
             while (1) switch (_context102.p = _context102.n) {
               case 0:
@@ -35434,8 +35440,8 @@ function Perfil(_ref156) {
                 break;
               case 5:
                 _context102.p = 5;
-                _t107 = _context102.v;
-                if (window.tnToast) window.tnToast("erro ao remover", _t107.message || "");
+                _t108 = _context102.v;
+                if (window.tnToast) window.tnToast("erro ao remover", _t108.message || "");
               case 6:
                 return _context102.a(2);
             }
@@ -35448,7 +35454,7 @@ function Perfil(_ref156) {
       // F1.B B2: salva edição de período+rótulo via place_profiles.id
       var salvarEdicaoLugar = /*#__PURE__*/function () {
         var _ref161 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee102(dados) {
-          var patch, _yield$db$from$update8, error, lista, _t108;
+          var patch, _yield$db$from$update8, error, lista, _t109;
           return _regenerator().w(function (_context103) {
             while (1) switch (_context103.p = _context103.n) {
               case 0:
@@ -35487,8 +35493,8 @@ function Perfil(_ref156) {
                 break;
               case 5:
                 _context103.p = 5;
-                _t108 = _context103.v;
-                if (window.tnToast) window.tnToast("erro ao salvar", _t108.message || "");
+                _t109 = _context103.v;
+                if (window.tnToast) window.tnToast("erro ao salvar", _t109.message || "");
               case 6:
                 setLugarEditando(null);
               case 7:
@@ -35551,7 +35557,7 @@ function Perfil(_ref156) {
     if (capituloAbertoPerfil === "memorias") {
       var removerMemoria = /*#__PURE__*/function () {
         var _ref162 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee103(m) {
-          var _t109;
+          var _yield$db$from$delete8, error, _t110;
           return _regenerator().w(function (_context104) {
             while (1) switch (_context104.p = _context104.n) {
               case 0:
@@ -35565,18 +35571,27 @@ function Perfil(_ref156) {
                 _context104.n = 2;
                 return db.from("momentos")["delete"]().eq("id", m.id);
               case 2:
+                _yield$db$from$delete8 = _context104.v;
+                error = _yield$db$from$delete8.error;
+                if (!error) {
+                  _context104.n = 3;
+                  break;
+                }
+                throw error;
+              case 3:
                 if (window.tnToast) window.tnToast("memória removida", "");
                 if (typeof window !== "undefined") window.location.reload();
-                _context104.n = 4;
+                _context104.n = 5;
                 break;
-              case 3:
-                _context104.p = 3;
-                _t109 = _context104.v;
-                if (window.tnToast) window.tnToast("erro ao remover", _t109.message || "");
               case 4:
+                _context104.p = 4;
+                _t110 = _context104.v;
+                console.error("Erro remover memória:", _t110);
+                if (window.tnToast) window.tnToast("não consegui remover", "tente de novo");
+              case 5:
                 return _context104.a(2);
             }
-          }, _callee103, null, [[1, 3]]);
+          }, _callee103, null, [[1, 4]]);
         }));
         return function removerMemoria(_x110) {
           return _ref162.apply(this, arguments);
@@ -35607,7 +35622,7 @@ function Perfil(_ref156) {
     if (capituloAbertoPerfil === "capsulas") {
       var removerCapsula = /*#__PURE__*/function () {
         var _ref163 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee104(c) {
-          var _t110;
+          var _yield$db$from$delete9, error, _t111;
           return _regenerator().w(function (_context105) {
             while (1) switch (_context105.p = _context105.n) {
               case 0:
@@ -35621,18 +35636,27 @@ function Perfil(_ref156) {
                 _context105.n = 2;
                 return db.from("momentos")["delete"]().eq("id", c.id);
               case 2:
+                _yield$db$from$delete9 = _context105.v;
+                error = _yield$db$from$delete9.error;
+                if (!error) {
+                  _context105.n = 3;
+                  break;
+                }
+                throw error;
+              case 3:
                 if (window.tnToast) window.tnToast("cápsula removida", "");
                 if (typeof window !== "undefined") window.location.reload();
-                _context105.n = 4;
+                _context105.n = 5;
                 break;
-              case 3:
-                _context105.p = 3;
-                _t110 = _context105.v;
-                if (window.tnToast) window.tnToast("erro ao remover", _t110.message || "");
               case 4:
+                _context105.p = 4;
+                _t111 = _context105.v;
+                console.error("Erro remover cápsula:", _t111);
+                if (window.tnToast) window.tnToast("não consegui remover", "tente de novo");
+              case 5:
                 return _context105.a(2);
             }
-          }, _callee104, null, [[1, 3]]);
+          }, _callee104, null, [[1, 4]]);
         }));
         return function removerCapsula(_x111) {
           return _ref163.apply(this, arguments);
@@ -36826,7 +36850,7 @@ function Perfil(_ref156) {
     lugar: (lugaresPerfilState === null || lugaresPerfilState === void 0 || (_lugaresPerfilState$ = lugaresPerfilState[0]) === null || _lugaresPerfilState$ === void 0 ? void 0 : _lugaresPerfilState$.placeName) || user.place_name || "",
     data: user.year_start ? "".concat(user.year_start, "\u2013").concat(user.year_end || "") : "",
     onRemove: fotoExpandida.index !== undefined ? /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee105() {
-      var idx, novas, _t111;
+      var idx, novas, _t112;
       return _regenerator().w(function (_context106) {
         while (1) switch (_context106.p = _context106.n) {
           case 0:
@@ -36847,7 +36871,7 @@ function Perfil(_ref156) {
             break;
           case 3:
             _context106.p = 3;
-            _t111 = _context106.v;
+            _t112 = _context106.v;
           case 4:
             setFotoExpandida(null);
           case 5:
@@ -37661,7 +37685,7 @@ function ModalPerfil(_ref169) {
     if (!(p !== null && p !== void 0 && p.id)) return;
     var cancelled = false;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee114() {
-      var _yield$Promise$all5, _yield$Promise$all6, lugaresR, seguindoR, momentosR, videosR, _lugaresR$count, _seguindoR$count, _momentosR$count, _t122;
+      var _yield$Promise$all5, _yield$Promise$all6, lugaresR, seguindoR, momentosR, videosR, _lugaresR$count, _seguindoR$count, _momentosR$count, _t123;
       return _regenerator().w(function (_context115) {
         while (1) switch (_context115.p = _context115.n) {
           case 0:
@@ -37699,7 +37723,7 @@ function ModalPerfil(_ref169) {
             break;
           case 2:
             _context115.p = 2;
-            _t122 = _context115.v;
+            _t123 = _context115.v;
             if (!cancelled) setStats(function (s) {
               return _objectSpread(_objectSpread({}, s), {}, {
                 loading: false
@@ -37719,7 +37743,7 @@ function ModalPerfil(_ref169) {
   useEffect(function () {
     var cancelled = false;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee115() {
-      var meus, deles, _t123, _t124;
+      var meus, deles, _t124, _t125;
       return _regenerator().w(function (_context116) {
         while (1) switch (_context116.n) {
           case 0:
@@ -37730,13 +37754,13 @@ function ModalPerfil(_ref169) {
             _context116.n = 1;
             return tnLugaresDoProfile(user.id);
           case 1:
-            _t123 = _context116.v;
+            _t124 = _context116.v;
             _context116.n = 3;
             break;
           case 2:
-            _t123 = [];
+            _t124 = [];
           case 3:
-            meus = _t123;
+            meus = _t124;
             if (!(p !== null && p !== void 0 && p.id)) {
               _context116.n = 5;
               break;
@@ -37744,13 +37768,13 @@ function ModalPerfil(_ref169) {
             _context116.n = 4;
             return tnLugaresDoProfile(p.id);
           case 4:
-            _t124 = _context116.v;
+            _t125 = _context116.v;
             _context116.n = 6;
             break;
           case 5:
-            _t124 = [];
+            _t125 = [];
           case 6:
-            deles = _t124;
+            deles = _t125;
             if (!cancelled) setLugaresMatch({
               meus: meus,
               deles: deles
@@ -38271,7 +38295,7 @@ function ModalChat(_ref172) {
   }
   function _send() {
     _send = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee117() {
-      var okMod, msg, _t125;
+      var okMod, msg, _t126;
       return _regenerator().w(function (_context118) {
         while (1) switch (_context118.p = _context118.n) {
           case 0:
@@ -38321,7 +38345,7 @@ function ModalChat(_ref172) {
             break;
           case 6:
             _context118.p = 6;
-            _t125 = _context118.v;
+            _t126 = _context118.v;
           case 7:
             return _context118.a(2);
         }
@@ -38876,7 +38900,7 @@ function useRegionAlerts(user) {
     if (!(user !== null && user !== void 0 && user.id)) return;
     var cancelled = false;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee118() {
-      var _yield$dbRead$from$se58, data, _t126;
+      var _yield$dbRead$from$se58, data, _t127;
       return _regenerator().w(function (_context119) {
         while (1) switch (_context119.p = _context119.n) {
           case 0:
@@ -38891,7 +38915,7 @@ function useRegionAlerts(user) {
             break;
           case 2:
             _context119.p = 2;
-            _t126 = _context119.v;
+            _t127 = _context119.v;
             // Coluna pode não existir ainda (SQL não rodado) — falha silenciosa
             if (!cancelled) setUltimaVisita(null);
           case 3:
@@ -38911,7 +38935,7 @@ function useRegionAlerts(user) {
     }
     function _checkNewProfiles() {
       _checkNewProfiles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee119() {
-        var lugaresUser, userCities, userStates, sevenDaysAgo, cityFilters, stateFilters, orFilter, _yield$dbRead$from$se59, data, lista, cidadesNorm, cutoff, _t127;
+        var lugaresUser, userCities, userStates, sevenDaysAgo, cityFilters, stateFilters, orFilter, _yield$dbRead$from$se59, data, lista, cidadesNorm, cutoff, _t128;
         return _regenerator().w(function (_context120) {
           while (1) switch (_context120.p = _context120.n) {
             case 0:
@@ -38987,8 +39011,8 @@ function useRegionAlerts(user) {
               break;
             case 7:
               _context120.p = 7;
-              _t127 = _context120.v;
-              tnLog("v323a region alerts error:", _t127);
+              _t128 = _context120.v;
+              tnLog("v323a region alerts error:", _t128);
             case 8:
               _context120.p = 8;
               setLoading(false);
@@ -39010,7 +39034,7 @@ function useRegionAlerts(user) {
 
   // Marca como visitado: persiste timestamp e zera badge local
   var marcarVisitado = React.useCallback(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee120() {
-    var agora, _t128;
+    var agora, _t129;
     return _regenerator().w(function (_context121) {
       while (1) switch (_context121.p = _context121.n) {
         case 0:
@@ -39033,9 +39057,9 @@ function useRegionAlerts(user) {
           break;
         case 4:
           _context121.p = 4;
-          _t128 = _context121.v;
+          _t129 = _context121.v;
           // Falha silenciosa — coluna pode não existir
-          tnLog("v323a marcarVisitado err:", _t128);
+          tnLog("v323a marcarVisitado err:", _t129);
         case 5:
           return _context121.a(2);
       }
@@ -39208,7 +39232,7 @@ function tnBuscarNominatim(_x113) {
 // Retorna o objeto place completo (com place_id).
 function _tnBuscarNominatim() {
   _tnBuscarNominatim = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee213(termo) {
-    var r, data, SM, _t250;
+    var r, data, SM, _t251;
     return _regenerator().w(function (_context215) {
       while (1) switch (_context215.p = _context215.n) {
         case 0:
@@ -39278,8 +39302,8 @@ function _tnBuscarNominatim() {
           }));
         case 4:
           _context215.p = 4;
-          _t250 = _context215.v;
-          console.warn("[CampoLugar] Nominatim falhou:", _t250);
+          _t251 = _context215.v;
+          console.warn("[CampoLugar] Nominatim falhou:", _t251);
           return _context215.a(2, []);
       }
     }, _callee213, null, [[1, 4]]);
@@ -39291,7 +39315,7 @@ function tnCriarPlace(_x114, _x115) {
 } // ── ChipLugar: pílula compacta de lugar já selecionado ──
 function _tnCriarPlace() {
   _tnCriarPlace = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee214(_ref178, createdById) {
-    var name, city, state, country, type, lat, lng, photo_url, _yield$db$from$select3, existente, _yield$db$from$insert19, created, error, _yield$db$from$select4, e2, _t251;
+    var name, city, state, country, type, lat, lng, photo_url, _yield$db$from$select3, existente, _yield$db$from$insert19, created, error, _yield$db$from$select4, e2, _t252;
     return _regenerator().w(function (_context216) {
       while (1) switch (_context216.p = _context216.n) {
         case 0:
@@ -39325,7 +39349,7 @@ function _tnCriarPlace() {
           break;
         case 5:
           _context216.p = 5;
-          _t251 = _context216.v;
+          _t252 = _context216.v;
         case 6:
           _context216.n = 7;
           return db.from("places").insert({
@@ -39578,7 +39602,7 @@ function CampoLugarCriarNovo(_ref181) {
   }
   function _salvar6() {
     _salvar6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee121() {
-      var novo, _t129;
+      var novo, _t130;
       return _regenerator().w(function (_context122) {
         while (1) switch (_context122.p = _context122.n) {
           case 0:
@@ -39609,9 +39633,9 @@ function CampoLugarCriarNovo(_ref181) {
             break;
           case 4:
             _context122.p = 4;
-            _t129 = _context122.v;
-            console.error("[CampoLugarCriarNovo] erro ao criar:", _t129);
-            setError(_t129.message || "Erro ao criar lugar.");
+            _t130 = _context122.v;
+            console.error("[CampoLugarCriarNovo] erro ao criar:", _t130);
+            setError(_t130.message || "Erro ao criar lugar.");
             setCreating(false);
           case 5:
             return _context122.a(2);
@@ -39799,7 +39823,7 @@ function CampoLugar(_ref182) {
   }
   function _buscar() {
     _buscar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee122(q) {
-      var internos, resultados, nominatim, filtrado, novos, _t130, _t131;
+      var internos, resultados, nominatim, filtrado, novos, _t131, _t132;
       return _regenerator().w(function (_context123) {
         while (1) switch (_context123.p = _context123.n) {
           case 0:
@@ -39815,7 +39839,7 @@ function CampoLugar(_ref182) {
             break;
           case 4:
             _context123.p = 4;
-            _t130 = _context123.v;
+            _t131 = _context123.v;
           case 5:
             // Filtro de tipos no frontend (search_places_fuzzy não suporta)
             if (tiposPermitidos && tiposPermitidos.length > 0) {
@@ -39851,8 +39875,8 @@ function CampoLugar(_ref182) {
             break;
           case 8:
             _context123.p = 8;
-            _t131 = _context123.v;
-            console.warn("[CampoLugar] busca falhou:", _t131);
+            _t132 = _context123.v;
+            console.warn("[CampoLugar] busca falhou:", _t132);
             setSugs([]);
           case 9:
             _context123.p = 9;
@@ -40084,7 +40108,7 @@ function ModalAdicionarLugar(_ref183) {
   }
   function _salvar7() {
     _salvar7 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee124() {
-      var p, y1Int, y2Int, eraFinal, ppRow, inserted, _yield$db$from$insert9, data, error, _t134;
+      var p, y1Int, y2Int, eraFinal, ppRow, inserted, _yield$db$from$insert9, data, error, _t135;
       return _regenerator().w(function (_context125) {
         while (1) switch (_context125.p = _context125.n) {
           case 0:
@@ -40139,8 +40163,8 @@ function ModalAdicionarLugar(_ref183) {
             break;
           case 5:
             _context125.p = 5;
-            _t134 = _context125.v;
-            console.warn("[ModalAdicionarLugar] exception:", _t134);
+            _t135 = _context125.v;
+            console.warn("[ModalAdicionarLugar] exception:", _t135);
             setErroSalvar("Erro de conexão. Tente de novo.");
             setSaving(false);
             return _context125.a(2);
@@ -40149,7 +40173,7 @@ function ModalAdicionarLugar(_ref183) {
             // e overlap temporal. Refatorado pra ler de place_profiles direto (sem fallback
             // pra profiles.lugares legado).
             _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee123() {
-              var _yield$dbRead$from$se60, cruzamentos, y2Eff, notificados, _iterator38, _step38, c, cY1, cY2, start, end, _t132, _t133;
+              var _yield$dbRead$from$se60, cruzamentos, y2Eff, notificados, _iterator38, _step38, c, cY1, cY2, start, end, _t133, _t134;
               return _regenerator().w(function (_context124) {
                 while (1) switch (_context124.p = _context124.n) {
                   case 0:
@@ -40220,8 +40244,8 @@ function ModalAdicionarLugar(_ref183) {
                     break;
                   case 10:
                     _context124.p = 10;
-                    _t132 = _context124.v;
-                    _iterator38.e(_t132);
+                    _t133 = _context124.v;
+                    _iterator38.e(_t133);
                   case 11:
                     _context124.p = 11;
                     _iterator38.f();
@@ -40231,8 +40255,8 @@ function ModalAdicionarLugar(_ref183) {
                     break;
                   case 13:
                     _context124.p = 13;
-                    _t133 = _context124.v;
-                    tnLog("Erro disparar notificações cruzou:", _t133);
+                    _t134 = _context124.v;
+                    tnLog("Erro disparar notificações cruzou:", _t134);
                   case 14:
                     return _context124.a(2);
                 }
@@ -40981,7 +41005,7 @@ function ModalCruzamentoQueroIr(_ref186) {
   React.useEffect(function () {
     if (!cidade || !dtInicio || !dtFim) return;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee125() {
-      var cruz, userIds, _yield$dbRead$from$se61, notifs, setResp, _t135;
+      var cruz, userIds, _yield$dbRead$from$se61, notifs, setResp, _t136;
       return _regenerator().w(function (_context126) {
         while (1) switch (_context126.p = _context126.n) {
           case 0:
@@ -41028,8 +41052,8 @@ function ModalCruzamentoQueroIr(_ref186) {
             break;
           case 4:
             _context126.p = 4;
-            _t135 = _context126.v;
-            tnLog("[Cruzamento modal] erro:", _t135);
+            _t136 = _context126.v;
+            tnLog("[Cruzamento modal] erro:", _t136);
           case 5:
             setLoading(false);
           case 6:
@@ -41043,7 +41067,7 @@ function ModalCruzamentoQueroIr(_ref186) {
   }
   function _responder() {
     _responder = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee126(item) {
-      var p, _t136;
+      var p, _t137;
       return _regenerator().w(function (_context127) {
         while (1) switch (_context127.p = _context127.n) {
           case 0:
@@ -41075,8 +41099,8 @@ function ModalCruzamentoQueroIr(_ref186) {
             break;
           case 3:
             _context127.p = 3;
-            _t136 = _context127.v;
-            tnLog("[Responder] erro:", _t136);
+            _t137 = _context127.v;
+            tnLog("[Responder] erro:", _t137);
           case 4:
             return _context127.a(2);
         }
@@ -41370,7 +41394,7 @@ function ModalRegistrandoAgora(_ref188) {
   }
   function _buscarCidade3() {
     _buscarCidade3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee127(q) {
-      var escopo, r, data, cidades, _t137;
+      var escopo, r, data, cidades, _t138;
       return _regenerator().w(function (_context128) {
         while (1) switch (_context128.p = _context128.n) {
           case 0:
@@ -41414,7 +41438,7 @@ function ModalRegistrandoAgora(_ref188) {
             break;
           case 5:
             _context128.p = 5;
-            _t137 = _context128.v;
+            _t138 = _context128.v;
             setLocD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 cityLoading: false
@@ -41500,7 +41524,7 @@ function ModalRegistrandoAgora(_ref188) {
   }
   function _salvar8() {
     _salvar8 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee128() {
-      var fotoUrl, ultimoDia, dtInicio, dtFim, _yield$criarRegistran, reg, error, qtd, _t138, _t139;
+      var fotoUrl, ultimoDia, dtInicio, dtFim, _yield$criarRegistran, reg, error, qtd, _t139, _t140;
       return _regenerator().w(function (_context129) {
         while (1) switch (_context129.p = _context129.n) {
           case 0:
@@ -41538,8 +41562,8 @@ function ModalRegistrandoAgora(_ref188) {
             break;
           case 5:
             _context129.p = 5;
-            _t138 = _context129.v;
-            console.error("Falha upload foto Quero ir:", _t138);
+            _t139 = _context129.v;
+            console.error("Falha upload foto Quero ir:", _t139);
           case 6:
             // v319b: converte mes/ano em janela mensal pra cruzamento
             // dt_inicio = 1º dia do mês, dt_fim = último dia
@@ -41588,8 +41612,8 @@ function ModalRegistrandoAgora(_ref188) {
             break;
           case 11:
             _context129.p = 11;
-            _t139 = _context129.v;
-            tnLog("Erro update foto_url:", _t139);
+            _t140 = _context129.v;
+            tnLog("Erro update foto_url:", _t140);
           case 12:
             _context129.n = 13;
             return notificarCruzamentosRegistrandoAgora({
@@ -42156,7 +42180,7 @@ function ModalMomento(_ref191) {
   }
   function _buscarCidadeMomento() {
     _buscarCidadeMomento = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee129(q) {
-      var escopo, r, data, cidades, _t140;
+      var escopo, r, data, cidades, _t141;
       return _regenerator().w(function (_context130) {
         while (1) switch (_context130.p = _context130.n) {
           case 0:
@@ -42200,7 +42224,7 @@ function ModalMomento(_ref191) {
             break;
           case 5:
             _context130.p = 5;
-            _t140 = _context130.v;
+            _t141 = _context130.v;
             setLocD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 cityLoading: false
@@ -42272,7 +42296,7 @@ function ModalMomento(_ref191) {
   } // Monta string de lugar a partir dos campos hierárquicos (ou usa lugar legado se vazio)
   function _handleCepChangeMomento() {
     _handleCepChangeMomento = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee130(e) {
-      var val, digits, r, data, _t141;
+      var val, digits, r, data, _t142;
       return _regenerator().w(function (_context131) {
         while (1) switch (_context131.p = _context131.n) {
           case 0:
@@ -42309,7 +42333,7 @@ function ModalMomento(_ref191) {
             break;
           case 4:
             _context131.p = 4;
-            _t141 = _context131.v;
+            _t142 = _context131.v;
           case 5:
             return _context131.a(2);
         }
@@ -42348,7 +42372,7 @@ function ModalMomento(_ref191) {
   } // Conta quantas vezes o usuário já viu o modal de confirmação EXIF
   function _reverseGeocode2() {
     _reverseGeocode2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee131(lat, lng) {
-      var res, data, addr, cidade, estado, ufMap, uf, _t142;
+      var res, data, addr, cidade, estado, ufMap, uf, _t143;
       return _regenerator().w(function (_context132) {
         while (1) switch (_context132.p = _context132.n) {
           case 0:
@@ -42419,8 +42443,8 @@ function ModalMomento(_ref191) {
             return _context132.a(2, estado || null);
           case 6:
             _context132.p = 6;
-            _t142 = _context132.v;
-            tnLog("Reverse geocode failed:", _t142);
+            _t143 = _context132.v;
+            tnLog("Reverse geocode failed:", _t143);
             return _context132.a(2, null);
         }
       }, _callee131, null, [[0, 6]]);
@@ -42453,7 +42477,7 @@ function ModalMomento(_ref191) {
   } // v318b: handleVideos — valida tamanho/duração/quantidade
   function _handleFotos2() {
     _handleFotos2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee132(e) {
-      var files, previews, meta, lugarDetectado, anoDetectado, dataOriginal, data, ano, sugestao, pergCount, _t143;
+      var files, previews, meta, lugarDetectado, anoDetectado, dataOriginal, data, ano, sugestao, pergCount, _t144;
       return _regenerator().w(function (_context133) {
         while (1) switch (_context133.p = _context133.n) {
           case 0:
@@ -42530,8 +42554,8 @@ function ModalMomento(_ref191) {
             break;
           case 6:
             _context133.p = 6;
-            _t143 = _context133.v;
-            tnLog("EXIF parse falhou (silencioso):", _t143);
+            _t144 = _context133.v;
+            tnLog("EXIF parse falhou (silencioso):", _t144);
           case 7:
             return _context133.a(2);
         }
@@ -42713,7 +42737,7 @@ function ModalMomento(_ref191) {
   }
   function _salvar9() {
     _salvar9 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee134() {
-      var okMod, photoUrls, uploadPromise, timeoutPromise, videoUrls, tsFinal, anoNum, anoAtual, momento, erroInsert, _yield$db$from$insert0, error, fotosAtuais, novasFotos, _t144, _t145, _t146, _t147;
+      var okMod, photoUrls, uploadPromise, timeoutPromise, videoUrls, tsFinal, anoNum, anoAtual, momento, erroInsert, _yield$db$from$insert0, error, fotosAtuais, novasFotos, _t145, _t146, _t147, _t148;
       return _regenerator().w(function (_context136) {
         while (1) switch (_context136.p = _context136.n) {
           case 0:
@@ -42778,8 +42802,8 @@ function ModalMomento(_ref191) {
             break;
           case 7:
             _context136.p = 7;
-            _t144 = _context136.v;
-            console.error("Falha no upload das fotos do momento:", _t144);
+            _t145 = _context136.v;
+            console.error("Falha no upload das fotos do momento:", _t145);
             photoUrls = [];
             if (!(!texto.trim() && videos.length === 0)) {
               _context136.n = 8;
@@ -42806,8 +42830,8 @@ function ModalMomento(_ref191) {
             break;
           case 11:
             _context136.p = 11;
-            _t145 = _context136.v;
-            console.error("Falha no upload dos vídeos:", _t145);
+            _t146 = _context136.v;
+            console.error("Falha no upload dos vídeos:", _t146);
             videoUrls = [];
             if (!(!texto.trim() && photoUrls.length === 0)) {
               _context136.n = 12;
@@ -42857,8 +42881,8 @@ function ModalMomento(_ref191) {
             break;
           case 15:
             _context136.p = 15;
-            _t146 = _context136.v;
-            erroInsert = _t146;
+            _t147 = _context136.v;
+            erroInsert = _t147;
           case 16:
             if (!erroInsert) {
               _context136.n = 17;
@@ -42888,8 +42912,8 @@ function ModalMomento(_ref191) {
             break;
           case 20:
             _context136.p = 20;
-            _t147 = _context136.v;
-            tnLog("Erro ao salvar fotos no perfil:", _t147);
+            _t148 = _context136.v;
+            tnLog("Erro ao salvar fotos no perfil:", _t148);
           case 21:
             onSave(momento);
             setSaving(false);
@@ -43729,7 +43753,7 @@ function TelaLogin(_ref192) {
   }
   function _loginGoogle() {
     _loginGoogle = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee135() {
-      var _yield$db$auth$signIn, error, _t148;
+      var _yield$db$auth$signIn, error, _t149;
       return _regenerator().w(function (_context137) {
         while (1) switch (_context137.p = _context137.n) {
           case 0:
@@ -43756,8 +43780,8 @@ function TelaLogin(_ref192) {
             break;
           case 4:
             _context137.p = 4;
-            _t148 = _context137.v;
-            setErro("Erro ao conectar com Google: " + _t148.message);
+            _t149 = _context137.v;
+            setErro("Erro ao conectar com Google: " + _t149.message);
             setLoading(false);
           case 5:
             return _context137.a(2);
@@ -43771,7 +43795,7 @@ function TelaLogin(_ref192) {
   }
   function _loginEmail() {
     _loginEmail = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee136() {
-      var _yield$db$auth$signIn2, error, _t149;
+      var _yield$db$auth$signIn2, error, _t150;
       return _regenerator().w(function (_context138) {
         while (1) switch (_context138.p = _context138.n) {
           case 0:
@@ -43806,8 +43830,8 @@ function TelaLogin(_ref192) {
             break;
           case 5:
             _context138.p = 5;
-            _t149 = _context138.v;
-            setErro("Erro: " + _t149.message);
+            _t150 = _context138.v;
+            setErro("Erro: " + _t150.message);
           case 6:
             setLoading(false);
           case 7:
@@ -44136,7 +44160,7 @@ function useRegionNotifications(user, contacts) {
     }
     function _check() {
       _check = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee137() {
-        var since, lugares, cidades, estados, orFilter, _yield$db$from$select, data, cidadesLixo, candidatos, novo, _user$name, meuSobrenome, sobrenomeIgual, _t150;
+        var since, lugares, cidades, estados, orFilter, _yield$db$from$select, data, cidadesLixo, candidatos, novo, _user$name, meuSobrenome, sobrenomeIgual, _t151;
         return _regenerator().w(function (_context139) {
           while (1) switch (_context139.p = _context139.n) {
             case 0:
@@ -44210,8 +44234,8 @@ function useRegionNotifications(user, contacts) {
               break;
             case 5:
               _context139.p = 5;
-              _t150 = _context139.v;
-              tnLog("notif error:", _t150);
+              _t151 = _context139.v;
+              tnLog("notif error:", _t151);
             case 6:
               return _context139.a(2);
           }
@@ -44368,7 +44392,7 @@ function CadastroSimples(_ref194) {
     }
     clearTimeout(addrTimer.current);
     addrTimer.current = setTimeout(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee138() {
-      var r, data, _t151;
+      var r, data, _t152;
       return _regenerator().w(function (_context140) {
         while (1) switch (_context140.p = _context140.n) {
           case 0:
@@ -44386,7 +44410,7 @@ function CadastroSimples(_ref194) {
             break;
           case 3:
             _context140.p = 3;
-            _t151 = _context140.v;
+            _t152 = _context140.v;
             setAddrSugs([]);
           case 4:
             return _context140.a(2);
@@ -44482,7 +44506,7 @@ function CadastroSimples(_ref194) {
   }
   function _salvar0() {
     _salvar0 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee139() {
-      var idade, authId, _yield$db$auth$getSes, session, nomeCompleto, partes, firstName, lastName, birthDate, payload, lugarInicialCadastro, saved, _yield$db$from$insert1, data, error, payloadSemBirth, _yield$db$from$insert10, _data, _error2, _yield$db$from$upsert, _data2, _t152, _t153, _t154, _t155;
+      var idade, authId, _yield$db$auth$getSes, session, nomeCompleto, partes, firstName, lastName, birthDate, payload, lugarInicialCadastro, saved, _yield$db$from$insert1, data, error, payloadSemBirth, _yield$db$from$insert10, _data, _error2, _yield$db$from$upsert, _data2, _error3, _t153, _t154, _t155, _t156;
       return _regenerator().w(function (_context141) {
         while (1) switch (_context141.p = _context141.n) {
           case 0:
@@ -44520,7 +44544,7 @@ function CadastroSimples(_ref194) {
             break;
           case 6:
             _context141.p = 6;
-            _t152 = _context141.v;
+            _t153 = _context141.v;
           case 7:
             nomeCompleto = f.fullName.trim();
             partes = nomeCompleto.split(" ").filter(Boolean);
@@ -44575,12 +44599,12 @@ function CadastroSimples(_ref194) {
             throw error;
           case 10:
             saved = data;
-            _context141.n = 19;
+            _context141.n = 20;
             break;
           case 11:
             _context141.p = 11;
-            _t153 = _context141.v;
-            console.error("Erro ao salvar perfil:", _t153);
+            _t154 = _context141.v;
+            console.error("Erro ao salvar perfil:", _t154);
             // Fallback 1: tenta sem birth_date (caso coluna não exista no banco)
             _context141.p = 12;
             payloadSemBirth = _objectSpread({}, payload);
@@ -44599,12 +44623,12 @@ function CadastroSimples(_ref194) {
           case 14:
             saved = _data;
             tnLog("Perfil salvo sem birth_date — rode o SQL add_birth_date.sql");
-            _context141.n = 19;
+            _context141.n = 20;
             break;
           case 15:
             _context141.p = 15;
-            _t154 = _context141.v;
-            console.error("Erro segunda tentativa:", _t154);
+            _t155 = _context141.v;
+            console.error("Erro segunda tentativa:", _t155);
             // Fallback 2: upsert
             _context141.p = 16;
             _context141.n = 17;
@@ -44612,17 +44636,27 @@ function CadastroSimples(_ref194) {
           case 17:
             _yield$db$from$upsert = _context141.v;
             _data2 = _yield$db$from$upsert.data;
-            saved = _data2;
-            _context141.n = 19;
-            break;
+            _error3 = _yield$db$from$upsert.error;
+            if (!_error3) {
+              _context141.n = 18;
+              break;
+            }
+            throw _error3;
           case 18:
-            _context141.p = 18;
-            _t155 = _context141.v;
-            console.error("Erro final:", _t155);
-            saved = _objectSpread(_objectSpread({}, payload), {}, {
-              id: "local_" + Date.now()
-            });
+            saved = _data2;
+            _context141.n = 20;
+            break;
           case 19:
+            _context141.p = 19;
+            _t156 = _context141.v;
+            console.error("Erro final:", _t156);
+            // v341: NÃO entra mais com perfil fantasma `local_`. Se o banco recusou
+            // em todas as tentativas, barra na tela de cadastro e avisa — melhor
+            // que deixar o usuário entrar achando que se cadastrou.
+            setErroIdade("Não consegui criar sua conta agora. Verifique a conexão e tente de novo.");
+            setSaving(false);
+            return _context141.a(2);
+          case 20:
             if (saved) {
               try {
                 localStorage.setItem("tn_user", JSON.stringify(saved));
@@ -44636,10 +44670,10 @@ function CadastroSimples(_ref194) {
             }
             setSaving(false);
             onDone(saved || payload);
-          case 20:
+          case 21:
             return _context141.a(2);
         }
-      }, _callee139, null, [[16, 18], [12, 15], [8, 11], [4, 6]]);
+      }, _callee139, null, [[16, 19], [12, 15], [8, 11], [4, 6]]);
     }));
     return _salvar0.apply(this, arguments);
   }
@@ -44969,7 +45003,7 @@ function AgendaVisita(_ref196) {
   }
   function _salvar1() {
     _salvar1 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee140() {
-      var textoCompleto, okMod, _t156;
+      var textoCompleto, okMod, _t157;
       return _regenerator().w(function (_context142) {
         while (1) switch (_context142.p = _context142.n) {
           case 0:
@@ -45026,7 +45060,7 @@ function AgendaVisita(_ref196) {
             break;
           case 5:
             _context142.p = 5;
-            _t156 = _context142.v;
+            _t157 = _context142.v;
             setSaved(true);
           case 6:
             setSaving(false);
@@ -45865,7 +45899,7 @@ function InteracoesBar(_ref200) {
   useEffect(function () {
     if (!alvoId || !userLogadoId) return;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee141() {
-      var _yield$dbRead$from$se62, likes, _yield$dbRead$from$se63, meuLike, _yield$dbRead$from$se64, comms, _t157;
+      var _yield$dbRead$from$se62, likes, _yield$dbRead$from$se63, meuLike, _yield$dbRead$from$se64, comms, _t158;
       return _regenerator().w(function (_context143) {
         while (1) switch (_context143.p = _context143.n) {
           case 0:
@@ -45900,7 +45934,7 @@ function InteracoesBar(_ref200) {
             break;
           case 4:
             _context143.p = 4;
-            _t157 = _context143.v;
+            _t158 = _context143.v;
           case 5:
             return _context143.a(2);
         }
@@ -45912,7 +45946,7 @@ function InteracoesBar(_ref200) {
   } // Coração SVG (vazio ou preenchido)
   function _toggleLike2() {
     _toggleLike2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee142() {
-      var _t158, _t159;
+      var _t159, _t160;
       return _regenerator().w(function (_context144) {
         while (1) switch (_context144.p = _context144.n) {
           case 0:
@@ -45939,7 +45973,7 @@ function InteracoesBar(_ref200) {
             break;
           case 4:
             _context144.p = 4;
-            _t158 = _context144.v;
+            _t159 = _context144.v;
           case 5:
             _context144.n = 10;
             break;
@@ -45973,7 +46007,7 @@ function InteracoesBar(_ref200) {
             break;
           case 9:
             _context144.p = 9;
-            _t159 = _context144.v;
+            _t160 = _context144.v;
             // Reverte em caso de erro (duplicata, etc)
             setCurtiu(false);
             setTotalCurtidas(function (n) {
@@ -46144,7 +46178,7 @@ function ModalComentarios(_ref203) {
   useEffect(function () {
     if (!alvoId) return;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee143() {
-      var _yield$dbRead$from$se65, data, error, _yield$dbRead$from$se66, _data3, _t160, _t161;
+      var _yield$dbRead$from$se65, data, error, _yield$dbRead$from$se66, _data3, _t161, _t162;
       return _regenerator().w(function (_context145) {
         while (1) switch (_context145.p = _context145.n) {
           case 0:
@@ -46169,7 +46203,7 @@ function ModalComentarios(_ref203) {
             break;
           case 4:
             _context145.p = 4;
-            _t160 = _context145.v;
+            _t161 = _context145.v;
             _context145.p = 5;
             _context145.n = 6;
             return dbRead.from("interacoes").select("*").eq("alvo_id", alvoId).eq("tipo", "comment").order("created_at", {
@@ -46183,7 +46217,7 @@ function ModalComentarios(_ref203) {
             break;
           case 7:
             _context145.p = 7;
-            _t161 = _context145.v;
+            _t162 = _context145.v;
           case 8:
             setLoading(false);
           case 9:
@@ -46197,7 +46231,7 @@ function ModalComentarios(_ref203) {
   }
   function _enviar2() {
     _enviar2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee144() {
-      var t, okMod, _yield$db$from$insert11, data, error, _t162;
+      var t, okMod, _yield$db$from$insert11, data, error, _t163;
       return _regenerator().w(function (_context146) {
         while (1) switch (_context146.p = _context146.n) {
           case 0:
@@ -46259,8 +46293,8 @@ function ModalComentarios(_ref203) {
             break;
           case 7:
             _context146.p = 7;
-            _t162 = _context146.v;
-            console.error("[interacoes] exceção:", _t162);
+            _t163 = _context146.v;
+            console.error("[interacoes] exceção:", _t163);
           case 8:
             setEnviando(false);
           case 9:
@@ -46551,7 +46585,7 @@ function CapsulaTelaCheia(_ref205) {
     var dtIni = "".concat(anoCap, "-01-01");
     var dtFim = "".concat(anoCap, "-12-31");
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee145() {
-      var cruzamentos, _t163;
+      var cruzamentos, _t164;
       return _regenerator().w(function (_context147) {
         while (1) switch (_context147.p = _context147.n) {
           case 0:
@@ -46570,8 +46604,8 @@ function CapsulaTelaCheia(_ref205) {
             break;
           case 2:
             _context147.p = 2;
-            _t163 = _context147.v;
-            tnLog("[CAP futura] busca registrando:", _t163);
+            _t164 = _context147.v;
+            tnLog("[CAP futura] busca registrando:", _t164);
           case 3:
             return _context147.a(2);
         }
@@ -46679,7 +46713,7 @@ function CapsulaTelaCheia(_ref205) {
   }, [capsula.id, userLogado === null || userLogado === void 0 ? void 0 : userLogado.id, podeAguardar]);
   var toggleAguardar = /*#__PURE__*/function () {
     var _ref210 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee149(e) {
-      var estadoAntigo, r, _r2, confirmado, _t164, _t165;
+      var estadoAntigo, r, _r2, confirmado, _t165, _t166;
       return _regenerator().w(function (_context151) {
         while (1) switch (_context151.p = _context151.n) {
           case 0:
@@ -46738,14 +46772,14 @@ function CapsulaTelaCheia(_ref205) {
             break;
           case 8:
             _context151.p = 8;
-            _t164 = _context151.v;
+            _t165 = _context151.v;
           case 9:
             _context151.n = 11;
             break;
           case 10:
             _context151.p = 10;
-            _t165 = _context151.v;
-            console.error("[AGUARDAR] exceção no toggle:", _t165);
+            _t166 = _context151.v;
+            console.error("[AGUARDAR] exceção no toggle:", _t166);
             setAguardando(estadoAntigo); // rollback
           case 11:
             _context151.p = 11;
@@ -47545,7 +47579,7 @@ function GaleriaLugar(_ref211) {
     if (!lugarNome && !lugarId) return;
     setLoading(true);
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee150() {
-      var q, _yield$q, data, lista, _t166;
+      var q, _yield$q, data, lista, _t167;
       return _regenerator().w(function (_context152) {
         while (1) switch (_context152.p = _context152.n) {
           case 0:
@@ -47584,8 +47618,8 @@ function GaleriaLugar(_ref211) {
             break;
           case 2:
             _context152.p = 2;
-            _t166 = _context152.v;
-            console.error("Erro carregar galeria:", _t166);
+            _t167 = _context152.v;
+            console.error("Erro carregar galeria:", _t167);
           case 3:
             _context152.p = 3;
             setLoading(false);
@@ -52304,7 +52338,7 @@ function HV9LugarImersivoWrapper(_ref246) {
   React.useEffect(function () {
     var cancelled = false;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee152() {
-      var _yield$dbRead$from$se67, data, nome, resultado, _yield$dbRead$from$se68, _data4, _yield$dbRead$from$se69, _data5, _yield$dbRead$from$se70, _data6, query, r, arr, lat, lng, _t167, _t168, _t169, _t170, _t171, _t172;
+      var _yield$dbRead$from$se67, data, nome, resultado, _yield$dbRead$from$se68, _data4, _yield$dbRead$from$se69, _data5, _yield$dbRead$from$se70, _data6, query, r, arr, lat, lng, _t168, _t169, _t170, _t171, _t172, _t173;
       return _regenerator().w(function (_context154) {
         while (1) switch (_context154.p = _context154.n) {
           case 0:
@@ -52356,7 +52390,7 @@ function HV9LugarImersivoWrapper(_ref246) {
             break;
           case 7:
             _context154.p = 7;
-            _t167 = _context154.v;
+            _t168 = _context154.v;
           case 8:
             if (resultado) {
               _context154.n = 12;
@@ -52373,7 +52407,7 @@ function HV9LugarImersivoWrapper(_ref246) {
             break;
           case 11:
             _context154.p = 11;
-            _t168 = _context154.v;
+            _t169 = _context154.v;
           case 12:
             if (resultado) {
               _context154.n = 16;
@@ -52390,7 +52424,7 @@ function HV9LugarImersivoWrapper(_ref246) {
             break;
           case 15:
             _context154.p = 15;
-            _t169 = _context154.v;
+            _t170 = _context154.v;
           case 16:
             if (!(resultado && (!resultado.lat || !resultado.lng))) {
               _context154.n = 25;
@@ -52432,14 +52466,14 @@ function HV9LugarImersivoWrapper(_ref246) {
             break;
           case 22:
             _context154.p = 22;
-            _t170 = _context154.v;
+            _t171 = _context154.v;
           case 23:
             _context154.n = 25;
             break;
           case 24:
             _context154.p = 24;
-            _t171 = _context154.v;
-            console.warn("[backfill nominatim]", _t171);
+            _t172 = _context154.v;
+            console.warn("[backfill nominatim]", _t172);
           case 25:
             if (!cancelled) {
               if (resultado) setPlace(resultado);
@@ -52449,8 +52483,8 @@ function HV9LugarImersivoWrapper(_ref246) {
             break;
           case 26:
             _context154.p = 26;
-            _t172 = _context154.v;
-            console.error("[HV9LugarImersivoWrapper]", _t172);
+            _t173 = _context154.v;
+            console.error("[HV9LugarImersivoWrapper]", _t173);
             if (!cancelled) setLoading(false);
           case 27:
             return _context154.a(2);
@@ -52583,7 +52617,7 @@ function HV9LugarImersivo(_ref248) {
     if (!lugarNome && !placeId) return;
     setLoading(true);
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee153() {
-      var q, _yield$q2, data, _t173;
+      var q, _yield$q2, data, _t174;
       return _regenerator().w(function (_context155) {
         while (1) switch (_context155.p = _context155.n) {
           case 0:
@@ -52604,8 +52638,8 @@ function HV9LugarImersivo(_ref248) {
             break;
           case 2:
             _context155.p = 2;
-            _t173 = _context155.v;
-            console.error("Erro carregar momentos do lugar:", _t173);
+            _t174 = _context155.v;
+            console.error("Erro carregar momentos do lugar:", _t174);
           case 3:
             _context155.p = 3;
             setLoading(false);
@@ -53917,7 +53951,7 @@ function MomentGallery(_ref253) {
       });
     });
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee155() {
-      var r, _t174;
+      var r, _t175;
       return _regenerator().w(function (_context157) {
         while (1) switch (_context157.p = _context157.n) {
           case 0:
@@ -53935,8 +53969,8 @@ function MomentGallery(_ref253) {
             break;
           case 2:
             _context157.p = 2;
-            _t174 = _context157.v;
-            console.error("[MomentGallery] erro fetch:", _t174);
+            _t175 = _context157.v;
+            console.error("[MomentGallery] erro fetch:", _t175);
             if (vivo) setEstado({
               loading: false,
               momentos: [],
@@ -54276,7 +54310,7 @@ function MomentMergulho(_ref255) {
       });
     });
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee156() {
-      var r, todos, _t175;
+      var r, todos, _t176;
       return _regenerator().w(function (_context158) {
         while (1) switch (_context158.p = _context158.n) {
           case 0:
@@ -54304,8 +54338,8 @@ function MomentMergulho(_ref255) {
             break;
           case 2:
             _context158.p = 2;
-            _t175 = _context158.v;
-            console.error("[MomentMergulho] erro fetch:", _t175);
+            _t176 = _context158.v;
+            console.error("[MomentMergulho] erro fetch:", _t176);
             if (vivo) setEstado({
               loading: false,
               momentos: [momento]
@@ -54718,7 +54752,7 @@ function calcularScoreAtividade(_x128) {
 // ícone +/✓ (padrão seguir). tipo no banco mudou pra "seguir_lugar".
 function _calcularScoreAtividade() {
   _calcularScoreAtividade = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee217(userIds) {
-    var out, _yield$Promise$all9, _yield$Promise$all0, rMom, rInter, score, _t252;
+    var out, _yield$Promise$all9, _yield$Promise$all0, rMom, rInter, score, _t253;
     return _regenerator().w(function (_context219) {
       while (1) switch (_context219.p = _context219.n) {
         case 0:
@@ -54769,8 +54803,8 @@ function _calcularScoreAtividade() {
           return _context219.a(2, score);
         case 4:
           _context219.p = 4;
-          _t252 = _context219.v;
-          console.warn("[score atividade] erro:", _t252);
+          _t253 = _context219.v;
+          console.warn("[score atividade] erro:", _t253);
           return _context219.a(2, {});
       }
     }, _callee217, null, [[2, 4]]);
@@ -54795,7 +54829,7 @@ function BotaoAvisarLugar(_ref258) {
     }
     var cancelled = false;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee157() {
-      var _yield$dbRead$from$se71, data, _t176;
+      var _yield$dbRead$from$se71, data, _t177;
       return _regenerator().w(function (_context159) {
         while (1) switch (_context159.p = _context159.n) {
           case 0:
@@ -54813,7 +54847,7 @@ function BotaoAvisarLugar(_ref258) {
             break;
           case 2:
             _context159.p = 2;
-            _t176 = _context159.v;
+            _t177 = _context159.v;
             if (!cancelled) setLoading(false);
           case 3:
             return _context159.a(2);
@@ -54829,7 +54863,7 @@ function BotaoAvisarLugar(_ref258) {
   }
   function _handleClick() {
     _handleClick = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee158(e) {
-      var novo, _t177, _t178;
+      var novo, _t178, _t179;
       return _regenerator().w(function (_context160) {
         while (1) switch (_context160.p = _context160.n) {
           case 0:
@@ -54864,7 +54898,7 @@ function BotaoAvisarLugar(_ref258) {
             break;
           case 4:
             _context160.p = 4;
-            _t177 = _context160.v;
+            _t178 = _context160.v;
             setSeguindo(false);
           case 5:
             _context160.n = 9;
@@ -54878,7 +54912,7 @@ function BotaoAvisarLugar(_ref258) {
             break;
           case 8:
             _context160.p = 8;
-            _t178 = _context160.v;
+            _t179 = _context160.v;
           case 9:
             return _context160.a(2);
         }
@@ -56290,7 +56324,7 @@ function HomeV9Preview(_ref265) {
       ascending: false
     }).limit(1)]).then(/*#__PURE__*/function () {
       var _ref267 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee160(_ref266) {
-        var _ref268, rPerfis, rMomentos, rCapsulas, rCapsulasFuturas, rPlaces, rMeuUltimo, perfis, momentos, capsulasArr, capsulasMap, capsulas, places, meuUltimoMomento, cruzosComigo, lugaresMapHome, luUser, _t179;
+        var _ref268, rPerfis, rMomentos, rCapsulas, rCapsulasFuturas, rPlaces, rMeuUltimo, perfis, momentos, capsulasArr, capsulasMap, capsulas, places, meuUltimoMomento, cruzosComigo, lugaresMapHome, luUser, _t180;
         return _regenerator().w(function (_context162) {
           while (1) switch (_context162.p = _context162.n) {
             case 0:
@@ -56343,8 +56377,8 @@ function HomeV9Preview(_ref265) {
               break;
             case 4:
               _context162.p = 4;
-              _t179 = _context162.v;
-              console.warn("[HomeV9] erro calc cruzamentos:", _t179);
+              _t180 = _context162.v;
+              console.warn("[HomeV9] erro calc cruzamentos:", _t180);
             case 5:
               setDadosLocal({
                 perfis: perfis,
@@ -58246,7 +58280,7 @@ function App() {
     }
     function _checkNaoLidas() {
       _checkNaoLidas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee161() {
-        var _yield$dbRead$from$se72, data, error, tiposReg, total, ambar, regionais, _t180;
+        var _yield$dbRead$from$se72, data, error, tiposReg, total, ambar, regionais, _t181;
         return _regenerator().w(function (_context163) {
           while (1) switch (_context163.p = _context163.n) {
             case 0:
@@ -58279,8 +58313,8 @@ function App() {
               break;
             case 3:
               _context163.p = 3;
-              _t180 = _context163.v;
-              console.error("[NOTIF polling] exceção:", _t180);
+              _t181 = _context163.v;
+              console.error("[NOTIF polling] exceção:", _t181);
             case 4:
               return _context163.a(2);
           }
@@ -58404,7 +58438,7 @@ function App() {
       return;
     }
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee162() {
-      var _yield$dbRead$from$se73, data, _t181;
+      var _yield$dbRead$from$se73, data, _t182;
       return _regenerator().w(function (_context164) {
         while (1) switch (_context164.p = _context164.n) {
           case 0:
@@ -58433,8 +58467,8 @@ function App() {
             break;
           case 2:
             _context164.p = 2;
-            _t181 = _context164.v;
-            tnLog("Deep link perfil não encontrado:", _t181.message || _t181);
+            _t182 = _context164.v;
+            tnLog("Deep link perfil não encontrado:", _t182.message || _t182);
             window.history.replaceState({}, "", window.location.pathname);
           case 3:
             return _context164.a(2);
@@ -58627,7 +58661,7 @@ function App() {
       ascending: false
     }).limit(1)]).then(/*#__PURE__*/function () {
       var _ref274 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee163(_ref273) {
-        var _ref275, rPerfis, rMomentos, rCapsulas, rCapsulasFuturas, rPlaces, rMeuUltimo, perfis, momentos, capsulasArr, capsulasMap, capsulas, places, meuUltimoMomento, cruzosComigo, lugaresMapHome, luUser, respUser, ids, _yield$dbRead$from$se74, respsCruzados, respsByUser, _t182, _t183;
+        var _ref275, rPerfis, rMomentos, rCapsulas, rCapsulasFuturas, rPlaces, rMeuUltimo, perfis, momentos, capsulasArr, capsulasMap, capsulas, places, meuUltimoMomento, cruzosComigo, lugaresMapHome, luUser, respUser, ids, _yield$dbRead$from$se74, respsCruzados, respsByUser, _t183, _t184;
         return _regenerator().w(function (_context165) {
           while (1) switch (_context165.p = _context165.n) {
             case 0:
@@ -58679,8 +58713,8 @@ function App() {
               break;
             case 4:
               _context165.p = 4;
-              _t182 = _context165.v;
-              console.warn("[homeDados] erro calc cruzamentos:", _t182);
+              _t183 = _context165.v;
+              console.warn("[homeDados] erro calc cruzamentos:", _t183);
             case 5:
               _context165.p = 5;
               if (!(cruzosComigo.length > 0)) {
@@ -58729,8 +58763,8 @@ function App() {
               break;
             case 9:
               _context165.p = 9;
-              _t183 = _context165.v;
-              console.warn("[homeDados] afinidade boost falhou (provável tabela ausente):", (_t183 === null || _t183 === void 0 ? void 0 : _t183.message) || _t183);
+              _t184 = _context165.v;
+              console.warn("[homeDados] afinidade boost falhou (provável tabela ausente):", (_t184 === null || _t184 === void 0 ? void 0 : _t184.message) || _t184);
             case 10:
               setHomeDados({
                 perfis: perfis,
@@ -58772,7 +58806,7 @@ function App() {
     function _init() {
       _init = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee165() {
         var _session;
-        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, bancoFalhou, _yield$dbRead$from$se76, data, error, _yield$dbRead$from$se77, _data7, _error3, updated, meta, ehLocalPuro, _yield$dbRead$from$se78, _data8, _error4, _t186, _t187, _t188, _t189, _t190;
+        var localUser, s, session, _res$data, sessionPromise, timeoutPromise, res, bancoFalhou, _yield$dbRead$from$se76, data, error, _yield$dbRead$from$se77, _data7, _error4, updated, meta, ehLocalPuro, _yield$dbRead$from$se78, _data8, _error5, _t187, _t188, _t189, _t190, _t191;
         return _regenerator().w(function (_context167) {
           while (1) switch (_context167.p = _context167.n) {
             case 0:
@@ -58804,8 +58838,8 @@ function App() {
               break;
             case 3:
               _context167.p = 3;
-              _t186 = _context167.v;
-              tnLog("Sessão Google indisponível:", _t186.message || _t186);
+              _t187 = _context167.v;
+              tnLog("Sessão Google indisponível:", _t187.message || _t187);
               // Já setou localUser acima, continua sem sessão
               return _context167.a(2);
             case 4:
@@ -58832,7 +58866,7 @@ function App() {
               break;
             case 7:
               _context167.p = 7;
-              _t187 = _context167.v;
+              _t188 = _context167.v;
             case 8:
               setUser(null);
               setContacts([]);
@@ -58867,9 +58901,9 @@ function App() {
               break;
             case 13:
               _context167.p = 13;
-              _t188 = _context167.v;
+              _t189 = _context167.v;
               bancoFalhou = true;
-              tnLog("Erro ao buscar perfil por auth_id:", _t188);
+              tnLog("Erro ao buscar perfil por auth_id:", _t189);
             case 14:
               if (!(localUser && localUser.id && !localUser.id.toString().startsWith("local_"))) {
                 _context167.n = 20;
@@ -58881,8 +58915,8 @@ function App() {
             case 16:
               _yield$dbRead$from$se77 = _context167.v;
               _data7 = _yield$dbRead$from$se77.data;
-              _error3 = _yield$dbRead$from$se77.error;
-              if (_error3) bancoFalhou = true;
+              _error4 = _yield$dbRead$from$se77.error;
+              if (_error4) bancoFalhou = true;
               if (!_data7) {
                 _context167.n = 18;
                 break;
@@ -58909,9 +58943,9 @@ function App() {
               break;
             case 19:
               _context167.p = 19;
-              _t189 = _context167.v;
+              _t190 = _context167.v;
               bancoFalhou = true;
-              tnLog("Erro ao buscar perfil por id:", _t189);
+              tnLog("Erro ao buscar perfil por id:", _t190);
             case 20:
               if (!(bancoFalhou && localUser)) {
                 _context167.n = 21;
@@ -58963,7 +58997,7 @@ function App() {
             case 24:
               _yield$dbRead$from$se78 = _context167.v;
               _data8 = _yield$dbRead$from$se78.data;
-              _error4 = _yield$dbRead$from$se78.error;
+              _error5 = _yield$dbRead$from$se78.error;
               if (!_data8) {
                 _context167.n = 25;
                 break;
@@ -58975,7 +59009,7 @@ function App() {
               } catch (_unused118) {}
               return _context167.a(2);
             case 25:
-              if (_error4) {
+              if (_error5) {
                 _context167.n = 26;
                 break;
               }
@@ -58994,13 +59028,13 @@ function App() {
             case 26:
               // error != null → banco indisponível (offline). NÃO apaga o
               // cache só por falha de rede — usa o local como fallback.
-              tnLog("[v335] banco indisponível, usando perfil local (offline):", _error4.message);
+              tnLog("[v335] banco indisponível, usando perfil local (offline):", _error5.message);
               _context167.n = 28;
               break;
             case 27:
               _context167.p = 27;
-              _t190 = _context167.v;
-              tnLog("Erro ao buscar perfil do banco:", _t190);
+              _t191 = _context167.v;
+              tnLog("Erro ao buscar perfil do banco:", _t191);
             case 28:
               // Perfil puramente local (id local_) ou banco offline: usa o cache.
               if (!user) setUser(localUser);
@@ -59014,7 +59048,7 @@ function App() {
     init();
     var _db$auth$onAuthStateC = db.auth.onAuthStateChange(/*#__PURE__*/function () {
         var _ref276 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee164(event, session) {
-          var _yield$dbRead$from$se75, data, localU, s, updated, meta, _s, _t184, _t185;
+          var _yield$dbRead$from$se75, data, localU, s, updated, meta, _s, _t185, _t186;
           return _regenerator().w(function (_context166) {
             while (1) switch (_context166.p = _context166.n) {
               case 0:
@@ -59078,8 +59112,8 @@ function App() {
                 break;
               case 6:
                 _context166.p = 6;
-                _t184 = _context166.v;
-                tnLog("Erro ao vincular perfil local:", _t184);
+                _t185 = _context166.v;
+                tnLog("Erro ao vincular perfil local:", _t185);
                 // Mantém o perfil local mesmo sem vincular
                 setUser(localU);
               case 7:
@@ -59099,8 +59133,8 @@ function App() {
                 break;
               case 10:
                 _context166.p = 10;
-                _t185 = _context166.v;
-                tnLog("Erro no auth state change:", _t185);
+                _t186 = _context166.v;
+                tnLog("Erro no auth state change:", _t186);
                 // Fallback: usa perfil local se existir
                 try {
                   _s = localStorage.getItem("tn_user");
@@ -59141,7 +59175,7 @@ function App() {
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee166() {
-      var _yield$dbRead$from$se79, data, error, loaded, c, local, rows, _t191;
+      var _yield$dbRead$from$se79, data, error, loaded, c, local, rows, _t192;
       return _regenerator().w(function (_context168) {
         while (1) switch (_context168.p = _context168.n) {
           case 0:
@@ -59172,8 +59206,8 @@ function App() {
             break;
           case 3:
             _context168.p = 3;
-            _t191 = _context168.v;
-            tnLog("Erro ao carregar contatos do Supabase:", _t191);
+            _t192 = _context168.v;
+            tnLog("Erro ao carregar contatos do Supabase:", _t192);
           case 4:
             // Fallback: localStorage (migra pro Supabase se tiver dados locais)
             try {
@@ -59210,7 +59244,7 @@ function App() {
   // Retorna true se pode prosseguir, false se bloqueou
   function _salvar10() {
     _salvar10 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee172(p) {
-      var perfilFinal, _yield$db$from$insert12, data, error, minimo, _yield$db$from$insert13, data2, error2, _t196;
+      var perfilFinal, _yield$db$from$insert12, data, error, minimo, _yield$db$from$insert13, data2, error2, _t197;
       return _regenerator().w(function (_context174) {
         while (1) switch (_context174.p = _context174.n) {
           case 0:
@@ -59260,8 +59294,8 @@ function App() {
             break;
           case 6:
             _context174.p = 6;
-            _t196 = _context174.v;
-            console.error("[salvar] exception:", _t196);
+            _t197 = _context174.v;
+            console.error("[salvar] exception:", _t197);
           case 7:
             setUser(perfilFinal);
             try {
@@ -59295,8 +59329,12 @@ function App() {
     _addContact = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee173(p) {
       var rel,
         updated,
+        erroContato,
+        _yield$db$from$upsert2,
+        error,
+        revertido,
         _args175 = arguments,
-        _t197;
+        _t198;
       return _regenerator().w(function (_context175) {
         while (1) switch (_context175.p = _context175.n) {
           case 0:
@@ -59329,6 +59367,9 @@ function App() {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
             } catch (_unused142) {}
             // Persiste no Supabase
+            // v341: o upsert não lança exceção em erro — checa {error}. Se o banco
+            // recusar, reverte o estado local pra não ficar "seguindo" só na tela.
+            erroContato = null;
             _context175.p = 4;
             _context175.n = 5;
             return db.from("contacts").upsert({
@@ -59339,13 +59380,31 @@ function App() {
               onConflict: "user_id,contact_id"
             });
           case 5:
+            _yield$db$from$upsert2 = _context175.v;
+            error = _yield$db$from$upsert2.error;
+            erroContato = error;
             _context175.n = 7;
             break;
           case 6:
             _context175.p = 6;
-            _t197 = _context175.v;
-            console.error("Erro ao salvar contato:", _t197);
+            _t198 = _context175.v;
+            erroContato = _t198;
           case 7:
+            if (!erroContato) {
+              _context175.n = 8;
+              break;
+            }
+            console.error("Erro ao salvar contato:", erroContato);
+            revertido = contacts.filter(function (c) {
+              return c.id !== p.id;
+            });
+            setContacts(revertido);
+            try {
+              localStorage.setItem("tn_contacts", JSON.stringify(revertido));
+            } catch (_unused143) {}
+            if (window.tnToast) window.tnToast("não consegui adicionar o contato", "verifique a conexão");
+            return _context175.a(2);
+          case 8:
             // Notifica quem foi seguido
             if (p.id && p.id !== user.id) {
               criarNotificacao({
@@ -59354,7 +59413,7 @@ function App() {
                 actorId: user.id
               });
             }
-          case 8:
+          case 9:
             return _context175.a(2);
         }
       }, _callee173, null, [[4, 6]]);
@@ -59366,7 +59425,7 @@ function App() {
   } // v294: toggle tag "família" no contato (privacidade fase B)
   function _updateContactRel() {
     _updateContactRel = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee174(id, rel) {
-      var updated, _t198;
+      var updated, _t199;
       return _regenerator().w(function (_context176) {
         while (1) switch (_context176.p = _context176.n) {
           case 0:
@@ -59378,7 +59437,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused143) {}
+            } catch (_unused144) {}
             // Atualiza no Supabase
             if (!(user !== null && user !== void 0 && user.id)) {
               _context176.n = 4;
@@ -59394,8 +59453,8 @@ function App() {
             break;
           case 3:
             _context176.p = 3;
-            _t198 = _context176.v;
-            console.error("Erro ao atualizar rel:", _t198);
+            _t199 = _context176.v;
+            console.error("Erro ao atualizar rel:", _t199);
           case 4:
             return _context176.a(2);
         }
@@ -59408,7 +59467,7 @@ function App() {
   }
   function _toggleFamilia() {
     _toggleFamilia = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee175(id) {
-      var atual, novoVal, updated, _t199;
+      var atual, novoVal, updated, _t200;
       return _regenerator().w(function (_context177) {
         while (1) switch (_context177.p = _context177.n) {
           case 0:
@@ -59424,7 +59483,7 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused144) {}
+            } catch (_unused145) {}
             if (!(user !== null && user !== void 0 && user.id)) {
               _context177.n = 4;
               break;
@@ -59442,8 +59501,8 @@ function App() {
             break;
           case 3:
             _context177.p = 3;
-            _t199 = _context177.v;
-            console.error("Erro ao toggle família:", _t199);
+            _t200 = _context177.v;
+            console.error("Erro ao toggle família:", _t200);
           case 4:
             return _context177.a(2);
         }
@@ -59477,7 +59536,7 @@ function App() {
   }
   function _logout() {
     _logout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee176() {
-      var _t200;
+      var _t201;
       return _regenerator().w(function (_context178) {
         while (1) switch (_context178.p = _context178.n) {
           case 0:
@@ -59485,10 +59544,10 @@ function App() {
             setContacts([]);
             try {
               localStorage.removeItem("tn_user");
-            } catch (_unused145) {}
+            } catch (_unused146) {}
             try {
               localStorage.removeItem("tn_contacts");
-            } catch (_unused146) {}
+            } catch (_unused147) {}
             _context178.p = 1;
             _context178.n = 2;
             return db.auth.signOut();
@@ -59497,8 +59556,8 @@ function App() {
             break;
           case 3:
             _context178.p = 3;
-            _t200 = _context178.v;
-            tnLog("signOut error:", _t200);
+            _t201 = _context178.v;
+            tnLog("signOut error:", _t201);
           case 4:
             return _context178.a(2);
         }
@@ -60319,7 +60378,7 @@ function App() {
     },
     onAbrirMomento: (/*#__PURE__*/function () {
       var _ref281 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee167(n) {
-        var _yield$dbRead$from$se80, mom, _t192;
+        var _yield$dbRead$from$se80, mom, _t193;
         return _regenerator().w(function (_context169) {
           while (1) switch (_context169.p = _context169.n) {
             case 0:
@@ -60343,8 +60402,8 @@ function App() {
               break;
             case 3:
               _context169.p = 3;
-              _t192 = _context169.v;
-              tnLog("v323c abrir momento err:", _t192);
+              _t193 = _context169.v;
+              tnLog("v323c abrir momento err:", _t193);
             case 4:
               return _context169.a(2);
           }
@@ -60379,7 +60438,7 @@ function App() {
     },
     onSave: (/*#__PURE__*/function () {
       var _ref282 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee168(cap) {
-        var _t193;
+        var _t194;
         return _regenerator().w(function (_context170) {
           while (1) switch (_context170.p = _context170.n) {
             case 0:
@@ -60404,8 +60463,8 @@ function App() {
               break;
             case 2:
               _context170.p = 2;
-              _t193 = _context170.v;
-              console.warn("[momento_proprio_guardado] notif falhou:", _t193);
+              _t194 = _context170.v;
+              console.warn("[momento_proprio_guardado] notif falhou:", _t194);
             case 3:
               setTela("inicio");
             case 4:
@@ -60425,7 +60484,7 @@ function App() {
     },
     onSave: (/*#__PURE__*/function () {
       var _ref283 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee169(cap) {
-        var dim, _t194;
+        var dim, _t195;
         return _regenerator().w(function (_context171) {
           while (1) switch (_context171.p = _context171.n) {
             case 0:
@@ -60468,8 +60527,8 @@ function App() {
               break;
             case 3:
               _context171.p = 3;
-              _t194 = _context171.v;
-              console.warn("[v324b capsula_nova self-notif] falhou:", _t194);
+              _t195 = _context171.v;
+              console.warn("[v324b capsula_nova self-notif] falhou:", _t195);
             case 4:
               setTela("inicio");
             case 5:
@@ -61183,7 +61242,7 @@ function App() {
     }
   }, "Agora n\xE3o"), /*#__PURE__*/React.createElement("button", {
     onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee170() {
-      var _t195;
+      var _t196;
       return _regenerator().w(function (_context172) {
         while (1) switch (_context172.p = _context172.n) {
           case 0:
@@ -61196,7 +61255,7 @@ function App() {
             break;
           case 3:
             _context172.p = 3;
-            _t195 = _context172.v;
+            _t196 = _context172.v;
           case 4:
             try {
               localStorage.removeItem("tn_user");
