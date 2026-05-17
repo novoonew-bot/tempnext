@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v337 — salvar momento/perfil avisa em caso de erro (fim do save silencioso) + ajustes de texto ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v338 — remoção do mock de demonstração da home (perfis/momentos fake) — só dado real ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -48987,104 +48987,13 @@ function injetarFontesV9() {
 }
 
 // ─── Mock data ────────────────────────────────────────────────
-var HV9_TILES = [{
-  type: "post-photo",
-  img: "https://images.unsplash.com/photo-1544989164-22f1e08d7aa0?w=600&q=80",
-  author: "Isabela",
-  when: "jan/2003",
-  caption: "O verão que mudou minha vida."
-}, {
-  type: "post-photo",
-  img: "https://images.unsplash.com/photo-1543059080-f9b1272213d5?w=600&q=80",
-  author: "Lucas",
-  when: "fev/2005",
-  caption: "Carnaval no Pelourinho. Os tambores ainda moram em mim."
-}, {
-  type: "post-photo",
-  img: "https://images.unsplash.com/photo-1513735429405-f0daeff7a8ba?w=600&q=80",
-  author: "Diego",
-  when: "nov/2015",
-  caption: "Cheguei a Lisboa sem saber que ficaria pra sempre."
-}, {
-  type: "post-photo",
-  img: "https://images.unsplash.com/photo-1564594985645-4427056e22e2?w=600&q=80",
-  author: "André",
-  when: "fev/1985",
-  caption: "Olinda no carnaval. Eu tinha 22 anos."
-}, {
-  type: "post-photo",
-  img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80",
-  author: "Pedro",
-  when: "mar/2008",
-  caption: "A Bahia me ensinou a esperar sem pressa."
-}, {
-  type: "postcard",
-  author: "Isabela",
-  stamp: "I",
-  text: "Hoje passei na esquina e lembrei de você sem motivo nenhum.",
-  meta: "Ipanema · 14 mar 2024"
-}, {
-  type: "postcard",
-  author: "Lucas",
-  stamp: "L",
-  text: "Aprendi a escutar o silêncio entre os tambores. É no espaço entre os sons que mora o ritmo.",
-  meta: "Salvador · ago 2008"
-}, {
-  type: "postcard",
-  author: "André",
-  stamp: "A",
-  text: "Hoje vi um par de óculos esquecido na areia. Pensei: alguém aqui também esqueceu de olhar.",
-  meta: "Pipa · 1992"
-}, {
-  type: "postcard",
-  author: "Marta",
-  stamp: "M",
-  text: "Esta cidade me ensinou a viver pela metade.",
-  meta: "Lisboa · nov 2015"
-}, {
-  type: "photo-cross",
-  img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&q=80",
-  nm: "Isabela",
-  yr: "esteve em 2003 · Ipanema"
-}, {
-  type: "photo-cross",
-  img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80",
-  nm: "Lucas",
-  yr: "esteve em 2005 · Pelourinho"
-}, {
-  type: "photo-cross",
-  img: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=600&q=80",
-  nm: "André",
-  yr: "esteve em 1998 · Olinda"
-}, {
-  type: "place",
-  img: "https://images.unsplash.com/photo-1544375408-e1fdc4d9e5b0?w=600&q=80",
-  pl: "Pelourinho",
-  soulsCount: "3 pessoas em 2005"
-}, {
-  type: "place",
-  img: "https://images.unsplash.com/photo-1564594985645-4427056e22e2?w=600&q=80",
-  pl: "Olinda",
-  soulsCount: "1 pessoa · 1985"
-}, {
-  type: "capsule",
-  mono: "B",
-  ttl: "De Bruno",
-  whenC: "em Ipanema",
-  cd: "47 dias",
-  _capsulaDim: "futuro"
-}, {
-  type: "capsule",
-  mono: "M",
-  ttl: "De Marta",
-  whenC: "em Lisboa",
-  cd: "em 2027",
-  _capsulaDim: "futuro"
-}];
-var HV9_YOURMARK = {
-  type: "your-mark",
-  text: "você marcou <b>Pelourinho</b> há 2 horas"
-};
+// v338 (caminho A): mock de demonstração removido. O princípio "verdade do banco"
+// proíbe perfis/momentos inventados na tela. A home agora mostra só dado real;
+// quando não há dado, cai no HV9EstadoVazio. Array vazio mantém o código de
+// fallback funcionando sem nada pra preencher.
+var HV9_TILES = [];
+// v338: HV9_YOURMARK (mock estático "você marcou Pelourinho há 2 horas")
+// removido — era código morto. gerarYourMark() faz a versão real.
 
 // v220: gerador dinâmico do tile your-mark
 // - Se user tem último momento: mostra "você marcou X em Y"
@@ -49117,92 +49026,12 @@ function gerarYourMark(ultimoMomento) {
     }
   };
 }
-var HV9_HEROES = [{
-  img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=900&q=80",
-  badge: "mesmo lugar",
-  title: "Isabela Moraes",
-  subtitle: "Ipanema",
-  quote: "\"Foi o verão que mudou minha vida.\"",
-  meta: "21 anos atrás · 2003"
-}, {
-  img: "https://images.unsplash.com/photo-1543059080-f9b1272213d5?w=900&q=80",
-  badge: "lugar do dia",
-  title: "Pelourinho",
-  subtitle: "Salvador",
-  quote: "Três vidas estiveram nesta praça nos mesmos dias do carnaval que você.",
-  meta: "Carnaval de 2005"
-}, {
-  img: "https://images.unsplash.com/photo-1513735429405-f0daeff7a8ba?w=900&q=80",
-  badge: "memória que voltou",
-  title: "Faz 9 anos hoje",
-  subtitle: "Lisboa",
-  quote: "Diego chegou a Lisboa neste mesmo dia, em 2015.",
-  meta: "24/04/2015"
-}, {
-  img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&q=80",
-  badge: "mesmo lugar",
-  title: "Marta Ribeiro",
-  subtitle: "Lisboa",
-  quote: "\"Aquela rua estreita guardou meu segredo.\"",
-  meta: "2018"
-}];
-var HV9_CROSSINGS = [{
-  label: "mesmo lugar — tempos diferentes",
-  narrative: "<b>Lucas</b> e <b>Marta</b> estiveram aqui em momentos diferentes.",
-  whenTag: "fev 2005",
-  place: "Pelourinho, Salvador",
-  souls: "2 pessoas",
-  pins: [{
-    x: 32,
-    y: 55,
-    color: "first",
-    label: "Lucas"
-  }, {
-    x: 62,
-    y: 62,
-    color: "second",
-    label: "Marta"
-  }]
-}, {
-  label: "um lugar, três vidas",
-  narrative: "<b>André, Bia e Diego</b> estiveram em Alfama no mesmo mês de 2018.",
-  whenTag: "mar 2018",
-  place: "Alfama, Lisboa",
-  souls: "3 pessoas",
-  pins: [{
-    x: 25,
-    y: 50,
-    color: "first",
-    label: "André"
-  }, {
-    x: 50,
-    y: 35,
-    color: "second",
-    label: "Bia"
-  }, {
-    x: 72,
-    y: 62,
-    color: "third",
-    label: "Diego"
-  }]
-}, {
-  label: "coincidência distante",
-  narrative: "<b>Isabela</b> e <b>Pedro</b> caminharam essa orla com 6 meses de diferença.",
-  whenTag: "2019",
-  place: "Praia de Copacabana, Rio",
-  souls: "2 pessoas",
-  pins: [{
-    x: 28,
-    y: 45,
-    color: "first",
-    label: "Isabela"
-  }, {
-    x: 65,
-    y: 58,
-    color: "second",
-    label: "Pedro · 6 meses depois"
-  }]
-}];
+
+// v338 (caminho A): mock removido — ver nota em HV9_TILES.
+var HV9_HEROES = [];
+
+// v338 (caminho A): mock removido — ver nota em HV9_TILES.
+var HV9_CROSSINGS = [];
 var HV9_HEIGHTS = [100, 120, 140, 160, 180];
 function hv9Greeting(firstName) {
   var nome = firstName || "";
