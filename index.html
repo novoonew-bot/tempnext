@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v336 — mapa de pessoas com contagem real (fim do mock) + splash sem FOUT da Italianno ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v337 — salvar momento/perfil avisa em caso de erro (fim do save silencioso) + ajustes de texto ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -2655,7 +2655,7 @@ function criarNotificacao(_x15) {
 //   CREATE INDEX idx_reg_agora_cidade_data ON registrando_agora(cidade, dt_inicio, dt_fim);
 function _criarNotificacao() {
   _criarNotificacao = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee181(_ref) {
-    var tipo, recipientId, actorId, _ref$momentoId, momentoId, _ref$meta, meta, _yield$db$from$insert13, data, error, _t205;
+    var tipo, recipientId, actorId, _ref$momentoId, momentoId, _ref$meta, meta, _yield$db$from$insert14, data, error, _t205;
     return _regenerator().w(function (_context182) {
       while (1) switch (_context182.p = _context182.n) {
         case 0:
@@ -2689,9 +2689,9 @@ function _criarNotificacao() {
             meta: meta
           }).select();
         case 3:
-          _yield$db$from$insert13 = _context182.v;
-          data = _yield$db$from$insert13.data;
-          error = _yield$db$from$insert13.error;
+          _yield$db$from$insert14 = _context182.v;
+          data = _yield$db$from$insert14.data;
+          error = _yield$db$from$insert14.error;
           if (error) {
             console.error("[NOTIF] ERRO insert:", {
               message: error.message,
@@ -2720,7 +2720,7 @@ function criarRegistrandoAgora(_x16) {
 } // Busca outros usuários com período sobreposto na MESMA cidade
 function _criarRegistrandoAgora() {
   _criarRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee182(_ref2) {
-    var userId, cidade, uf, pais, regiao, lugar, dtInicio, dtFim, frase, privacidade, faltam, _yield$db$from$insert14, data, error, _t206;
+    var userId, cidade, uf, pais, regiao, lugar, dtInicio, dtFim, frase, privacidade, faltam, _yield$db$from$insert15, data, error, _t206;
     return _regenerator().w(function (_context183) {
       while (1) switch (_context183.p = _context183.n) {
         case 0:
@@ -2757,9 +2757,9 @@ function _criarRegistrandoAgora() {
             privacidade: privacidade || "contatos"
           }).select().single();
         case 2:
-          _yield$db$from$insert14 = _context183.v;
-          data = _yield$db$from$insert14.data;
-          error = _yield$db$from$insert14.error;
+          _yield$db$from$insert15 = _context183.v;
+          data = _yield$db$from$insert15.data;
+          error = _yield$db$from$insert15.error;
           if (!error) {
             _context183.n = 3;
             break;
@@ -2916,7 +2916,7 @@ function aguardarCapsula(_x19) {
 }
 function _aguardarCapsula() {
   _aguardarCapsula = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee185(_ref5) {
-    var capsulaId, userId, _yield$db$from$insert15, data, error, _yield$dbRead$from$se82, cap, _t209, _t210;
+    var capsulaId, userId, _yield$db$from$insert16, data, error, _yield$dbRead$from$se82, cap, _t209, _t210;
     return _regenerator().w(function (_context186) {
       while (1) switch (_context186.p = _context186.n) {
         case 0:
@@ -2945,9 +2945,9 @@ function _aguardarCapsula() {
             user_id: userId
           }).select();
         case 3:
-          _yield$db$from$insert15 = _context186.v;
-          data = _yield$db$from$insert15.data;
-          error = _yield$db$from$insert15.error;
+          _yield$db$from$insert16 = _context186.v;
+          data = _yield$db$from$insert16.data;
+          error = _yield$db$from$insert16.error;
           if (!error) {
             _context186.n = 5;
             break;
@@ -3109,7 +3109,7 @@ function revelarCapsula(_x22) {
 }
 function _revelarCapsula() {
   _revelarCapsula = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee188(_ref8) {
-    var capsulaId, userId, agora, _yield$dbRead$from$se84, existente, jaRevelaraAntes, _yield$db$from$update8, error, _yield$db$from$insert16, _error5, _yield$dbRead$from$se85, cap, _t213, _t214;
+    var capsulaId, userId, agora, _yield$dbRead$from$se84, existente, jaRevelaraAntes, _yield$db$from$update9, error, _yield$db$from$insert17, _error5, _yield$dbRead$from$se85, cap, _t213, _t214;
     return _regenerator().w(function (_context189) {
       while (1) switch (_context189.p = _context189.n) {
         case 0:
@@ -3150,8 +3150,8 @@ function _revelarCapsula() {
             revelada_em: agora
           }).eq("id", existente[0].id);
         case 4:
-          _yield$db$from$update8 = _context189.v;
-          error = _yield$db$from$update8.error;
+          _yield$db$from$update9 = _context189.v;
+          error = _yield$db$from$update9.error;
           if (!error) {
             _context189.n = 5;
             break;
@@ -3171,8 +3171,8 @@ function _revelarCapsula() {
             revelada_em: agora
           });
         case 7:
-          _yield$db$from$insert16 = _context189.v;
-          _error5 = _yield$db$from$insert16.error;
+          _yield$db$from$insert17 = _context189.v;
+          _error5 = _yield$db$from$insert17.error;
           if (!(_error5 && _error5.code !== "23505")) {
             _context189.n = 8;
             break;
@@ -4940,8 +4940,8 @@ var VOZES_CARD = {
       p: "lugares por onde passei"
     },
     foot: {
-      o: "{nM} cidades onde morou · {nP} viagens",
-      p: "{nM} cidades onde morei · {nP} viagens"
+      o: "{nM} {cidadeW} onde morou · {nP} {viagemW}",
+      p: "{nM} {cidadeW} onde morei · {nP} {viagemW}"
     },
     vazio: {
       o: "ainda nenhum lugar marcado",
@@ -11720,8 +11720,13 @@ function CardMapaVida(_ref51) {
   var footKey = vozPrefix ? vozPrefix + "foot" : "foot";
   var footTemplate = ((_voz$footKey = voz[footKey]) === null || _voz$footKey === void 0 ? void 0 : _voz$footKey[ctx]) || voz.foot[ctx];
   if (numAtual > 0) {
-    var _dados$totalLugaresRa2;
-    if (cam === "lugares") footTxt = footTemplate.replace("{nM}", (_dados$totalLugaresRa2 = dados === null || dados === void 0 ? void 0 : dados.totalLugaresRaw) !== null && _dados$totalLugaresRa2 !== void 0 ? _dados$totalLugaresRa2 : lugaresMorou.length).replace("{nP}", lugaresPassou.length);else if (cam === "capsulas" && !vozPrefix) {
+    if (cam === "lugares") {
+      var _dados$totalLugaresRa2;
+      // v337: plural correto — "1 cidade" / "N cidades", "1 viagem" / "N viagens"
+      var nM = (_dados$totalLugaresRa2 = dados === null || dados === void 0 ? void 0 : dados.totalLugaresRaw) !== null && _dados$totalLugaresRa2 !== void 0 ? _dados$totalLugaresRa2 : lugaresMorou.length;
+      var nP = lugaresPassou.length;
+      footTxt = footTemplate.replace("{nM}", nM).replace("{cidadeW}", nM === 1 ? "cidade" : "cidades").replace("{nP}", nP).replace("{viagemW}", nP === 1 ? "viagem" : "viagens");
+    } else if (cam === "capsulas" && !vozPrefix) {
       // todas as cápsulas: mostra detalhamento por estado
       footTxt = footTemplate.replace("{nA}", capsulas.passado.length).replace("{nP}", capsulas.presente.length).replace("{nF}", capsulas.futuro.length);
     } else footTxt = footTemplate.replace("{n}", numAtual);
@@ -13905,7 +13910,7 @@ function syncLugaresToPlaces(_x73, _x74) {
 //   - Senão → abre perfil
 function _syncLugaresToPlaces() {
   _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee206(profileId, lugares) {
-    var _iterator48, _step48, l, nome, cidade, estado, pais, _yield$db$from$select2, existing, placeId, foto, photoFields, _foto, _yield$db$from$insert17, created, error, _foto2, _t234, _t235;
+    var _iterator48, _step48, l, nome, cidade, estado, pais, _yield$db$from$select2, existing, placeId, foto, photoFields, _foto, _yield$db$from$insert18, created, error, _foto2, _t234, _t235;
     return _regenerator().w(function (_context207) {
       while (1) switch (_context207.p = _context207.n) {
         case 0:
@@ -14001,9 +14006,9 @@ function _syncLugaresToPlaces() {
             lng: l.lng != null ? l.lng : null
           }, photoFields)).select("id").single();
         case 12:
-          _yield$db$from$insert17 = _context207.v;
-          created = _yield$db$from$insert17.data;
-          error = _yield$db$from$insert17.error;
+          _yield$db$from$insert18 = _context207.v;
+          created = _yield$db$from$insert18.data;
+          error = _yield$db$from$insert18.error;
           if (!error) {
             _context207.n = 13;
             break;
@@ -16778,7 +16783,7 @@ function processarCapsulaAberta(_x79, _x80) {
 // ═══════════════════════════════════════════════════════════════════
 function _processarCapsulaAberta() {
   _processarCapsulaAberta = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee210(capsula, criadorUser) {
-    var lugar, trecho, _yield$dbRead$from$se99, aguardando, _iterator52, _step52, a, dataAbreISO, anoAbre, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se100, outros, notifRegiao, lugaresOutros, _yield$dbRead$from$se101, jaAguardando, idsJaNotif, _iterator53, _step53, o, cruz, _yield$db$from$update9, errMark, _t243, _t244, _t245, _t246, _t247;
+    var lugar, trecho, _yield$dbRead$from$se99, aguardando, _iterator52, _step52, a, dataAbreISO, anoAbre, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se100, outros, notifRegiao, lugaresOutros, _yield$dbRead$from$se101, jaAguardando, idsJaNotif, _iterator53, _step53, o, cruz, _yield$db$from$update0, errMark, _t243, _t244, _t245, _t246, _t247;
     return _regenerator().w(function (_context211) {
       while (1) switch (_context211.p = _context211.n) {
         case 0:
@@ -16973,8 +16978,8 @@ function _processarCapsulaAberta() {
             capsula_notificada_em: new Date().toISOString()
           }).eq("id", capsula.id).eq("user_id", criadorUser.id);
         case 29:
-          _yield$db$from$update9 = _context211.v;
-          errMark = _yield$db$from$update9.error;
+          _yield$db$from$update0 = _context211.v;
+          errMark = _yield$db$from$update0.error;
           // safety
           if (errMark) {
             console.error("  \u26A0 erro marcando notificada_em pra ".concat(capsula.id, ":"), errMark);
@@ -31987,12 +31992,16 @@ function ModalEditarPerfil(_ref148) {
     _useState264 = _slicedToArray(_useState263, 2),
     saving = _useState264[0],
     setSaving = _useState264[1];
+  var _useState265 = useState(""),
+    _useState266 = _slicedToArray(_useState265, 2),
+    erroSalvar = _useState266[0],
+    setErroSalvar = _useState266[1]; // v337: erro de gravação no banco
 
   // v306: divide nome legado se firstName/lastName não existem
   var partesNome = (user.name || "").trim().split(" ");
   var firstNameInicial = user.first_name || partesNome[0] || "";
   var lastNameInicial = user.last_name || partesNome.slice(1).join(" ") || "";
-  var _useState265 = useState({
+  var _useState267 = useState({
       firstName: firstNameInicial,
       lastName: lastNameInicial,
       note: user.note || "",
@@ -32007,17 +32016,17 @@ function ModalEditarPerfil(_ref148) {
       currentRegiao: user.current_regiao || "",
       bioEstendida: user.bio_estendida || {} // v317
     }),
-    _useState266 = _slicedToArray(_useState265, 2),
-    f = _useState266[0],
-    setF = _useState266[1];
-  var _useState267 = useState([]),
     _useState268 = _slicedToArray(_useState267, 2),
-    citySugs = _useState268[0],
-    setCitySugs = _useState268[1];
-  var _useState269 = useState(false),
+    f = _useState268[0],
+    setF = _useState268[1];
+  var _useState269 = useState([]),
     _useState270 = _slicedToArray(_useState269, 2),
-    cityLoading = _useState270[0],
-    setCityLoading = _useState270[1];
+    citySugs = _useState270[0],
+    setCitySugs = _useState270[1];
+  var _useState271 = useState(false),
+    _useState272 = _slicedToArray(_useState271, 2),
+    cityLoading = _useState272[0],
+    setCityLoading = _useState272[1];
   var cityTimer = useRef();
 
   // Busca inteligente de cidade (filtrada por país + estado)
@@ -32177,7 +32186,7 @@ function ModalEditarPerfil(_ref148) {
   } // v307: relógio temporal poético — anos, meses, dias
   function _salvar4() {
     _salvar4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee93() {
-      var okMod, nomeCompleto, updated, _t100;
+      var okMod, nomeCompleto, updated, erroUpd, _yield$db$from$update7, error, _t100;
       return _regenerator().w(function (_context93) {
         while (1) switch (_context93.p = _context93.n) {
           case 0:
@@ -32187,6 +32196,7 @@ function ModalEditarPerfil(_ref148) {
             }
             return _context93.a(2);
           case 1:
+            setErroSalvar(""); // v337: limpa erro anterior
             setSaving(true);
 
             // v227: modera bio (campo "note") se não vazia
@@ -32237,7 +32247,10 @@ function ModalEditarPerfil(_ref148) {
               country: user.country || f.currentCountry || "Brasil",
               year_start: user.year_start || (f.birthYear ? parseInt(f.birthYear) : null) || new Date().getFullYear(),
               era: user.era || "presente"
-            });
+            }); // v337: o update do Supabase NÃO lança exceção em erro — retorna {error}.
+            // Antes o try/catch só logava e o modal fechava; a tela mostrava o valor
+            // novo (estado local) mas o banco não gravava — no refresh voltava ao antigo.
+            erroUpd = null;
             _context93.p = 4;
             _context93.n = 5;
             return db.from("profiles").update({
@@ -32262,17 +32275,29 @@ function ModalEditarPerfil(_ref148) {
               bio_estendida: updated.bio_estendida // v317
             }).eq("id", user.id);
           case 5:
+            _yield$db$from$update7 = _context93.v;
+            error = _yield$db$from$update7.error;
+            erroUpd = error;
             _context93.n = 7;
             break;
           case 6:
             _context93.p = 6;
             _t100 = _context93.v;
-            tnLog("Erro:", _t100);
+            erroUpd = _t100;
           case 7:
+            if (!erroUpd) {
+              _context93.n = 8;
+              break;
+            }
+            console.error("Erro update perfil:", erroUpd);
+            setErroSalvar("Não consegui salvar as alterações. Verifique a conexão e tente de novo.");
+            setSaving(false);
+            return _context93.a(2);
+          case 8:
             onSave(updated);
             setSaving(false);
             onClose();
-          case 8:
+          case 9:
             return _context93.a(2);
         }
       }, _callee93, null, [[4, 6]]);
@@ -32977,7 +33002,19 @@ function ModalEditarPerfil(_ref148) {
     style: {
       paddingTop: 24
     }
-  }, /*#__PURE__*/React.createElement("button", {
+  }, erroSalvar && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: "#B0413E",
+      background: "rgba(176,65,62,0.08)",
+      border: "1px solid rgba(176,65,62,0.25)",
+      borderRadius: 10,
+      padding: "9px 12px",
+      marginBottom: 12,
+      fontFamily: "Georgia,serif",
+      lineHeight: 1.4
+    }
+  }, erroSalvar), /*#__PURE__*/React.createElement("button", {
     onClick: salvar,
     disabled: saving || !f.firstName.trim(),
     style: {
@@ -33200,11 +33237,11 @@ function ModalCompletar(_ref151) {
     campo = _ref151.campo,
     onClose = _ref151.onClose,
     onUpdateUser = _ref151.onUpdateUser;
-  var _useState271 = useState(false),
-    _useState272 = _slicedToArray(_useState271, 2),
-    saving = _useState272[0],
-    setSaving = _useState272[1];
-  var _useState273 = useState(function () {
+  var _useState273 = useState(false),
+    _useState274 = _slicedToArray(_useState273, 2),
+    saving = _useState274[0],
+    setSaving = _useState274[1];
+  var _useState275 = useState(function () {
       if (campo === "lastName") return user.last_name || "";
       if (campo === "birth") return {
         d: user.birth_day || "",
@@ -33213,21 +33250,21 @@ function ModalCompletar(_ref151) {
       };
       return "";
     }),
-    _useState274 = _slicedToArray(_useState273, 2),
-    val = _useState274[0],
-    setVal = _useState274[1];
-  var _useState275 = useState(null),
     _useState276 = _slicedToArray(_useState275, 2),
-    file = _useState276[0],
-    setFile = _useState276[1];
+    val = _useState276[0],
+    setVal = _useState276[1];
   var _useState277 = useState(null),
     _useState278 = _slicedToArray(_useState277, 2),
-    filePreview = _useState278[0],
-    setFilePreview = _useState278[1];
-  var _useState279 = useState(user.tema || null),
+    file = _useState278[0],
+    setFile = _useState278[1];
+  var _useState279 = useState(null),
     _useState280 = _slicedToArray(_useState279, 2),
-    temaEscolhido = _useState280[0],
-    setTemaEscolhido = _useState280[1];
+    filePreview = _useState280[0],
+    setFilePreview = _useState280[1];
+  var _useState281 = useState(user.tema || null),
+    _useState282 = _slicedToArray(_useState281, 2),
+    temaEscolhido = _useState282[0],
+    setTemaEscolhido = _useState282[1];
   var copy = COMPLETAR_COPY[campo] || {
     titulo: "",
     subtitulo: "",
@@ -33816,30 +33853,30 @@ function ModalGravarVideo(_ref153) {
   var user = _ref153.user,
     onClose = _ref153.onClose,
     onPosted = _ref153.onPosted;
-  var _useState281 = useState(null),
-    _useState282 = _slicedToArray(_useState281, 2),
-    arquivo = _useState282[0],
-    setArquivo = _useState282[1];
   var _useState283 = useState(null),
     _useState284 = _slicedToArray(_useState283, 2),
-    previewUrl = _useState284[0],
-    setPreviewUrl = _useState284[1];
-  var _useState285 = useState(0),
+    arquivo = _useState284[0],
+    setArquivo = _useState284[1];
+  var _useState285 = useState(null),
     _useState286 = _slicedToArray(_useState285, 2),
-    duracao = _useState286[0],
-    setDuracao = _useState286[1];
-  var _useState287 = useState(""),
+    previewUrl = _useState286[0],
+    setPreviewUrl = _useState286[1];
+  var _useState287 = useState(0),
     _useState288 = _slicedToArray(_useState287, 2),
-    erro = _useState288[0],
-    setErro = _useState288[1];
-  var _useState289 = useState(48),
+    duracao = _useState288[0],
+    setDuracao = _useState288[1];
+  var _useState289 = useState(""),
     _useState290 = _slicedToArray(_useState289, 2),
-    expiraHoras = _useState290[0],
-    setExpiraHoras = _useState290[1];
-  var _useState291 = useState(false),
+    erro = _useState290[0],
+    setErro = _useState290[1];
+  var _useState291 = useState(48),
     _useState292 = _slicedToArray(_useState291, 2),
-    postando = _useState292[0],
-    setPostando = _useState292[1];
+    expiraHoras = _useState292[0],
+    setExpiraHoras = _useState292[1];
+  var _useState293 = useState(false),
+    _useState294 = _slicedToArray(_useState293, 2),
+    postando = _useState294[0],
+    setPostando = _useState294[1];
   var LIMITE_SEGUNDOS = 15;
   var LIMITE_BYTES = 10 * 1024 * 1024; // 10MB
   function onSelecionar(_x103) {
@@ -34496,93 +34533,93 @@ function Perfil(_ref156) {
   // userLogado é quem está navegando (pra saber se é o próprio ou não)
   var perfilExibido = user;
   var modoVisualizacao = !!visualizando;
-  var _useState293 = useState(false),
-    _useState294 = _slicedToArray(_useState293, 2),
-    editando = _useState294[0],
-    setEditando = _useState294[1];
   var _useState295 = useState(false),
     _useState296 = _slicedToArray(_useState295, 2),
-    mostrarConfig = _useState296[0],
-    setMostrarConfig = _useState296[1]; // v311: modal Configurações
-  var _useState297 = useState(null),
+    editando = _useState296[0],
+    setEditando = _useState296[1];
+  var _useState297 = useState(false),
     _useState298 = _slicedToArray(_useState297, 2),
-    fotoExpandida = _useState298[0],
-    setFotoExpandida = _useState298[1];
+    mostrarConfig = _useState298[0],
+    setMostrarConfig = _useState298[1]; // v311: modal Configurações
   var _useState299 = useState(null),
     _useState300 = _slicedToArray(_useState299, 2),
-    completarCampo = _useState300[0],
-    setCompletarCampo = _useState300[1];
-  // v315: removidos — confirmandoLogout (modal legacy), menuAberto (dropdown ⚙ removido na v312), novoLugarQuer (lugares_quer removido)
-  var _useState301 = useState(false),
+    fotoExpandida = _useState300[0],
+    setFotoExpandida = _useState300[1];
+  var _useState301 = useState(null),
     _useState302 = _slicedToArray(_useState301, 2),
-    gravarVideo = _useState302[0],
-    setGravarVideo = _useState302[1];
-  var _useState303 = useState([]),
+    completarCampo = _useState302[0],
+    setCompletarCampo = _useState302[1];
+  // v315: removidos — confirmandoLogout (modal legacy), menuAberto (dropdown ⚙ removido na v312), novoLugarQuer (lugares_quer removido)
+  var _useState303 = useState(false),
     _useState304 = _slicedToArray(_useState303, 2),
-    meusVideos = _useState304[0],
-    setMeusVideos = _useState304[1];
-  var _useState305 = useState(null),
+    gravarVideo = _useState304[0],
+    setGravarVideo = _useState304[1];
+  var _useState305 = useState([]),
     _useState306 = _slicedToArray(_useState305, 2),
-    videoAberto = _useState306[0],
-    setVideoAberto = _useState306[1];
-  var _useState307 = useState([]),
+    meusVideos = _useState306[0],
+    setMeusVideos = _useState306[1];
+  var _useState307 = useState(null),
     _useState308 = _slicedToArray(_useState307, 2),
-    meusMomentos = _useState308[0],
-    setMeusMomentos = _useState308[1];
-  var _useState309 = useState(false),
+    videoAberto = _useState308[0],
+    setVideoAberto = _useState308[1];
+  var _useState309 = useState([]),
     _useState310 = _slicedToArray(_useState309, 2),
-    mostrarEscolherDestaque = _useState310[0],
-    setMostrarEscolherDestaque = _useState310[1];
-  var _useState311 = useState(null),
+    meusMomentos = _useState310[0],
+    setMeusMomentos = _useState310[1];
+  var _useState311 = useState(false),
     _useState312 = _slicedToArray(_useState311, 2),
-    momentoAberto = _useState312[0],
-    setMomentoAberto = _useState312[1];
+    mostrarEscolherDestaque = _useState312[0],
+    setMostrarEscolherDestaque = _useState312[1];
   var _useState313 = useState(null),
     _useState314 = _slicedToArray(_useState313, 2),
-    menuDestaque = _useState314[0],
-    setMenuDestaque = _useState314[1]; // id do destaque com menu aberto
+    momentoAberto = _useState314[0],
+    setMomentoAberto = _useState314[1];
+  var _useState315 = useState(null),
+    _useState316 = _slicedToArray(_useState315, 2),
+    menuDestaque = _useState316[0],
+    setMenuDestaque = _useState316[1]; // id do destaque com menu aberto
 
   // v313b: states pra Livro de Registros no perfil próprio
-  var _useState315 = useState({
+  var _useState317 = useState({
       passado: [],
       presente: [],
       futuro: []
     }),
-    _useState316 = _slicedToArray(_useState315, 2),
-    minhasCapsulas = _useState316[0],
-    setMinhasCapsulas = _useState316[1];
-  var _useState317 = useState(0),
     _useState318 = _slicedToArray(_useState317, 2),
-    pessoasCruzaramCount = _useState318[0],
-    setPessoasCruzaramCount = _useState318[1];
-  // F1.B B2: lugares do perfil exibido, carregados do canônico (place_profiles)
-  var _useState319 = useState([]),
+    minhasCapsulas = _useState318[0],
+    setMinhasCapsulas = _useState318[1];
+  var _useState319 = useState(0),
     _useState320 = _slicedToArray(_useState319, 2),
-    lugaresPerfilState = _useState320[0],
-    setLugaresPerfilState = _useState320[1];
-  // F1.B B2: lugar em edição no capítulo lugares (abre EditarLugarInline em overlay)
-  var _useState321 = useState(null),
+    pessoasCruzaramCount = _useState320[0],
+    setPessoasCruzaramCount = _useState320[1];
+  // F1.B B2: lugares do perfil exibido, carregados do canônico (place_profiles)
+  var _useState321 = useState([]),
     _useState322 = _slicedToArray(_useState321, 2),
-    lugarEditando = _useState322[0],
-    setLugarEditando = _useState322[1];
+    lugaresPerfilState = _useState322[0],
+    setLugaresPerfilState = _useState322[1];
+  // F1.B B2: lugar em edição no capítulo lugares (abre EditarLugarInline em overlay)
   var _useState323 = useState(null),
     _useState324 = _slicedToArray(_useState323, 2),
-    capituloAbertoPerfil = _useState324[0],
-    setCapituloAbertoPerfil = _useState324[1]; // null/lugares/memorias/capsulas/pessoas
+    lugarEditando = _useState324[0],
+    setLugarEditando = _useState324[1];
   var _useState325 = useState(null),
     _useState326 = _slicedToArray(_useState325, 2),
-    itemAbertoPerfil = _useState326[0],
-    setItemAbertoPerfil = _useState326[1]; // {tipo, dados}
-  // v313c: state pra ShareMenu (compartilhar mapa vs perfil inteiro)
-  var _useState327 = useState(false),
+    capituloAbertoPerfil = _useState326[0],
+    setCapituloAbertoPerfil = _useState326[1]; // null/lugares/memorias/capsulas/pessoas
+  var _useState327 = useState(null),
     _useState328 = _slicedToArray(_useState327, 2),
-    shareMenuAberto = _useState328[0],
-    setShareMenuAberto = _useState328[1];
-  // v316b: state pro kebab menu da capa (Editar / Compartilhar / Configurações)
+    itemAbertoPerfil = _useState328[0],
+    setItemAbertoPerfil = _useState328[1]; // {tipo, dados}
+  // v313c: state pra ShareMenu (compartilhar mapa vs perfil inteiro)
   var _useState329 = useState(false),
     _useState330 = _slicedToArray(_useState329, 2),
-    kebabMenuAberto = _useState330[0],
-    setKebabMenuAberto = _useState330[1];
+    shareMenuAberto = _useState330[0],
+    setShareMenuAberto = _useState330[1];
+  // v316b: state pro kebab menu da capa (Editar / Compartilhar / Configurações)
+  var _useState331 = useState(false),
+    _useState332 = _slicedToArray(_useState331, 2),
+    kebabMenuAberto = _useState332[0],
+    setKebabMenuAberto = _useState332[1];
 
   // v317: bio estendida — sorteia 3 itens preenchidos por carregamento
   var bioSorteada = React.useMemo(function () {
@@ -34815,10 +34852,10 @@ function Perfil(_ref156) {
   }, [perfilExibido === null || perfilExibido === void 0 ? void 0 : perfilExibido.id, lugaresPerfilState]);
 
   // Carrega TODOS os itens (momentos + cápsulas) pra grade unificada
-  var _useState331 = useState([]),
-    _useState332 = _slicedToArray(_useState331, 2),
-    meusItens = _useState332[0],
-    setMeusItens = _useState332[1];
+  var _useState333 = useState([]),
+    _useState334 = _slicedToArray(_useState333, 2),
+    meusItens = _useState334[0],
+    setMeusItens = _useState334[1];
   function carregarMeusItens() {
     return _carregarMeusItens.apply(this, arguments);
   }
@@ -35405,7 +35442,7 @@ function Perfil(_ref156) {
       // F1.B B2: salva edição de período+rótulo via place_profiles.id
       var salvarEdicaoLugar = /*#__PURE__*/function () {
         var _ref161 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee102(dados) {
-          var patch, _yield$db$from$update7, error, lista, _t108;
+          var patch, _yield$db$from$update8, error, lista, _t108;
           return _regenerator().w(function (_context102) {
             while (1) switch (_context102.p = _context102.n) {
               case 0:
@@ -35426,8 +35463,8 @@ function Perfil(_ref156) {
                 _context102.n = 2;
                 return db.from("place_profiles").update(patch).eq("id", lugarEditando.pp_id);
               case 2:
-                _yield$db$from$update7 = _context102.v;
-                error = _yield$db$from$update7.error;
+                _yield$db$from$update8 = _context102.v;
+                error = _yield$db$from$update8.error;
                 if (!error) {
                   _context102.n = 3;
                   break;
@@ -37242,18 +37279,18 @@ function ModalFoto(_ref168) {
     liked = _useLike.liked,
     likes = _useLike.count,
     toggleLike = _useLike.toggle;
-  var _useState333 = useState(false),
-    _useState334 = _slicedToArray(_useState333, 2),
-    showMsg = _useState334[0],
-    setShowMsg = _useState334[1];
-  var _useState335 = useState(""),
+  var _useState335 = useState(false),
     _useState336 = _slicedToArray(_useState335, 2),
-    msg = _useState336[0],
-    setMsg = _useState336[1];
-  var _useState337 = useState(false),
+    showMsg = _useState336[0],
+    setShowMsg = _useState336[1];
+  var _useState337 = useState(""),
     _useState338 = _slicedToArray(_useState337, 2),
-    confirmRemove = _useState338[0],
-    setConfirmRemove = _useState338[1];
+    msg = _useState338[0],
+    setMsg = _useState338[1];
+  var _useState339 = useState(false),
+    _useState340 = _slicedToArray(_useState339, 2),
+    confirmRemove = _useState340[0],
+    setConfirmRemove = _useState340[1];
   return /*#__PURE__*/React.createElement("div", {
     className: "fi",
     onClick: onClose,
@@ -37587,31 +37624,31 @@ function ModalPerfil(_ref169) {
     onChat = _ref169.onChat,
     user = _ref169.user,
     isContact = _ref169.isContact;
-  var _useState339 = useState({
+  var _useState341 = useState({
       lugares: 0,
       seguindo: 0,
       momentos: 0,
       loading: true
     }),
-    _useState340 = _slicedToArray(_useState339, 2),
-    stats = _useState340[0],
-    setStats = _useState340[1];
+    _useState342 = _slicedToArray(_useState341, 2),
+    stats = _useState342[0],
+    setStats = _useState342[1];
   // F1.B B2: lugares de ambos (user logado + p), do canônico, pra calcular matches
-  var _useState341 = useState({
+  var _useState343 = useState({
       meus: [],
       deles: []
     }),
-    _useState342 = _slicedToArray(_useState341, 2),
-    lugaresMatch = _useState342[0],
-    setLugaresMatch = _useState342[1];
-  var _useState343 = useState([]),
     _useState344 = _slicedToArray(_useState343, 2),
-    videos = _useState344[0],
-    setVideos = _useState344[1];
-  var _useState345 = useState(null),
+    lugaresMatch = _useState344[0],
+    setLugaresMatch = _useState344[1];
+  var _useState345 = useState([]),
     _useState346 = _slicedToArray(_useState345, 2),
-    videoAberto = _useState346[0],
-    setVideoAberto = _useState346[1];
+    videos = _useState346[0],
+    setVideos = _useState346[1];
+  var _useState347 = useState(null),
+    _useState348 = _slicedToArray(_useState347, 2),
+    videoAberto = _useState348[0],
+    setVideoAberto = _useState348[1];
 
   // Carrega métricas em paralelo quando abre
   useEffect(function () {
@@ -38127,34 +38164,34 @@ function ModalChat(_ref172) {
     msgs = _ref172.msgs,
     onSend = _ref172.onSend,
     onClose = _ref172.onClose;
-  var _useState347 = useState(""),
-    _useState348 = _slicedToArray(_useState347, 2),
-    txt = _useState348[0],
-    setTxt = _useState348[1];
-  var _useState349 = useState(null),
+  var _useState349 = useState(""),
     _useState350 = _slicedToArray(_useState349, 2),
-    mediaPreview = _useState350[0],
-    setMediaPreview = _useState350[1];
+    txt = _useState350[0],
+    setTxt = _useState350[1];
   var _useState351 = useState(null),
     _useState352 = _slicedToArray(_useState351, 2),
-    mediaFile = _useState352[0],
-    setMediaFile = _useState352[1];
+    mediaPreview = _useState352[0],
+    setMediaPreview = _useState352[1];
   var _useState353 = useState(null),
     _useState354 = _slicedToArray(_useState353, 2),
-    mediaType = _useState354[0],
-    setMediaType = _useState354[1];
-  var _useState355 = useState(false),
+    mediaFile = _useState354[0],
+    setMediaFile = _useState354[1];
+  var _useState355 = useState(null),
     _useState356 = _slicedToArray(_useState355, 2),
-    isRecording = _useState356[0],
-    setIsRecording = _useState356[1];
-  var _useState357 = useState(null),
+    mediaType = _useState356[0],
+    setMediaType = _useState356[1];
+  var _useState357 = useState(false),
     _useState358 = _slicedToArray(_useState357, 2),
-    audioBlob = _useState358[0],
-    setAudioBlob = _useState358[1];
-  var _useState359 = useState([]),
+    isRecording = _useState358[0],
+    setIsRecording = _useState358[1];
+  var _useState359 = useState(null),
     _useState360 = _slicedToArray(_useState359, 2),
-    dbMsgs = _useState360[0],
-    setDbMsgs = _useState360[1];
+    audioBlob = _useState360[0],
+    setAudioBlob = _useState360[1];
+  var _useState361 = useState([]),
+    _useState362 = _slicedToArray(_useState361, 2),
+    dbMsgs = _useState362[0],
+    setDbMsgs = _useState362[1];
   var recorderRef = useRef(null);
   var endRef = useRef();
 
@@ -38811,22 +38848,22 @@ function ModalChat(_ref172) {
 //                     (alimenta o pulso/badge do sino azul)
 //   - marcarVisitado(): atualiza ultima_visita_alertas_regionais=NOW() e zera alertsNovos localmente
 function useRegionAlerts(user) {
-  var _useState361 = useState([]),
-    _useState362 = _slicedToArray(_useState361, 2),
-    alertsRecentes = _useState362[0],
-    setAlertsRecentes = _useState362[1];
   var _useState363 = useState([]),
     _useState364 = _slicedToArray(_useState363, 2),
-    alertsNovos = _useState364[0],
-    setAlertsNovos = _useState364[1];
-  var _useState365 = useState(null),
+    alertsRecentes = _useState364[0],
+    setAlertsRecentes = _useState364[1];
+  var _useState365 = useState([]),
     _useState366 = _slicedToArray(_useState365, 2),
-    ultimaVisita = _useState366[0],
-    setUltimaVisita = _useState366[1];
-  var _useState367 = useState(false),
+    alertsNovos = _useState366[0],
+    setAlertsNovos = _useState366[1];
+  var _useState367 = useState(null),
     _useState368 = _slicedToArray(_useState367, 2),
-    loading = _useState368[0],
-    setLoading = _useState368[1];
+    ultimaVisita = _useState368[0],
+    setUltimaVisita = _useState368[1];
+  var _useState369 = useState(false),
+    _useState370 = _slicedToArray(_useState369, 2),
+    loading = _useState370[0],
+    setLoading = _useState370[1];
 
   // Carrega ultima_visita_alertas_regionais do profile uma vez por user
   useEffect(function () {
@@ -39248,7 +39285,7 @@ function tnCriarPlace(_x114, _x115) {
 } // ── ChipLugar: pílula compacta de lugar já selecionado ──
 function _tnCriarPlace() {
   _tnCriarPlace = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee214(_ref178, createdById) {
-    var name, city, state, country, type, lat, lng, photo_url, _yield$db$from$select3, existente, _yield$db$from$insert18, created, error, _yield$db$from$select4, e2, _t251;
+    var name, city, state, country, type, lat, lng, photo_url, _yield$db$from$select3, existente, _yield$db$from$insert19, created, error, _yield$db$from$select4, e2, _t251;
     return _regenerator().w(function (_context215) {
       while (1) switch (_context215.p = _context215.n) {
         case 0:
@@ -39297,9 +39334,9 @@ function _tnCriarPlace() {
             created_by: createdById || null
           }).select("*").single();
         case 7:
-          _yield$db$from$insert18 = _context215.v;
-          created = _yield$db$from$insert18.data;
-          error = _yield$db$from$insert18.error;
+          _yield$db$from$insert19 = _context215.v;
+          created = _yield$db$from$insert19.data;
+          error = _yield$db$from$insert19.error;
           if (!error) {
             _context215.n = 10;
             break;
@@ -39504,30 +39541,30 @@ function CampoLugarCriarNovo(_ref181) {
     onCancel = _ref181.onCancel,
     onCreated = _ref181.onCreated;
   // Se veio candidato do Nominatim, pré-preenche tudo
-  var _useState369 = useState((candidato === null || candidato === void 0 ? void 0 : candidato.name) || nomeInicial || ""),
-    _useState370 = _slicedToArray(_useState369, 2),
-    name = _useState370[0],
-    setName = _useState370[1];
-  var _useState371 = useState((candidato === null || candidato === void 0 ? void 0 : candidato.city) || ""),
+  var _useState371 = useState((candidato === null || candidato === void 0 ? void 0 : candidato.name) || nomeInicial || ""),
     _useState372 = _slicedToArray(_useState371, 2),
-    city = _useState372[0],
-    setCity = _useState372[1];
-  var _useState373 = useState((candidato === null || candidato === void 0 ? void 0 : candidato.state) || ""),
+    name = _useState372[0],
+    setName = _useState372[1];
+  var _useState373 = useState((candidato === null || candidato === void 0 ? void 0 : candidato.city) || ""),
     _useState374 = _slicedToArray(_useState373, 2),
-    state = _useState374[0],
-    setState = _useState374[1];
-  var _useState375 = useState((candidato === null || candidato === void 0 ? void 0 : candidato.type) || (tiposPermitidos === null || tiposPermitidos === void 0 ? void 0 : tiposPermitidos[0]) || "outro"),
+    city = _useState374[0],
+    setCity = _useState374[1];
+  var _useState375 = useState((candidato === null || candidato === void 0 ? void 0 : candidato.state) || ""),
     _useState376 = _slicedToArray(_useState375, 2),
-    type = _useState376[0],
-    setType = _useState376[1];
-  var _useState377 = useState(false),
+    state = _useState376[0],
+    setState = _useState376[1];
+  var _useState377 = useState((candidato === null || candidato === void 0 ? void 0 : candidato.type) || (tiposPermitidos === null || tiposPermitidos === void 0 ? void 0 : tiposPermitidos[0]) || "outro"),
     _useState378 = _slicedToArray(_useState377, 2),
-    creating = _useState378[0],
-    setCreating = _useState378[1];
-  var _useState379 = useState(null),
+    type = _useState378[0],
+    setType = _useState378[1];
+  var _useState379 = useState(false),
     _useState380 = _slicedToArray(_useState379, 2),
-    error = _useState380[0],
-    setError = _useState380[1];
+    creating = _useState380[0],
+    setCreating = _useState380[1];
+  var _useState381 = useState(null),
+    _useState382 = _slicedToArray(_useState381, 2),
+    error = _useState382[0],
+    setError = _useState382[1];
   var tipos = tiposPermitidos && tiposPermitidos.length > 0 ? tiposPermitidos : TN_PLACE_TYPES;
   var canSave = name.trim() && city.trim() && type;
   function salvar() {
@@ -39728,26 +39765,26 @@ function CampoLugar(_ref182) {
     placeholder = _ref182$placeholder === void 0 ? "onde foi..." : _ref182$placeholder,
     _ref182$createdById = _ref182.createdById,
     createdById = _ref182$createdById === void 0 ? null : _ref182$createdById;
-  var _useState381 = useState(""),
-    _useState382 = _slicedToArray(_useState381, 2),
-    query = _useState382[0],
-    setQuery = _useState382[1];
-  var _useState383 = useState([]),
+  var _useState383 = useState(""),
     _useState384 = _slicedToArray(_useState383, 2),
-    sugs = _useState384[0],
-    setSugs = _useState384[1];
-  var _useState385 = useState(false),
+    query = _useState384[0],
+    setQuery = _useState384[1];
+  var _useState385 = useState([]),
     _useState386 = _slicedToArray(_useState385, 2),
-    loading = _useState386[0],
-    setLoading = _useState386[1];
-  var _useState387 = useState(null),
+    sugs = _useState386[0],
+    setSugs = _useState386[1];
+  var _useState387 = useState(false),
     _useState388 = _slicedToArray(_useState387, 2),
-    criarNovoData = _useState388[0],
-    setCriarNovoData = _useState388[1]; // {nomeInicial, candidato?} ou null
-  var _useState389 = useState(""),
+    loading = _useState388[0],
+    setLoading = _useState388[1];
+  var _useState389 = useState(null),
     _useState390 = _slicedToArray(_useState389, 2),
-    customLabel = _useState390[0],
-    setCustomLabel = _useState390[1];
+    criarNovoData = _useState390[0],
+    setCriarNovoData = _useState390[1]; // {nomeInicial, candidato?} ou null
+  var _useState391 = useState(""),
+    _useState392 = _slicedToArray(_useState391, 2),
+    customLabel = _useState392[0],
+    setCustomLabel = _useState392[1];
   var timer = useRef();
 
   // Busca: interno (tnBuscarLugaresLocal) + Nominatim quando interno < 3
@@ -40012,7 +40049,7 @@ function ModalAdicionarLugar(_ref183) {
   // F1.B Sessão C.2a (15/mai/2026): state migrado pra schema canônico.
   // lugarSelecionado vem do <CampoLugar> (objeto place ou null).
   // labelPessoal é rótulo afetivo opcional (F1.A.2 -> place_profiles.place_label).
-  var _useState391 = useState({
+  var _useState393 = useState({
       lugarSelecionado: null,
       labelPessoal: "",
       cep: "",
@@ -40020,21 +40057,21 @@ function ModalAdicionarLugar(_ref183) {
       y2: "",
       era: "passado"
     }),
-    _useState392 = _slicedToArray(_useState391, 2),
-    d = _useState392[0],
-    setD = _useState392[1];
-  var _useState393 = useState(false),
     _useState394 = _slicedToArray(_useState393, 2),
-    saving = _useState394[0],
-    setSaving = _useState394[1];
+    d = _useState394[0],
+    setD = _useState394[1];
   var _useState395 = useState(false),
     _useState396 = _slicedToArray(_useState395, 2),
-    done = _useState396[0],
-    setDone = _useState396[1];
-  var _useState397 = useState(""),
+    saving = _useState396[0],
+    setSaving = _useState396[1];
+  var _useState397 = useState(false),
     _useState398 = _slicedToArray(_useState397, 2),
-    erroSalvar = _useState398[0],
-    setErroSalvar = _useState398[1];
+    done = _useState398[0],
+    setDone = _useState398[1];
+  var _useState399 = useState(""),
+    _useState400 = _slicedToArray(_useState399, 2),
+    erroSalvar = _useState400[0],
+    setErroSalvar = _useState400[1];
   var canSave = !!(d.lugarSelecionado && d.y1 && d.y2);
   function salvar() {
     return _salvar7.apply(this, arguments);
@@ -41274,7 +41311,7 @@ function ModalRegistrandoAgora(_ref188) {
   var temaBg = getTema(user).bg;
 
   // v319b: simplificado — sem CEP, sem região, sem datas precisas
-  var _useState399 = useState({
+  var _useState401 = useState({
       pais: "Brasil",
       uf: (user === null || user === void 0 ? void 0 : user.current_state) || (user === null || user === void 0 ? void 0 : user.state) || "MT",
       city: "",
@@ -41282,45 +41319,45 @@ function ModalRegistrandoAgora(_ref188) {
       citySugs: [],
       cityLoading: false
     }),
-    _useState400 = _slicedToArray(_useState399, 2),
-    locD = _useState400[0],
-    setLocD = _useState400[1];
-  var _useState401 = useState(""),
     _useState402 = _slicedToArray(_useState401, 2),
-    mes = _useState402[0],
-    setMes = _useState402[1]; // 01-12 ou "" pra "ainda não sei"
+    locD = _useState402[0],
+    setLocD = _useState402[1];
   var _useState403 = useState(""),
     _useState404 = _slicedToArray(_useState403, 2),
-    ano = _useState404[0],
-    setAno = _useState404[1];
+    mes = _useState404[0],
+    setMes = _useState404[1]; // 01-12 ou "" pra "ainda não sei"
   var _useState405 = useState(""),
     _useState406 = _slicedToArray(_useState405, 2),
-    frase = _useState406[0],
-    setFrase = _useState406[1];
-  var _useState407 = useState(null),
+    ano = _useState406[0],
+    setAno = _useState406[1];
+  var _useState407 = useState(""),
     _useState408 = _slicedToArray(_useState407, 2),
-    foto = _useState408[0],
-    setFoto = _useState408[1]; // URL preview
+    frase = _useState408[0],
+    setFrase = _useState408[1];
   var _useState409 = useState(null),
     _useState410 = _slicedToArray(_useState409, 2),
-    fotoFile = _useState410[0],
-    setFotoFile = _useState410[1];
-  var _useState411 = useState("contatos"),
+    foto = _useState410[0],
+    setFoto = _useState410[1]; // URL preview
+  var _useState411 = useState(null),
     _useState412 = _slicedToArray(_useState411, 2),
-    privacidade = _useState412[0],
-    setPrivacidade = _useState412[1];
-  var _useState413 = useState(false),
+    fotoFile = _useState412[0],
+    setFotoFile = _useState412[1];
+  var _useState413 = useState("contatos"),
     _useState414 = _slicedToArray(_useState413, 2),
-    saving = _useState414[0],
-    setSaving = _useState414[1];
-  var _useState415 = useState(null),
+    privacidade = _useState414[0],
+    setPrivacidade = _useState414[1];
+  var _useState415 = useState(false),
     _useState416 = _slicedToArray(_useState415, 2),
-    resultado = _useState416[0],
-    setResultado = _useState416[1];
+    saving = _useState416[0],
+    setSaving = _useState416[1];
   var _useState417 = useState(null),
     _useState418 = _slicedToArray(_useState417, 2),
-    erro = _useState418[0],
-    setErro = _useState418[1]; // v319d: {titulo, descricao}
+    resultado = _useState418[0],
+    setResultado = _useState418[1];
+  var _useState419 = useState(null),
+    _useState420 = _slicedToArray(_useState419, 2),
+    erro = _useState420[0],
+    setErro = _useState420[1]; // v319d: {titulo, descricao}
   var cityTimer = React.useRef();
   function buscarCidade(_x118) {
     return _buscarCidade3.apply(this, arguments);
@@ -42039,58 +42076,62 @@ function ModalMomento(_ref191) {
   var temaCor = getTema(user).main;
   var temaDk = getTema(user).dark;
   var temaBg = getTema(user).bg;
-  var _useState419 = useState(""),
-    _useState420 = _slicedToArray(_useState419, 2),
-    texto = _useState420[0],
-    setTexto = _useState420[1];
   var _useState421 = useState(""),
     _useState422 = _slicedToArray(_useState421, 2),
-    lugar = _useState422[0],
-    setLugar = _useState422[1];
+    texto = _useState422[0],
+    setTexto = _useState422[1];
   var _useState423 = useState(""),
     _useState424 = _slicedToArray(_useState423, 2),
-    anoMomento = _useState424[0],
-    setAnoMomento = _useState424[1];
-  var _useState425 = useState([]),
+    lugar = _useState424[0],
+    setLugar = _useState424[1];
+  var _useState425 = useState(""),
     _useState426 = _slicedToArray(_useState425, 2),
-    fotos = _useState426[0],
-    setFotos = _useState426[1];
+    anoMomento = _useState426[0],
+    setAnoMomento = _useState426[1];
   var _useState427 = useState([]),
     _useState428 = _slicedToArray(_useState427, 2),
-    fotosFiles = _useState428[0],
-    setFotosFiles = _useState428[1];
-  // v318b: vídeos do momento — até 5 vídeos, max 60s e 50MB cada
+    fotos = _useState428[0],
+    setFotos = _useState428[1];
   var _useState429 = useState([]),
     _useState430 = _slicedToArray(_useState429, 2),
-    videos = _useState430[0],
-    setVideos = _useState430[1]; // URLs locais de preview
+    fotosFiles = _useState430[0],
+    setFotosFiles = _useState430[1];
+  // v318b: vídeos do momento — até 5 vídeos, max 60s e 50MB cada
   var _useState431 = useState([]),
     _useState432 = _slicedToArray(_useState431, 2),
-    videosFiles = _useState432[0],
-    setVideosFiles = _useState432[1]; // File objects pra upload
-  var _useState433 = useState(""),
+    videos = _useState432[0],
+    setVideos = _useState432[1]; // URLs locais de preview
+  var _useState433 = useState([]),
     _useState434 = _slicedToArray(_useState433, 2),
-    videoErro = _useState434[0],
-    setVideoErro = _useState434[1];
-  var _useState435 = useState(false),
+    videosFiles = _useState434[0],
+    setVideosFiles = _useState434[1]; // File objects pra upload
+  var _useState435 = useState(""),
     _useState436 = _slicedToArray(_useState435, 2),
-    saving = _useState436[0],
-    setSaving = _useState436[1];
-  var _useState437 = useState("contatos"),
+    videoErro = _useState436[0],
+    setVideoErro = _useState436[1];
+  var _useState437 = useState(false),
     _useState438 = _slicedToArray(_useState437, 2),
-    privMomento = _useState438[0],
-    setPrivMomento = _useState438[1];
-  var _useState439 = useState(false),
+    saving = _useState438[0],
+    setSaving = _useState438[1];
+  var _useState439 = useState(""),
     _useState440 = _slicedToArray(_useState439, 2),
-    capsulaAtiva = _useState440[0],
-    setCapsulaAtiva = _useState440[1];
-  var _useState441 = useState(""),
+    erroSalvar = _useState440[0],
+    setErroSalvar = _useState440[1]; // v337: erro de gravação no banco
+  var _useState441 = useState("contatos"),
     _useState442 = _slicedToArray(_useState441, 2),
-    revelarEm = _useState442[0],
-    setRevelarEm = _useState442[1];
+    privMomento = _useState442[0],
+    setPrivMomento = _useState442[1];
+  var _useState443 = useState(false),
+    _useState444 = _slicedToArray(_useState443, 2),
+    capsulaAtiva = _useState444[0],
+    setCapsulaAtiva = _useState444[1];
+  var _useState445 = useState(""),
+    _useState446 = _slicedToArray(_useState445, 2),
+    revelarEm = _useState446[0],
+    setRevelarEm = _useState446[1];
 
   // v317i: localização hierárquica (mesmo padrão NovoLugar)
-  var _useState443 = useState({
+  var _useState447 = useState({
       pais: "Brasil",
       uf: (user === null || user === void 0 ? void 0 : user.current_state) || (user === null || user === void 0 ? void 0 : user.state) || "MT",
       city: "",
@@ -42100,9 +42141,9 @@ function ModalMomento(_ref191) {
       citySugs: [],
       cityLoading: false
     }),
-    _useState444 = _slicedToArray(_useState443, 2),
-    locD = _useState444[0],
-    setLocD = _useState444[1];
+    _useState448 = _slicedToArray(_useState447, 2),
+    locD = _useState448[0],
+    setLocD = _useState448[1];
   var cityTimerMomento = useRef();
   function buscarCidadeMomento(_x119) {
     return _buscarCidadeMomento.apply(this, arguments);
@@ -42278,22 +42319,22 @@ function ModalMomento(_ref191) {
   }
 
   // EXIF: estados
-  var _useState445 = useState(null),
-    _useState446 = _slicedToArray(_useState445, 2),
-    exifSugestao = _useState446[0],
-    setExifSugestao = _useState446[1]; // {lugar, ano, dataOriginal}
-  var _useState447 = useState(false),
-    _useState448 = _slicedToArray(_useState447, 2),
-    mostrarConfirmacaoExif = _useState448[0],
-    setMostrarConfirmacaoExif = _useState448[1];
-  var _useState449 = useState(false),
+  var _useState449 = useState(null),
     _useState450 = _slicedToArray(_useState449, 2),
-    lugarVeioDeExif = _useState450[0],
-    setLugarVeioDeExif = _useState450[1];
+    exifSugestao = _useState450[0],
+    setExifSugestao = _useState450[1]; // {lugar, ano, dataOriginal}
   var _useState451 = useState(false),
     _useState452 = _slicedToArray(_useState451, 2),
-    anoVeioDeExif = _useState452[0],
-    setAnoVeioDeExif = _useState452[1];
+    mostrarConfirmacaoExif = _useState452[0],
+    setMostrarConfirmacaoExif = _useState452[1];
+  var _useState453 = useState(false),
+    _useState454 = _slicedToArray(_useState453, 2),
+    lugarVeioDeExif = _useState454[0],
+    setLugarVeioDeExif = _useState454[1];
+  var _useState455 = useState(false),
+    _useState456 = _slicedToArray(_useState455, 2),
+    anoVeioDeExif = _useState456[0],
+    setAnoVeioDeExif = _useState456[1];
 
   // Reverse geocode via Nominatim (lat/lng → cidade, estado)
   function reverseGeocode(_x121, _x122) {
@@ -42666,10 +42707,12 @@ function ModalMomento(_ref191) {
   }
   function _salvar9() {
     _salvar9 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee134() {
-      var okMod, photoUrls, uploadPromise, timeoutPromise, videoUrls, tsFinal, anoNum, anoAtual, momento, fotosAtuais, novasFotos, _t144, _t145, _t146, _t147;
+      var okMod, photoUrls, uploadPromise, timeoutPromise, videoUrls, tsFinal, anoNum, anoAtual, momento, erroInsert, _yield$db$from$insert0, error, fotosAtuais, novasFotos, _t144, _t145, _t146, _t147;
       return _regenerator().w(function (_context135) {
         while (1) switch (_context135.p = _context135.n) {
           case 0:
+            setErroSalvar(""); // v337: limpa erro anterior ao tentar de novo
+            // v318b: permite salvar com vídeo (não só texto/foto)
             if (!(!texto.trim() && fotos.length === 0 && videos.length === 0)) {
               _context135.n = 1;
               break;
@@ -42793,46 +42836,62 @@ function ModalMomento(_ref191) {
               // v318b
               ts: tsFinal
             }; // Salva no banco de momentos
+            // v337: o insert do Supabase NÃO lança exceção em erro — retorna {error}.
+            // Antes o try/catch só logava e o modal fechava como se tivesse salvo,
+            // perdendo o momento em silêncio. Agora checa o erro e avisa o usuário.
+            erroInsert = null;
             _context135.p = 13;
             _context135.n = 14;
             return db.from("momentos").insert(momento);
           case 14:
+            _yield$db$from$insert0 = _context135.v;
+            error = _yield$db$from$insert0.error;
+            erroInsert = error;
             _context135.n = 16;
             break;
           case 15:
             _context135.p = 15;
             _t146 = _context135.v;
-            tnLog("Erro insert momento:", _t146);
+            erroInsert = _t146;
           case 16:
-            if (!(photoUrls.length > 0)) {
-              _context135.n = 20;
+            if (!erroInsert) {
+              _context135.n = 17;
               break;
             }
-            _context135.p = 17;
+            console.error("Erro insert momento:", erroInsert);
+            setErroSalvar("Não consegui salvar seu momento. Verifique a conexão e tente de novo.");
+            setSaving(false);
+            return _context135.a(2);
+          case 17:
+            if (!(photoUrls.length > 0)) {
+              _context135.n = 21;
+              break;
+            }
+            _context135.p = 18;
             fotosAtuais = user.photos || [];
             novasFotos = [].concat(_toConsumableArray(fotosAtuais), _toConsumableArray(photoUrls)).slice(0, 50);
-            _context135.n = 18;
+            _context135.n = 19;
             return db.from("profiles").update({
               photos: novasFotos
             }).eq("id", user.id);
-          case 18:
+          case 19:
             if (onUpdateUser) onUpdateUser(_objectSpread(_objectSpread({}, user), {}, {
               photos: novasFotos
             }));
-            _context135.n = 20;
+            _context135.n = 21;
             break;
-          case 19:
-            _context135.p = 19;
+          case 20:
+            _context135.p = 20;
             _t147 = _context135.v;
             tnLog("Erro ao salvar fotos no perfil:", _t147);
-          case 20:
+          case 21:
             onSave(momento);
             setSaving(false);
             onClose();
-          case 21:
+          case 22:
             return _context135.a(2);
         }
-      }, _callee134, null, [[17, 19], [13, 15], [9, 11], [5, 7]]);
+      }, _callee134, null, [[18, 20], [13, 15], [9, 11], [5, 7]]);
     }));
     return _salvar9.apply(this, arguments);
   }
@@ -43425,7 +43484,19 @@ function ModalMomento(_ref191) {
       marginTop: 4,
       letterSpacing: "0.01em"
     }
-  }, "data detectada a partir da foto")), /*#__PURE__*/React.createElement(Btn, {
+  }, "data detectada a partir da foto")), erroSalvar && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: "#B0413E",
+      background: "rgba(176,65,62,0.08)",
+      border: "1px solid rgba(176,65,62,0.25)",
+      borderRadius: 10,
+      padding: "9px 12px",
+      marginBottom: 10,
+      fontFamily: "Georgia,serif",
+      lineHeight: 1.4
+    }
+  }, erroSalvar), /*#__PURE__*/React.createElement(Btn, {
     full: true,
     onClick: salvar,
     disabled: !canSave,
@@ -43627,26 +43698,26 @@ function ModalMomento(_ref191) {
 function TelaLogin(_ref192) {
   var onClose = _ref192.onClose,
     onLoggedIn = _ref192.onLoggedIn;
-  var _useState453 = useState("opcoes"),
-    _useState454 = _slicedToArray(_useState453, 2),
-    modo = _useState454[0],
-    setModo = _useState454[1]; // opcoes | email
-  var _useState455 = useState(""),
-    _useState456 = _slicedToArray(_useState455, 2),
-    email = _useState456[0],
-    setEmail = _useState456[1];
-  var _useState457 = useState(false),
+  var _useState457 = useState("opcoes"),
     _useState458 = _slicedToArray(_useState457, 2),
-    loading = _useState458[0],
-    setLoading = _useState458[1];
-  var _useState459 = useState(false),
+    modo = _useState458[0],
+    setModo = _useState458[1]; // opcoes | email
+  var _useState459 = useState(""),
     _useState460 = _slicedToArray(_useState459, 2),
-    enviado = _useState460[0],
-    setEnviado = _useState460[1];
-  var _useState461 = useState(""),
+    email = _useState460[0],
+    setEmail = _useState460[1];
+  var _useState461 = useState(false),
     _useState462 = _slicedToArray(_useState461, 2),
-    erro = _useState462[0],
-    setErro = _useState462[1];
+    loading = _useState462[0],
+    setLoading = _useState462[1];
+  var _useState463 = useState(false),
+    _useState464 = _slicedToArray(_useState463, 2),
+    enviado = _useState464[0],
+    setEnviado = _useState464[1];
+  var _useState465 = useState(""),
+    _useState466 = _slicedToArray(_useState465, 2),
+    erro = _useState466[0],
+    setErro = _useState466[1];
   function loginGoogle() {
     return _loginGoogle.apply(this, arguments);
   }
@@ -44045,10 +44116,10 @@ function TelaLogin(_ref192) {
 
 // ── Hook: Notificações de Região ──────────────────────────────
 function useRegionNotifications(user, contacts) {
-  var _useState463 = useState(null),
-    _useState464 = _slicedToArray(_useState463, 2),
-    notif = _useState464[0],
-    setNotif = _useState464[1]; // {type,profile,message}
+  var _useState467 = useState(null),
+    _useState468 = _slicedToArray(_useState467, 2),
+    notif = _useState468[0],
+    setNotif = _useState468[1]; // {type,profile,message}
   var lastCheck = useRef(null);
   var checked = useRef(new Set());
   useEffect(function () {
@@ -44256,11 +44327,11 @@ function CadastroSimples(_ref194) {
   var onDone = _ref194.onDone,
     onLogin = _ref194.onLogin,
     googleInfo = _ref194.googleInfo;
-  var _useState465 = useState(false),
-    _useState466 = _slicedToArray(_useState465, 2),
-    saving = _useState466[0],
-    setSaving = _useState466[1];
-  var _useState467 = useState({
+  var _useState469 = useState(false),
+    _useState470 = _slicedToArray(_useState469, 2),
+    saving = _useState470[0],
+    setSaving = _useState470[1];
+  var _useState471 = useState({
       fullName: (googleInfo === null || googleInfo === void 0 ? void 0 : googleInfo.name) || "",
       birthDay: "",
       birthMonth: "",
@@ -44270,17 +44341,17 @@ function CadastroSimples(_ref194) {
       uf: "",
       country: "Brasil"
     }),
-    _useState468 = _slicedToArray(_useState467, 2),
-    f = _useState468[0],
-    setF = _useState468[1];
-  var _useState469 = useState(""),
-    _useState470 = _slicedToArray(_useState469, 2),
-    erroIdade = _useState470[0],
-    setErroIdade = _useState470[1];
-  var _useState471 = useState([]),
     _useState472 = _slicedToArray(_useState471, 2),
-    addrSugs = _useState472[0],
-    setAddrSugs = _useState472[1];
+    f = _useState472[0],
+    setF = _useState472[1];
+  var _useState473 = useState(""),
+    _useState474 = _slicedToArray(_useState473, 2),
+    erroIdade = _useState474[0],
+    setErroIdade = _useState474[1];
+  var _useState475 = useState([]),
+    _useState476 = _slicedToArray(_useState475, 2),
+    addrSugs = _useState476[0],
+    setAddrSugs = _useState476[1];
   var addrTimer = useRef(null);
 
   // Autocomplete de lugar (mundial — sem forçar Brasil)
@@ -44405,7 +44476,7 @@ function CadastroSimples(_ref194) {
   }
   function _salvar0() {
     _salvar0 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee139() {
-      var idade, authId, _yield$db$auth$getSes, session, nomeCompleto, partes, firstName, lastName, birthDate, payload, lugarInicialCadastro, saved, _yield$db$from$insert0, data, error, payloadSemBirth, _yield$db$from$insert1, _data, _error2, _yield$db$from$upsert, _data2, _t152, _t153, _t154, _t155;
+      var idade, authId, _yield$db$auth$getSes, session, nomeCompleto, partes, firstName, lastName, birthDate, payload, lugarInicialCadastro, saved, _yield$db$from$insert1, data, error, payloadSemBirth, _yield$db$from$insert10, _data, _error2, _yield$db$from$upsert, _data2, _t152, _t153, _t154, _t155;
       return _regenerator().w(function (_context140) {
         while (1) switch (_context140.p = _context140.n) {
           case 0:
@@ -44488,9 +44559,9 @@ function CadastroSimples(_ref194) {
             _context140.n = 9;
             return db.from("profiles").insert(payload).select().single();
           case 9:
-            _yield$db$from$insert0 = _context140.v;
-            data = _yield$db$from$insert0.data;
-            error = _yield$db$from$insert0.error;
+            _yield$db$from$insert1 = _context140.v;
+            data = _yield$db$from$insert1.data;
+            error = _yield$db$from$insert1.error;
             if (!error) {
               _context140.n = 10;
               break;
@@ -44511,9 +44582,9 @@ function CadastroSimples(_ref194) {
             _context140.n = 13;
             return db.from("profiles").insert(payloadSemBirth).select().single();
           case 13:
-            _yield$db$from$insert1 = _context140.v;
-            _data = _yield$db$from$insert1.data;
-            _error2 = _yield$db$from$insert1.error;
+            _yield$db$from$insert10 = _context140.v;
+            _data = _yield$db$from$insert10.data;
+            _error2 = _yield$db$from$insert10.error;
             if (!_error2) {
               _context140.n = 14;
               break;
@@ -44864,7 +44935,7 @@ function CadastroSimples(_ref194) {
 function AgendaVisita(_ref196) {
   var user = _ref196.user,
     onSave = _ref196.onSave;
-  var _useState473 = useState({
+  var _useState477 = useState({
       data: "",
       hora: "",
       cidade: (user === null || user === void 0 ? void 0 : user.city) || "",
@@ -44876,17 +44947,17 @@ function AgendaVisita(_ref196) {
       revelarEm: "",
       selecionados: []
     }),
-    _useState474 = _slicedToArray(_useState473, 2),
-    f = _useState474[0],
-    setF = _useState474[1];
-  var _useState475 = useState(false),
-    _useState476 = _slicedToArray(_useState475, 2),
-    saving = _useState476[0],
-    setSaving = _useState476[1];
-  var _useState477 = useState(false),
     _useState478 = _slicedToArray(_useState477, 2),
-    saved = _useState478[0],
-    setSaved = _useState478[1];
+    f = _useState478[0],
+    setF = _useState478[1];
+  var _useState479 = useState(false),
+    _useState480 = _slicedToArray(_useState479, 2),
+    saving = _useState480[0],
+    setSaving = _useState480[1];
+  var _useState481 = useState(false),
+    _useState482 = _slicedToArray(_useState481, 2),
+    saved = _useState482[0],
+    setSaved = _useState482[1];
   function salvar() {
     return _salvar1.apply(this, arguments);
   }
@@ -44979,7 +45050,7 @@ function AgendaVisita(_ref196) {
     v: "contatos",
     icon: "👥",
     label: "Meus contatos",
-    desc: "Quem está no Encontrei"
+    desc: "Quem está no Tempnext"
   }, {
     v: "comunidade",
     icon: "🌎",
@@ -45408,14 +45479,14 @@ function CapsulasUser(_ref197) {
     onOpenAgenda = _ref197.onOpenAgenda,
     _ref197$ehDono = _ref197.ehDono,
     ehDono = _ref197$ehDono === void 0 ? true : _ref197$ehDono;
-  var _useState479 = useState([]),
-    _useState480 = _slicedToArray(_useState479, 2),
-    capsulas = _useState480[0],
-    setCapsulas = _useState480[1];
-  var _useState481 = useState(null),
-    _useState482 = _slicedToArray(_useState481, 2),
-    aberta = _useState482[0],
-    setAberta = _useState482[1]; // index da cápsula aberta em tela cheia
+  var _useState483 = useState([]),
+    _useState484 = _slicedToArray(_useState483, 2),
+    capsulas = _useState484[0],
+    setCapsulas = _useState484[1];
+  var _useState485 = useState(null),
+    _useState486 = _slicedToArray(_useState485, 2),
+    aberta = _useState486[0],
+    setAberta = _useState486[1]; // index da cápsula aberta em tela cheia
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
     var q = dbRead.from("momentos").select("*").eq("user_id", user.id).eq("tipo", "capsula");
@@ -45636,10 +45707,10 @@ function CapsulaPolaroid(_ref199) {
   var lugar = capsula.lugar || (user === null || user === void 0 ? void 0 : user.city) || "";
   var caption = m.dim === "futuro" ? "lacrada" : m.dim === "presente" ? "presente" : "lembrança";
   var yearLabel = m.lacrada ? "revela ".concat(m.ano || "?") : m.ano || "";
-  var _useState483 = useState(false),
-    _useState484 = _slicedToArray(_useState483, 2),
-    animando = _useState484[0],
-    setAnimando = _useState484[1];
+  var _useState487 = useState(false),
+    _useState488 = _slicedToArray(_useState487, 2),
+    animando = _useState488[0],
+    setAnimando = _useState488[1];
   var handleClick = function handleClick() {
     if (onClick === "try-open") {
       setAnimando(false);
@@ -45767,22 +45838,22 @@ function InteracoesBar(_ref200) {
     onComentariosClick = _ref200.onComentariosClick,
     _ref200$esconderConta = _ref200.esconderContador,
     esconderContador = _ref200$esconderConta === void 0 ? false : _ref200$esconderConta;
-  var _useState485 = useState(false),
-    _useState486 = _slicedToArray(_useState485, 2),
-    curtiu = _useState486[0],
-    setCurtiu = _useState486[1];
-  var _useState487 = useState(0),
-    _useState488 = _slicedToArray(_useState487, 2),
-    totalCurtidas = _useState488[0],
-    setTotalCurtidas = _useState488[1];
-  var _useState489 = useState(0),
+  var _useState489 = useState(false),
     _useState490 = _slicedToArray(_useState489, 2),
-    totalComentarios = _useState490[0],
-    setTotalComentarios = _useState490[1];
-  var _useState491 = useState(false),
+    curtiu = _useState490[0],
+    setCurtiu = _useState490[1];
+  var _useState491 = useState(0),
     _useState492 = _slicedToArray(_useState491, 2),
-    animando = _useState492[0],
-    setAnimando = _useState492[1];
+    totalCurtidas = _useState492[0],
+    setTotalCurtidas = _useState492[1];
+  var _useState493 = useState(0),
+    _useState494 = _slicedToArray(_useState493, 2),
+    totalComentarios = _useState494[0],
+    setTotalComentarios = _useState494[1];
+  var _useState495 = useState(false),
+    _useState496 = _slicedToArray(_useState495, 2),
+    animando = _useState496[0],
+    setAnimando = _useState496[1];
 
   // Carrega estado inicial (se eu curti, e contadores)
   useEffect(function () {
@@ -46048,22 +46119,22 @@ function ModalComentarios(_ref203) {
     userLogado = _ref203.userLogado,
     onClose = _ref203.onClose,
     onNovoComentario = _ref203.onNovoComentario;
-  var _useState493 = useState([]),
-    _useState494 = _slicedToArray(_useState493, 2),
-    comentarios = _useState494[0],
-    setComentarios = _useState494[1];
-  var _useState495 = useState(""),
-    _useState496 = _slicedToArray(_useState495, 2),
-    novo = _useState496[0],
-    setNovo = _useState496[1];
-  var _useState497 = useState(false),
+  var _useState497 = useState([]),
     _useState498 = _slicedToArray(_useState497, 2),
-    enviando = _useState498[0],
-    setEnviando = _useState498[1];
-  var _useState499 = useState(true),
+    comentarios = _useState498[0],
+    setComentarios = _useState498[1];
+  var _useState499 = useState(""),
     _useState500 = _slicedToArray(_useState499, 2),
-    loading = _useState500[0],
-    setLoading = _useState500[1];
+    novo = _useState500[0],
+    setNovo = _useState500[1];
+  var _useState501 = useState(false),
+    _useState502 = _slicedToArray(_useState501, 2),
+    enviando = _useState502[0],
+    setEnviando = _useState502[1];
+  var _useState503 = useState(true),
+    _useState504 = _slicedToArray(_useState503, 2),
+    loading = _useState504[0],
+    setLoading = _useState504[1];
   useEffect(function () {
     if (!alvoId) return;
     _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee143() {
@@ -46120,7 +46191,7 @@ function ModalComentarios(_ref203) {
   }
   function _enviar2() {
     _enviar2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee144() {
-      var t, okMod, _yield$db$from$insert10, data, error, _t162;
+      var t, okMod, _yield$db$from$insert11, data, error, _t162;
       return _regenerator().w(function (_context145) {
         while (1) switch (_context145.p = _context145.n) {
           case 0:
@@ -46153,9 +46224,9 @@ function ModalComentarios(_ref203) {
               texto: t
             }).select().single();
           case 5:
-            _yield$db$from$insert10 = _context145.v;
-            data = _yield$db$from$insert10.data;
-            error = _yield$db$from$insert10.error;
+            _yield$db$from$insert11 = _context145.v;
+            data = _yield$db$from$insert11.data;
+            error = _yield$db$from$insert11.error;
             if (!error) {
               _context145.n = 6;
               break;
@@ -46411,14 +46482,14 @@ function CapsulaTelaCheia(_ref205) {
     onNext = _ref205.onNext,
     userLogado = _ref205.userLogado;
   var m = capsulaMeta(capsula);
-  var _useState501 = useState(0),
-    _useState502 = _slicedToArray(_useState501, 2),
-    fotoAtiva = _useState502[0],
-    setFotoAtiva = _useState502[1];
-  var _useState503 = useState(false),
-    _useState504 = _slicedToArray(_useState503, 2),
-    showComentarios = _useState504[0],
-    setShowComentarios = _useState504[1];
+  var _useState505 = useState(0),
+    _useState506 = _slicedToArray(_useState505, 2),
+    fotoAtiva = _useState506[0],
+    setFotoAtiva = _useState506[1];
+  var _useState507 = useState(false),
+    _useState508 = _slicedToArray(_useState507, 2),
+    showComentarios = _useState508[0],
+    setShowComentarios = _useState508[1];
   var lugar = capsula.lugar || (user === null || user === void 0 ? void 0 : user.city) || "";
   var nomeCurto = ((user === null || user === void 0 ? void 0 : user.first_name) || ((user === null || user === void 0 ? void 0 : user.name) || "").split(" ")[0] || "").trim();
   var anoGuardou = capsula.ts ? new Date(capsula.ts).getFullYear() : m.ano;
@@ -46426,24 +46497,24 @@ function CapsulaTelaCheia(_ref205) {
   // v190: Estado "aguardando" — user quer ser avisado quando esta cápsula abrir
   var ehDono = userLogado && capsula.user_id === userLogado.id;
   var podeAguardar = m.lacrada && userLogado && !ehDono && capsula.id;
-  var _useState505 = useState(false),
-    _useState506 = _slicedToArray(_useState505, 2),
-    aguardando = _useState506[0],
-    setAguardando = _useState506[1];
-  var _useState507 = useState(false),
-    _useState508 = _slicedToArray(_useState507, 2),
-    aguardandoBusy = _useState508[0],
-    setAguardandoBusy = _useState508[1];
-
-  // v193: Estado "revelar" — ritual de abrir a cápsula pra este user
   var _useState509 = useState(false),
     _useState510 = _slicedToArray(_useState509, 2),
-    jaRevelei = _useState510[0],
-    setJaRevelei = _useState510[1];
+    aguardando = _useState510[0],
+    setAguardando = _useState510[1];
   var _useState511 = useState(false),
     _useState512 = _slicedToArray(_useState511, 2),
-    revelando = _useState512[0],
-    setRevelando = _useState512[1]; // animação em curso
+    aguardandoBusy = _useState512[0],
+    setAguardandoBusy = _useState512[1];
+
+  // v193: Estado "revelar" — ritual de abrir a cápsula pra este user
+  var _useState513 = useState(false),
+    _useState514 = _slicedToArray(_useState513, 2),
+    jaRevelei = _useState514[0],
+    setJaRevelei = _useState514[1];
+  var _useState515 = useState(false),
+    _useState516 = _slicedToArray(_useState515, 2),
+    revelando = _useState516[0],
+    setRevelando = _useState516[1]; // animação em curso
   // v196: Estado inicial síncrono — sem flash da imagem
   // Default pessimista por dimensão:
   //   - lacrada (futuro com data válida) → "lacrada"
@@ -46455,16 +46526,16 @@ function CapsulaTelaCheia(_ref205) {
     if ((capsula.capsula_dimensao || "") === "presente") return "revelar";
     return "aberta";
   }();
-  var _useState513 = useState(estadoInicialSync),
-    _useState514 = _slicedToArray(_useState513, 2),
-    estadoUser = _useState514[0],
-    setEstadoUser = _useState514[1];
+  var _useState517 = useState(estadoInicialSync),
+    _useState518 = _slicedToArray(_useState517, 2),
+    estadoUser = _useState518[0],
+    setEstadoUser = _useState518[1];
 
   // v318d: Para cápsulas FUTURAS reveladas, busca quem mais marcou "Registrando agora" no mesmo lugar/ano
-  var _useState515 = useState([]),
-    _useState516 = _slicedToArray(_useState515, 2),
-    outrosRegistrando = _useState516[0],
-    setOutrosRegistrando = _useState516[1];
+  var _useState519 = useState([]),
+    _useState520 = _slicedToArray(_useState519, 2),
+    outrosRegistrando = _useState520[0],
+    setOutrosRegistrando = _useState520[1];
   useEffect(function () {
     var ehFutura = (capsula.capsula_dimensao || "") === "futuro";
     var cidadeCap = (capsula.lugar || (user === null || user === void 0 ? void 0 : user.city) || "").split(",")[0].trim();
@@ -47456,14 +47527,14 @@ function GaleriaLugar(_ref211) {
     onLoadItems = _ref211.onLoadItems;
   // v325j: cada item = 1 momento (não mais 1 foto). Foto principal = primeira do momento.
   // Badge +N indica fotos adicionais. Tap → abre galeria imersiva.
-  var _useState517 = useState([]),
-    _useState518 = _slicedToArray(_useState517, 2),
-    items = _useState518[0],
-    setItems = _useState518[1]; // array de {momento, fotoUrl, totalFotos, ano, mes, ts}
-  var _useState519 = useState(true),
-    _useState520 = _slicedToArray(_useState519, 2),
-    loading = _useState520[0],
-    setLoading = _useState520[1];
+  var _useState521 = useState([]),
+    _useState522 = _slicedToArray(_useState521, 2),
+    items = _useState522[0],
+    setItems = _useState522[1]; // array de {momento, fotoUrl, totalFotos, ano, mes, ts}
+  var _useState523 = useState(true),
+    _useState524 = _slicedToArray(_useState523, 2),
+    loading = _useState524[0],
+    setLoading = _useState524[1];
   useEffect(function () {
     if (!lugarNome && !lugarId) return;
     setLoading(true);
@@ -47661,19 +47732,19 @@ function MomentGalleryViewer(_ref213) {
     lugarNome = _ref213.lugarNome,
     user = _ref213.user,
     onClose = _ref213.onClose;
-  var _useState521 = useState(indiceInicial),
-    _useState522 = _slicedToArray(_useState521, 2),
-    indiceAtual = _useState522[0],
-    setIndiceAtual = _useState522[1];
-  var _useState523 = useState(null),
-    _useState524 = _slicedToArray(_useState523, 2),
-    comentariosAbertos = _useState524[0],
-    setComentariosAbertos = _useState524[1]; // momento_id ou null
-  // v328b: state pro kebab menu (compartilhar momento)
-  var _useState525 = useState(false),
+  var _useState525 = useState(indiceInicial),
     _useState526 = _slicedToArray(_useState525, 2),
-    kebabAberto = _useState526[0],
-    setKebabAberto = _useState526[1];
+    indiceAtual = _useState526[0],
+    setIndiceAtual = _useState526[1];
+  var _useState527 = useState(null),
+    _useState528 = _slicedToArray(_useState527, 2),
+    comentariosAbertos = _useState528[0],
+    setComentariosAbertos = _useState528[1]; // momento_id ou null
+  // v328b: state pro kebab menu (compartilhar momento)
+  var _useState529 = useState(false),
+    _useState530 = _slicedToArray(_useState529, 2),
+    kebabAberto = _useState530[0],
+    setKebabAberto = _useState530[1];
   var containerRef = useRef(null);
   var itemRefs = useRef({});
 
@@ -47900,19 +47971,19 @@ function MomentGalleryItem(_ref214) {
     ativo = _ref214.ativo,
     comentariosAbertos = _ref214.comentariosAbertos,
     onToggleComentarios = _ref214.onToggleComentarios;
-  var _useState527 = useState(0),
-    _useState528 = _slicedToArray(_useState527, 2),
-    fotoIdx = _useState528[0],
-    setFotoIdx = _useState528[1];
+  var _useState531 = useState(0),
+    _useState532 = _slicedToArray(_useState531, 2),
+    fotoIdx = _useState532[0],
+    setFotoIdx = _useState532[1];
   var fs = Array.isArray(momento.fotos) ? momento.fotos.filter(Boolean) : momento.fotos ? [momento.fotos] : [];
   var fotos = fs.length > 0 ? fs : momento.foto_url ? [momento.foto_url] : [];
   var fotoAtual = fotos[fotoIdx] || null;
 
   // Carrega autor (pode não vir junto)
-  var _useState529 = useState(momento.profiles || null),
-    _useState530 = _slicedToArray(_useState529, 2),
-    autor = _useState530[0],
-    setAutor = _useState530[1];
+  var _useState533 = useState(momento.profiles || null),
+    _useState534 = _slicedToArray(_useState533, 2),
+    autor = _useState534[0],
+    setAutor = _useState534[1];
   useEffect(function () {
     if (autor || !momento.user_id) return;
     dbRead.from("profiles").select("id,name,first_name,last_name,avatar_url,city,state").eq("id", momento.user_id).maybeSingle().then(function (_ref215) {
@@ -48112,43 +48183,43 @@ function PainelPessoal(_ref216) {
   var user = _ref216.user,
     onBack = _ref216.onBack,
     onAbrirContatos = _ref216.onAbrirContatos;
-  var _useState531 = useState({
+  var _useState535 = useState({
       fotos: 0,
       momentos: 0,
       conexoes: 0,
       lugares: 0
     }),
-    _useState532 = _slicedToArray(_useState531, 2),
-    stats = _useState532[0],
-    setStats = _useState532[1];
-  var _useState533 = useState(null),
-    _useState534 = _slicedToArray(_useState533, 2),
-    fotoTop = _useState534[0],
-    setFotoTop = _useState534[1];
-  var _useState535 = useState(null),
     _useState536 = _slicedToArray(_useState535, 2),
-    momentoTop = _useState536[0],
-    setMomentoTop = _useState536[1];
+    stats = _useState536[0],
+    setStats = _useState536[1];
   var _useState537 = useState(null),
     _useState538 = _slicedToArray(_useState537, 2),
-    lugarTop = _useState538[0],
-    setLugarTop = _useState538[1];
-  var _useState539 = useState(0),
+    fotoTop = _useState538[0],
+    setFotoTop = _useState538[1];
+  var _useState539 = useState(null),
     _useState540 = _slicedToArray(_useState539, 2),
-    nascRegiao = _useState540[0],
-    setNascRegiao = _useState540[1];
+    momentoTop = _useState540[0],
+    setMomentoTop = _useState540[1];
   var _useState541 = useState(null),
     _useState542 = _slicedToArray(_useState541, 2),
-    lugarRelevante = _useState542[0],
-    setLugarRelevante = _useState542[1];
-  var _useState543 = useState([]),
+    lugarTop = _useState542[0],
+    setLugarTop = _useState542[1];
+  var _useState543 = useState(0),
     _useState544 = _slicedToArray(_useState543, 2),
-    pessoasLugar = _useState544[0],
-    setPessoasLugar = _useState544[1];
-  var _useState545 = useState([]),
+    nascRegiao = _useState544[0],
+    setNascRegiao = _useState544[1];
+  var _useState545 = useState(null),
     _useState546 = _slicedToArray(_useState545, 2),
-    meusPlaces = _useState546[0],
-    setMeusPlaces = _useState546[1];
+    lugarRelevante = _useState546[0],
+    setLugarRelevante = _useState546[1];
+  var _useState547 = useState([]),
+    _useState548 = _slicedToArray(_useState547, 2),
+    pessoasLugar = _useState548[0],
+    setPessoasLugar = _useState548[1];
+  var _useState549 = useState([]),
+    _useState550 = _slicedToArray(_useState549, 2),
+    meusPlaces = _useState550[0],
+    setMeusPlaces = _useState550[1];
   useEffect(function () {
     if (!(user !== null && user !== void 0 && user.id)) return;
     var cancelled = false;
@@ -58061,38 +58132,38 @@ function TelaPadrao(_ref271) {
   }, acoes || null))), children);
 }
 function App() {
-  var _useState547 = useState("inicio"),
-    _useState548 = _slicedToArray(_useState547, 2),
-    tela = _useState548[0],
-    setTela = _useState548[1];
-  // v221: seed da HomeV9 vive no App — sobrevive a navegações (entrar perfil/voltar não re-sortea)
-  var _useState549 = useState(0),
-    _useState550 = _slicedToArray(_useState549, 2),
-    homeSeed = _useState550[0],
-    setHomeSeed = _useState550[1];
-  // v225: estados de profundidade da HomeV9 também vivem no App pra sobreviver navegações
-  var _useState551 = useState(0),
+  var _useState551 = useState("inicio"),
     _useState552 = _slicedToArray(_useState551, 2),
-    homeNivel = _useState552[0],
-    setHomeNivel = _useState552[1];
-  var _useState553 = useState(null),
+    tela = _useState552[0],
+    setTela = _useState552[1];
+  // v221: seed da HomeV9 vive no App — sobrevive a navegações (entrar perfil/voltar não re-sortea)
+  var _useState553 = useState(0),
     _useState554 = _slicedToArray(_useState553, 2),
-    homeCardSelecionado = _useState554[0],
-    setHomeCardSelecionado = _useState554[1];
-  var _useState555 = useState(null),
+    homeSeed = _useState554[0],
+    setHomeSeed = _useState554[1];
+  // v225: estados de profundidade da HomeV9 também vivem no App pra sobreviver navegações
+  var _useState555 = useState(0),
     _useState556 = _slicedToArray(_useState555, 2),
-    homeHeroImersivo = _useState556[0],
-    setHomeHeroImersivo = _useState556[1];
+    homeNivel = _useState556[0],
+    setHomeNivel = _useState556[1];
   var _useState557 = useState(null),
     _useState558 = _slicedToArray(_useState557, 2),
-    homeCardClicadoUid = _useState558[0],
-    setHomeCardClicadoUid = _useState558[1];
-  var _useState559 = useState(0),
+    homeCardSelecionado = _useState558[0],
+    setHomeCardSelecionado = _useState558[1];
+  var _useState559 = useState(null),
     _useState560 = _slicedToArray(_useState559, 2),
-    homeScrollExtra = _useState560[0],
-    setHomeScrollExtra = _useState560[1];
+    homeHeroImersivo = _useState560[0],
+    setHomeHeroImersivo = _useState560[1];
+  var _useState561 = useState(null),
+    _useState562 = _slicedToArray(_useState561, 2),
+    homeCardClicadoUid = _useState562[0],
+    setHomeCardClicadoUid = _useState562[1];
+  var _useState563 = useState(0),
+    _useState564 = _slicedToArray(_useState563, 2),
+    homeScrollExtra = _useState564[0],
+    setHomeScrollExtra = _useState564[1];
   // v225c: dados da HomeV9 carregados no App (sobrevivem desmontagens da Home)
-  var _useState561 = useState({
+  var _useState565 = useState({
       perfis: [],
       momentos: [],
       capsulas: [],
@@ -58101,37 +58172,37 @@ function App() {
       meuUltimoMomento: null,
       loading: true
     }),
-    _useState562 = _slicedToArray(_useState561, 2),
-    homeDados = _useState562[0],
-    setHomeDados = _useState562[1];
-  var _useState563 = useState({}),
-    _useState564 = _slicedToArray(_useState563, 2),
-    msgs = _useState564[0],
-    setMsgs = _useState564[1];
-  var _useState565 = useState([]),
     _useState566 = _slicedToArray(_useState565, 2),
-    contacts = _useState566[0],
-    setContacts = _useState566[1];
-  var _useState567 = useState(false),
+    homeDados = _useState566[0],
+    setHomeDados = _useState566[1];
+  var _useState567 = useState({}),
     _useState568 = _slicedToArray(_useState567, 2),
-    showLogin = _useState568[0],
-    setShowLogin = _useState568[1];
-  var _useState569 = useState(false),
+    msgs = _useState568[0],
+    setMsgs = _useState568[1];
+  var _useState569 = useState([]),
     _useState570 = _slicedToArray(_useState569, 2),
-    showLoginPreview = _useState570[0],
-    setShowLoginPreview = _useState570[1];
-  var _useState571 = useState(null),
+    contacts = _useState570[0],
+    setContacts = _useState570[1];
+  var _useState571 = useState(false),
     _useState572 = _slicedToArray(_useState571, 2),
-    googleUserSemPerfil = _useState572[0],
-    setGoogleUserSemPerfil = _useState572[1]; // {id, email, name, avatar_url} quando precisa cadastrar
+    showLogin = _useState572[0],
+    setShowLogin = _useState572[1];
   var _useState573 = useState(false),
     _useState574 = _slicedToArray(_useState573, 2),
-    bloqueioPerfilIncompleto = _useState574[0],
-    setBloqueioPerfilIncompleto = _useState574[1]; // modal bloqueante quando tenta ação sem perfil completo
-  var _useState575 = useState(false),
+    showLoginPreview = _useState574[0],
+    setShowLoginPreview = _useState574[1];
+  var _useState575 = useState(null),
     _useState576 = _slicedToArray(_useState575, 2),
-    bloqueioCadastroCorrompido = _useState576[0],
-    setBloqueioCadastroCorrompido = _useState576[1]; // v320b: cadastro sem id real
+    googleUserSemPerfil = _useState576[0],
+    setGoogleUserSemPerfil = _useState576[1]; // {id, email, name, avatar_url} quando precisa cadastrar
+  var _useState577 = useState(false),
+    _useState578 = _slicedToArray(_useState577, 2),
+    bloqueioPerfilIncompleto = _useState578[0],
+    setBloqueioPerfilIncompleto = _useState578[1]; // modal bloqueante quando tenta ação sem perfil completo
+  var _useState579 = useState(false),
+    _useState580 = _slicedToArray(_useState579, 2),
+    bloqueioCadastroCorrompido = _useState580[0],
+    setBloqueioCadastroCorrompido = _useState580[1]; // v320b: cadastro sem id real
   // v320b: expõe função global pra modals usarem
   useEffect(function () {
     window.__bloquearCadastroCorrompido = function () {
@@ -58141,19 +58212,19 @@ function App() {
       delete window.__bloquearCadastroCorrompido;
     };
   }, []);
-  var _useState577 = useState(null),
-    _useState578 = _slicedToArray(_useState577, 2),
-    perfilLugarAtual = _useState578[0],
-    setPerfilLugarAtual = _useState578[1];
-  var _useState579 = useState(false),
-    _useState580 = _slicedToArray(_useState579, 2),
-    showCuriosidade = _useState580[0],
-    setShowCuriosidade = _useState580[1];
-  var _useState581 = useState(true),
+  var _useState581 = useState(null),
     _useState582 = _slicedToArray(_useState581, 2),
-    useCadastroSimples = _useState582[0],
-    setUseCadastroSimples = _useState582[1];
-  var _useState583 = useState(function () {
+    perfilLugarAtual = _useState582[0],
+    setPerfilLugarAtual = _useState582[1];
+  var _useState583 = useState(false),
+    _useState584 = _slicedToArray(_useState583, 2),
+    showCuriosidade = _useState584[0],
+    setShowCuriosidade = _useState584[1];
+  var _useState585 = useState(true),
+    _useState586 = _slicedToArray(_useState585, 2),
+    useCadastroSimples = _useState586[0],
+    setUseCadastroSimples = _useState586[1];
+  var _useState587 = useState(function () {
       try {
         var s = localStorage.getItem("tn_user");
         return s ? JSON.parse(s) : null;
@@ -58161,9 +58232,9 @@ function App() {
         return null;
       }
     }),
-    _useState584 = _slicedToArray(_useState583, 2),
-    user = _useState584[0],
-    setUser = _useState584[1];
+    _useState588 = _slicedToArray(_useState587, 2),
+    user = _useState588[0],
+    setUser = _useState588[1];
 
   // Expõe o user logado globalmente pra componentes profundos (ex: CapsulasUser em perfis alheios)
   useEffect(function () {
@@ -58209,69 +58280,69 @@ function App() {
   // Reativo: muda imediatamente quando user troca paleta no perfil
   // Convive com sistema antigo de personalização (PersonalizacaoPerfil)
   usePaletaAfetiva(user);
-  var _useState585 = useState(null),
-    _useState586 = _slicedToArray(_useState585, 2),
-    modal = _useState586[0],
-    setModal = _useState586[1];
-  var _useState587 = useState(null),
-    _useState588 = _slicedToArray(_useState587, 2),
-    chat = _useState588[0],
-    setChat = _useState588[1];
   var _useState589 = useState(null),
     _useState590 = _slicedToArray(_useState589, 2),
-    perfilVisualizando = _useState590[0],
-    setPerfilVisualizando = _useState590[1]; // outro user sendo "mergulhado"
+    modal = _useState590[0],
+    setModal = _useState590[1];
   var _useState591 = useState(null),
     _useState592 = _slicedToArray(_useState591, 2),
-    momentoVisualizando = _useState592[0],
-    setMomentoVisualizando = _useState592[1]; // momento sendo visto em tela cheia
-  // v333r: states showReencontrar/filtroReencontrar removidos junto com ModalReencontrar e Inicio legado.
-  var _useState593 = useState(false),
+    chat = _useState592[0],
+    setChat = _useState592[1];
+  var _useState593 = useState(null),
     _useState594 = _slicedToArray(_useState593, 2),
-    showMenuRapido = _useState594[0],
-    setShowMenuRapidoRaw = _useState594[1];
-  var _useState595 = useState(false),
+    perfilVisualizando = _useState594[0],
+    setPerfilVisualizando = _useState594[1]; // outro user sendo "mergulhado"
+  var _useState595 = useState(null),
     _useState596 = _slicedToArray(_useState595, 2),
-    showRegistrandoAgora = _useState596[0],
-    setShowRegistrandoAgora = _useState596[1]; // v318c
-  var _useState597 = useState(null),
+    momentoVisualizando = _useState596[0],
+    setMomentoVisualizando = _useState596[1]; // momento sendo visto em tela cheia
+  // v333r: states showReencontrar/filtroReencontrar removidos junto com ModalReencontrar e Inicio legado.
+  var _useState597 = useState(false),
     _useState598 = _slicedToArray(_useState597, 2),
-    showCruzamentoQI = _useState598[0],
-    setShowCruzamentoQI = _useState598[1]; // v319e: {cidade, dtInicio, dtFim}
+    showMenuRapido = _useState598[0],
+    setShowMenuRapidoRaw = _useState598[1];
   var _useState599 = useState(false),
     _useState600 = _slicedToArray(_useState599, 2),
-    showAdicionarLugar = _useState600[0],
-    setShowAdicionarLugarRaw = _useState600[1];
-  var _useState601 = useState(false),
+    showRegistrandoAgora = _useState600[0],
+    setShowRegistrandoAgora = _useState600[1]; // v318c
+  var _useState601 = useState(null),
     _useState602 = _slicedToArray(_useState601, 2),
-    showAgendaVisita = _useState602[0],
-    setShowAgendaVisitaRaw = _useState602[1];
+    showCruzamentoQI = _useState602[0],
+    setShowCruzamentoQI = _useState602[1]; // v319e: {cidade, dtInicio, dtFim}
   var _useState603 = useState(false),
     _useState604 = _slicedToArray(_useState603, 2),
-    showMomento = _useState604[0],
-    setShowMomentoRaw = _useState604[1];
-  // v333n: painel dev agrupado — começa fechado a cada reload pra não vazar acidentalmente
+    showAdicionarLugar = _useState604[0],
+    setShowAdicionarLugarRaw = _useState604[1];
   var _useState605 = useState(false),
     _useState606 = _slicedToArray(_useState605, 2),
-    showDevPanel = _useState606[0],
-    setShowDevPanel = _useState606[1];
+    showAgendaVisita = _useState606[0],
+    setShowAgendaVisitaRaw = _useState606[1];
   var _useState607 = useState(false),
     _useState608 = _slicedToArray(_useState607, 2),
-    showPassagem = _useState608[0],
-    setShowPassagem = _useState608[1];
-  var _useState609 = useState(0),
+    showMomento = _useState608[0],
+    setShowMomentoRaw = _useState608[1];
+  // v333n: painel dev agrupado — começa fechado a cada reload pra não vazar acidentalmente
+  var _useState609 = useState(false),
     _useState610 = _slicedToArray(_useState609, 2),
-    naoLidas = _useState610[0],
-    setNaoLidas = _useState610[1]; // notificações não-lidas (sino âmbar — interação direta)
-  // v323b: notifs regionais persistidas não-lidas (alimenta sino azul junto com alertsNovos)
-  var _useState611 = useState(0),
+    showDevPanel = _useState610[0],
+    setShowDevPanel = _useState610[1];
+  var _useState611 = useState(false),
     _useState612 = _slicedToArray(_useState611, 2),
-    naoLidasRegionaisPersistidas = _useState612[0],
-    setNaoLidasRegionaisPersistidas = _useState612[1];
-  var _useState613 = useState(false),
+    showPassagem = _useState612[0],
+    setShowPassagem = _useState612[1];
+  var _useState613 = useState(0),
     _useState614 = _slicedToArray(_useState613, 2),
-    confirmandoSaida = _useState614[0],
-    setConfirmandoSaida = _useState614[1];
+    naoLidas = _useState614[0],
+    setNaoLidas = _useState614[1]; // notificações não-lidas (sino âmbar — interação direta)
+  // v323b: notifs regionais persistidas não-lidas (alimenta sino azul junto com alertsNovos)
+  var _useState615 = useState(0),
+    _useState616 = _slicedToArray(_useState615, 2),
+    naoLidasRegionaisPersistidas = _useState616[0],
+    setNaoLidasRegionaisPersistidas = _useState616[1];
+  var _useState617 = useState(false),
+    _useState618 = _slicedToArray(_useState617, 2),
+    confirmandoSaida = _useState618[0],
+    setConfirmandoSaida = _useState618[1];
   // v323a: hook expandido — inclui alertsNovos (badge/pulso) e marcarVisitado
   var _useRegionAlerts = useRegionAlerts(user),
     alerts = _useRegionAlerts.alerts,
@@ -59287,7 +59358,7 @@ function App() {
   // Retorna true se pode prosseguir, false se bloqueou
   function _salvar10() {
     _salvar10 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee172(p) {
-      var perfilFinal, _yield$db$from$insert11, data, error, minimo, _yield$db$from$insert12, data2, error2, _t196;
+      var perfilFinal, _yield$db$from$insert12, data, error, minimo, _yield$db$from$insert13, data2, error2, _t196;
       return _regenerator().w(function (_context173) {
         while (1) switch (_context173.p = _context173.n) {
           case 0:
@@ -59302,9 +59373,9 @@ function App() {
             _context173.n = 2;
             return db.from("profiles").insert(_objectSpread({}, p)).select().single();
           case 2:
-            _yield$db$from$insert11 = _context173.v;
-            data = _yield$db$from$insert11.data;
-            error = _yield$db$from$insert11.error;
+            _yield$db$from$insert12 = _context173.v;
+            data = _yield$db$from$insert12.data;
+            error = _yield$db$from$insert12.error;
             if (!error) {
               _context173.n = 4;
               break;
@@ -59320,9 +59391,9 @@ function App() {
             _context173.n = 3;
             return db.from("profiles").insert(minimo).select().single();
           case 3:
-            _yield$db$from$insert12 = _context173.v;
-            data2 = _yield$db$from$insert12.data;
-            error2 = _yield$db$from$insert12.error;
+            _yield$db$from$insert13 = _context173.v;
+            data2 = _yield$db$from$insert13.data;
+            error2 = _yield$db$from$insert13.error;
             if (error2) {
               console.error("[salvar] erro segunda tentativa:", error2);
             } else {
@@ -59651,10 +59722,10 @@ function App() {
   }
 
   // Estado de loading inicial
-  var _useState615 = useState(false),
-    _useState616 = _slicedToArray(_useState615, 2),
-    appReady = _useState616[0],
-    setAppReady = _useState616[1];
+  var _useState619 = useState(false),
+    _useState620 = _slicedToArray(_useState619, 2),
+    appReady = _useState620[0],
+    setAppReady = _useState620[1];
 
   // Marca app como pronto após init
   useEffect(function () {
