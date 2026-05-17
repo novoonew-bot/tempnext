@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v338 — remoção do mock de demonstração da home (perfis/momentos fake) — só dado real ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v338b — fix tela branca: guards nos componentes de hero/mapa quando nao ha dado real ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -50034,6 +50034,8 @@ function HV9Hero(_ref231) {
   var hero = _ref231.hero,
     secondary = _ref231.secondary,
     onClick = _ref231.onClick;
+  // v338b: sem hero real (HV9_HEROES vazio), hero pode vir undefined.
+  if (!hero) return null;
   // 4/5 = 125%, 4/4.5 = 112.5%
   var padBottom = secondary ? "112.5%" : "125%";
   // v232: tile sintético pro debug badge
@@ -50261,6 +50263,9 @@ function HV9Hero(_ref231) {
 function HV9MapBlock(_ref232) {
   var c = _ref232.c,
     onClick = _ref232.onClick;
+  // v338b: sem cruzamento real, c pode vir undefined (HV9_CROSSINGS vazio).
+  // Não renderiza nada em vez de quebrar a home inteira.
+  if (!c || !Array.isArray(c.pins) || c.pins.length === 0) return null;
   var corPin = function corPin(cor) {
     if (cor === "second") return "var(--user-color-second)";
     if (cor === "third") return "#b88a3a";
@@ -51236,6 +51241,8 @@ function HV9HeroGrande(_ref239) {
   var hero = _ref239.hero,
     secondary = _ref239.secondary,
     onClick = _ref239.onClick;
+  // v338b: guard — sem hero real, hero pode vir undefined.
+  if (!hero) return null;
   var padBottom = secondary ? "118%" : "130%";
   var debugTile = _objectSpread(_objectSpread({}, hero || {}), {}, {
     type: secondary ? "HERO-GRANDE-2" : "HERO-GRANDE-1",
@@ -51343,6 +51350,8 @@ function HV9HeroGrande(_ref239) {
 function HV9MapBlockGrande(_ref240) {
   var c = _ref240.c,
     onClick = _ref240.onClick;
+  // v338b: guard — sem cruzamento real, c pode vir undefined.
+  if (!c || !Array.isArray(c.pins) || c.pins.length === 0) return null;
   var corPin = function corPin(cor) {
     if (cor === "second") return "var(--user-color-second)";
     if (cor === "third") return "#b88a3a";
