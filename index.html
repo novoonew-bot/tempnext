@@ -781,8 +781,24 @@ input:focus,select:focus,textarea:focus{
       <span style="color:#C17E3A;font-weight:700">Temp</span><span style="color:#1E88E5;font-weight:700">nexT</span>
     </div>
     <div style="font-size:11px;color:#8C8478;margin-top:8px;font-style:italic;font-family:Georgia,serif">guarda histórias, marca o presente e aproxima o futuro</div>
-    <div style="font-family:'Italianno','Cormorant Garamond',cursive;font-size:42px;color:#5A4A38;margin-top:14px;letter-spacing:0;line-height:1;font-weight:400">o tempo não para <span style="color:#C17E3A">—</span> ele aproxima</div>
+    <div id="tn-splash-frase" style="font-family:'Italianno','Cormorant Garamond',cursive;font-size:42px;color:#5A4A38;margin-top:14px;letter-spacing:0;line-height:1;font-weight:400;opacity:0;transition:opacity .4s ease">o tempo não para <span style="color:#C17E3A">—</span> ele aproxima</div>
   </div>
+  <script>
+  /* v336: fim do FOUT da Italianno. A frase nasce com opacity:0 e só aparece
+     (fade .4s) quando a fonte real terminou de baixar — sem flash de encolher
+     do fallback cursive. Fallback de 1.2s caso fonts.ready demore/falhe. */
+  (function(){
+    var el=document.getElementById('tn-splash-frase');
+    if(!el) return;
+    var mostrar=function(){ el.style.opacity='1'; };
+    if(document.fonts && document.fonts.ready){
+      document.fonts.load("42px 'Italianno'").then(function(){ document.fonts.ready.then(mostrar); });
+      setTimeout(mostrar, 1200);
+    } else {
+      setTimeout(mostrar, 300);
+    }
+  })();
+  </script>
   <!-- Bolinhas -->
   <div style="display:flex;gap:6px;margin-top:28px">
     <div style="width:8px;height:8px;border-radius:50%;background:#C17E3A;animation:pulse 1.2s ease-in-out infinite"></div>
@@ -794,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v335 — fix profile-fantasma: perfil deletado/inexistente não loga mais via cache localStorage ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v336 — mapa de pessoas com contagem real (fim do mock) + splash sem FOUT da Italianno ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -11813,34 +11829,29 @@ function CardMapaVida(_ref51) {
           })));
         });
       } else {
-        // Nuvem: gera pinos espalhados em torno de cada centro
+        // v336 (plano A): 1 pino real por lugar onde a pessoa morou.
+        // Sem espalhamento aleatório nem tamanho/opacidade randômicos (era mock visual).
         pessoasNuvem.forEach(function (cen, idx) {
-          var sigma = cen.sigma || 2.5;
-          for (var i = 0; i < (cen.n || 1); i++) {
-            var dx = (Math.random() - 0.5) * sigma * 2;
-            var dy = (Math.random() - 0.5) * sigma * 2;
-            var pct = coordToPct({
-              x: cen.x + dx,
-              y: cen.y + dy
-            });
-            if (!dentro(pct)) continue;
-            var tam = 3 + Math.random() * 2;
-            elementos.push(React.createElement("div", {
-              key: "nu-" + idx + "-" + i,
-              className: "cmv-pin-wrap",
-              style: {
-                left: pct.x + "%",
-                top: pct.y + "%"
-              }
-            }, React.createElement("div", {
-              className: "cmv-pin-dot",
-              style: {
-                width: tam + "px",
-                height: tam + "px",
-                opacity: 0.5 + Math.random() * 0.4
-              }
-            })));
-          }
+          var pct = coordToPct({
+            x: cen.x,
+            y: cen.y
+          });
+          if (!dentro(pct)) return;
+          elementos.push(React.createElement("div", {
+            key: "nu-" + idx,
+            className: "cmv-pin-wrap",
+            style: {
+              left: pct.x + "%",
+              top: pct.y + "%"
+            }
+          }, React.createElement("div", {
+            className: "cmv-pin-dot",
+            style: {
+              width: "5px",
+              height: "5px",
+              opacity: 0.75
+            }
+          })));
         });
       }
     }
@@ -16392,22 +16403,17 @@ function PerfilOutroFiltrado(_ref82) {
         ano: destaqueMom.ts ? new Date(destaqueMom.ts).getFullYear() : null
       } : null;
 
-      // Pessoas: nuvem mock baseada nos lugares com geo (n proporcional ao tempo no lugar)
-      // v246: densidade mais sutil (2-8 por lugar) pra não poluir o mapa
+      // v336 (plano A): fim do mock. Cada lugar onde a pessoa morou vira 1 pino real
+      // no mapa — sem multiplicador inventado de "2-8 pessoas por lugar".
+      // A contagem real de pessoas que cruzaram vem de pessoasReaisCount (query no banco).
       var pessoasNuvem = lugaresMorou.map(function (l) {
-        var anos = (parseInt((l.anos || "").split("-")[1]) || 2026) - (parseInt((l.anos || "").split("-")[0]) || 0);
-        var n = Math.max(2, Math.min(8, Math.floor(anos * 0.7))); // mock: 2-8 pessoas por lugar
         return {
           x: l.x,
           y: l.y,
-          n: n,
-          sigma: 1.8
+          n: 1,
+          sigma: 0
         };
       });
-      // v246: total de pessoas mock = soma dos n da nuvem (mesmo número que aparece no mapa)
-      var totalPessoasMock = pessoasNuvem.reduce(function (s, p) {
-        return s + (p.n || 0);
-      }, 0);
 
       // v270: cápsulas com geo — substituiu o mock {passado:[], presente:[], futuro:[]}
       // que estava hardcoded a zero desde a v245 ("etapa 2"). Agora usa capsulasReais
@@ -16461,8 +16467,9 @@ function PerfilOutroFiltrado(_ref82) {
         // v270: real
         totalCapsulasFuturoRaw: totalCapsulasFuturoRaw,
         // v270: real
-        // v246: usa totalPessoasMock (alinhado com nuvem) em vez de triangulacao.length
-        totalPessoasRaw: totalPessoasMock,
+        // v336 (plano A): contagem real de pessoas que cruzaram (query no banco,
+        // count por cidade em comum). Não mais soma de mock.
+        totalPessoasRaw: pessoasReaisCount,
         totalConexoesRaw: 0 // etapa 2
       };
     }()
