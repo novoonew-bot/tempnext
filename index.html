@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v341 — saves silenciosos corrigidos: cadastro, seguir, remover momento/capsula, Olhar ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v342 — fix erro 400 em places: coluna era created_by, nao user_id ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -17205,7 +17205,7 @@ function FormularioCapsulaUnificado(_ref86) {
             });
             _context44.p = 3;
             _context44.n = 4;
-            return dbRead.from("places").select("user_id", {
+            return dbRead.from("places").select("created_by", {
               count: "exact"
             }).ilike("city", cidade);
           case 4:
@@ -17213,7 +17213,7 @@ function FormularioCapsulaUnificado(_ref86) {
             placesRows = _yield$dbRead$from$se17.data;
             pessoasIds = new Set();
             (placesRows || []).forEach(function (p) {
-              if (p.user_id && p.user_id !== (user === null || user === void 0 ? void 0 : user.id)) pessoasIds.add(p.user_id);
+              if (p.created_by && p.created_by !== (user === null || user === void 0 ? void 0 : user.id)) pessoasIds.add(p.created_by);
             });
 
             // 2) Momentos guardados nesse lugar (lugar ilike cidade)
@@ -18110,7 +18110,7 @@ function FormularioCapsulaUnificado(_ref86) {
             }
             _context47.p = 32;
             _context47.n = 33;
-            return dbRead.from("places").select("user_id, city").ilike("city", cidadeAlvo);
+            return dbRead.from("places").select("created_by, city").ilike("city", cidadeAlvo);
           case 33:
             _yield$dbRead$from$se21 = _context47.v;
             placesRows = _yield$dbRead$from$se21.data;
@@ -18123,13 +18123,13 @@ function FormularioCapsulaUnificado(_ref86) {
               break;
             }
             p = _step12.value;
-            if (!(!p.user_id || p.user_id === user.id)) {
+            if (!(!p.created_by || p.created_by === user.id)) {
               _context47.n = 36;
               break;
             }
             return _context47.a(3, 37);
           case 36:
-            destinatarios.add(p.user_id);
+            destinatarios.add(p.created_by);
           case 37:
             _context47.n = 35;
             break;
