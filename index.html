@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v345b — UX 7a: frase da tela encontros no tempo (sem vocabulario banido) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v346 — UX 5: plural residual (1 momento) tratado ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -47504,7 +47504,7 @@ function _fetchMomentosRelacionados() {
           exatos = r1.length;
           return _context218.a(2, {
             momentos: combinado,
-            raio: exatos > 0 ? "".concat(exatos, " exatamente aqui \xB7 ").concat(combinado.length, " nesta regi\xE3o") : "".concat(combinado.length, " momentos \xB7 ").concat(cidade, " \xB7 anos ").concat(decadaIni)
+            raio: exatos > 0 ? "".concat(exatos, " exatamente aqui \xB7 ").concat(combinado.length, " nesta regi\xE3o") : "".concat(combinado.length, " ").concat(combinado.length === 1 ? "momento" : "momentos", " \xB7 ").concat(cidade, " \xB7 anos ").concat(decadaIni)
           });
         case 7:
           if (!(r2.length > 0)) {
