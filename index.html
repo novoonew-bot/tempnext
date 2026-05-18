@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v343 — fix foto sumida no capitulo memorias: array fotos nao era mapeado ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v344 — card encontros no tempo agora e tela propria (so cruzamentos), separada do Olhar ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -29845,7 +29845,11 @@ function Cruzamentos(_ref133) {
     onAbrirLivro = _ref133.onAbrirLivro,
     onAdd = _ref133.onAdd,
     contacts = _ref133.contacts,
-    onLugar = _ref133.onLugar;
+    onLugar = _ref133.onLugar,
+    soCruzamentos = _ref133.soCruzamentos;
+  // v344: soCruzamentos=true → modo enxuto pro card "encontros no tempo" da
+  // tela Buscar: mostra SÓ a categoria de cruzamentos de tempo/lugar, esconde
+  // as outras 5. O Olhar (nav) continua com o feed curado completo.
   // v325c: Olhar — feed multi-categoria de descobertas curadas
   // Fase 1: espaço-tempo (cat 1) + cápsulas próximas a abrir (cat 4) + sobrenome (cat 5)
   // v325e: Fase 2 — lugares ressonantes (cat 2) + momentos da era (cat 3) + quero ir cruzado (cat 6)
@@ -30536,7 +30540,8 @@ function Cruzamentos(_ref133) {
   var contactIds = new Set((contacts || []).map(function (c) {
     return String(c.id);
   }));
-  var totalDescobertas = profiles.length + capsulasProximas.length + sobrenomes.length + lugaresRess.length + momentosEra.length + queroIrCruz.length;
+  // v344: no modo enxuto só conta os cruzamentos pro estado vazio.
+  var totalDescobertas = soCruzamentos ? profiles.length : profiles.length + capsulasProximas.length + sobrenomes.length + lugaresRess.length + momentosEra.length + queroIrCruz.length;
 
   // Header de seção (estilo editorial)
   var SectionHeader = function SectionHeader(_ref143) {
@@ -30583,7 +30588,7 @@ function Cruzamentos(_ref133) {
   };
   return /*#__PURE__*/React.createElement(TelaPadrao, {
     user: user,
-    titulo: "olhar",
+    titulo: soCruzamentos ? "encontros no tempo" : "olhar",
     onVoltar: onBack
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -30602,7 +30607,7 @@ function Cruzamentos(_ref133) {
       letterSpacing: "-0.02em",
       lineHeight: 1
     }
-  }, "Olhar"), /*#__PURE__*/React.createElement("div", {
+  }, soCruzamentos ? "Encontros no tempo" : "Olhar"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 13,
       color: T.muted,
@@ -30610,7 +30615,7 @@ function Cruzamentos(_ref133) {
       fontStyle: "italic",
       fontFamily: "'Cormorant Garamond',Georgia,serif"
     }
-  }, "o que se aproxima de voc\xEA essa semana"))), /*#__PURE__*/React.createElement("div", {
+  }, soCruzamentos ? "pessoas que viveram o seu tempo e o seu lugar" : "o que se aproxima de você essa semana"))), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "0 18px"
     }
@@ -30649,7 +30654,7 @@ function Cruzamentos(_ref133) {
       fontStyle: "italic",
       fontFamily: "'Cormorant Garamond',Georgia,serif"
     }
-  }, !temLugaresUser ? "adicione seus lugares pra encontrar pessoas que se aproximaram de você." : "nada se aproxima de você ainda. com novos cadastros, descobertas vão aparecer aqui.") : /*#__PURE__*/React.createElement(React.Fragment, null, profiles.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
+  }, !temLugaresUser ? "adicione seus lugares pra encontrar pessoas que se aproximaram de você." : soCruzamentos ? "ninguém cruzou o seu tempo e lugar ainda. com novos cadastros, os encontros vão aparecer aqui." : "nada se aproxima de você ainda. com novos cadastros, descobertas vão aparecer aqui.") : /*#__PURE__*/React.createElement(React.Fragment, null, profiles.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
     titulo: "quem viveu seu tempo",
     subtitulo: "pessoas pr\xF3ximas no seu lugar e na sua era",
     count: profiles.length
@@ -30804,7 +30809,7 @@ function Cruzamentos(_ref133) {
       strokeWidth: "2",
       strokeLinecap: "round"
     })), "conectar"));
-  }))), capsulasProximas.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
+  }))), !soCruzamentos && capsulasProximas.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
     titulo: "c\xE1psulas perto de abrir",
     subtitulo: "lacradas na sua regi\xE3o, abrem em breve",
     count: capsulasProximas.length
@@ -30860,7 +30865,7 @@ function Cruzamentos(_ref133) {
         fontFamily: "'Cormorant Garamond',Georgia,serif"
       }
     }, "c\xE1psula lacrada \xB7 abre em ", dataAbre.toLocaleDateString("pt-BR")));
-  }))), sobrenomes.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
+  }))), !soCruzamentos && sobrenomes.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
     titulo: "mesma fam\xEDlia, outras cidades",
     subtitulo: "pessoas com seu sobrenome em outros lugares",
     count: sobrenomes.length
@@ -30924,7 +30929,7 @@ function Cruzamentos(_ref133) {
         borderRadius: 10
       }
     }, "\u2713"));
-  }))), lugaresRess.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
+  }))), !soCruzamentos && lugaresRess.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
     titulo: "lugares que vibram com voc\xEA",
     subtitulo: "cidades onde sua rede passou \u2014 descobertas e reencontros",
     count: lugaresRess.length
@@ -31014,7 +31019,7 @@ function Cruzamentos(_ref133) {
         whiteSpace: "nowrap"
       }
     }, "voc\xEA tamb\xE9m"));
-  }))), momentosEra.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
+  }))), !soCruzamentos && momentosEra.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
     titulo: "vivido em paralelo",
     subtitulo: "momentos pr\xF3ximos no seu lugar e na sua era",
     count: momentosEra.length
@@ -31095,7 +31100,7 @@ function Cruzamentos(_ref133) {
         textTransform: "uppercase"
       }
     }, badge)));
-  }))), queroIrCruz.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader
+  }))), !soCruzamentos && queroIrCruz.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader
   /* v333: era "caminhos futuros que se tocam" / "vocês marcaram o mesmo lugar pro futuro".
      "se tocam" sugere contato físico — banido junto com cruzamento. Substituído por
      imagem de caminhos que convergem (encontros futuros possíveis). */, {
@@ -60234,12 +60239,29 @@ function App() {
       return setTela("meus_lugares");
     },
     onAbrirCruzamentos: function onAbrirCruzamentos() {
-      return setTela("cruzamentos");
+      return setTela("encontros_tempo");
     }
   }), tela === "cruzamentos" && user && /*#__PURE__*/React.createElement(Cruzamentos, {
     user: user,
     onBack: function onBack() {
       return setTela("inicio");
+    },
+    onAbrirLivro: function onAbrirLivro(p) {
+      return navAbrirPerfilOutro(p);
+    },
+    onAdd: function onAdd(p) {
+      addContact(p);
+    },
+    contacts: contacts,
+    onLugar: function onLugar(lugar) {
+      setPerfilLugarAtual(typeof lugar === "string" ? lugar : lugar);
+      setTela("lugar_imersivo");
+    }
+  }), tela === "encontros_tempo" && user && /*#__PURE__*/React.createElement(Cruzamentos, {
+    soCruzamentos: true,
+    user: user,
+    onBack: function onBack() {
+      return setTela("buscar");
     },
     onAbrirLivro: function onAbrirLivro(p) {
       return navAbrirPerfilOutro(p);
