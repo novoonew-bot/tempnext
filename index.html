@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v349 — UX 1: nome do perfil no card com fonte serifada, sem negrito ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v349b — deixar de seguir: botao Seguindo agora desfaz o follow ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -967,22 +967,22 @@ function moderarTexto(_x) {
   return _moderarTexto.apply(this, arguments);
 } // Toast contemplativo de moderação — mostra mensagem no topo da tela e some sozinho
 function _moderarTexto() {
-  _moderarTexto = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee177(texto) {
-    var r, data, _t202;
-    return _regenerator().w(function (_context179) {
-      while (1) switch (_context179.p = _context179.n) {
+  _moderarTexto = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee178(texto) {
+    var r, data, _t203;
+    return _regenerator().w(function (_context180) {
+      while (1) switch (_context180.p = _context180.n) {
         case 0:
           if (!(!texto || typeof texto !== "string" || texto.trim().length < 3)) {
-            _context179.n = 1;
+            _context180.n = 1;
             break;
           }
-          return _context179.a(2, {
+          return _context180.a(2, {
             ok: true,
             vazio: true
           });
         case 1:
-          _context179.p = 1;
-          _context179.n = 2;
+          _context180.p = 1;
+          _context180.n = 2;
           return fetch(MODERAR_URL, {
             method: "POST",
             headers: {
@@ -995,33 +995,33 @@ function _moderarTexto() {
             })
           });
         case 2:
-          r = _context179.v;
+          r = _context180.v;
           if (r.ok) {
-            _context179.n = 3;
+            _context180.n = 3;
             break;
           }
           console.warn("[moderarTexto] erro http:", r.status);
-          return _context179.a(2, {
+          return _context180.a(2, {
             ok: true,
             erro_servidor: true
           });
         case 3:
-          _context179.n = 4;
+          _context180.n = 4;
           return r.json();
         case 4:
-          data = _context179.v;
-          return _context179.a(2, data);
+          data = _context180.v;
+          return _context180.a(2, data);
         case 5:
-          _context179.p = 5;
-          _t202 = _context179.v;
-          console.warn("[moderarTexto] erro fetch:", _t202);
+          _context180.p = 5;
+          _t203 = _context180.v;
+          console.warn("[moderarTexto] erro fetch:", _t203);
           // Falha de rede: deixa passar (não punir user por problema técnico)
-          return _context179.a(2, {
+          return _context180.a(2, {
             ok: true,
             erro_rede: true
           });
       }
-    }, _callee177, null, [[1, 5]]);
+    }, _callee178, null, [[1, 5]]);
   }));
   return _moderarTexto.apply(this, arguments);
 }
@@ -1056,25 +1056,25 @@ function validarTextoUsuario(_x2) {
 // Marcador: campo `bio` começa com "[TESTE]" pra fácil identificação/limpeza
 // ─────────────────────────────────────────────────────────────────────
 function _validarTextoUsuario() {
-  _validarTextoUsuario = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee178(texto) {
+  _validarTextoUsuario = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee179(texto) {
     var r;
-    return _regenerator().w(function (_context180) {
-      while (1) switch (_context180.n) {
+    return _regenerator().w(function (_context181) {
+      while (1) switch (_context181.n) {
         case 0:
-          _context180.n = 1;
+          _context181.n = 1;
           return moderarTexto(texto);
         case 1:
-          r = _context180.v;
+          r = _context181.v;
           if (r.ok) {
-            _context180.n = 2;
+            _context181.n = 2;
             break;
           }
           mostrarAvisoModeracao();
-          return _context180.a(2, false);
+          return _context181.a(2, false);
         case 2:
-          return _context180.a(2, true);
+          return _context181.a(2, true);
       }
-    }, _callee178);
+    }, _callee179);
   }));
   return _validarTextoUsuario.apply(this, arguments);
 }
@@ -2431,16 +2431,16 @@ function preloadPrivacidadeCache(_x11, _x12) {
  *   const visiveis = await filtrarCapsulasVisiveis(momentosArr, user);
  */
 function _preloadPrivacidadeCache() {
-  _preloadPrivacidadeCache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee179(criadorIds, userAtualId) {
-    var familiaPorCriador, contatosPorCriador, agora, idsParaFetch, _iterator39, _step39, _cid2, cached, _yield$dbRead$from$se81, rows, error, grupos, _i8, _idsParaFetch, cid, _iterator40, _step40, row, grupo, _iterator41, _step41, _step41$value, _cid, _grupo, _t203, _t204, _t205;
-    return _regenerator().w(function (_context181) {
-      while (1) switch (_context181.p = _context181.n) {
+  _preloadPrivacidadeCache = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee180(criadorIds, userAtualId) {
+    var familiaPorCriador, contatosPorCriador, agora, idsParaFetch, _iterator39, _step39, _cid2, cached, _yield$dbRead$from$se81, rows, error, grupos, _i8, _idsParaFetch, cid, _iterator40, _step40, row, grupo, _iterator41, _step41, _step41$value, _cid, _grupo, _t204, _t205, _t206;
+    return _regenerator().w(function (_context182) {
+      while (1) switch (_context182.p = _context182.n) {
         case 0:
           if (!(!criadorIds || criadorIds.length === 0)) {
-            _context181.n = 1;
+            _context182.n = 1;
             break;
           }
-          return _context181.a(2, {
+          return _context182.a(2, {
             familiaPorCriador: new Map(),
             contatosPorCriador: new Map()
           });
@@ -2450,19 +2450,19 @@ function _preloadPrivacidadeCache() {
           agora = Date.now();
           idsParaFetch = [];
           _iterator39 = _createForOfIteratorHelper(criadorIds);
-          _context181.p = 2;
+          _context182.p = 2;
           _iterator39.s();
         case 3:
           if ((_step39 = _iterator39.n()).done) {
-            _context181.n = 6;
+            _context182.n = 6;
             break;
           }
           _cid2 = _step39.value;
           if (!(!_cid2 || _cid2 === userAtualId)) {
-            _context181.n = 4;
+            _context182.n = 4;
             break;
           }
-          return _context181.a(3, 5);
+          return _context182.a(3, 5);
         case 4:
           cached = window.__tnPrivacidadeCache.get(_cid2);
           if (cached && cached.expira > agora) {
@@ -2472,42 +2472,42 @@ function _preloadPrivacidadeCache() {
             idsParaFetch.push(_cid2);
           }
         case 5:
-          _context181.n = 3;
+          _context182.n = 3;
           break;
         case 6:
-          _context181.n = 8;
+          _context182.n = 8;
           break;
         case 7:
-          _context181.p = 7;
-          _t203 = _context181.v;
-          _iterator39.e(_t203);
+          _context182.p = 7;
+          _t204 = _context182.v;
+          _iterator39.e(_t204);
         case 8:
-          _context181.p = 8;
+          _context182.p = 8;
           _iterator39.f();
-          return _context181.f(8);
+          return _context182.f(8);
         case 9:
           if (!(idsParaFetch.length === 0)) {
-            _context181.n = 10;
+            _context182.n = 10;
             break;
           }
-          return _context181.a(2, {
+          return _context182.a(2, {
             familiaPorCriador: familiaPorCriador,
             contatosPorCriador: contatosPorCriador
           });
         case 10:
-          _context181.p = 10;
-          _context181.n = 11;
+          _context182.p = 10;
+          _context182.n = 11;
           return dbRead.from("contacts").select("user_id, contact_id, is_family")["in"]("user_id", idsParaFetch);
         case 11:
-          _yield$dbRead$from$se81 = _context181.v;
+          _yield$dbRead$from$se81 = _context182.v;
           rows = _yield$dbRead$from$se81.data;
           error = _yield$dbRead$from$se81.error;
           if (!error) {
-            _context181.n = 12;
+            _context182.n = 12;
             break;
           }
           console.warn("[PRIV] erro carregando cache:", error);
-          return _context181.a(2, {
+          return _context182.a(2, {
             familiaPorCriador: familiaPorCriador,
             contatosPorCriador: contatosPorCriador
           });
@@ -2522,39 +2522,39 @@ function _preloadPrivacidadeCache() {
             });
           }
           _iterator40 = _createForOfIteratorHelper(rows || []);
-          _context181.p = 13;
+          _context182.p = 13;
           _iterator40.s();
         case 14:
           if ((_step40 = _iterator40.n()).done) {
-            _context181.n = 17;
+            _context182.n = 17;
             break;
           }
           row = _step40.value;
           grupo = grupos.get(row.user_id);
           if (grupo) {
-            _context181.n = 15;
+            _context182.n = 15;
             break;
           }
-          return _context181.a(3, 16);
+          return _context182.a(3, 16);
         case 15:
           if (row.contact_id) {
             grupo.contatos.add(row.contact_id);
             if (row.is_family) grupo.familia.add(row.contact_id);
           }
         case 16:
-          _context181.n = 14;
+          _context182.n = 14;
           break;
         case 17:
-          _context181.n = 19;
+          _context182.n = 19;
           break;
         case 18:
-          _context181.p = 18;
-          _t204 = _context181.v;
-          _iterator40.e(_t204);
+          _context182.p = 18;
+          _t205 = _context182.v;
+          _iterator40.e(_t205);
         case 19:
-          _context181.p = 19;
+          _context182.p = 19;
           _iterator40.f();
-          return _context181.f(19);
+          return _context182.f(19);
         case 20:
           // Salva no cache + retorna
           _iterator41 = _createForOfIteratorHelper(grupos);
@@ -2574,19 +2574,19 @@ function _preloadPrivacidadeCache() {
           } finally {
             _iterator41.f();
           }
-          _context181.n = 22;
+          _context182.n = 22;
           break;
         case 21:
-          _context181.p = 21;
-          _t205 = _context181.v;
-          console.warn("[PRIV] exceção carregando cache:", _t205);
+          _context182.p = 21;
+          _t206 = _context182.v;
+          console.warn("[PRIV] exceção carregando cache:", _t206);
         case 22:
-          return _context181.a(2, {
+          return _context182.a(2, {
             familiaPorCriador: familiaPorCriador,
             contatosPorCriador: contatosPorCriador
           });
       }
-    }, _callee179, null, [[13, 18, 19, 20], [10, 21], [2, 7, 8, 9]]);
+    }, _callee180, null, [[13, 18, 19, 20], [10, 21], [2, 7, 8, 9]]);
   }));
   return _preloadPrivacidadeCache.apply(this, arguments);
 }
@@ -2594,16 +2594,16 @@ function filtrarCapsulasVisiveis(_x13, _x14) {
   return _filtrarCapsulasVisiveis.apply(this, arguments);
 } // Expor pra debug e uso global
 function _filtrarCapsulasVisiveis() {
-  _filtrarCapsulasVisiveis = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee180(momentos, userAtual) {
+  _filtrarCapsulasVisiveis = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee181(momentos, userAtual) {
     var criadores, _iterator42, _step42, m, ctx;
-    return _regenerator().w(function (_context182) {
-      while (1) switch (_context182.n) {
+    return _regenerator().w(function (_context183) {
+      while (1) switch (_context183.n) {
         case 0:
           if (!(!momentos || momentos.length === 0)) {
-            _context182.n = 1;
+            _context183.n = 1;
             break;
           }
-          return _context182.a(2, momentos || []);
+          return _context183.a(2, momentos || []);
         case 1:
           // Coleta criadores únicos das cápsulas que NÃO são do user atual
           criadores = new Set();
@@ -2620,15 +2620,15 @@ function _filtrarCapsulasVisiveis() {
           } finally {
             _iterator42.f();
           }
-          _context182.n = 2;
+          _context183.n = 2;
           return preloadPrivacidadeCache(_toConsumableArray(criadores), userAtual === null || userAtual === void 0 ? void 0 : userAtual.id);
         case 2:
-          ctx = _context182.v;
-          return _context182.a(2, momentos.filter(function (m) {
+          ctx = _context183.v;
+          return _context183.a(2, momentos.filter(function (m) {
             return usuarioPodeVerCapsula(m, userAtual, ctx);
           }));
       }
-    }, _callee180);
+    }, _callee181);
   }));
   return _filtrarCapsulasVisiveis.apply(this, arguments);
 }
@@ -2654,14 +2654,14 @@ function criarNotificacao(_x15) {
 //   );
 //   CREATE INDEX idx_reg_agora_cidade_data ON registrando_agora(cidade, dt_inicio, dt_fim);
 function _criarNotificacao() {
-  _criarNotificacao = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee181(_ref) {
-    var tipo, recipientId, actorId, _ref$momentoId, momentoId, _ref$meta, meta, _yield$db$from$insert14, data, error, _t206;
-    return _regenerator().w(function (_context183) {
-      while (1) switch (_context183.p = _context183.n) {
+  _criarNotificacao = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee182(_ref) {
+    var tipo, recipientId, actorId, _ref$momentoId, momentoId, _ref$meta, meta, _yield$db$from$insert14, data, error, _t207;
+    return _regenerator().w(function (_context184) {
+      while (1) switch (_context184.p = _context184.n) {
         case 0:
           tipo = _ref.tipo, recipientId = _ref.recipientId, actorId = _ref.actorId, _ref$momentoId = _ref.momentoId, momentoId = _ref$momentoId === void 0 ? null : _ref$momentoId, _ref$meta = _ref.meta, meta = _ref$meta === void 0 ? null : _ref$meta;
           if (!(!recipientId || !actorId || recipientId === actorId)) {
-            _context183.n = 1;
+            _context184.n = 1;
             break;
           }
           tnLog("[NOTIF] ignorada:", {
@@ -2670,7 +2670,7 @@ function _criarNotificacao() {
             actorId: actorId,
             motivo: recipientId === actorId ? "self" : "missing id"
           });
-          return _context183.a(2);
+          return _context184.a(2);
         case 1:
           tnLog("[NOTIF] criando:", {
             tipo: tipo,
@@ -2679,8 +2679,8 @@ function _criarNotificacao() {
             momentoId: momentoId,
             meta: meta
           });
-          _context183.p = 2;
-          _context183.n = 3;
+          _context184.p = 2;
+          _context184.n = 3;
           return db.from("notificacoes").insert({
             user_id: recipientId,
             tipo: tipo,
@@ -2689,7 +2689,7 @@ function _criarNotificacao() {
             meta: meta
           }).select();
         case 3:
-          _yield$db$from$insert14 = _context183.v;
+          _yield$db$from$insert14 = _context184.v;
           data = _yield$db$from$insert14.data;
           error = _yield$db$from$insert14.error;
           if (error) {
@@ -2702,16 +2702,16 @@ function _criarNotificacao() {
           } else {
             tnLog("[NOTIF] criada com sucesso:", data);
           }
-          _context183.n = 5;
+          _context184.n = 5;
           break;
         case 4:
-          _context183.p = 4;
-          _t206 = _context183.v;
-          console.error("[NOTIF] exceção:", _t206);
+          _context184.p = 4;
+          _t207 = _context184.v;
+          console.error("[NOTIF] exceção:", _t207);
         case 5:
-          return _context183.a(2);
+          return _context184.a(2);
       }
-    }, _callee181, null, [[2, 4]]);
+    }, _callee182, null, [[2, 4]]);
   }));
   return _criarNotificacao.apply(this, arguments);
 }
@@ -2719,10 +2719,10 @@ function criarRegistrandoAgora(_x16) {
   return _criarRegistrandoAgora.apply(this, arguments);
 } // Busca outros usuários com período sobreposto na MESMA cidade
 function _criarRegistrandoAgora() {
-  _criarRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee182(_ref2) {
-    var userId, cidade, uf, pais, regiao, lugar, dtInicio, dtFim, frase, privacidade, faltam, _yield$db$from$insert15, data, error, _t207;
-    return _regenerator().w(function (_context184) {
-      while (1) switch (_context184.p = _context184.n) {
+  _criarRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee183(_ref2) {
+    var userId, cidade, uf, pais, regiao, lugar, dtInicio, dtFim, frase, privacidade, faltam, _yield$db$from$insert15, data, error, _t208;
+    return _regenerator().w(function (_context185) {
+      while (1) switch (_context185.p = _context185.n) {
         case 0:
           userId = _ref2.userId, cidade = _ref2.cidade, uf = _ref2.uf, pais = _ref2.pais, regiao = _ref2.regiao, lugar = _ref2.lugar, dtInicio = _ref2.dtInicio, dtFim = _ref2.dtFim, frase = _ref2.frase, privacidade = _ref2.privacidade;
           // v319g: diagnóstico detalhado de qual campo falta
@@ -2732,18 +2732,18 @@ function _criarRegistrandoAgora() {
           if (!dtInicio) faltam.push("mês de início");
           if (!dtFim) faltam.push("mês de fim");
           if (!(faltam.length > 0)) {
-            _context184.n = 1;
+            _context185.n = 1;
             break;
           }
-          return _context184.a(2, {
+          return _context185.a(2, {
             data: null,
             error: {
               message: "faltam: " + faltam.join(", ")
             }
           });
         case 1:
-          _context184.p = 1;
-          _context184.n = 2;
+          _context185.p = 1;
+          _context185.n = 2;
           return db.from("registrando_agora").insert({
             user_id: userId,
             cidade: cidade,
@@ -2757,35 +2757,35 @@ function _criarRegistrandoAgora() {
             privacidade: privacidade || "contatos"
           }).select().single();
         case 2:
-          _yield$db$from$insert15 = _context184.v;
+          _yield$db$from$insert15 = _context185.v;
           data = _yield$db$from$insert15.data;
           error = _yield$db$from$insert15.error;
           if (!error) {
-            _context184.n = 3;
+            _context185.n = 3;
             break;
           }
           console.error("[REG_AGORA] erro insert:", error);
-          return _context184.a(2, {
+          return _context185.a(2, {
             data: null,
             error: error
           });
         case 3:
-          return _context184.a(2, {
+          return _context185.a(2, {
             data: data,
             error: null
           });
         case 4:
-          _context184.p = 4;
-          _t207 = _context184.v;
-          console.error("[REG_AGORA] exceção:", _t207);
-          return _context184.a(2, {
+          _context185.p = 4;
+          _t208 = _context185.v;
+          console.error("[REG_AGORA] exceção:", _t208);
+          return _context185.a(2, {
             data: null,
             error: {
-              message: _t207.message || "erro desconhecido"
+              message: _t208.message || "erro desconhecido"
             }
           });
       }
-    }, _callee182, null, [[1, 4]]);
+    }, _callee183, null, [[1, 4]]);
   }));
   return _criarRegistrandoAgora.apply(this, arguments);
 }
@@ -2793,42 +2793,42 @@ function buscarCruzamentosRegistrandoAgora(_x17) {
   return _buscarCruzamentosRegistrandoAgora.apply(this, arguments);
 } // Cria notificações cruzadas pra todos os matches
 function _buscarCruzamentosRegistrandoAgora() {
-  _buscarCruzamentosRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee183(_ref3) {
-    var cidade, dtInicio, dtFim, excluirUserId, _yield$dbRead$from$se82, data, error, _t208;
-    return _regenerator().w(function (_context185) {
-      while (1) switch (_context185.p = _context185.n) {
+  _buscarCruzamentosRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee184(_ref3) {
+    var cidade, dtInicio, dtFim, excluirUserId, _yield$dbRead$from$se82, data, error, _t209;
+    return _regenerator().w(function (_context186) {
+      while (1) switch (_context186.p = _context186.n) {
         case 0:
           cidade = _ref3.cidade, dtInicio = _ref3.dtInicio, dtFim = _ref3.dtFim, excluirUserId = _ref3.excluirUserId;
           if (!(!cidade || !dtInicio || !dtFim)) {
-            _context185.n = 1;
+            _context186.n = 1;
             break;
           }
-          return _context185.a(2, []);
+          return _context186.a(2, []);
         case 1:
-          _context185.p = 1;
-          _context185.n = 2;
+          _context186.p = 1;
+          _context186.n = 2;
           return dbRead.from("registrando_agora").select("*, profiles!registrando_agora_user_id_fkey(id,name,first_name,avatar_url)").eq("cidade", cidade).lte("dt_inicio", dtFim) // começa antes ou no fim do meu
           .gte("dt_fim", dtInicio) // termina depois ou no início do meu
           .neq("user_id", excluirUserId);
         case 2:
-          _yield$dbRead$from$se82 = _context185.v;
+          _yield$dbRead$from$se82 = _context186.v;
           data = _yield$dbRead$from$se82.data;
           error = _yield$dbRead$from$se82.error;
           if (!error) {
-            _context185.n = 3;
+            _context186.n = 3;
             break;
           }
           console.error("[REG_AGORA] erro busca:", error);
-          return _context185.a(2, []);
+          return _context186.a(2, []);
         case 3:
-          return _context185.a(2, data || []);
+          return _context186.a(2, data || []);
         case 4:
-          _context185.p = 4;
-          _t208 = _context185.v;
-          console.error("[REG_AGORA] exceção busca:", _t208);
-          return _context185.a(2, []);
+          _context186.p = 4;
+          _t209 = _context186.v;
+          console.error("[REG_AGORA] exceção busca:", _t209);
+          return _context186.a(2, []);
       }
-    }, _callee183, null, [[1, 4]]);
+    }, _callee184, null, [[1, 4]]);
   }));
   return _buscarCruzamentosRegistrandoAgora.apply(this, arguments);
 }
@@ -2839,13 +2839,13 @@ function notificarCruzamentosRegistrandoAgora(_x18) {
 // Tabela: capsula_aguardando (capsula_id, user_id, criado_em, notificado_em)
 // Privado: o criador da cápsula não sabe quem marcou.
 function _notificarCruzamentosRegistrandoAgora() {
-  _notificarCruzamentosRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee184(_ref4) {
-    var userId, cidade, dtInicio, dtFim, registroId, cruzamentos, _iterator43, _step43, c, _t209;
-    return _regenerator().w(function (_context186) {
-      while (1) switch (_context186.p = _context186.n) {
+  _notificarCruzamentosRegistrandoAgora = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee185(_ref4) {
+    var userId, cidade, dtInicio, dtFim, registroId, cruzamentos, _iterator43, _step43, c, _t210;
+    return _regenerator().w(function (_context187) {
+      while (1) switch (_context187.p = _context187.n) {
         case 0:
           userId = _ref4.userId, cidade = _ref4.cidade, dtInicio = _ref4.dtInicio, dtFim = _ref4.dtFim, registroId = _ref4.registroId;
-          _context186.n = 1;
+          _context187.n = 1;
           return buscarCruzamentosRegistrandoAgora({
             cidade: cidade,
             dtInicio: dtInicio,
@@ -2853,17 +2853,17 @@ function _notificarCruzamentosRegistrandoAgora() {
             excluirUserId: userId
           });
         case 1:
-          cruzamentos = _context186.v;
+          cruzamentos = _context187.v;
           _iterator43 = _createForOfIteratorHelper(cruzamentos);
-          _context186.p = 2;
+          _context187.p = 2;
           _iterator43.s();
         case 3:
           if ((_step43 = _iterator43.n()).done) {
-            _context186.n = 6;
+            _context187.n = 6;
             break;
           }
           c = _step43.value;
-          _context186.n = 4;
+          _context187.n = 4;
           return criarNotificacao({
             tipo: "registrando_agora_cruzou",
             recipientId: c.user_id,
@@ -2877,7 +2877,7 @@ function _notificarCruzamentosRegistrandoAgora() {
             }
           });
         case 4:
-          _context186.n = 5;
+          _context187.n = 5;
           return criarNotificacao({
             tipo: "registrando_agora_cruzou",
             recipientId: userId,
@@ -2891,23 +2891,23 @@ function _notificarCruzamentosRegistrandoAgora() {
             }
           });
         case 5:
-          _context186.n = 3;
+          _context187.n = 3;
           break;
         case 6:
-          _context186.n = 8;
+          _context187.n = 8;
           break;
         case 7:
-          _context186.p = 7;
-          _t209 = _context186.v;
-          _iterator43.e(_t209);
+          _context187.p = 7;
+          _t210 = _context187.v;
+          _iterator43.e(_t210);
         case 8:
-          _context186.p = 8;
+          _context187.p = 8;
           _iterator43.f();
-          return _context186.f(8);
+          return _context187.f(8);
         case 9:
-          return _context186.a(2, cruzamentos.length);
+          return _context187.a(2, cruzamentos.length);
       }
-    }, _callee184, null, [[2, 7, 8, 9]]);
+    }, _callee185, null, [[2, 7, 8, 9]]);
   }));
   return _notificarCruzamentosRegistrandoAgora.apply(this, arguments);
 }
@@ -2915,21 +2915,21 @@ function aguardarCapsula(_x19) {
   return _aguardarCapsula.apply(this, arguments);
 }
 function _aguardarCapsula() {
-  _aguardarCapsula = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee185(_ref5) {
-    var capsulaId, userId, _yield$db$from$insert16, data, error, _yield$dbRead$from$se83, cap, _t210, _t211;
-    return _regenerator().w(function (_context187) {
-      while (1) switch (_context187.p = _context187.n) {
+  _aguardarCapsula = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee186(_ref5) {
+    var capsulaId, userId, _yield$db$from$insert16, data, error, _yield$dbRead$from$se83, cap, _t211, _t212;
+    return _regenerator().w(function (_context188) {
+      while (1) switch (_context188.p = _context188.n) {
         case 0:
           capsulaId = _ref5.capsulaId, userId = _ref5.userId;
           if (!(!capsulaId || !userId)) {
-            _context187.n = 1;
+            _context188.n = 1;
             break;
           }
           console.warn("[AGUARDAR] faltam ids:", {
             capsulaId: capsulaId,
             userId: userId
           });
-          return _context187.a(2, {
+          return _context188.a(2, {
             ok: false,
             erro: "faltam ids"
           });
@@ -2938,26 +2938,26 @@ function _aguardarCapsula() {
             capsulaId: capsulaId,
             userId: userId
           });
-          _context187.p = 2;
-          _context187.n = 3;
+          _context188.p = 2;
+          _context188.n = 3;
           return db.from("capsula_aguardando").insert({
             capsula_id: capsulaId,
             user_id: userId
           }).select();
         case 3:
-          _yield$db$from$insert16 = _context187.v;
+          _yield$db$from$insert16 = _context188.v;
           data = _yield$db$from$insert16.data;
           error = _yield$db$from$insert16.error;
           if (!error) {
-            _context187.n = 5;
+            _context188.n = 5;
             break;
           }
           if (!(error.code === "23505")) {
-            _context187.n = 4;
+            _context188.n = 4;
             break;
           }
           tnLog("[AGUARDAR] já aguardava (unique violation) — ok");
-          return _context187.a(2, {
+          return _context188.a(2, {
             ok: true,
             jaAguardava: true
           });
@@ -2968,7 +2968,7 @@ function _aguardarCapsula() {
             details: error.details,
             hint: error.hint
           });
-          return _context187.a(2, {
+          return _context188.a(2, {
             ok: false,
             erro: error.message,
             code: error.code
@@ -2976,17 +2976,17 @@ function _aguardarCapsula() {
         case 5:
           tnLog("[AGUARDAR] sucesso:", data);
           // v321n: notifica dono da cápsula que alguém quer ver
-          _context187.p = 6;
-          _context187.n = 7;
+          _context188.p = 6;
+          _context188.n = 7;
           return dbRead.from("momentos").select("user_id, lugar, capsula_dimensao").eq("id", capsulaId).maybeSingle();
         case 7:
-          _yield$dbRead$from$se83 = _context187.v;
+          _yield$dbRead$from$se83 = _context188.v;
           cap = _yield$dbRead$from$se83.data;
           if (!(cap && cap.user_id && cap.user_id !== userId)) {
-            _context187.n = 8;
+            _context188.n = 8;
             break;
           }
-          _context187.n = 8;
+          _context188.n = 8;
           return criarNotificacao({
             tipo: "capsula_aguardada_por",
             recipientId: cap.user_id,
@@ -2998,27 +2998,27 @@ function _aguardarCapsula() {
             }
           });
         case 8:
-          _context187.n = 10;
+          _context188.n = 10;
           break;
         case 9:
-          _context187.p = 9;
-          _t210 = _context187.v;
-          console.warn("[AGUARDAR] notif dono falhou:", _t210);
+          _context188.p = 9;
+          _t211 = _context188.v;
+          console.warn("[AGUARDAR] notif dono falhou:", _t211);
         case 10:
-          return _context187.a(2, {
+          return _context188.a(2, {
             ok: true,
             data: data
           });
         case 11:
-          _context187.p = 11;
-          _t211 = _context187.v;
-          console.error("[AGUARDAR] exceção:", _t211);
-          return _context187.a(2, {
+          _context188.p = 11;
+          _t212 = _context188.v;
+          console.error("[AGUARDAR] exceção:", _t212);
+          return _context188.a(2, {
             ok: false,
-            erro: _t211.message
+            erro: _t212.message
           });
       }
-    }, _callee185, null, [[6, 9], [2, 11]]);
+    }, _callee186, null, [[6, 9], [2, 11]]);
   }));
   return _aguardarCapsula.apply(this, arguments);
 }
@@ -3026,36 +3026,36 @@ function desmarcarAguardo(_x20) {
   return _desmarcarAguardo.apply(this, arguments);
 }
 function _desmarcarAguardo() {
-  _desmarcarAguardo = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee186(_ref6) {
-    var capsulaId, userId, _t212;
-    return _regenerator().w(function (_context188) {
-      while (1) switch (_context188.p = _context188.n) {
+  _desmarcarAguardo = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee187(_ref6) {
+    var capsulaId, userId, _t213;
+    return _regenerator().w(function (_context189) {
+      while (1) switch (_context189.p = _context189.n) {
         case 0:
           capsulaId = _ref6.capsulaId, userId = _ref6.userId;
           if (!(!capsulaId || !userId)) {
-            _context188.n = 1;
+            _context189.n = 1;
             break;
           }
-          return _context188.a(2, {
+          return _context189.a(2, {
             ok: false
           });
         case 1:
-          _context188.p = 1;
-          _context188.n = 2;
+          _context189.p = 1;
+          _context189.n = 2;
           return db.from("capsula_aguardando")["delete"]().eq("capsula_id", capsulaId).eq("user_id", userId);
         case 2:
-          return _context188.a(2, {
+          return _context189.a(2, {
             ok: true
           });
         case 3:
-          _context188.p = 3;
-          _t212 = _context188.v;
-          console.error("[DESMARCAR-AGUARDO] exceção:", _t212);
-          return _context188.a(2, {
+          _context189.p = 3;
+          _t213 = _context189.v;
+          console.error("[DESMARCAR-AGUARDO] exceção:", _t213);
+          return _context189.a(2, {
             ok: false
           });
       }
-    }, _callee186, null, [[1, 3]]);
+    }, _callee187, null, [[1, 3]]);
   }));
   return _desmarcarAguardo.apply(this, arguments);
 }
@@ -3063,27 +3063,27 @@ function estouAguardando(_x21) {
   return _estouAguardando.apply(this, arguments);
 } // v193: Marcar cápsula como revelada pra este user (ritual de abertura)
 function _estouAguardando() {
-  _estouAguardando = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee187(_ref7) {
-    var capsulaId, userId, _yield$dbRead$from$se84, data, error, _t213;
-    return _regenerator().w(function (_context189) {
-      while (1) switch (_context189.p = _context189.n) {
+  _estouAguardando = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee188(_ref7) {
+    var capsulaId, userId, _yield$dbRead$from$se84, data, error, _t214;
+    return _regenerator().w(function (_context190) {
+      while (1) switch (_context190.p = _context190.n) {
         case 0:
           capsulaId = _ref7.capsulaId, userId = _ref7.userId;
           if (!(!capsulaId || !userId)) {
-            _context189.n = 1;
+            _context190.n = 1;
             break;
           }
-          return _context189.a(2, false);
+          return _context190.a(2, false);
         case 1:
-          _context189.p = 1;
-          _context189.n = 2;
+          _context190.p = 1;
+          _context190.n = 2;
           return dbRead.from("capsula_aguardando").select("id").eq("capsula_id", capsulaId).eq("user_id", userId).limit(1);
         case 2:
-          _yield$dbRead$from$se84 = _context189.v;
+          _yield$dbRead$from$se84 = _context190.v;
           data = _yield$dbRead$from$se84.data;
           error = _yield$dbRead$from$se84.error;
           if (!error) {
-            _context189.n = 3;
+            _context190.n = 3;
             break;
           }
           console.error("[AGUARDAR] ERRO na leitura:", {
@@ -3091,16 +3091,16 @@ function _estouAguardando() {
             code: error.code,
             hint: error.hint
           });
-          return _context189.a(2, false);
+          return _context190.a(2, false);
         case 3:
-          return _context189.a(2, !!(data && data.length > 0));
+          return _context190.a(2, !!(data && data.length > 0));
         case 4:
-          _context189.p = 4;
-          _t213 = _context189.v;
-          console.error("[AGUARDAR] exceção na leitura:", _t213);
-          return _context189.a(2, false);
+          _context190.p = 4;
+          _t214 = _context190.v;
+          console.error("[AGUARDAR] exceção na leitura:", _t214);
+          return _context190.a(2, false);
       }
-    }, _callee187, null, [[1, 4]]);
+    }, _callee188, null, [[1, 4]]);
   }));
   return _estouAguardando.apply(this, arguments);
 }
@@ -3108,21 +3108,21 @@ function revelarCapsula(_x22) {
   return _revelarCapsula.apply(this, arguments);
 }
 function _revelarCapsula() {
-  _revelarCapsula = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee188(_ref8) {
-    var capsulaId, userId, agora, _yield$dbRead$from$se85, existente, jaRevelaraAntes, _yield$db$from$update9, error, _yield$db$from$insert17, _error6, _yield$dbRead$from$se86, cap, _t214, _t215;
-    return _regenerator().w(function (_context190) {
-      while (1) switch (_context190.p = _context190.n) {
+  _revelarCapsula = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee189(_ref8) {
+    var capsulaId, userId, agora, _yield$dbRead$from$se85, existente, jaRevelaraAntes, _yield$db$from$update9, error, _yield$db$from$insert17, _error6, _yield$dbRead$from$se86, cap, _t215, _t216;
+    return _regenerator().w(function (_context191) {
+      while (1) switch (_context191.p = _context191.n) {
         case 0:
           capsulaId = _ref8.capsulaId, userId = _ref8.userId;
           if (!(!capsulaId || !userId)) {
-            _context190.n = 1;
+            _context191.n = 1;
             break;
           }
           console.warn("[REVELAR] faltam ids:", {
             capsulaId: capsulaId,
             userId: userId
           });
-          return _context190.a(2, {
+          return _context191.a(2, {
             ok: false
           });
         case 1:
@@ -3130,82 +3130,82 @@ function _revelarCapsula() {
             capsulaId: capsulaId,
             userId: userId
           });
-          _context190.p = 2;
+          _context191.p = 2;
           // Upsert: se já tem registro em capsula_aguardando, só atualiza revelada_em.
           // Se não tem (dono da cápsula nunca marca aguardar, por ex), cria o registro.
           agora = new Date().toISOString();
-          _context190.n = 3;
+          _context191.n = 3;
           return dbRead.from("capsula_aguardando").select("id, revelada_em").eq("capsula_id", capsulaId).eq("user_id", userId).limit(1);
         case 3:
-          _yield$dbRead$from$se85 = _context190.v;
+          _yield$dbRead$from$se85 = _context191.v;
           existente = _yield$dbRead$from$se85.data;
           // v321n: só notifica se for primeira revelação deste user
           jaRevelaraAntes = existente && existente.length > 0 && existente[0].revelada_em;
           if (!(existente && existente.length > 0)) {
-            _context190.n = 6;
+            _context191.n = 6;
             break;
           }
-          _context190.n = 4;
+          _context191.n = 4;
           return db.from("capsula_aguardando").update({
             revelada_em: agora
           }).eq("id", existente[0].id);
         case 4:
-          _yield$db$from$update9 = _context190.v;
+          _yield$db$from$update9 = _context191.v;
           error = _yield$db$from$update9.error;
           if (!error) {
-            _context190.n = 5;
+            _context191.n = 5;
             break;
           }
           console.error("[REVELAR] erro update:", error);
-          return _context190.a(2, {
+          return _context191.a(2, {
             ok: false
           });
         case 5:
-          _context190.n = 9;
+          _context191.n = 9;
           break;
         case 6:
-          _context190.n = 7;
+          _context191.n = 7;
           return db.from("capsula_aguardando").insert({
             capsula_id: capsulaId,
             user_id: userId,
             revelada_em: agora
           });
         case 7:
-          _yield$db$from$insert17 = _context190.v;
+          _yield$db$from$insert17 = _context191.v;
           _error6 = _yield$db$from$insert17.error;
           if (!(_error6 && _error6.code !== "23505")) {
-            _context190.n = 8;
+            _context191.n = 8;
             break;
           }
           console.error("[REVELAR] erro insert:", _error6);
-          return _context190.a(2, {
+          return _context191.a(2, {
             ok: false
           });
         case 8:
           if (!(_error6 && _error6.code === "23505")) {
-            _context190.n = 9;
+            _context191.n = 9;
             break;
           }
-          _context190.n = 9;
+          _context191.n = 9;
           return db.from("capsula_aguardando").update({
             revelada_em: agora
           }).eq("capsula_id", capsulaId).eq("user_id", userId);
         case 9:
           if (jaRevelaraAntes) {
-            _context190.n = 14;
+            _context191.n = 14;
             break;
           }
-          _context190.p = 10;
-          _context190.n = 11;
+          _context191.p = 10;
+          _context191.n = 11;
           return dbRead.from("momentos").select("user_id, lugar, capsula_dimensao").eq("id", capsulaId).maybeSingle();
         case 11:
-          _yield$dbRead$from$se86 = _context190.v;
+          _yield$dbRead$from$se86 = _context191.v;
           cap = _yield$dbRead$from$se86.data;
           if (!(cap && cap.user_id && cap.user_id !== userId)) {
-            _context190.n = 12;
+            _context191.n = 12;
             break;
           }
-          _context190.n = 12;
+          _context191.n = 12;
           return criarNotificacao({
             tipo: "capsula_revelada_por",
             recipientId: cap.user_id,
@@ -3217,25 +3217,25 @@ function _revelarCapsula() {
             }
           });
         case 12:
-          _context190.n = 14;
+          _context191.n = 14;
           break;
         case 13:
-          _context190.p = 13;
-          _t214 = _context190.v;
-          console.warn("[REVELAR] notif dono falhou:", _t214);
+          _context191.p = 13;
+          _t215 = _context191.v;
+          console.warn("[REVELAR] notif dono falhou:", _t215);
         case 14:
-          return _context190.a(2, {
+          return _context191.a(2, {
             ok: true
           });
         case 15:
-          _context190.p = 15;
-          _t215 = _context190.v;
-          console.error("[REVELAR] exceção:", _t215);
-          return _context190.a(2, {
+          _context191.p = 15;
+          _t216 = _context191.v;
+          console.error("[REVELAR] exceção:", _t216);
+          return _context191.a(2, {
             ok: false
           });
       }
-    }, _callee188, null, [[10, 13], [2, 15]]);
+    }, _callee189, null, [[10, 13], [2, 15]]);
   }));
   return _revelarCapsula.apply(this, arguments);
 }
@@ -3251,39 +3251,39 @@ function euJaRevelei(_x23) {
 //              data passou + revelou → "aberta"
 //              data passou + não aguardou (e não dono) → "aberta" (v193 simplificado)
 function _euJaRevelei() {
-  _euJaRevelei = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee189(_ref9) {
-    var capsulaId, userId, _yield$dbRead$from$se87, data, error, _t216;
-    return _regenerator().w(function (_context191) {
-      while (1) switch (_context191.p = _context191.n) {
+  _euJaRevelei = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee190(_ref9) {
+    var capsulaId, userId, _yield$dbRead$from$se87, data, error, _t217;
+    return _regenerator().w(function (_context192) {
+      while (1) switch (_context192.p = _context192.n) {
         case 0:
           capsulaId = _ref9.capsulaId, userId = _ref9.userId;
           if (!(!capsulaId || !userId)) {
-            _context191.n = 1;
+            _context192.n = 1;
             break;
           }
-          return _context191.a(2, false);
+          return _context192.a(2, false);
         case 1:
-          _context191.p = 1;
-          _context191.n = 2;
+          _context192.p = 1;
+          _context192.n = 2;
           return dbRead.from("capsula_aguardando").select("revelada_em").eq("capsula_id", capsulaId).eq("user_id", userId).limit(1);
         case 2:
-          _yield$dbRead$from$se87 = _context191.v;
+          _yield$dbRead$from$se87 = _context192.v;
           data = _yield$dbRead$from$se87.data;
           error = _yield$dbRead$from$se87.error;
           if (!error) {
-            _context191.n = 3;
+            _context192.n = 3;
             break;
           }
           console.error("[REVELAR] erro leitura:", error);
-          return _context191.a(2, false);
+          return _context192.a(2, false);
         case 3:
-          return _context191.a(2, !!(data && data.length > 0 && data[0].revelada_em));
+          return _context192.a(2, !!(data && data.length > 0 && data[0].revelada_em));
         case 4:
-          _context191.p = 4;
-          _t216 = _context191.v;
-          return _context191.a(2, false);
+          _context192.p = 4;
+          _t217 = _context192.v;
+          return _context192.a(2, false);
       }
-    }, _callee189, null, [[1, 4]]);
+    }, _callee190, null, [[1, 4]]);
   }));
   return _euJaRevelei.apply(this, arguments);
 }
@@ -3330,72 +3330,72 @@ function verificarCapsulasAguardadas(_x24) {
   return _verificarCapsulasAguardadas.apply(this, arguments);
 } // ── Unsplash API (fotos automáticas pra cidades) ─────────────
 function _verificarCapsulasAguardadas() {
-  _verificarCapsulasAguardadas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee190(userId) {
-    var _yield$dbRead$from$se88, aguardos, _iterator44, _step44, a, _yield$dbRead$from$se89, caps, cap, abreEm, alvo, _t217, _t218;
-    return _regenerator().w(function (_context192) {
-      while (1) switch (_context192.p = _context192.n) {
+  _verificarCapsulasAguardadas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee191(userId) {
+    var _yield$dbRead$from$se88, aguardos, _iterator44, _step44, a, _yield$dbRead$from$se89, caps, cap, abreEm, alvo, _t218, _t219;
+    return _regenerator().w(function (_context193) {
+      while (1) switch (_context193.p = _context193.n) {
         case 0:
           if (userId) {
-            _context192.n = 1;
+            _context193.n = 1;
             break;
           }
-          return _context192.a(2);
+          return _context193.a(2);
         case 1:
-          _context192.p = 1;
-          _context192.n = 2;
+          _context193.p = 1;
+          _context193.n = 2;
           return dbRead.from("capsula_aguardando").select("id, capsula_id, user_id").eq("user_id", userId).is("notificado_em", null);
         case 2:
-          _yield$dbRead$from$se88 = _context192.v;
+          _yield$dbRead$from$se88 = _context193.v;
           aguardos = _yield$dbRead$from$se88.data;
           if (!(!aguardos || aguardos.length === 0)) {
-            _context192.n = 3;
+            _context193.n = 3;
             break;
           }
-          return _context192.a(2);
+          return _context193.a(2);
         case 3:
           // Pra cada aguardo, verifica se a cápsula já abriu
           _iterator44 = _createForOfIteratorHelper(aguardos);
-          _context192.p = 4;
+          _context193.p = 4;
           _iterator44.s();
         case 5:
           if ((_step44 = _iterator44.n()).done) {
-            _context192.n = 13;
+            _context193.n = 13;
             break;
           }
           a = _step44.value;
-          _context192.n = 6;
+          _context193.n = 6;
           return dbRead.from("momentos").select("*").eq("id", a.capsula_id).limit(1);
         case 6:
-          _yield$dbRead$from$se89 = _context192.v;
+          _yield$dbRead$from$se89 = _context193.v;
           caps = _yield$dbRead$from$se89.data;
           if (!(!caps || caps.length === 0)) {
-            _context192.n = 7;
+            _context193.n = 7;
             break;
           }
-          return _context192.a(3, 12);
+          return _context193.a(3, 12);
         case 7:
           cap = caps[0];
           abreEm = cap.ts || cap.capsula_revela_em || cap.capsula_abre_em || cap.data_abertura || cap.capsula_data_referencia || null;
           if (abreEm) {
-            _context192.n = 8;
+            _context193.n = 8;
             break;
           }
-          return _context192.a(3, 12);
+          return _context193.a(3, 12);
         case 8:
           alvo = new Date(abreEm);
           if (!isNaN(alvo.getTime())) {
-            _context192.n = 9;
+            _context193.n = 9;
             break;
           }
-          return _context192.a(3, 12);
+          return _context193.a(3, 12);
         case 9:
           if (!(alvo > new Date())) {
-            _context192.n = 10;
+            _context193.n = 10;
             break;
           }
-          return _context192.a(3, 12);
+          return _context193.a(3, 12);
         case 10:
-          _context192.n = 11;
+          _context193.n = 11;
           return criarNotificacao({
             tipo: "capsula_revelada",
             recipientId: userId,
@@ -3407,35 +3407,35 @@ function _verificarCapsulasAguardadas() {
             }
           });
         case 11:
-          _context192.n = 12;
+          _context193.n = 12;
           return db.from("capsula_aguardando").update({
             notificado_em: new Date().toISOString()
           }).eq("id", a.id);
         case 12:
-          _context192.n = 5;
+          _context193.n = 5;
           break;
         case 13:
-          _context192.n = 15;
+          _context193.n = 15;
           break;
         case 14:
-          _context192.p = 14;
-          _t217 = _context192.v;
-          _iterator44.e(_t217);
+          _context193.p = 14;
+          _t218 = _context193.v;
+          _iterator44.e(_t218);
         case 15:
-          _context192.p = 15;
+          _context193.p = 15;
           _iterator44.f();
-          return _context192.f(15);
+          return _context193.f(15);
         case 16:
-          _context192.n = 18;
+          _context193.n = 18;
           break;
         case 17:
-          _context192.p = 17;
-          _t218 = _context192.v;
-          console.error("[VERIFICAR-AGUARDADAS] exceção:", _t218);
+          _context193.p = 17;
+          _t219 = _context193.v;
+          console.error("[VERIFICAR-AGUARDADAS] exceção:", _t219);
         case 18:
-          return _context192.a(2);
+          return _context193.a(2);
       }
-    }, _callee190, null, [[4, 14, 15, 16], [1, 17]]);
+    }, _callee191, null, [[4, 14, 15, 16], [1, 17]]);
   }));
   return _verificarCapsulasAguardadas.apply(this, arguments);
 }
@@ -3446,51 +3446,51 @@ function buscarFotoLugarUnsplash(_x25, _x26, _x27) {
   return _buscarFotoLugarUnsplash.apply(this, arguments);
 } // Notifica o Unsplash que uma foto foi "usada" (requisito de atribuição)
 function _buscarFotoLugarUnsplash() {
-  _buscarFotoLugarUnsplash = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee191(cidade, estado, pais) {
-    var partes, query, _candidata$urls, _candidata$urls2, _candidata$urls3, _candidata$user, _candidata$user2, _candidata$links, r, data, candidata, _t219;
-    return _regenerator().w(function (_context193) {
-      while (1) switch (_context193.p = _context193.n) {
+  _buscarFotoLugarUnsplash = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee192(cidade, estado, pais) {
+    var partes, query, _candidata$urls, _candidata$urls2, _candidata$urls3, _candidata$user, _candidata$user2, _candidata$links, r, data, candidata, _t220;
+    return _regenerator().w(function (_context194) {
+      while (1) switch (_context194.p = _context194.n) {
         case 0:
           if (cidade) {
-            _context193.n = 1;
+            _context194.n = 1;
             break;
           }
-          return _context193.a(2, null);
+          return _context194.a(2, null);
         case 1:
           partes = [cidade, estado, pais].filter(Boolean).join(" ");
           query = encodeURIComponent(partes);
-          _context193.p = 2;
-          _context193.n = 3;
+          _context194.p = 2;
+          _context194.n = 3;
           return fetch("https://api.unsplash.com/search/photos?query=".concat(query, "&per_page=5&orientation=landscape&content_filter=high&client_id=").concat(UNSPLASH_ACCESS_KEY));
         case 3:
-          r = _context193.v;
+          r = _context194.v;
           if (r.ok) {
-            _context193.n = 4;
+            _context194.n = 4;
             break;
           }
-          return _context193.a(2, null);
+          return _context194.a(2, null);
         case 4:
-          _context193.n = 5;
+          _context194.n = 5;
           return r.json();
         case 5:
-          data = _context193.v;
+          data = _context194.v;
           if (!(!data.results || data.results.length === 0)) {
-            _context193.n = 6;
+            _context194.n = 6;
             break;
           }
-          return _context193.a(2, null);
+          return _context194.a(2, null);
         case 6:
           // Pega a primeira foto com likes >= 10 (filtro de qualidade) ou a 1ª se nenhuma passar
           candidata = data.results.find(function (p) {
             return p.likes >= 10;
           }) || data.results[0];
           if (candidata) {
-            _context193.n = 7;
+            _context194.n = 7;
             break;
           }
-          return _context193.a(2, null);
+          return _context194.a(2, null);
         case 7:
-          return _context193.a(2, {
+          return _context194.a(2, {
             url: ((_candidata$urls = candidata.urls) === null || _candidata$urls === void 0 ? void 0 : _candidata$urls.regular) || ((_candidata$urls2 = candidata.urls) === null || _candidata$urls2 === void 0 ? void 0 : _candidata$urls2.small),
             urlSmall: (_candidata$urls3 = candidata.urls) === null || _candidata$urls3 === void 0 ? void 0 : _candidata$urls3.small,
             photographer: ((_candidata$user = candidata.user) === null || _candidata$user === void 0 ? void 0 : _candidata$user.name) || "fotógrafo",
@@ -3498,12 +3498,12 @@ function _buscarFotoLugarUnsplash() {
             downloadLocation: ((_candidata$links = candidata.links) === null || _candidata$links === void 0 ? void 0 : _candidata$links.download_location) || null
           });
         case 8:
-          _context193.p = 8;
-          _t219 = _context193.v;
-          tnLog("Unsplash erro:", _t219.message || _t219);
-          return _context193.a(2, null);
+          _context194.p = 8;
+          _t220 = _context194.v;
+          tnLog("Unsplash erro:", _t220.message || _t220);
+          return _context194.a(2, null);
       }
-    }, _callee191, null, [[2, 8]]);
+    }, _callee192, null, [[2, 8]]);
   }));
   return _buscarFotoLugarUnsplash.apply(this, arguments);
 }
@@ -3553,19 +3553,19 @@ function tnBuscarLugaresLocal(_x28, _x29) {
 } // ─── CAMADA 2: OpenStreetMap / Nominatim (fallback gratuito) ───
 // Usa o cache em tabela place_suggestions_cache pra não estourar rate limit
 function _tnBuscarLugaresLocal() {
-  _tnBuscarLugaresLocal = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee192(termo, cidade) {
-    var _yield$dbRead$rpc, data, error, _yield$dbRead$from$se90, fb, _t220;
-    return _regenerator().w(function (_context194) {
-      while (1) switch (_context194.p = _context194.n) {
+  _tnBuscarLugaresLocal = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee193(termo, cidade) {
+    var _yield$dbRead$rpc, data, error, _yield$dbRead$from$se90, fb, _t221;
+    return _regenerator().w(function (_context195) {
+      while (1) switch (_context195.p = _context195.n) {
         case 0:
           if (!(!termo || termo.trim().length < 2)) {
-            _context194.n = 1;
+            _context195.n = 1;
             break;
           }
-          return _context194.a(2, []);
+          return _context195.a(2, []);
         case 1:
-          _context194.p = 1;
-          _context194.n = 2;
+          _context195.p = 1;
+          _context195.n = 2;
           return dbRead.rpc("search_places_fuzzy", {
             termo: termo,
             cidade_filtro: cidade || null,
@@ -3573,39 +3573,39 @@ function _tnBuscarLugaresLocal() {
             score_min: 0.25
           });
         case 2:
-          _yield$dbRead$rpc = _context194.v;
+          _yield$dbRead$rpc = _context195.v;
           data = _yield$dbRead$rpc.data;
           error = _yield$dbRead$rpc.error;
           if (!error) {
-            _context194.n = 4;
+            _context195.n = 4;
             break;
           }
           console.warn("[PLACES] RPC fuzzy falhou, fallback pra ilike:", error.message);
           // Fallback: busca literal caso RPC ainda não exista
-          _context194.n = 3;
+          _context195.n = 3;
           return dbRead.from("places").select("id, name, city, state, country, type, lat, lng, photo_url").or("name.ilike.%".concat(termo, "%,city.ilike.%").concat(termo, "%")).limit(8);
         case 3:
-          _yield$dbRead$from$se90 = _context194.v;
+          _yield$dbRead$from$se90 = _context195.v;
           fb = _yield$dbRead$from$se90.data;
-          return _context194.a(2, (fb || []).map(function (p) {
+          return _context195.a(2, (fb || []).map(function (p) {
             return _objectSpread(_objectSpread({}, p), {}, {
               score: 0.5,
               matched_via: "ilike_fallback"
             });
           }));
         case 4:
-          return _context194.a(2, (data || []).map(function (p) {
+          return _context195.a(2, (data || []).map(function (p) {
             return _objectSpread(_objectSpread({}, p), {}, {
               _camada: "tempnext"
             });
           }));
         case 5:
-          _context194.p = 5;
-          _t220 = _context194.v;
-          console.warn("[PLACES] exceção camada local:", _t220);
-          return _context194.a(2, []);
+          _context195.p = 5;
+          _t221 = _context195.v;
+          console.warn("[PLACES] exceção camada local:", _t221);
+          return _context195.a(2, []);
       }
-    }, _callee192, null, [[1, 5]]);
+    }, _callee193, null, [[1, 5]]);
   }));
   return _tnBuscarLugaresLocal.apply(this, arguments);
 }
@@ -3615,58 +3615,58 @@ function tnBuscarLugaresOSM(_x30, _x31) {
 // Retorna sugestões de 2 camadas + opção "criar manual" sempre.
 // Ordena por score, remove duplicatas óbvias.
 function _tnBuscarLugaresOSM() {
-  _tnBuscarLugaresOSM = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee193(termo, cidade) {
-    var queryNorm, cityNorm, _yield$dbRead$from$se91, cached, q, r, raw, resultados, _t221, _t222, _t223;
-    return _regenerator().w(function (_context195) {
-      while (1) switch (_context195.p = _context195.n) {
+  _tnBuscarLugaresOSM = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee194(termo, cidade) {
+    var queryNorm, cityNorm, _yield$dbRead$from$se91, cached, q, r, raw, resultados, _t222, _t223, _t224;
+    return _regenerator().w(function (_context196) {
+      while (1) switch (_context196.p = _context196.n) {
         case 0:
           if (!(!termo || termo.trim().length < 3)) {
-            _context195.n = 1;
+            _context196.n = 1;
             break;
           }
-          return _context195.a(2, []);
+          return _context196.a(2, []);
         case 1:
           queryNorm = tnNormalizarNome(termo);
           cityNorm = tnNormalizarNome(cidade || ""); // 1. Tenta cache do Supabase primeiro
-          _context195.p = 2;
-          _context195.n = 3;
+          _context196.p = 2;
+          _context196.n = 3;
           return dbRead.from("place_suggestions_cache").select("results, fetched_at").eq("query_normalized", queryNorm).eq("city_context", cityNorm).eq("source", "osm").gt("expires_at", new Date().toISOString()).maybeSingle();
         case 3:
-          _yield$dbRead$from$se91 = _context195.v;
+          _yield$dbRead$from$se91 = _context196.v;
           cached = _yield$dbRead$from$se91.data;
           if (!(cached && cached.results)) {
-            _context195.n = 4;
+            _context196.n = 4;
             break;
           }
-          return _context195.a(2, cached.results);
+          return _context196.a(2, cached.results);
         case 4:
-          _context195.n = 6;
+          _context196.n = 6;
           break;
         case 5:
-          _context195.p = 5;
-          _t221 = _context195.v;
+          _context196.p = 5;
+          _t222 = _context196.v;
         case 6:
-          _context195.p = 6;
+          _context196.p = 6;
           q = cidade ? "".concat(termo, ", ").concat(cidade, ", Brasil") : "".concat(termo, ", Brasil");
-          _context195.n = 7;
+          _context196.n = 7;
           return fetch("https://nominatim.openstreetmap.org/search?q=".concat(encodeURIComponent(q), "&format=json&addressdetails=1&limit=5&accept-language=pt-BR"));
         case 7:
-          r = _context195.v;
+          r = _context196.v;
           if (r.ok) {
-            _context195.n = 8;
+            _context196.n = 8;
             break;
           }
-          return _context195.a(2, []);
+          return _context196.a(2, []);
         case 8:
-          _context195.n = 9;
+          _context196.n = 9;
           return r.json();
         case 9:
-          raw = _context195.v;
+          raw = _context196.v;
           if (Array.isArray(raw)) {
-            _context195.n = 10;
+            _context196.n = 10;
             break;
           }
-          return _context195.a(2, []);
+          return _context196.a(2, []);
         case 10:
           resultados = raw.map(function (item) {
             var _item$address, _item$address2, _item$address3, _item$address4, _item$address5, _item$address6;
@@ -3688,8 +3688,8 @@ function _tnBuscarLugaresOSM() {
               _osm_raw: item
             };
           }); // 3. Salva no cache do Supabase (fire-and-forget)
-          _context195.p = 11;
-          _context195.n = 12;
+          _context196.p = 11;
+          _context196.n = 12;
           return db.from("place_suggestions_cache").upsert({
             query_normalized: queryNorm,
             city_context: cityNorm,
@@ -3699,20 +3699,20 @@ function _tnBuscarLugaresOSM() {
             onConflict: "query_normalized,city_context,source"
           });
         case 12:
-          _context195.n = 14;
+          _context196.n = 14;
           break;
         case 13:
-          _context195.p = 13;
-          _t222 = _context195.v;
+          _context196.p = 13;
+          _t223 = _context196.v;
         case 14:
-          return _context195.a(2, resultados);
+          return _context196.a(2, resultados);
         case 15:
-          _context195.p = 15;
-          _t223 = _context195.v;
-          console.warn("[PLACES] erro OSM:", _t223);
-          return _context195.a(2, []);
+          _context196.p = 15;
+          _t224 = _context196.v;
+          console.warn("[PLACES] erro OSM:", _t224);
+          return _context196.a(2, []);
       }
-    }, _callee193, null, [[11, 13], [6, 15], [2, 5]]);
+    }, _callee194, null, [[11, 13], [6, 15], [2, 5]]);
   }));
   return _tnBuscarLugaresOSM.apply(this, arguments);
 }
@@ -3720,16 +3720,16 @@ function searchPlacesInteligente(_x32, _x33) {
   return _searchPlacesInteligente.apply(this, arguments);
 } // ─── Ao escolher sugestão: registrar termo digitado como alias (se diferente) ───
 function _searchPlacesInteligente() {
-  _searchPlacesInteligente = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee194(termo, cidade) {
+  _searchPlacesInteligente = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee195(termo, cidade) {
     var cacheK, cacheHit, _yield$Promise$all7, _yield$Promise$all8, locais, externos, externosFiltrados, sugestoes, resultado;
-    return _regenerator().w(function (_context196) {
-      while (1) switch (_context196.n) {
+    return _regenerator().w(function (_context197) {
+      while (1) switch (_context197.n) {
         case 0:
           if (!(!termo || termo.trim().length < 2)) {
-            _context196.n = 1;
+            _context197.n = 1;
             break;
           }
-          return _context196.a(2, {
+          return _context197.a(2, {
             sugestoes: [],
             mostrarCriarManual: false
           });
@@ -3737,15 +3737,15 @@ function _searchPlacesInteligente() {
           cacheK = tnCacheKey(termo, cidade);
           cacheHit = TN_PLACES_CACHE.get(cacheK);
           if (!(cacheHit && Date.now() - cacheHit.time < TN_PLACES_CACHE_TTL)) {
-            _context196.n = 2;
+            _context197.n = 2;
             break;
           }
-          return _context196.a(2, cacheHit.data);
+          return _context197.a(2, cacheHit.data);
         case 2:
-          _context196.n = 3;
+          _context197.n = 3;
           return Promise.all([tnBuscarLugaresLocal(termo, cidade), tnBuscarLugaresOSM(termo, cidade)]);
         case 3:
-          _yield$Promise$all7 = _context196.v;
+          _yield$Promise$all7 = _context197.v;
           _yield$Promise$all8 = _slicedToArray(_yield$Promise$all7, 2);
           locais = _yield$Promise$all8[0];
           externos = _yield$Promise$all8[1];
@@ -3768,9 +3768,9 @@ function _searchPlacesInteligente() {
             time: Date.now(),
             data: resultado
           });
-          return _context196.a(2, resultado);
+          return _context197.a(2, resultado);
       }
-    }, _callee194);
+    }, _callee195);
   }));
   return _searchPlacesInteligente.apply(this, arguments);
 }
@@ -3795,34 +3795,34 @@ function registrarAliasLugar(_x34, _x35) {
 //   window.tnLugaresDoProfile && tnLugaresDoProfile('8e858623-46d0-427d-932e-37bb5ab36cb7').then(tnLog)
 //
 function _registrarAliasLugar() {
-  _registrarAliasLugar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee195(placeId, termoDigitado) {
-    var _t224;
-    return _regenerator().w(function (_context197) {
-      while (1) switch (_context197.p = _context197.n) {
+  _registrarAliasLugar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee196(placeId, termoDigitado) {
+    var _t225;
+    return _regenerator().w(function (_context198) {
+      while (1) switch (_context198.p = _context198.n) {
         case 0:
           if (!(!placeId || !termoDigitado)) {
-            _context197.n = 1;
+            _context198.n = 1;
             break;
           }
-          return _context197.a(2);
+          return _context198.a(2);
         case 1:
-          _context197.p = 1;
-          _context197.n = 2;
+          _context198.p = 1;
+          _context198.n = 2;
           return dbRead.rpc("register_place_alias", {
             p_place_id: placeId,
             p_alias: termoDigitado,
             p_source: "user"
           });
         case 2:
-          _context197.n = 4;
+          _context198.n = 4;
           break;
         case 3:
-          _context197.p = 3;
-          _t224 = _context197.v;
+          _context198.p = 3;
+          _t225 = _context198.v;
         case 4:
-          return _context197.a(2);
+          return _context198.a(2);
       }
-    }, _callee195, null, [[1, 3]]);
+    }, _callee196, null, [[1, 3]]);
   }));
   return _registrarAliasLugar.apply(this, arguments);
 }
@@ -3830,19 +3830,19 @@ function tnLugaresDoProfile(_x36) {
   return _tnLugaresDoProfile.apply(this, arguments);
 } // Expõe no window pra teste manual via DevTools console (removível em prod)
 function _tnLugaresDoProfile() {
-  _tnLugaresDoProfile = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee196(profileId) {
-    var _yield$dbRead$from$se92, data, error, _t225;
-    return _regenerator().w(function (_context198) {
-      while (1) switch (_context198.p = _context198.n) {
+  _tnLugaresDoProfile = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee197(profileId) {
+    var _yield$dbRead$from$se92, data, error, _t226;
+    return _regenerator().w(function (_context199) {
+      while (1) switch (_context199.p = _context199.n) {
         case 0:
           if (profileId) {
-            _context198.n = 1;
+            _context199.n = 1;
             break;
           }
-          return _context198.a(2, []);
+          return _context199.a(2, []);
         case 1:
-          _context198.p = 1;
-          _context198.n = 2;
+          _context199.p = 1;
+          _context199.n = 2;
           return dbRead.from("place_profiles").select("id, place_id, profile_id, year_start, year_end, place_type, era, place_label, label_visibilidade, display_order, places(id, name, city, state, country, lat, lng, type, cep)").eq("profile_id", profileId).order("display_order", {
             ascending: true,
             nullsFirst: false
@@ -3851,23 +3851,23 @@ function _tnLugaresDoProfile() {
             nullsFirst: false
           });
         case 2:
-          _yield$dbRead$from$se92 = _context198.v;
+          _yield$dbRead$from$se92 = _context199.v;
           data = _yield$dbRead$from$se92.data;
           error = _yield$dbRead$from$se92.error;
           if (!error) {
-            _context198.n = 3;
+            _context199.n = 3;
             break;
           }
           console.warn("[tnLugaresDoProfile] erro:", error.message);
-          return _context198.a(2, []);
+          return _context199.a(2, []);
         case 3:
           if (Array.isArray(data)) {
-            _context198.n = 4;
+            _context199.n = 4;
             break;
           }
-          return _context198.a(2, []);
+          return _context199.a(2, []);
         case 4:
-          return _context198.a(2, data.map(function (pp) {
+          return _context199.a(2, data.map(function (pp) {
             var pl = pp.places || {};
             return {
               // Campos do JSON legado (compatibilidade com 75 leituras existentes)
@@ -3893,12 +3893,12 @@ function _tnLugaresDoProfile() {
             };
           }));
         case 5:
-          _context198.p = 5;
-          _t225 = _context198.v;
-          console.warn("[tnLugaresDoProfile] exception:", _t225);
-          return _context198.a(2, []);
+          _context199.p = 5;
+          _t226 = _context199.v;
+          console.warn("[tnLugaresDoProfile] exception:", _t226);
+          return _context199.a(2, []);
       }
-    }, _callee196, null, [[1, 5]]);
+    }, _callee197, null, [[1, 5]]);
   }));
   return _tnLugaresDoProfile.apply(this, arguments);
 }
@@ -3911,28 +3911,28 @@ function tnLugaresDeProfiles(_x37) {
   return _tnLugaresDeProfiles.apply(this, arguments);
 }
 function _tnLugaresDeProfiles() {
-  _tnLugaresDeProfiles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee197(profileIds) {
-    var vazio, ids, _yield$dbRead$from$se93, data, error, mapa, _iterator45, _step45, id, _iterator46, _step46, pp, pl, lugar, arr, _t226;
-    return _regenerator().w(function (_context199) {
-      while (1) switch (_context199.p = _context199.n) {
+  _tnLugaresDeProfiles = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee198(profileIds) {
+    var vazio, ids, _yield$dbRead$from$se93, data, error, mapa, _iterator45, _step45, id, _iterator46, _step46, pp, pl, lugar, arr, _t227;
+    return _regenerator().w(function (_context200) {
+      while (1) switch (_context200.p = _context200.n) {
         case 0:
           vazio = new Map();
           if (!(!Array.isArray(profileIds) || profileIds.length === 0)) {
-            _context199.n = 1;
+            _context200.n = 1;
             break;
           }
-          return _context199.a(2, vazio);
+          return _context200.a(2, vazio);
         case 1:
           // Dedup
           ids = _toConsumableArray(new Set(profileIds.filter(Boolean)));
           if (!(ids.length === 0)) {
-            _context199.n = 2;
+            _context200.n = 2;
             break;
           }
-          return _context199.a(2, vazio);
+          return _context200.a(2, vazio);
         case 2:
-          _context199.p = 2;
-          _context199.n = 3;
+          _context200.p = 2;
+          _context200.n = 3;
           return dbRead.from("place_profiles").select("id, place_id, profile_id, year_start, year_end, place_type, era, place_label, label_visibilidade, display_order, places(id, name, city, state, country, lat, lng, type, cep)")["in"]("profile_id", ids).order("display_order", {
             ascending: true,
             nullsFirst: false
@@ -3941,21 +3941,21 @@ function _tnLugaresDeProfiles() {
             nullsFirst: false
           });
         case 3:
-          _yield$dbRead$from$se93 = _context199.v;
+          _yield$dbRead$from$se93 = _context200.v;
           data = _yield$dbRead$from$se93.data;
           error = _yield$dbRead$from$se93.error;
           if (!error) {
-            _context199.n = 4;
+            _context200.n = 4;
             break;
           }
           console.warn("[tnLugaresDeProfiles] erro:", error.message);
-          return _context199.a(2, vazio);
+          return _context200.a(2, vazio);
         case 4:
           if (Array.isArray(data)) {
-            _context199.n = 5;
+            _context200.n = 5;
             break;
           }
-          return _context199.a(2, vazio);
+          return _context200.a(2, vazio);
         case 5:
           mapa = new Map();
           _iterator45 = _createForOfIteratorHelper(ids);
@@ -4001,14 +4001,14 @@ function _tnLugaresDeProfiles() {
           } finally {
             _iterator46.f();
           }
-          return _context199.a(2, mapa);
+          return _context200.a(2, mapa);
         case 6:
-          _context199.p = 6;
-          _t226 = _context199.v;
-          console.warn("[tnLugaresDeProfiles] exception:", _t226);
-          return _context199.a(2, vazio);
+          _context200.p = 6;
+          _t227 = _context200.v;
+          console.warn("[tnLugaresDeProfiles] exception:", _t227);
+          return _context200.a(2, vazio);
       }
-    }, _callee197, null, [[2, 6]]);
+    }, _callee198, null, [[2, 6]]);
   }));
   return _tnLugaresDeProfiles.apply(this, arguments);
 }
@@ -4312,30 +4312,30 @@ function reverseGeocode(_x38, _x39) {
   return _reverseGeocode.apply(this, arguments);
 }
 function _reverseGeocode() {
-  _reverseGeocode = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee198(lat, lng) {
-    var res, data, addr, cidade, estado, ufMap, uf, _t227;
-    return _regenerator().w(function (_context200) {
-      while (1) switch (_context200.p = _context200.n) {
+  _reverseGeocode = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee199(lat, lng) {
+    var res, data, addr, cidade, estado, ufMap, uf, _t228;
+    return _regenerator().w(function (_context201) {
+      while (1) switch (_context201.p = _context201.n) {
         case 0:
-          _context200.p = 0;
-          _context200.n = 1;
+          _context201.p = 0;
+          _context201.n = 1;
           return fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=".concat(lat, "&lon=").concat(lng, "&accept-language=pt-BR&zoom=10"), {
             headers: {
               'Accept': 'application/json'
             }
           });
         case 1:
-          res = _context200.v;
+          res = _context201.v;
           if (res.ok) {
-            _context200.n = 2;
+            _context201.n = 2;
             break;
           }
-          return _context200.a(2, null);
+          return _context201.a(2, null);
         case 2:
-          _context200.n = 3;
+          _context201.n = 3;
           return res.json();
         case 3:
-          data = _context200.v;
+          data = _context201.v;
           addr = data.address || {};
           cidade = addr.city || addr.town || addr.village || addr.municipality || addr.county || "";
           estado = addr.state || "";
@@ -4370,25 +4370,25 @@ function _reverseGeocode() {
           };
           uf = ufMap[estado] || estado;
           if (!(cidade && uf)) {
-            _context200.n = 4;
+            _context201.n = 4;
             break;
           }
-          return _context200.a(2, "".concat(cidade, ", ").concat(uf));
+          return _context201.a(2, "".concat(cidade, ", ").concat(uf));
         case 4:
           if (!cidade) {
-            _context200.n = 5;
+            _context201.n = 5;
             break;
           }
-          return _context200.a(2, cidade);
+          return _context201.a(2, cidade);
         case 5:
-          return _context200.a(2, estado || null);
+          return _context201.a(2, estado || null);
         case 6:
-          _context200.p = 6;
-          _t227 = _context200.v;
-          tnLog("Reverse geocode failed:", _t227);
-          return _context200.a(2, null);
+          _context201.p = 6;
+          _t228 = _context201.v;
+          tnLog("Reverse geocode failed:", _t228);
+          return _context201.a(2, null);
       }
-    }, _callee198, null, [[0, 6]]);
+    }, _callee199, null, [[0, 6]]);
   }));
   return _reverseGeocode.apply(this, arguments);
 }
@@ -5083,31 +5083,31 @@ function jaCurti(_x40, _x41, _x42) {
   return _jaCurti.apply(this, arguments);
 }
 function _jaCurti() {
-  _jaCurti = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee199(targetId, targetType, userId) {
-    var _yield$dbRead$from$se94, data, _t228;
-    return _regenerator().w(function (_context201) {
-      while (1) switch (_context201.p = _context201.n) {
+  _jaCurti = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee200(targetId, targetType, userId) {
+    var _yield$dbRead$from$se94, data, _t229;
+    return _regenerator().w(function (_context202) {
+      while (1) switch (_context202.p = _context202.n) {
         case 0:
           if (!(!targetId || !userId)) {
-            _context201.n = 1;
+            _context202.n = 1;
             break;
           }
-          return _context201.a(2, false);
+          return _context202.a(2, false);
         case 1:
-          _context201.p = 1;
-          _context201.n = 2;
+          _context202.p = 1;
+          _context202.n = 2;
           return dbRead.from("interacoes").select("id").eq("tipo", "like").eq("alvo_tipo", targetType).eq("alvo_id", targetId).eq("user_id", userId).limit(1);
         case 2:
-          _yield$dbRead$from$se94 = _context201.v;
+          _yield$dbRead$from$se94 = _context202.v;
           data = _yield$dbRead$from$se94.data;
-          return _context201.a(2, (data || []).length > 0);
+          return _context202.a(2, (data || []).length > 0);
         case 3:
-          _context201.p = 3;
-          _t228 = _context201.v;
-          tnLog("jaCurti erro:", _t228.message);
-          return _context201.a(2, false);
+          _context202.p = 3;
+          _t229 = _context202.v;
+          tnLog("jaCurti erro:", _t229.message);
+          return _context202.a(2, false);
       }
-    }, _callee199, null, [[1, 3]]);
+    }, _callee200, null, [[1, 3]]);
   }));
   return _jaCurti.apply(this, arguments);
 }
@@ -5115,34 +5115,34 @@ function contarLikes(_x43, _x44) {
   return _contarLikes.apply(this, arguments);
 }
 function _contarLikes() {
-  _contarLikes = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee200(targetId, targetType) {
-    var _yield$dbRead$from$se95, count, _t229;
-    return _regenerator().w(function (_context202) {
-      while (1) switch (_context202.p = _context202.n) {
+  _contarLikes = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee201(targetId, targetType) {
+    var _yield$dbRead$from$se95, count, _t230;
+    return _regenerator().w(function (_context203) {
+      while (1) switch (_context203.p = _context203.n) {
         case 0:
           if (targetId) {
-            _context202.n = 1;
+            _context203.n = 1;
             break;
           }
-          return _context202.a(2, 0);
+          return _context203.a(2, 0);
         case 1:
-          _context202.p = 1;
-          _context202.n = 2;
+          _context203.p = 1;
+          _context203.n = 2;
           return dbRead.from("interacoes").select("id", {
             count: "exact",
             head: true
           }).eq("tipo", "like").eq("alvo_tipo", targetType).eq("alvo_id", targetId);
         case 2:
-          _yield$dbRead$from$se95 = _context202.v;
+          _yield$dbRead$from$se95 = _context203.v;
           count = _yield$dbRead$from$se95.count;
-          return _context202.a(2, count || 0);
+          return _context203.a(2, count || 0);
         case 3:
-          _context202.p = 3;
-          _t229 = _context202.v;
-          tnLog("contarLikes erro:", _t229.message);
-          return _context202.a(2, 0);
+          _context203.p = 3;
+          _t230 = _context203.v;
+          tnLog("contarLikes erro:", _t230.message);
+          return _context203.a(2, 0);
       }
-    }, _callee200, null, [[1, 3]]);
+    }, _callee201, null, [[1, 3]]);
   }));
   return _contarLikes.apply(this, arguments);
 }
@@ -5150,36 +5150,36 @@ function toggleLike(_x45, _x46, _x47, _x48, _x49) {
   return _toggleLike.apply(this, arguments);
 }
 function _toggleLike() {
-  _toggleLike = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee201(targetId, targetType, alvoUserId, userId, jaCurtiAgora) {
-    var _yield$dbRead$from$de, error, _yield$dbRead$from$in, _error7, _t230;
-    return _regenerator().w(function (_context203) {
-      while (1) switch (_context203.p = _context203.n) {
+  _toggleLike = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee202(targetId, targetType, alvoUserId, userId, jaCurtiAgora) {
+    var _yield$dbRead$from$de, error, _yield$dbRead$from$in, _error7, _t231;
+    return _regenerator().w(function (_context204) {
+      while (1) switch (_context204.p = _context204.n) {
         case 0:
           if (!(!targetId || !userId)) {
-            _context203.n = 1;
+            _context204.n = 1;
             break;
           }
-          return _context203.a(2, false);
+          return _context204.a(2, false);
         case 1:
-          _context203.p = 1;
+          _context204.p = 1;
           if (!jaCurtiAgora) {
-            _context203.n = 4;
+            _context204.n = 4;
             break;
           }
-          _context203.n = 2;
+          _context204.n = 2;
           return dbRead.from("interacoes")["delete"]().eq("tipo", "like").eq("alvo_tipo", targetType).eq("alvo_id", targetId).eq("user_id", userId);
         case 2:
-          _yield$dbRead$from$de = _context203.v;
+          _yield$dbRead$from$de = _context204.v;
           error = _yield$dbRead$from$de.error;
           if (!error) {
-            _context203.n = 3;
+            _context204.n = 3;
             break;
           }
           throw error;
         case 3:
-          return _context203.a(2, false);
+          return _context204.a(2, false);
         case 4:
-          _context203.n = 5;
+          _context204.n = 5;
           return dbRead.from("interacoes").insert({
             user_id: userId,
             alvo_id: targetId,
@@ -5188,27 +5188,27 @@ function _toggleLike() {
             tipo: "like"
           });
         case 5:
-          _yield$dbRead$from$in = _context203.v;
+          _yield$dbRead$from$in = _context204.v;
           _error7 = _yield$dbRead$from$in.error;
           if (!_error7) {
-            _context203.n = 6;
+            _context204.n = 6;
             break;
           }
           throw _error7;
         case 6:
-          return _context203.a(2, true);
+          return _context204.a(2, true);
         case 7:
-          _context203.n = 9;
+          _context204.n = 9;
           break;
         case 8:
-          _context203.p = 8;
-          _t230 = _context203.v;
-          tnLog("toggleLike erro:", _t230.message);
-          return _context203.a(2, jaCurtiAgora);
+          _context204.p = 8;
+          _t231 = _context204.v;
+          tnLog("toggleLike erro:", _t231.message);
+          return _context204.a(2, jaCurtiAgora);
         case 9:
-          return _context203.a(2);
+          return _context204.a(2);
       }
-    }, _callee201, null, [[1, 8]]);
+    }, _callee202, null, [[1, 8]]);
   }));
   return _toggleLike.apply(this, arguments);
 }
@@ -13658,32 +13658,32 @@ function uploadImage(_x63, _x64, _x65, _x66, _x67) {
   return _uploadImage.apply(this, arguments);
 } // ── uploadVideo: sobe vídeo pro bucket 'videos' e retorna URL pública ──
 function _uploadImage() {
-  _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee202(file, bucket, userId, maxW, quality) {
+  _uploadImage = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee203(file, bucket, userId, maxW, quality) {
     var _blob$type;
-    var defaultW, defaultQ, blob, ts, rand, ext, filename, uploadPromise, timeoutPromise, _yield$Promise$race, error, _db$storage$from$getP, data, _t231;
-    return _regenerator().w(function (_context204) {
-      while (1) switch (_context204.p = _context204.n) {
+    var defaultW, defaultQ, blob, ts, rand, ext, filename, uploadPromise, timeoutPromise, _yield$Promise$race, error, _db$storage$from$getP, data, _t232;
+    return _regenerator().w(function (_context205) {
+      while (1) switch (_context205.p = _context205.n) {
         case 0:
           defaultW = bucket === "avatars" ? 400 : 800;
           defaultQ = bucket === "avatars" ? 0.75 : 0.78;
-          _context204.p = 1;
-          _context204.n = 2;
+          _context205.p = 1;
+          _context205.n = 2;
           return fileToBlob(file, maxW || defaultW, quality || defaultQ);
         case 2:
-          blob = _context204.v;
-          _context204.n = 5;
+          blob = _context205.v;
+          _context205.n = 5;
           break;
         case 3:
-          _context204.p = 3;
-          _t231 = _context204.v;
-          tnLog("fileToBlob falhou, tentando upload direto:", _t231);
+          _context205.p = 3;
+          _t232 = _context205.v;
+          tnLog("fileToBlob falhou, tentando upload direto:", _t232);
           // Fallback: sobe o arquivo original se for menor que 2MB
           if (!(file.size <= 2 * 1024 * 1024)) {
-            _context204.n = 4;
+            _context205.n = 4;
             break;
           }
           blob = file;
-          _context204.n = 5;
+          _context205.n = 5;
           break;
         case 4:
           throw new Error("Imagem muito grande e não foi possível redimensionar");
@@ -13703,22 +13703,22 @@ function _uploadImage() {
               return reject(new Error("Upload timeout após 30s"));
             }, 30000);
           });
-          _context204.n = 6;
+          _context205.n = 6;
           return Promise.race([uploadPromise, timeoutPromise]);
         case 6:
-          _yield$Promise$race = _context204.v;
+          _yield$Promise$race = _context205.v;
           error = _yield$Promise$race.error;
           if (!error) {
-            _context204.n = 7;
+            _context205.n = 7;
             break;
           }
           console.error("Upload erro:", error);
           throw error;
         case 7:
           _db$storage$from$getP = db.storage.from(bucket).getPublicUrl(filename), data = _db$storage$from$getP.data;
-          return _context204.a(2, data.publicUrl);
+          return _context205.a(2, data.publicUrl);
       }
-    }, _callee202, null, [[1, 3]]);
+    }, _callee203, null, [[1, 3]]);
   }));
   return _uploadImage.apply(this, arguments);
 }
@@ -13726,10 +13726,10 @@ function uploadVideo(_x68, _x69) {
   return _uploadVideo.apply(this, arguments);
 } // ── Lê duração do vídeo em segundos ──
 function _uploadVideo() {
-  _uploadVideo = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee203(file, userId) {
+  _uploadVideo = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee204(file, userId) {
     var ts, rand, ext, filename, uploadPromise, timeoutPromise, _yield$Promise$race2, error, _db$storage$from$getP2, data;
-    return _regenerator().w(function (_context205) {
-      while (1) switch (_context205.n) {
+    return _regenerator().w(function (_context206) {
+      while (1) switch (_context206.n) {
         case 0:
           // Nome único
           ts = Date.now();
@@ -13746,22 +13746,22 @@ function _uploadVideo() {
               return reject(new Error("Upload timeout após 90s"));
             }, 90000);
           });
-          _context205.n = 1;
+          _context206.n = 1;
           return Promise.race([uploadPromise, timeoutPromise]);
         case 1:
-          _yield$Promise$race2 = _context205.v;
+          _yield$Promise$race2 = _context206.v;
           error = _yield$Promise$race2.error;
           if (!error) {
-            _context205.n = 2;
+            _context206.n = 2;
             break;
           }
           console.error("Upload vídeo erro:", error);
           throw error;
         case 2:
           _db$storage$from$getP2 = db.storage.from('videos').getPublicUrl(filename), data = _db$storage$from$getP2.data;
-          return _context205.a(2, data.publicUrl);
+          return _context206.a(2, data.publicUrl);
       }
-    }, _callee203);
+    }, _callee204);
   }));
   return _uploadVideo.apply(this, arguments);
 }
@@ -13788,46 +13788,46 @@ function geocodificar(_x70, _x71, _x72) {
 } // Backfill: percorre places sem lat/lng e preenche via Nominatim
 // Roda no máximo 1 vez por hora, até 5 lugares por vez (respeita rate limit do Nominatim)
 function _geocodificar() {
-  _geocodificar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee204(cidade, estado, pais) {
-    var q, r, data, _t232;
-    return _regenerator().w(function (_context206) {
-      while (1) switch (_context206.p = _context206.n) {
+  _geocodificar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee205(cidade, estado, pais) {
+    var q, r, data, _t233;
+    return _regenerator().w(function (_context207) {
+      while (1) switch (_context207.p = _context207.n) {
         case 0:
           if (!(!cidade && !estado)) {
-            _context206.n = 1;
+            _context207.n = 1;
             break;
           }
-          return _context206.a(2, null);
+          return _context207.a(2, null);
         case 1:
-          _context206.p = 1;
+          _context207.p = 1;
           q = [cidade, estado, pais || "Brasil"].filter(Boolean).join(", ");
-          _context206.n = 2;
+          _context207.n = 2;
           return fetch("https://nominatim.openstreetmap.org/search?q=".concat(encodeURIComponent(q), "&format=json&limit=1&accept-language=pt-BR"));
         case 2:
-          r = _context206.v;
-          _context206.n = 3;
+          r = _context207.v;
+          _context207.n = 3;
           return r.json();
         case 3:
-          data = _context206.v;
+          data = _context207.v;
           if (!(data && data[0])) {
-            _context206.n = 4;
+            _context207.n = 4;
             break;
           }
-          return _context206.a(2, {
+          return _context207.a(2, {
             lat: parseFloat(data[0].lat),
             lng: parseFloat(data[0].lon)
           });
         case 4:
-          _context206.n = 6;
+          _context207.n = 6;
           break;
         case 5:
-          _context206.p = 5;
-          _t232 = _context206.v;
-          tnLog("Geocodificação falhou:", cidade, _t232);
+          _context207.p = 5;
+          _t233 = _context207.v;
+          tnLog("Geocodificação falhou:", cidade, _t233);
         case 6:
-          return _context206.a(2, null);
+          return _context207.a(2, null);
       }
-    }, _callee204, null, [[1, 5]]);
+    }, _callee205, null, [[1, 5]]);
   }));
   return _geocodificar.apply(this, arguments);
 }
@@ -13840,48 +13840,48 @@ function backfillCoordenadas() {
 // legado e materializa em places + place_profiles (schema canônico F1.A).
 // Não lê nem escreve profiles.lugares. Pode ser renomeada na Sessão D.
 function _backfillCoordenadas() {
-  _backfillCoordenadas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee205() {
-    var _yield$dbRead$from$se96, lugares, _iterator47, _step47, l, coords, _t233, _t234;
-    return _regenerator().w(function (_context207) {
-      while (1) switch (_context207.p = _context207.n) {
+  _backfillCoordenadas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee206() {
+    var _yield$dbRead$from$se96, lugares, _iterator47, _step47, l, coords, _t234, _t235;
+    return _regenerator().w(function (_context208) {
+      while (1) switch (_context208.p = _context208.n) {
         case 0:
           if (!_backfillJaRodou) {
-            _context207.n = 1;
+            _context208.n = 1;
             break;
           }
-          return _context207.a(2);
+          return _context208.a(2);
         case 1:
           _backfillJaRodou = true;
-          _context207.p = 2;
-          _context207.n = 3;
+          _context208.p = 2;
+          _context208.n = 3;
           return dbRead.from("places").select("id, name, city, state, country").is("lat", null).limit(5);
         case 3:
-          _yield$dbRead$from$se96 = _context207.v;
+          _yield$dbRead$from$se96 = _context208.v;
           lugares = _yield$dbRead$from$se96.data;
           if (!(!lugares || lugares.length === 0)) {
-            _context207.n = 4;
+            _context208.n = 4;
             break;
           }
-          return _context207.a(2);
+          return _context208.a(2);
         case 4:
           _iterator47 = _createForOfIteratorHelper(lugares);
-          _context207.p = 5;
+          _context208.p = 5;
           _iterator47.s();
         case 6:
           if ((_step47 = _iterator47.n()).done) {
-            _context207.n = 11;
+            _context208.n = 11;
             break;
           }
           l = _step47.value;
-          _context207.n = 7;
+          _context208.n = 7;
           return geocodificar(l.city || l.name, l.state, l.country);
         case 7:
-          coords = _context207.v;
+          coords = _context208.v;
           if (!coords) {
-            _context207.n = 9;
+            _context208.n = 9;
             break;
           }
-          _context207.n = 8;
+          _context208.n = 8;
           return db.from("places").update({
             lat: coords.lat,
             lng: coords.lng
@@ -13889,35 +13889,35 @@ function _backfillCoordenadas() {
         case 8:
           tnLog("Geocodificado:", l.name, coords);
         case 9:
-          _context207.n = 10;
+          _context208.n = 10;
           return new Promise(function (r) {
             return setTimeout(r, 1100);
           });
         case 10:
-          _context207.n = 6;
+          _context208.n = 6;
           break;
         case 11:
-          _context207.n = 13;
+          _context208.n = 13;
           break;
         case 12:
-          _context207.p = 12;
-          _t233 = _context207.v;
-          _iterator47.e(_t233);
+          _context208.p = 12;
+          _t234 = _context208.v;
+          _iterator47.e(_t234);
         case 13:
-          _context207.p = 13;
+          _context208.p = 13;
           _iterator47.f();
-          return _context207.f(13);
+          return _context208.f(13);
         case 14:
-          _context207.n = 16;
+          _context208.n = 16;
           break;
         case 15:
-          _context207.p = 15;
-          _t234 = _context207.v;
-          tnLog("Backfill falhou:", _t234);
+          _context208.p = 15;
+          _t235 = _context208.v;
+          tnLog("Backfill falhou:", _t235);
         case 16:
-          return _context207.a(2);
+          return _context208.a(2);
       }
-    }, _callee205, null, [[5, 12, 13, 14], [2, 15]]);
+    }, _callee206, null, [[5, 12, 13, 14], [2, 15]]);
   }));
   return _backfillCoordenadas.apply(this, arguments);
 }
@@ -13933,23 +13933,23 @@ function syncLugaresToPlaces(_x73, _x74) {
 //   - Se user tem status ativo (passagem/cápsula) → abre viewer
 //   - Senão → abre perfil
 function _syncLugaresToPlaces() {
-  _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee206(profileId, lugares) {
-    var _iterator48, _step48, l, nome, cidade, estado, pais, _yield$db$from$select2, existing, placeId, photoFields, _yield$db$from$insert18, created, error, foto, _t235, _t236;
-    return _regenerator().w(function (_context208) {
-      while (1) switch (_context208.p = _context208.n) {
+  _syncLugaresToPlaces = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee207(profileId, lugares) {
+    var _iterator48, _step48, l, nome, cidade, estado, pais, _yield$db$from$select2, existing, placeId, photoFields, _yield$db$from$insert18, created, error, foto, _t236, _t237;
+    return _regenerator().w(function (_context209) {
+      while (1) switch (_context209.p = _context209.n) {
         case 0:
           if (!(!profileId || !lugares || lugares.length === 0)) {
-            _context208.n = 1;
+            _context209.n = 1;
             break;
           }
-          return _context208.a(2);
+          return _context209.a(2);
         case 1:
           _iterator48 = _createForOfIteratorHelper(lugares);
-          _context208.p = 2;
+          _context209.p = 2;
           _iterator48.s();
         case 3:
           if ((_step48 = _iterator48.n()).done) {
-            _context208.n = 13;
+            _context209.n = 13;
             break;
           }
           l = _step48.value;
@@ -13958,20 +13958,20 @@ function _syncLugaresToPlaces() {
           estado = (l.uf || l.state || "").trim();
           pais = (l.pais || l.country || "Brasil").trim();
           if (!(!nome && !cidade)) {
-            _context208.n = 4;
+            _context209.n = 4;
             break;
           }
-          return _context208.a(3, 12);
+          return _context209.a(3, 12);
         case 4:
-          _context208.p = 4;
-          _context208.n = 5;
+          _context209.p = 4;
+          _context209.n = 5;
           return db.from("places").select("id, photo_url").eq("name", nome).eq("city", cidade).maybeSingle();
         case 5:
-          _yield$db$from$select2 = _context208.v;
+          _yield$db$from$select2 = _context209.v;
           existing = _yield$db$from$select2.data;
           placeId = void 0;
           if (!existing) {
-            _context208.n = 6;
+            _context209.n = 6;
             break;
           }
           placeId = existing.id;
@@ -13979,12 +13979,12 @@ function _syncLugaresToPlaces() {
           // Para cidade pequena a API ignorava os termos e devolvia foto genérica
           // de outro lugar (ex.: Rio em "Primavera do Leste") — mostrar lugar errado
           // viola "verdade do banco". Lugar sem foto cai no mapa/gradiente real.
-          _context208.n = 9;
+          _context209.n = 9;
           break;
         case 6:
           // Novo lugar
           photoFields = {}; // Cria o lugar (com foto se conseguiu)
-          _context208.n = 7;
+          _context209.n = 7;
           return db.from("places").insert(_objectSpread({
             name: nome,
             city: cidade,
@@ -13996,15 +13996,15 @@ function _syncLugaresToPlaces() {
             lng: l.lng != null ? l.lng : null
           }, photoFields)).select("id").single();
         case 7:
-          _yield$db$from$insert18 = _context208.v;
+          _yield$db$from$insert18 = _context209.v;
           created = _yield$db$from$insert18.data;
           error = _yield$db$from$insert18.error;
           if (!error) {
-            _context208.n = 8;
+            _context209.n = 8;
             break;
           }
           console.error("Erro ao criar lugar:", error);
-          return _context208.a(3, 12);
+          return _context209.a(3, 12);
         case 8:
           placeId = created.id;
           // Notifica download do Unsplash (exigência de atribuição)
@@ -14016,10 +14016,10 @@ function _syncLugaresToPlaces() {
           }
         case 9:
           if (!placeId) {
-            _context208.n = 10;
+            _context209.n = 10;
             break;
           }
-          _context208.n = 10;
+          _context209.n = 10;
           return db.from("place_profiles").upsert({
             place_id: placeId,
             profile_id: profileId,
@@ -14031,30 +14031,30 @@ function _syncLugaresToPlaces() {
             onConflict: "place_id,profile_id,year_start"
           });
         case 10:
-          _context208.n = 12;
+          _context209.n = 12;
           break;
         case 11:
-          _context208.p = 11;
-          _t235 = _context208.v;
-          console.error("Erro syncLugares:", _t235);
+          _context209.p = 11;
+          _t236 = _context209.v;
+          console.error("Erro syncLugares:", _t236);
         case 12:
-          _context208.n = 3;
+          _context209.n = 3;
           break;
         case 13:
-          _context208.n = 15;
+          _context209.n = 15;
           break;
         case 14:
-          _context208.p = 14;
-          _t236 = _context208.v;
-          _iterator48.e(_t236);
+          _context209.p = 14;
+          _t237 = _context209.v;
+          _iterator48.e(_t237);
         case 15:
-          _context208.p = 15;
+          _context209.p = 15;
           _iterator48.f();
-          return _context208.f(15);
+          return _context209.f(15);
         case 16:
-          return _context208.a(2);
+          return _context209.a(2);
       }
-    }, _callee206, null, [[4, 11], [2, 14, 15, 16]]);
+    }, _callee207, null, [[4, 11], [2, 14, 15, 16]]);
   }));
   return _syncLugaresToPlaces.apply(this, arguments);
 }
@@ -14568,63 +14568,63 @@ function carregarCapsulasAtivas() {
   return _carregarCapsulasAtivas.apply(this, arguments);
 } // Dispara carregamento ao boot (1 vez)
 function _carregarCapsulasAtivas() {
-  _carregarCapsulasAtivas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee207() {
-    var dLimite, _yield$dbRead$from$se97, data, error, mapa, _iterator49, _step49, c, _t237, _t238;
-    return _regenerator().w(function (_context209) {
-      while (1) switch (_context209.p = _context209.n) {
+  _carregarCapsulasAtivas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee208() {
+    var dLimite, _yield$dbRead$from$se97, data, error, mapa, _iterator49, _step49, c, _t238, _t239;
+    return _regenerator().w(function (_context210) {
+      while (1) switch (_context210.p = _context210.n) {
         case 0:
-          _context209.p = 0;
+          _context210.p = 0;
           dLimite = new Date(Date.now() - CAPSULA_JANELA_DIAS * 24 * 60 * 60 * 1000).toISOString();
-          _context209.n = 1;
+          _context210.n = 1;
           return dbRead.from("momentos").select("user_id, capsula_dimensao, created_at, ts").eq("tipo", "capsula").not("capsula_dimensao", "is", null).gte("created_at", dLimite).order("created_at", {
             ascending: false
           });
         case 1:
-          _yield$dbRead$from$se97 = _context209.v;
+          _yield$dbRead$from$se97 = _context210.v;
           data = _yield$dbRead$from$se97.data;
           error = _yield$dbRead$from$se97.error;
           if (!error) {
-            _context209.n = 2;
+            _context210.n = 2;
             break;
           }
           console.warn("[capsulas ativas] erro:", error);
-          return _context209.a(2);
+          return _context210.a(2);
         case 2:
           // Agrupa por user: cada user recebe um array com as dimensões únicas ativas
           mapa = {};
           _iterator49 = _createForOfIteratorHelper(data || []);
-          _context209.p = 3;
+          _context210.p = 3;
           _iterator49.s();
         case 4:
           if ((_step49 = _iterator49.n()).done) {
-            _context209.n = 7;
+            _context210.n = 7;
             break;
           }
           c = _step49.value;
           if (!(!c.user_id || !c.capsula_dimensao)) {
-            _context209.n = 5;
+            _context210.n = 5;
             break;
           }
-          return _context209.a(3, 6);
+          return _context210.a(3, 6);
         case 5:
           if (!mapa[c.user_id]) mapa[c.user_id] = [];
           if (!mapa[c.user_id].includes(c.capsula_dimensao)) {
             mapa[c.user_id].push(c.capsula_dimensao);
           }
         case 6:
-          _context209.n = 4;
+          _context210.n = 4;
           break;
         case 7:
-          _context209.n = 9;
+          _context210.n = 9;
           break;
         case 8:
-          _context209.p = 8;
-          _t237 = _context209.v;
-          _iterator49.e(_t237);
+          _context210.p = 8;
+          _t238 = _context210.v;
+          _iterator49.e(_t238);
         case 9:
-          _context209.p = 9;
+          _context210.p = 9;
           _iterator49.f();
-          return _context209.f(9);
+          return _context210.f(9);
         case 10:
           window.__tnCapsulasAtivas = mapa;
           tnLog("[capsulas ativas]", Object.keys(mapa).length, "users:", mapa);
@@ -14632,18 +14632,18 @@ function _carregarCapsulasAtivas() {
           window.__tnCapsulasAtivasListeners.forEach(function (fn) {
             try {
               fn();
-            } catch (_unused148) {}
+            } catch (_unused150) {}
           });
-          _context209.n = 12;
+          _context210.n = 12;
           break;
         case 11:
-          _context209.p = 11;
-          _t238 = _context209.v;
-          console.warn("[capsulas ativas] falhou:", _t238);
+          _context210.p = 11;
+          _t239 = _context210.v;
+          console.warn("[capsulas ativas] falhou:", _t239);
         case 12:
-          return _context209.a(2);
+          return _context210.a(2);
       }
-    }, _callee207, null, [[3, 8, 9, 10], [0, 11]]);
+    }, _callee208, null, [[3, 8, 9, 10], [0, 11]]);
   }));
   return _carregarCapsulasAtivas.apply(this, arguments);
 }
@@ -16531,31 +16531,31 @@ function dispararNotifsCapsulaFutura(_x76, _x77) {
 // (registrado em memória dívida técnica abr/2026).
 // ════════════════════════════════════════════════════════════════════
 function _dispararNotifsCapsulaFutura() {
-  _dispararNotifsCapsulaFutura = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee208(capsula, criadorUser) {
-    var dataAbreISO, anoAbre, lugarCapsula, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se98, outros, error, lugaresOutros, notificados, _iterator50, _step50, o, cruz, _t239, _t240;
-    return _regenerator().w(function (_context210) {
-      while (1) switch (_context210.p = _context210.n) {
+  _dispararNotifsCapsulaFutura = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee209(capsula, criadorUser) {
+    var dataAbreISO, anoAbre, lugarCapsula, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se98, outros, error, lugaresOutros, notificados, _iterator50, _step50, o, cruz, _t240, _t241;
+    return _regenerator().w(function (_context211) {
+      while (1) switch (_context211.p = _context211.n) {
         case 0:
-          _context210.p = 0;
+          _context211.p = 0;
           if (!(!capsula || !(criadorUser !== null && criadorUser !== void 0 && criadorUser.id))) {
-            _context210.n = 1;
+            _context211.n = 1;
             break;
           }
-          return _context210.a(2);
+          return _context211.a(2);
         case 1:
           dataAbreISO = capsula.capsula_data_referencia;
           if (dataAbreISO) {
-            _context210.n = 2;
+            _context211.n = 2;
             break;
           }
-          return _context210.a(2);
+          return _context211.a(2);
         case 2:
           anoAbre = new Date(dataAbreISO).getFullYear();
           if (anoAbre) {
-            _context210.n = 3;
+            _context211.n = 3;
             break;
           }
-          return _context210.a(2);
+          return _context211.a(2);
         case 3:
           // "User fictício" representando a cápsula no espaço-tempo (lugar + período de abertura).
           // Janela temporal: ano de abertura ± 1 (cruzamento com quem viver lá nesse momento).
@@ -16563,10 +16563,10 @@ function _dispararNotifsCapsulaFutura() {
           // (idealmente o formulário coletaria isso explicitamente — escopo v212.x futuro).
           lugarCapsula = (capsula.lugar || "").trim();
           if (lugarCapsula) {
-            _context210.n = 4;
+            _context211.n = 4;
             break;
           }
-          return _context210.a(2);
+          return _context211.a(2);
         case 4:
           // Estima cidade/uf a partir do lugar digitado ("Cuiabá, MT" → city=Cuiabá, uf=MT)
           partes = lugarCapsula.split(",").map(function (s) {
@@ -16589,49 +16589,49 @@ function _dispararNotifsCapsulaFutura() {
               y2: anoAbre + 1
             }]
           }; // Busca todos os outros profiles (limita pra não sobrecarregar)
-          _context210.n = 5;
+          _context211.n = 5;
           return dbRead.from("profiles").select("id, name, city, state, place_name, year_start, year_end").neq("id", criadorUser.id).limit(500);
         case 5:
-          _yield$dbRead$from$se98 = _context210.v;
+          _yield$dbRead$from$se98 = _context211.v;
           outros = _yield$dbRead$from$se98.data;
           error = _yield$dbRead$from$se98.error;
           if (!error) {
-            _context210.n = 6;
+            _context211.n = 6;
             break;
           }
           console.error("[NOTIF CAPSULA] erro buscar profiles:", error);
-          return _context210.a(2);
+          return _context211.a(2);
         case 6:
           if (outros) {
-            _context210.n = 7;
+            _context211.n = 7;
             break;
           }
-          return _context210.a(2);
+          return _context211.a(2);
         case 7:
-          _context210.n = 8;
+          _context211.n = 8;
           return tnLugaresDeProfiles(outros.map(function (o) {
             return o.id;
           }));
         case 8:
-          lugaresOutros = _context210.v;
+          lugaresOutros = _context211.v;
           notificados = 0;
           _iterator50 = _createForOfIteratorHelper(outros);
-          _context210.p = 9;
+          _context211.p = 9;
           _iterator50.s();
         case 10:
           if ((_step50 = _iterator50.n()).done) {
-            _context210.n = 14;
+            _context211.n = 14;
             break;
           }
           o = _step50.value;
           cruz = calcularCruzamento(userFantasma, o, userFantasma.lugares, lugaresOutros.get(o.id) || []);
           if (!(cruz.tipo === "nenhum" || (cruz.score || 0) < 40)) {
-            _context210.n = 11;
+            _context211.n = 11;
             break;
           }
-          return _context210.a(3, 13);
+          return _context211.a(3, 13);
         case 11:
-          _context210.n = 12;
+          _context211.n = 12;
           return criarNotificacao({
             tipo: "capsula_futura_aqui",
             recipientId: o.id,
@@ -16649,31 +16649,31 @@ function _dispararNotifsCapsulaFutura() {
         case 12:
           notificados++;
         case 13:
-          _context210.n = 10;
+          _context211.n = 10;
           break;
         case 14:
-          _context210.n = 16;
+          _context211.n = 16;
           break;
         case 15:
-          _context210.p = 15;
-          _t239 = _context210.v;
-          _iterator50.e(_t239);
+          _context211.p = 15;
+          _t240 = _context211.v;
+          _iterator50.e(_t240);
         case 16:
-          _context210.p = 16;
+          _context211.p = 16;
           _iterator50.f();
-          return _context210.f(16);
+          return _context211.f(16);
         case 17:
           tnLog("[NOTIF CAPSULA FUTURA] ".concat(notificados, " pessoas notificadas (cruzamento com ").concat(lugarCapsula, " em ").concat(anoAbre, ")"));
-          _context210.n = 19;
+          _context211.n = 19;
           break;
         case 18:
-          _context210.p = 18;
-          _t240 = _context210.v;
-          console.error("[NOTIF CAPSULA FUTURA] erro:", _t240);
+          _context211.p = 18;
+          _t241 = _context211.v;
+          console.error("[NOTIF CAPSULA FUTURA] erro:", _t241);
         case 19:
-          return _context210.a(2);
+          return _context211.a(2);
       }
-    }, _callee208, null, [[9, 15, 16, 17], [0, 18]]);
+    }, _callee209, null, [[9, 15, 16, 17], [0, 18]]);
   }));
   return _dispararNotifsCapsulaFutura.apply(this, arguments);
 }
@@ -16681,87 +16681,87 @@ function verificarCapsulasAbertas(_x78) {
   return _verificarCapsulasAbertas.apply(this, arguments);
 } // Processa UMA cápsula que abriu — dispara as 3 categorias de notificação
 function _verificarCapsulasAbertas() {
-  _verificarCapsulasAbertas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee209(userLogado) {
-    var hojeISO, dataLimite, _yield$dbRead$from$se99, capsulas, error, _iterator51, _step51, capsula, _t241, _t242, _t243;
-    return _regenerator().w(function (_context211) {
-      while (1) switch (_context211.p = _context211.n) {
+  _verificarCapsulasAbertas = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee210(userLogado) {
+    var hojeISO, dataLimite, _yield$dbRead$from$se99, capsulas, error, _iterator51, _step51, capsula, _t242, _t243, _t244;
+    return _regenerator().w(function (_context212) {
+      while (1) switch (_context212.p = _context212.n) {
         case 0:
-          _context211.p = 0;
+          _context212.p = 0;
           if (userLogado !== null && userLogado !== void 0 && userLogado.id) {
-            _context211.n = 1;
+            _context212.n = 1;
             break;
           }
-          return _context211.a(2);
+          return _context212.a(2);
         case 1:
           hojeISO = new Date().toISOString(); // 1) Busca cápsulas DO USER que já abriram E ainda não foram notificadas
           // (limita a janela: cápsulas que abriram nos últimos 30 dias — evita despejar
           //  notificações de cápsulas antigas se o user não abriu o app por meses)
           dataLimite = new Date();
           dataLimite.setDate(dataLimite.getDate() - 30);
-          _context211.n = 2;
+          _context212.n = 2;
           return dbRead.from("momentos").select("id, lugar, texto, fotos, capsula_data_referencia, user_id").eq("user_id", userLogado.id).eq("tipo", "capsula").lte("capsula_data_referencia", hojeISO).gte("capsula_data_referencia", dataLimite.toISOString()).is("capsula_notificada_em", null).limit(20);
         case 2:
-          _yield$dbRead$from$se99 = _context211.v;
+          _yield$dbRead$from$se99 = _context212.v;
           capsulas = _yield$dbRead$from$se99.data;
           error = _yield$dbRead$from$se99.error;
           if (!error) {
-            _context211.n = 3;
+            _context212.n = 3;
             break;
           }
           console.error("[CAPSULA ABERTA] erro buscar cápsulas:", error);
-          return _context211.a(2);
+          return _context212.a(2);
         case 3:
           if (!(!capsulas || capsulas.length === 0)) {
-            _context211.n = 4;
+            _context212.n = 4;
             break;
           }
-          return _context211.a(2);
+          return _context212.a(2);
         case 4:
           tnLog("[CAPSULA ABERTA] ".concat(capsulas.length, " c\xE1psula(s) abriram e ainda n\xE3o notificaram"));
           _iterator51 = _createForOfIteratorHelper(capsulas);
-          _context211.p = 5;
+          _context212.p = 5;
           _iterator51.s();
         case 6:
           if ((_step51 = _iterator51.n()).done) {
-            _context211.n = 11;
+            _context212.n = 11;
             break;
           }
           capsula = _step51.value;
-          _context211.p = 7;
-          _context211.n = 8;
+          _context212.p = 7;
+          _context212.n = 8;
           return processarCapsulaAberta(capsula, userLogado);
         case 8:
-          _context211.n = 10;
+          _context212.n = 10;
           break;
         case 9:
-          _context211.p = 9;
-          _t241 = _context211.v;
-          console.error("[CAPSULA ABERTA] erro processando ".concat(capsula.id, ":"), _t241);
+          _context212.p = 9;
+          _t242 = _context212.v;
+          console.error("[CAPSULA ABERTA] erro processando ".concat(capsula.id, ":"), _t242);
         case 10:
-          _context211.n = 6;
+          _context212.n = 6;
           break;
         case 11:
-          _context211.n = 13;
+          _context212.n = 13;
           break;
         case 12:
-          _context211.p = 12;
-          _t242 = _context211.v;
-          _iterator51.e(_t242);
+          _context212.p = 12;
+          _t243 = _context212.v;
+          _iterator51.e(_t243);
         case 13:
-          _context211.p = 13;
+          _context212.p = 13;
           _iterator51.f();
-          return _context211.f(13);
+          return _context212.f(13);
         case 14:
-          _context211.n = 16;
+          _context212.n = 16;
           break;
         case 15:
-          _context211.p = 15;
-          _t243 = _context211.v;
-          console.error("[CAPSULA ABERTA] erro fatal:", _t243);
+          _context212.p = 15;
+          _t244 = _context212.v;
+          console.error("[CAPSULA ABERTA] erro fatal:", _t244);
         case 16:
-          return _context211.a(2);
+          return _context212.a(2);
       }
-    }, _callee209, null, [[7, 9], [5, 12, 13, 14], [0, 15]]);
+    }, _callee210, null, [[7, 9], [5, 12, 13, 14], [0, 15]]);
   }));
   return _verificarCapsulasAbertas.apply(this, arguments);
 }
@@ -16775,14 +16775,14 @@ function processarCapsulaAberta(_x79, _x80) {
 // v321b+: drag horizontal real, variação de cores por posição na régua.
 // ═══════════════════════════════════════════════════════════════════
 function _processarCapsulaAberta() {
-  _processarCapsulaAberta = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee210(capsula, criadorUser) {
-    var lugar, trecho, _yield$dbRead$from$se100, aguardando, _iterator52, _step52, a, dataAbreISO, anoAbre, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se101, outros, notifRegiao, lugaresOutros, _yield$dbRead$from$se102, jaAguardando, idsJaNotif, _iterator53, _step53, o, cruz, _yield$db$from$update0, errMark, _t244, _t245, _t246, _t247, _t248;
-    return _regenerator().w(function (_context212) {
-      while (1) switch (_context212.p = _context212.n) {
+  _processarCapsulaAberta = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee211(capsula, criadorUser) {
+    var lugar, trecho, _yield$dbRead$from$se100, aguardando, _iterator52, _step52, a, dataAbreISO, anoAbre, partes, cityEstimada, ufEstimada, userFantasma, _yield$dbRead$from$se101, outros, notifRegiao, lugaresOutros, _yield$dbRead$from$se102, jaAguardando, idsJaNotif, _iterator53, _step53, o, cruz, _yield$db$from$update0, errMark, _t245, _t246, _t247, _t248, _t249;
+    return _regenerator().w(function (_context213) {
+      while (1) switch (_context213.p = _context213.n) {
         case 0:
           lugar = capsula.lugar || "um lugar";
           trecho = (capsula.texto || "").slice(0, 100); // ── (1) Notifica o CRIADOR ──
-          _context212.n = 1;
+          _context213.n = 1;
           return criarNotificacao({
             tipo: "capsula_abriu_minha",
             recipientId: criadorUser.id,
@@ -16795,30 +16795,30 @@ function _processarCapsulaAberta() {
             }
           });
         case 1:
-          _context212.p = 1;
-          _context212.n = 2;
+          _context213.p = 1;
+          _context213.n = 2;
           return dbRead.from("capsula_aguardando").select("user_id").eq("capsula_id", capsula.id);
         case 2:
-          _yield$dbRead$from$se100 = _context212.v;
+          _yield$dbRead$from$se100 = _context213.v;
           aguardando = _yield$dbRead$from$se100.data;
           if (!(aguardando && aguardando.length > 0)) {
-            _context212.n = 10;
+            _context213.n = 10;
             break;
           }
           _iterator52 = _createForOfIteratorHelper(aguardando);
-          _context212.p = 3;
+          _context213.p = 3;
           _iterator52.s();
         case 4:
           if ((_step52 = _iterator52.n()).done) {
-            _context212.n = 6;
+            _context213.n = 6;
             break;
           }
           a = _step52.value;
           if (!(a.user_id && a.user_id !== criadorUser.id)) {
-            _context212.n = 5;
+            _context213.n = 5;
             break;
           }
-          _context212.n = 5;
+          _context213.n = 5;
           return criarNotificacao({
             tipo: "capsula_abriu_aguardando",
             recipientId: a.user_id,
@@ -16830,30 +16830,30 @@ function _processarCapsulaAberta() {
             }
           });
         case 5:
-          _context212.n = 4;
+          _context213.n = 4;
           break;
         case 6:
-          _context212.n = 8;
+          _context213.n = 8;
           break;
         case 7:
-          _context212.p = 7;
-          _t244 = _context212.v;
-          _iterator52.e(_t244);
+          _context213.p = 7;
+          _t245 = _context213.v;
+          _iterator52.e(_t245);
         case 8:
-          _context212.p = 8;
+          _context213.p = 8;
           _iterator52.f();
-          return _context212.f(8);
+          return _context213.f(8);
         case 9:
           tnLog("  \u2713 Notificou ".concat(aguardando.length, " em aguardando pra c\xE1psula ").concat(capsula.id.slice(0, 8), "\u2026"));
         case 10:
-          _context212.n = 12;
+          _context213.n = 12;
           break;
         case 11:
-          _context212.p = 11;
-          _t245 = _context212.v;
-          console.warn("  \u26A0 erro buscar aguardando pra ".concat(capsula.id, ":"), _t245);
+          _context213.p = 11;
+          _t246 = _context213.v;
+          console.warn("  \u26A0 erro buscar aguardando pra ".concat(capsula.id, ":"), _t246);
         case 12:
-          _context212.p = 12;
+          _context213.p = 12;
           dataAbreISO = capsula.capsula_data_referencia;
           anoAbre = new Date(dataAbreISO).getFullYear(); // Estima cidade/uf a partir do lugar digitado
           partes = (capsula.lugar || "").split(",").map(function (s) {
@@ -16862,10 +16862,10 @@ function _processarCapsulaAberta() {
           cityEstimada = partes[0] || "";
           ufEstimada = (partes[1] || "").length === 2 ? partes[1].toUpperCase() : "";
           if (cityEstimada) {
-            _context212.n = 13;
+            _context213.n = 13;
             break;
           }
-          return _context212.a(2);
+          return _context213.a(2);
         case 13:
           // sem cidade, não dá pra calcular cruzamento
           userFantasma = {
@@ -16883,52 +16883,52 @@ function _processarCapsulaAberta() {
               y2: anoAbre + 1
             }]
           };
-          _context212.n = 14;
+          _context213.n = 14;
           return dbRead.from("profiles").select("id, name, city, state, place_name, year_start, year_end").neq("id", criadorUser.id).limit(500);
         case 14:
-          _yield$dbRead$from$se101 = _context212.v;
+          _yield$dbRead$from$se101 = _context213.v;
           outros = _yield$dbRead$from$se101.data;
           if (!outros) {
-            _context212.n = 26;
+            _context213.n = 26;
             break;
           }
           notifRegiao = 0; // F1.B (calcularCruzamento): lugares de todos os profiles em 1 query batch.
-          _context212.n = 15;
+          _context213.n = 15;
           return tnLugaresDeProfiles(outros.map(function (o) {
             return o.id;
           }));
         case 15:
-          lugaresOutros = _context212.v;
-          _context212.n = 16;
+          lugaresOutros = _context213.v;
+          _context213.n = 16;
           return dbRead.from("capsula_aguardando").select("user_id").eq("capsula_id", capsula.id);
         case 16:
-          _yield$dbRead$from$se102 = _context212.v;
+          _yield$dbRead$from$se102 = _context213.v;
           jaAguardando = _yield$dbRead$from$se102.data;
           idsJaNotif = new Set((jaAguardando || []).map(function (a) {
             return a.user_id;
           }));
           _iterator53 = _createForOfIteratorHelper(outros);
-          _context212.p = 17;
+          _context213.p = 17;
           _iterator53.s();
         case 18:
           if ((_step53 = _iterator53.n()).done) {
-            _context212.n = 22;
+            _context213.n = 22;
             break;
           }
           o = _step53.value;
           if (!idsJaNotif.has(o.id)) {
-            _context212.n = 19;
+            _context213.n = 19;
             break;
           }
-          return _context212.a(3, 21);
+          return _context213.a(3, 21);
         case 19:
           // já recebeu via aguardando
           cruz = calcularCruzamento(userFantasma, o, userFantasma.lugares, lugaresOutros.get(o.id) || []);
           if (!(cruz && cruz.score >= 40)) {
-            _context212.n = 21;
+            _context213.n = 21;
             break;
           }
-          _context212.n = 20;
+          _context213.n = 20;
           return criarNotificacao({
             tipo: "capsula_abriu_regiao",
             recipientId: o.id,
@@ -16942,51 +16942,51 @@ function _processarCapsulaAberta() {
         case 20:
           notifRegiao++;
         case 21:
-          _context212.n = 18;
+          _context213.n = 18;
           break;
         case 22:
-          _context212.n = 24;
+          _context213.n = 24;
           break;
         case 23:
-          _context212.p = 23;
-          _t246 = _context212.v;
-          _iterator53.e(_t246);
+          _context213.p = 23;
+          _t247 = _context213.v;
+          _iterator53.e(_t247);
         case 24:
-          _context212.p = 24;
+          _context213.p = 24;
           _iterator53.f();
-          return _context212.f(24);
+          return _context213.f(24);
         case 25:
           if (notifRegiao > 0) tnLog("  \u2713 Notificou ".concat(notifRegiao, " por cruzamento regional"));
         case 26:
-          _context212.n = 28;
+          _context213.n = 28;
           break;
         case 27:
-          _context212.p = 27;
-          _t247 = _context212.v;
-          console.warn("  \u26A0 erro notif regional pra ".concat(capsula.id, ":"), _t247);
+          _context213.p = 27;
+          _t248 = _context213.v;
+          console.warn("  \u26A0 erro notif regional pra ".concat(capsula.id, ":"), _t248);
         case 28:
-          _context212.p = 28;
-          _context212.n = 29;
+          _context213.p = 28;
+          _context213.n = 29;
           return db.from("momentos").update({
             capsula_notificada_em: new Date().toISOString()
           }).eq("id", capsula.id).eq("user_id", criadorUser.id);
         case 29:
-          _yield$db$from$update0 = _context212.v;
+          _yield$db$from$update0 = _context213.v;
           errMark = _yield$db$from$update0.error;
           // safety
           if (errMark) {
             console.error("  \u26A0 erro marcando notificada_em pra ".concat(capsula.id, ":"), errMark);
           }
-          _context212.n = 31;
+          _context213.n = 31;
           break;
         case 30:
-          _context212.p = 30;
-          _t248 = _context212.v;
-          console.error("  \u26A0 exce\xE7\xE3o marcando notificada_em:", _t248);
+          _context213.p = 30;
+          _t249 = _context213.v;
+          console.error("  \u26A0 exce\xE7\xE3o marcando notificada_em:", _t249);
         case 31:
-          return _context212.a(2);
+          return _context213.a(2);
       }
-    }, _callee210, null, [[28, 30], [17, 23, 24, 25], [12, 27], [3, 7, 8, 9], [1, 11]]);
+    }, _callee211, null, [[28, 30], [17, 23, 24, 25], [12, 27], [3, 7, 8, 9], [1, 11]]);
   }));
   return _processarCapsulaAberta.apply(this, arguments);
 }
@@ -26242,7 +26242,7 @@ function carregarLugaresEmAlta() {
   return _carregarLugaresEmAlta.apply(this, arguments);
 } // ── Helper: Contar perfis por place_id em lote ────────────────
 function _carregarLugaresEmAlta() {
-  _carregarLugaresEmAlta = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee211() {
+  _carregarLugaresEmAlta = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee212() {
     var limite,
       _yield$dbRead$from$se103,
       pp,
@@ -26250,23 +26250,23 @@ function _carregarLugaresEmAlta() {
       topIds,
       _yield$dbRead$from$se104,
       places,
-      _args213 = arguments,
-      _t249;
-    return _regenerator().w(function (_context213) {
-      while (1) switch (_context213.p = _context213.n) {
+      _args214 = arguments,
+      _t250;
+    return _regenerator().w(function (_context214) {
+      while (1) switch (_context214.p = _context214.n) {
         case 0:
-          limite = _args213.length > 0 && _args213[0] !== undefined ? _args213[0] : 6;
-          _context213.p = 1;
-          _context213.n = 2;
+          limite = _args214.length > 0 && _args214[0] !== undefined ? _args214[0] : 6;
+          _context214.p = 1;
+          _context214.n = 2;
           return dbRead.from("place_profiles").select("place_id");
         case 2:
-          _yield$dbRead$from$se103 = _context213.v;
+          _yield$dbRead$from$se103 = _context214.v;
           pp = _yield$dbRead$from$se103.data;
           if (!(!pp || pp.length === 0)) {
-            _context213.n = 3;
+            _context214.n = 3;
             break;
           }
-          return _context213.a(2, []);
+          return _context214.a(2, []);
         case 3:
           counts = {};
           pp.forEach(function (r) {
@@ -26278,23 +26278,23 @@ function _carregarLugaresEmAlta() {
             return e[0];
           });
           if (!(topIds.length === 0)) {
-            _context213.n = 4;
+            _context214.n = 4;
             break;
           }
-          return _context213.a(2, []);
+          return _context214.a(2, []);
         case 4:
-          _context213.n = 5;
+          _context214.n = 5;
           return dbRead.from("places").select("*")["in"]("id", topIds);
         case 5:
-          _yield$dbRead$from$se104 = _context213.v;
+          _yield$dbRead$from$se104 = _context214.v;
           places = _yield$dbRead$from$se104.data;
           if (places) {
-            _context213.n = 6;
+            _context214.n = 6;
             break;
           }
-          return _context213.a(2, []);
+          return _context214.a(2, []);
         case 6:
-          return _context213.a(2, topIds.map(function (id) {
+          return _context214.a(2, topIds.map(function (id) {
             var p = places.find(function (x) {
               return String(x.id) === String(id);
             });
@@ -26304,12 +26304,12 @@ function _carregarLugaresEmAlta() {
             });
           }).filter(Boolean));
         case 7:
-          _context213.p = 7;
-          _t249 = _context213.v;
-          tnLog("Lugares em alta:", _t249.message || _t249);
-          return _context213.a(2, []);
+          _context214.p = 7;
+          _t250 = _context214.v;
+          tnLog("Lugares em alta:", _t250.message || _t250);
+          return _context214.a(2, []);
       }
-    }, _callee211, null, [[1, 7]]);
+    }, _callee212, null, [[1, 7]]);
   }));
   return _carregarLugaresEmAlta.apply(this, arguments);
 }
@@ -26320,34 +26320,34 @@ function contarPerfisPorLugar(_x95) {
 // contemplativa, não de busca recorrente tipo Google. Funções mantidas como
 // stubs no-op pra não quebrar chamadas existentes.
 function _contarPerfisPorLugar() {
-  _contarPerfisPorLugar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee212(placeIds) {
-    var _yield$dbRead$from$se105, data, counts, _t250;
-    return _regenerator().w(function (_context214) {
-      while (1) switch (_context214.p = _context214.n) {
+  _contarPerfisPorLugar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee213(placeIds) {
+    var _yield$dbRead$from$se105, data, counts, _t251;
+    return _regenerator().w(function (_context215) {
+      while (1) switch (_context215.p = _context215.n) {
         case 0:
           if (!(!placeIds || placeIds.length === 0)) {
-            _context214.n = 1;
+            _context215.n = 1;
             break;
           }
-          return _context214.a(2, {});
+          return _context215.a(2, {});
         case 1:
-          _context214.p = 1;
-          _context214.n = 2;
+          _context215.p = 1;
+          _context215.n = 2;
           return dbRead.from("place_profiles").select("place_id")["in"]("place_id", placeIds);
         case 2:
-          _yield$dbRead$from$se105 = _context214.v;
+          _yield$dbRead$from$se105 = _context215.v;
           data = _yield$dbRead$from$se105.data;
           counts = {};
           (data || []).forEach(function (r) {
             counts[r.place_id] = (counts[r.place_id] || 0) + 1;
           });
-          return _context214.a(2, counts);
+          return _context215.a(2, counts);
         case 3:
-          _context214.p = 3;
-          _t250 = _context214.v;
-          return _context214.a(2, {});
+          _context215.p = 3;
+          _t251 = _context215.v;
+          return _context215.a(2, {});
       }
-    }, _callee212, null, [[1, 3]]);
+    }, _callee213, null, [[1, 3]]);
   }));
   return _contarPerfisPorLugar.apply(this, arguments);
 }
@@ -37685,6 +37685,7 @@ function ModalPerfil(_ref169) {
   var p = _ref169.p,
     onClose = _ref169.onClose,
     onAdd = _ref169.onAdd,
+    onRemove = _ref169.onRemove,
     onChat = _ref169.onChat,
     user = _ref169.user,
     isContact = _ref169.isContact;
@@ -38131,7 +38132,11 @@ function ModalPerfil(_ref169) {
     }
   }, /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
-      if (!isContact) onAdd(p);
+      if (isContact) {
+        if (onRemove) onRemove(p);
+      } else {
+        onAdd(p);
+      }
     },
     style: {
       flex: 1,
@@ -39266,26 +39271,26 @@ function tnBuscarNominatim(_x113) {
 } // Cria entrada nova em `places` com proteção contra duplicata.
 // Retorna o objeto place completo (com place_id).
 function _tnBuscarNominatim() {
-  _tnBuscarNominatim = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee213(termo) {
-    var r, data, SM, _t251;
-    return _regenerator().w(function (_context215) {
-      while (1) switch (_context215.p = _context215.n) {
+  _tnBuscarNominatim = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee214(termo) {
+    var r, data, SM, _t252;
+    return _regenerator().w(function (_context216) {
+      while (1) switch (_context216.p = _context216.n) {
         case 0:
           if (!(!termo || termo.trim().length < 3)) {
-            _context215.n = 1;
+            _context216.n = 1;
             break;
           }
-          return _context215.a(2, []);
+          return _context216.a(2, []);
         case 1:
-          _context215.p = 1;
-          _context215.n = 2;
+          _context216.p = 1;
+          _context216.n = 2;
           return fetch("https://nominatim.openstreetmap.org/search?q=".concat(encodeURIComponent(termo + ", Brasil"), "&format=json&addressdetails=1&limit=5&accept-language=pt-BR"));
         case 2:
-          r = _context215.v;
-          _context215.n = 3;
+          r = _context216.v;
+          _context216.n = 3;
           return r.json();
         case 3:
-          data = _context215.v;
+          data = _context216.v;
           // Normaliza resultado pra formato compatível com places
           SM = {
             "Acre": "AC",
@@ -39316,7 +39321,7 @@ function _tnBuscarNominatim() {
             "Sergipe": "SE",
             "Tocantins": "TO"
           };
-          return _context215.a(2, (data || []).map(function (s) {
+          return _context216.a(2, (data || []).map(function (s) {
             var addr = s.address || {};
             var cidade = addr.city || addr.town || addr.village || addr.municipality || addr.county || "";
             var nome = s.display_name.split(",")[0].trim();
@@ -39336,12 +39341,12 @@ function _tnBuscarNominatim() {
             return p.name && p.city;
           }));
         case 4:
-          _context215.p = 4;
-          _t251 = _context215.v;
-          console.warn("[CampoLugar] Nominatim falhou:", _t251);
-          return _context215.a(2, []);
+          _context216.p = 4;
+          _t252 = _context216.v;
+          console.warn("[CampoLugar] Nominatim falhou:", _t252);
+          return _context216.a(2, []);
       }
-    }, _callee213, null, [[1, 4]]);
+    }, _callee214, null, [[1, 4]]);
   }));
   return _tnBuscarNominatim.apply(this, arguments);
 }
@@ -39349,44 +39354,44 @@ function tnCriarPlace(_x114, _x115) {
   return _tnCriarPlace.apply(this, arguments);
 } // ── ChipLugar: pílula compacta de lugar já selecionado ──
 function _tnCriarPlace() {
-  _tnCriarPlace = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee214(_ref178, createdById) {
-    var name, city, state, country, type, lat, lng, photo_url, _yield$db$from$select3, existente, _yield$db$from$insert19, created, error, _yield$db$from$select4, e2, _t252;
-    return _regenerator().w(function (_context216) {
-      while (1) switch (_context216.p = _context216.n) {
+  _tnCriarPlace = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee215(_ref178, createdById) {
+    var name, city, state, country, type, lat, lng, photo_url, _yield$db$from$select3, existente, _yield$db$from$insert19, created, error, _yield$db$from$select4, e2, _t253;
+    return _regenerator().w(function (_context217) {
+      while (1) switch (_context217.p = _context217.n) {
         case 0:
           name = _ref178.name, city = _ref178.city, state = _ref178.state, country = _ref178.country, type = _ref178.type, lat = _ref178.lat, lng = _ref178.lng, photo_url = _ref178.photo_url;
           if (!(!name || !city)) {
-            _context216.n = 1;
+            _context217.n = 1;
             break;
           }
           throw new Error("tnCriarPlace: name e city são obrigatórios");
         case 1:
           if (TN_PLACE_TYPES.includes(type)) {
-            _context216.n = 2;
+            _context217.n = 2;
             break;
           }
           throw new Error("tnCriarPlace: type '".concat(type, "' inv\xE1lido. Use um de: ").concat(TN_PLACE_TYPES.join(",")));
         case 2:
-          _context216.p = 2;
-          _context216.n = 3;
+          _context217.p = 2;
+          _context217.n = 3;
           return db.from("places").select("id, name, city, state, country, type, lat, lng, photo_url").ilike("name", name.trim()).ilike("city", city.trim()).limit(1).maybeSingle();
         case 3:
-          _yield$db$from$select3 = _context216.v;
+          _yield$db$from$select3 = _context217.v;
           existente = _yield$db$from$select3.data;
           if (!existente) {
-            _context216.n = 4;
+            _context217.n = 4;
             break;
           }
           tnLog("[tnCriarPlace] já existe place, reusando:", existente.id);
-          return _context216.a(2, existente);
+          return _context217.a(2, existente);
         case 4:
-          _context216.n = 6;
+          _context217.n = 6;
           break;
         case 5:
-          _context216.p = 5;
-          _t252 = _context216.v;
+          _context217.p = 5;
+          _t253 = _context217.v;
         case 6:
-          _context216.n = 7;
+          _context217.n = 7;
           return db.from("places").insert({
             name: name.trim(),
             city: city.trim(),
@@ -39399,33 +39404,33 @@ function _tnCriarPlace() {
             created_by: createdById || null
           }).select("*").single();
         case 7:
-          _yield$db$from$insert19 = _context216.v;
+          _yield$db$from$insert19 = _context217.v;
           created = _yield$db$from$insert19.data;
           error = _yield$db$from$insert19.error;
           if (!error) {
-            _context216.n = 10;
+            _context217.n = 10;
             break;
           }
           if (!(error.code === "23505")) {
-            _context216.n = 9;
+            _context217.n = 9;
             break;
           }
-          _context216.n = 8;
+          _context217.n = 8;
           return db.from("places").select("*").ilike("name", name.trim()).ilike("city", city.trim()).limit(1).maybeSingle();
         case 8:
-          _yield$db$from$select4 = _context216.v;
+          _yield$db$from$select4 = _context217.v;
           e2 = _yield$db$from$select4.data;
           if (!e2) {
-            _context216.n = 9;
+            _context217.n = 9;
             break;
           }
-          return _context216.a(2, e2);
+          return _context217.a(2, e2);
         case 9:
           throw error;
         case 10:
-          return _context216.a(2, created);
+          return _context217.a(2, created);
       }
-    }, _callee214, null, [[2, 5]]);
+    }, _callee215, null, [[2, 5]]);
   }));
   return _tnCriarPlace.apply(this, arguments);
 }
@@ -47417,16 +47422,16 @@ function fetchMomentosRelacionados(_x127) {
 // Carrega todos os momentos com fotos do lugar. Mostra mosaico 3 colunas
 // com separadores por ano. Click numa foto abre o momento.
 function _fetchMomentosRelacionados() {
-  _fetchMomentosRelacionados = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee216(momento) {
+  _fetchMomentosRelacionados = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee217(momento) {
     var ts, ano, decadaIni, decadaFim, lugarStr, bairro, cidade, buscar, r1, r2, r3, ids, combinado, exatos, _exatos, r4, r5;
-    return _regenerator().w(function (_context218) {
-      while (1) switch (_context218.n) {
+    return _regenerator().w(function (_context219) {
+      while (1) switch (_context219.n) {
         case 0:
           if (momento) {
-            _context218.n = 1;
+            _context219.n = 1;
             break;
           }
-          return _context218.a(2, {
+          return _context219.a(2, {
             momentos: [],
             raio: ""
           });
@@ -47439,16 +47444,16 @@ function _fetchMomentosRelacionados() {
           bairro = tnExtrairBairroOuLocal(lugarStr);
           cidade = tnExtrairCidadeDoLugar(lugarStr);
           buscar = /*#__PURE__*/function () {
-            var _ref286 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee215(filtroLugar, anoMin, anoMax) {
+            var _ref286 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee216(filtroLugar, anoMin, anoMax) {
               var q, ini, fim, _yield$q3, data;
-              return _regenerator().w(function (_context217) {
-                while (1) switch (_context217.n) {
+              return _regenerator().w(function (_context218) {
+                while (1) switch (_context218.n) {
                   case 0:
                     if (filtroLugar) {
-                      _context217.n = 1;
+                      _context218.n = 1;
                       break;
                     }
-                    return _context217.a(2, []);
+                    return _context218.a(2, []);
                   case 1:
                     q = dbRead.from("momentos").select("*").or("tipo.is.null,tipo.eq.momento,tipo.eq.capsula").ilike("lugar", "%".concat(filtroLugar, "%")).order("ts", {
                       ascending: false
@@ -47458,65 +47463,65 @@ function _fetchMomentosRelacionados() {
                       fim = new Date("".concat(anoMax, "-12-31T23:59:59Z")).toISOString();
                       q = q.gte("ts", ini).lte("ts", fim);
                     }
-                    _context217.n = 2;
+                    _context218.n = 2;
                     return q;
                   case 2:
-                    _yield$q3 = _context217.v;
+                    _yield$q3 = _context218.v;
                     data = _yield$q3.data;
-                    return _context217.a(2, (data || []).filter(function (m) {
+                    return _context218.a(2, (data || []).filter(function (m) {
                       return m.id !== momento.id;
                     }));
                 }
-              }, _callee215);
+              }, _callee216);
             }));
-            return function buscar(_x142, _x143, _x144) {
+            return function buscar(_x143, _x144, _x145) {
               return _ref286.apply(this, arguments);
             };
           }(); // Camada 1: bairro/lugar específico + mesmo ano
           if (!(bairro && ano)) {
-            _context218.n = 9;
+            _context219.n = 9;
             break;
           }
-          _context218.n = 2;
+          _context219.n = 2;
           return buscar(bairro, ano, ano);
         case 2:
-          r1 = _context218.v;
+          r1 = _context219.v;
           if (!(r1.length >= 6)) {
-            _context218.n = 3;
+            _context219.n = 3;
             break;
           }
-          return _context218.a(2, {
+          return _context219.a(2, {
             momentos: r1,
             raio: "".concat(r1.length, " momentos \xB7 ").concat(bairro, " \xB7 ").concat(ano)
           });
         case 3:
           if (!decadaIni) {
-            _context218.n = 8;
+            _context219.n = 8;
             break;
           }
-          _context218.n = 4;
+          _context219.n = 4;
           return buscar(bairro, decadaIni, decadaFim);
         case 4:
-          r2 = _context218.v;
+          r2 = _context219.v;
           if (!(r2.length >= 6)) {
-            _context218.n = 5;
+            _context219.n = 5;
             break;
           }
-          return _context218.a(2, {
+          return _context219.a(2, {
             momentos: r2,
             raio: "".concat(r2.length, " momentos \xB7 ").concat(bairro, " \xB7 anos ").concat(decadaIni)
           });
         case 5:
           if (!(cidade && cidade.toLowerCase() !== bairro.toLowerCase())) {
-            _context218.n = 7;
+            _context219.n = 7;
             break;
           }
-          _context218.n = 6;
+          _context219.n = 6;
           return buscar(cidade, decadaIni, decadaFim);
         case 6:
-          r3 = _context218.v;
+          r3 = _context219.v;
           if (!(r3.length > 0)) {
-            _context218.n = 7;
+            _context219.n = 7;
             break;
           }
           // Combina r2 (mais relevantes) na frente de r3 (sem duplicar)
@@ -47527,70 +47532,70 @@ function _fetchMomentosRelacionados() {
             return !ids.has(m.id);
           })));
           exatos = r1.length;
-          return _context218.a(2, {
+          return _context219.a(2, {
             momentos: combinado,
             raio: exatos > 0 ? "".concat(exatos, " exatamente aqui \xB7 ").concat(combinado.length, " nesta regi\xE3o") : "".concat(combinado.length, " ").concat(combinado.length === 1 ? "momento" : "momentos", " \xB7 ").concat(cidade, " \xB7 anos ").concat(decadaIni)
           });
         case 7:
           if (!(r2.length > 0)) {
-            _context218.n = 8;
+            _context219.n = 8;
             break;
           }
           _exatos = r1.length;
-          return _context218.a(2, {
+          return _context219.a(2, {
             momentos: r2,
             raio: _exatos > 0 ? "".concat(_exatos, " exatamente aqui \xB7 ").concat(r2.length, " nesta \xE9poca") : "".concat(r2.length, " momentos \xB7 ").concat(bairro, " \xB7 anos ").concat(decadaIni)
           });
         case 8:
           if (!(r1.length > 0)) {
-            _context218.n = 9;
+            _context219.n = 9;
             break;
           }
-          return _context218.a(2, {
+          return _context219.a(2, {
             momentos: r1,
             raio: "".concat(r1.length, " momentos \xB7 ").concat(bairro, " \xB7 ").concat(ano)
           });
         case 9:
           if (!(cidade && decadaIni)) {
-            _context218.n = 11;
+            _context219.n = 11;
             break;
           }
-          _context218.n = 10;
+          _context219.n = 10;
           return buscar(cidade, decadaIni, decadaFim);
         case 10:
-          r4 = _context218.v;
+          r4 = _context219.v;
           if (!(r4.length > 0)) {
-            _context218.n = 11;
+            _context219.n = 11;
             break;
           }
-          return _context218.a(2, {
+          return _context219.a(2, {
             momentos: r4,
             raio: "".concat(r4.length, " momentos \xB7 ").concat(cidade, " \xB7 anos ").concat(decadaIni)
           });
         case 11:
           if (!(bairro || cidade)) {
-            _context218.n = 13;
+            _context219.n = 13;
             break;
           }
-          _context218.n = 12;
+          _context219.n = 12;
           return buscar(bairro || cidade, null, null);
         case 12:
-          r5 = _context218.v;
+          r5 = _context219.v;
           if (!(r5.length > 0)) {
-            _context218.n = 13;
+            _context219.n = 13;
             break;
           }
-          return _context218.a(2, {
+          return _context219.a(2, {
             momentos: r5,
             raio: "".concat(r5.length, " momentos \xB7 ").concat(bairro || cidade)
           });
         case 13:
-          return _context218.a(2, {
+          return _context219.a(2, {
             momentos: [],
             raio: ""
           });
       }
-    }, _callee216);
+    }, _callee217);
   }));
   return _fetchMomentosRelacionados.apply(this, arguments);
 }
@@ -54786,36 +54791,36 @@ function calcularScoreAtividade(_x128) {
 // v329m: vira "seguir lugar" - vocabulário direto, cor var(--user-color),
 // ícone +/✓ (padrão seguir). tipo no banco mudou pra "seguir_lugar".
 function _calcularScoreAtividade() {
-  _calcularScoreAtividade = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee217(userIds) {
-    var out, _yield$Promise$all9, _yield$Promise$all0, rMom, rInter, score, _t253;
-    return _regenerator().w(function (_context219) {
-      while (1) switch (_context219.p = _context219.n) {
+  _calcularScoreAtividade = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee218(userIds) {
+    var out, _yield$Promise$all9, _yield$Promise$all0, rMom, rInter, score, _t254;
+    return _regenerator().w(function (_context220) {
+      while (1) switch (_context220.p = _context220.n) {
         case 0:
           if (!(!userIds || userIds.length === 0)) {
-            _context219.n = 1;
+            _context220.n = 1;
             break;
           }
-          return _context219.a(2, {});
+          return _context220.a(2, {});
         case 1:
           if (!(TN_SCORE_CACHE.data && Date.now() - TN_SCORE_CACHE.ts < TN_SCORE_TTL)) {
-            _context219.n = 2;
+            _context220.n = 2;
             break;
           }
           out = {};
           userIds.forEach(function (id) {
             out[id] = TN_SCORE_CACHE.data[id] || 0;
           });
-          return _context219.a(2, out);
+          return _context220.a(2, out);
         case 2:
-          _context219.p = 2;
-          _context219.n = 3;
+          _context220.p = 2;
+          _context220.n = 3;
           return Promise.all([
           // Momentos por user (inclui cápsulas - mesma tabela)
           dbRead.from("momentos").select("user_id, tipo")["in"]("user_id", userIds),
           // Interações: comentários e curtidas
           dbRead.from("interacoes").select("user_id, tipo")["in"]("user_id", userIds)]);
         case 3:
-          _yield$Promise$all9 = _context219.v;
+          _yield$Promise$all9 = _context220.v;
           _yield$Promise$all0 = _slicedToArray(_yield$Promise$all9, 2);
           rMom = _yield$Promise$all0[0];
           rInter = _yield$Promise$all0[1];
@@ -54835,14 +54840,14 @@ function _calcularScoreAtividade() {
           });
           TN_SCORE_CACHE.data = score;
           TN_SCORE_CACHE.ts = Date.now();
-          return _context219.a(2, score);
+          return _context220.a(2, score);
         case 4:
-          _context219.p = 4;
-          _t253 = _context219.v;
-          console.warn("[score atividade] erro:", _t253);
-          return _context219.a(2, {});
+          _context220.p = 4;
+          _t254 = _context220.v;
+          console.warn("[score atividade] erro:", _t254);
+          return _context220.a(2, {});
       }
-    }, _callee217, null, [[2, 4]]);
+    }, _callee218, null, [[2, 4]]);
   }));
   return _calcularScoreAtividade.apply(this, arguments);
 }
@@ -59359,7 +59364,7 @@ function App() {
   }
   function addContact(_x135) {
     return _addContact.apply(this, arguments);
-  }
+  } // v349: deixar de seguir — espelho do addContact.
   function _addContact() {
     _addContact = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee173(p) {
       var rel,
@@ -59455,14 +59460,77 @@ function App() {
     }));
     return _addContact.apply(this, arguments);
   }
-  function updateContactRel(_x136, _x137) {
+  function removeContact(_x136) {
+    return _removeContact.apply(this, arguments);
+  }
+  function _removeContact() {
+    _removeContact = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee174(p) {
+      var anterior, updated, erroContato, _yield$db$from$delete0, error, _t199;
+      return _regenerator().w(function (_context176) {
+        while (1) switch (_context176.p = _context176.n) {
+          case 0:
+            if (!(!(user !== null && user !== void 0 && user.id) || !(p !== null && p !== void 0 && p.id))) {
+              _context176.n = 1;
+              break;
+            }
+            return _context176.a(2);
+          case 1:
+            if (contacts.find(function (c) {
+              return c.id === p.id;
+            })) {
+              _context176.n = 2;
+              break;
+            }
+            return _context176.a(2);
+          case 2:
+            anterior = contacts;
+            updated = contacts.filter(function (c) {
+              return c.id !== p.id;
+            });
+            setContacts(updated);
+            try {
+              localStorage.setItem("tn_contacts", JSON.stringify(updated));
+            } catch (_unused144) {}
+            // Persiste no Supabase — delete não lança exceção em erro, checa {error}.
+            erroContato = null;
+            _context176.p = 3;
+            _context176.n = 4;
+            return db.from("contacts")["delete"]().eq("user_id", user.id).eq("contact_id", p.id);
+          case 4:
+            _yield$db$from$delete0 = _context176.v;
+            error = _yield$db$from$delete0.error;
+            erroContato = error;
+            _context176.n = 6;
+            break;
+          case 5:
+            _context176.p = 5;
+            _t199 = _context176.v;
+            erroContato = _t199;
+          case 6:
+            if (erroContato) {
+              console.error("Erro ao remover contato:", erroContato);
+              // reverte: volta o contato pro estado local
+              setContacts(anterior);
+              try {
+                localStorage.setItem("tn_contacts", JSON.stringify(anterior));
+              } catch (_unused145) {}
+              if (window.tnToast) window.tnToast("não consegui deixar de seguir", "verifique a conexão");
+            }
+          case 7:
+            return _context176.a(2);
+        }
+      }, _callee174, null, [[3, 5]]);
+    }));
+    return _removeContact.apply(this, arguments);
+  }
+  function updateContactRel(_x137, _x138) {
     return _updateContactRel.apply(this, arguments);
   } // v294: toggle tag "família" no contato (privacidade fase B)
   function _updateContactRel() {
-    _updateContactRel = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee174(id, rel) {
-      var updated, _t199;
-      return _regenerator().w(function (_context176) {
-        while (1) switch (_context176.p = _context176.n) {
+    _updateContactRel = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee175(id, rel) {
+      var updated, _t200;
+      return _regenerator().w(function (_context177) {
+        while (1) switch (_context177.p = _context177.n) {
           case 0:
             updated = contacts.map(function (c) {
               return c.id === id ? _objectSpread(_objectSpread({}, c), {}, {
@@ -59472,39 +59540,39 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused144) {}
+            } catch (_unused146) {}
             // Atualiza no Supabase
             if (!(user !== null && user !== void 0 && user.id)) {
-              _context176.n = 4;
+              _context177.n = 4;
               break;
             }
-            _context176.p = 1;
-            _context176.n = 2;
+            _context177.p = 1;
+            _context177.n = 2;
             return db.from("contacts").update({
               rel: rel
             }).eq("user_id", user.id).eq("contact_id", id);
           case 2:
-            _context176.n = 4;
+            _context177.n = 4;
             break;
           case 3:
-            _context176.p = 3;
-            _t199 = _context176.v;
-            console.error("Erro ao atualizar rel:", _t199);
+            _context177.p = 3;
+            _t200 = _context177.v;
+            console.error("Erro ao atualizar rel:", _t200);
           case 4:
-            return _context176.a(2);
+            return _context177.a(2);
         }
-      }, _callee174, null, [[1, 3]]);
+      }, _callee175, null, [[1, 3]]);
     }));
     return _updateContactRel.apply(this, arguments);
   }
-  function toggleFamilia(_x138) {
+  function toggleFamilia(_x139) {
     return _toggleFamilia.apply(this, arguments);
   }
   function _toggleFamilia() {
-    _toggleFamilia = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee175(id) {
-      var atual, novoVal, updated, _t200;
-      return _regenerator().w(function (_context177) {
-        while (1) switch (_context177.p = _context177.n) {
+    _toggleFamilia = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee176(id) {
+      var atual, novoVal, updated, _t201;
+      return _regenerator().w(function (_context178) {
+        while (1) switch (_context178.p = _context178.n) {
           case 0:
             atual = contacts.find(function (c) {
               return c.id === id;
@@ -59518,13 +59586,13 @@ function App() {
             setContacts(updated);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(updated));
-            } catch (_unused145) {}
+            } catch (_unused147) {}
             if (!(user !== null && user !== void 0 && user.id)) {
-              _context177.n = 4;
+              _context178.n = 4;
               break;
             }
-            _context177.p = 1;
-            _context177.n = 2;
+            _context178.p = 1;
+            _context178.n = 2;
             return db.from("contacts").update({
               is_family: novoVal
             }).eq("user_id", user.id).eq("contact_id", id);
@@ -59532,16 +59600,16 @@ function App() {
             // Invalida cache de privacidade
             if (window.__tnPrivacidadeCache) window.__tnPrivacidadeCache["delete"](user.id);
             if (window.tnToast) window.tnToast(novoVal ? "marcado como família" : "removido da família", novoVal ? "essa pessoa agora vê suas cápsulas marcadas pra família." : "essa pessoa não vê mais cápsulas só de família.");
-            _context177.n = 4;
+            _context178.n = 4;
             break;
           case 3:
-            _context177.p = 3;
-            _t200 = _context177.v;
-            console.error("Erro ao toggle família:", _t200);
+            _context178.p = 3;
+            _t201 = _context178.v;
+            console.error("Erro ao toggle família:", _t201);
           case 4:
-            return _context177.a(2);
+            return _context178.a(2);
         }
-      }, _callee175, null, [[1, 3]]);
+      }, _callee176, null, [[1, 3]]);
     }));
     return _toggleFamilia.apply(this, arguments);
   }
@@ -59570,33 +59638,33 @@ function App() {
     return _logout.apply(this, arguments);
   }
   function _logout() {
-    _logout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee176() {
-      var _t201;
-      return _regenerator().w(function (_context178) {
-        while (1) switch (_context178.p = _context178.n) {
+    _logout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee177() {
+      var _t202;
+      return _regenerator().w(function (_context179) {
+        while (1) switch (_context179.p = _context179.n) {
           case 0:
             setUser(null);
             setContacts([]);
             try {
               localStorage.removeItem("tn_user");
-            } catch (_unused146) {}
+            } catch (_unused148) {}
             try {
               localStorage.removeItem("tn_contacts");
-            } catch (_unused147) {}
-            _context178.p = 1;
-            _context178.n = 2;
+            } catch (_unused149) {}
+            _context179.p = 1;
+            _context179.n = 2;
             return db.auth.signOut();
           case 2:
-            _context178.n = 4;
+            _context179.n = 4;
             break;
           case 3:
-            _context178.p = 3;
-            _t201 = _context178.v;
-            tnLog("signOut error:", _t201);
+            _context179.p = 3;
+            _t202 = _context179.v;
+            tnLog("signOut error:", _t202);
           case 4:
-            return _context178.a(2);
+            return _context179.a(2);
         }
-      }, _callee176, null, [[1, 3]]);
+      }, _callee177, null, [[1, 3]]);
     }));
     return _logout.apply(this, arguments);
   }
@@ -60461,7 +60529,7 @@ function App() {
           }
         }, _callee167, null, [[1, 3]]);
       }));
-      return function (_x139) {
+      return function (_x140) {
         return _ref281.apply(this, arguments);
       };
     }()),
@@ -60524,7 +60592,7 @@ function App() {
           }
         }, _callee168, null, [[0, 2]]);
       }));
-      return function (_x140) {
+      return function (_x141) {
         return _ref282.apply(this, arguments);
       };
     }())
@@ -60588,7 +60656,7 @@ function App() {
           }
         }, _callee169, null, [[1, 3]]);
       }));
-      return function (_x141) {
+      return function (_x142) {
         return _ref283.apply(this, arguments);
       };
     }())
@@ -61115,6 +61183,10 @@ function App() {
     },
     onAdd: function onAdd(p) {
       addContact(p);
+      setModal(null);
+    },
+    onRemove: function onRemove(p) {
+      removeContact(p);
       setModal(null);
     },
     onChat: abrirChat,
