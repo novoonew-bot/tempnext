@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v347 — UX 3: botao cancelar do editar lugar com mais peso visual ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v348 — UX 4: placeholder de foto do card de lugar mais leve ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -6901,9 +6901,33 @@ function CapituloLugares(_ref21) {
     }, React.createElement("div", {
       className: "cap-exp-foto morou",
       style: {
-        background: "linear-gradient(135deg, var(--user-color-soft), var(--user-color-deep))"
+        // v348 (UX 4): placeholder mais leve — antes era gradiente sólido
+        // cheio (user-color-soft → user-color-deep), peso visual alto pra
+        // um estado sem-foto. Agora gradiente translúcido + pin discreto.
+        background: "linear-gradient(135deg, var(--user-color-15), var(--user-color-soft))",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
       }
-    }), React.createElement("div", {
+    }, React.createElement("svg", {
+      width: 22,
+      height: 22,
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "var(--user-color-deep)",
+      strokeWidth: 1.6,
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      style: {
+        opacity: 0.55
+      }
+    }, React.createElement("path", {
+      d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"
+    }), React.createElement("circle", {
+      cx: 12,
+      cy: 10,
+      r: 3
+    }))), React.createElement("div", {
       className: "cap-exp-info"
     }, React.createElement("div", {
       className: "cap-exp-nome"
