@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v350b — UX 14: botão conectar com peso visual (sólido) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v350c — UX: titulo lugares por onde passei, pin menor, lapis/lixeira só dentro do perfil ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -29362,7 +29362,7 @@ function MeusLugares(_ref131) {
       textOverflow: "ellipsis",
       whiteSpace: "nowrap"
     }
-  }, "meus lugares"), /*#__PURE__*/React.createElement("div", {
+  }, "lugares por onde passei"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 12,
       color: T.muted,
@@ -29370,7 +29370,7 @@ function MeusLugares(_ref131) {
       fontStyle: "italic",
       fontFamily: "Georgia,serif"
     }
-  }, lugares.length)), /*#__PURE__*/React.createElement("button", {
+  }, lugares.length, " ", lugares.length === 1 ? "cidade" : "cidades")), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       return setMostrarForm(function (v) {
         return !v;
@@ -29481,19 +29481,17 @@ function MeusLugares(_ref131) {
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        width: 38,
-        height: 38,
+        width: 24,
+        height: 24,
         borderRadius: "50%",
         flexShrink: 0,
-        background: "".concat(era.color, "15"),
-        border: "1.5px solid ".concat(era.color, "40"),
         display: "flex",
         alignItems: "center",
         justifyContent: "center"
       }
     }, /*#__PURE__*/React.createElement("svg", {
-      width: "16",
-      height: "18",
+      width: "14",
+      height: "16",
       viewBox: "0 0 12 14",
       fill: "none"
     }, /*#__PURE__*/React.createElement("path", {
@@ -29549,66 +29547,7 @@ function MeusLugares(_ref131) {
         marginTop: 8,
         alignItems: "center"
       }
-    })), /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: 6,
-        flexShrink: 0
-      }
-    }, /*#__PURE__*/React.createElement("button", {
-      onClick: function onClick() {
-        return setEditandoIdx(idx);
-      },
-      title: "editar",
-      style: {
-        width: 32,
-        height: 32,
-        borderRadius: "50%",
-        background: T.faint,
-        border: "1px solid ".concat(T.border),
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }
-    }, /*#__PURE__*/React.createElement("svg", {
-      width: "13",
-      height: "13",
-      viewBox: "0 0 14 14",
-      fill: "none",
-      stroke: T.sub,
-      strokeWidth: "1.5",
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    }, /*#__PURE__*/React.createElement("path", {
-      d: "M11 2l1 1L4 11H3v-1L11 2z"
-    }))), /*#__PURE__*/React.createElement("button", {
-      onClick: function onClick() {
-        return setConfirmRemover(idx);
-      },
-      title: "remover",
-      style: {
-        width: 32,
-        height: 32,
-        borderRadius: "50%",
-        background: T.faint,
-        border: "1px solid ".concat(T.border),
-        cursor: "pointer",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }
-    }, /*#__PURE__*/React.createElement("svg", {
-      width: "13",
-      height: "13",
-      viewBox: "0 0 14 14",
-      fill: "none",
-      stroke: T.muted,
-      strokeWidth: "1.5",
-      strokeLinecap: "round"
-    }, /*#__PURE__*/React.createElement("path", {
-      d: "M3 4h8M5 4V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1M4 4l1 8a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1l1-8"
-    }))))), confirmRemover === idx && /*#__PURE__*/React.createElement("div", {
+    }))), confirmRemover === idx && /*#__PURE__*/React.createElement("div", {
       style: {
         marginTop: 12,
         padding: "12px",
