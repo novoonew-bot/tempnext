@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v351c — fix: remover memoria/capsula atualiza estado local sem sair do capitulo ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v351d — debug delete memoria: log com resposta do banco e detecção de RLS ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -35409,46 +35409,65 @@ function Perfil(_ref156) {
     if (capituloAbertoPerfil === "memorias") {
       var removerMemoria = /*#__PURE__*/function () {
         var _ref162 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee99(m) {
-          var _yield$db$from$delete8, error, _t110;
+          var _yield$db$from$delete8, data, error, _t110;
           return _regenerator().w(function (_context100) {
             while (1) switch (_context100.p = _context100.n) {
               case 0:
+                // v351d: log explicito pra diagnostico
+                console.log("[removerMemoria] iniciado", {
+                  id: m === null || m === void 0 ? void 0 : m.id,
+                  lugar: m === null || m === void 0 ? void 0 : m.lugar,
+                  user_id_app: userLogado === null || userLogado === void 0 ? void 0 : userLogado.id
+                });
                 if (m !== null && m !== void 0 && m.id) {
                   _context100.n = 1;
                   break;
                 }
+                console.warn("[removerMemoria] abortado: sem id");
                 return _context100.a(2);
               case 1:
                 _context100.p = 1;
                 _context100.n = 2;
-                return db.from("momentos")["delete"]().eq("id", m.id);
+                return db.from("momentos")["delete"]().eq("id", m.id).select();
               case 2:
                 _yield$db$from$delete8 = _context100.v;
+                data = _yield$db$from$delete8.data;
                 error = _yield$db$from$delete8.error;
+                console.log("[removerMemoria] resposta", {
+                  affected: data === null || data === void 0 ? void 0 : data.length,
+                  error: error
+                });
                 if (!error) {
                   _context100.n = 3;
                   break;
                 }
                 throw error;
               case 3:
+                if (!(!data || data.length === 0)) {
+                  _context100.n = 4;
+                  break;
+                }
+                console.warn("[removerMemoria] 0 linhas afetadas — provavelmente RLS bloqueando");
+                if (window.tnToast) window.tnToast("sem permissão pra remover", "verifique se está logado com a conta certa");
+                return _context100.a(2);
+              case 4:
                 if (window.tnToast) window.tnToast("memória removida", "");
-                // v351c: atualiza estado local sem recarregar nem fechar capítulo.
                 setMeusMomentos(function (prev) {
                   return (prev || []).filter(function (x) {
                     return x.id !== m.id;
                   });
                 });
-                _context100.n = 5;
+                _context100.n = 6;
                 break;
-              case 4:
-                _context100.p = 4;
-                _t110 = _context100.v;
-                console.error("Erro remover memória:", _t110);
-                if (window.tnToast) window.tnToast("não consegui remover", "tente de novo");
               case 5:
+                _context100.p = 5;
+                _t110 = _context100.v;
+                console.error("[removerMemoria] ERRO:", _t110);
+                if (window.tnToast) window.tnToast("não consegui remover", (_t110 === null || _t110 === void 0 ? void 0 : _t110.message) || "tente de novo");
+              case 6:
                 return _context100.a(2);
             }
-          }, _callee99, null, [[1, 4]]);
+          }, _callee99, null, [[1, 5]]);
         }));
         return function removerMemoria(_x106) {
           return _ref162.apply(this, arguments);
