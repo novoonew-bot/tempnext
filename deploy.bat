@@ -65,11 +65,13 @@ git commit -m "%VERSAO% %DESCRICAO%" || goto :erro_commit
 echo [7/7] Git push --force
 git push --force || goto :erro
 
+echo [8/8] Restaurando fonte babel em C:\tempnext\index.html
+copy /Y "C:\backup_tempnext\tempnext_%VERSAO%.html" index.html || goto :erro
+
 echo.
 echo === Deploy concluido: %VERSAO% ===
 echo Vercel vai detectar o push e atualizar em ~30s.
-echo IMPORTANTE: restaure o orig com Babel pra C:\tempnext\index.html
-echo   antes da proxima edicao (copy de C:\backup_tempnext\tempnext_%VERSAO%.html).
+echo Fonte babel ja restaurado em C:\tempnext\index.html (pronto pra proxima edicao).
 echo.
 endlocal
 exit /b 0
