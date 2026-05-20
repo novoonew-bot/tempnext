@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v349d — fix: seguir tambem nao fecha mais o card de perfil (simetria com deixar de seguir) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v350 — UX 4,5,6,7,8: frase, chip de força, pill, pin do lugar, nome duplicado ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -6773,7 +6773,8 @@ function CapituloLugares(_ref21) {
     className: "cap-exp-titulo-grande"
   }, ehDono ? "meus lugares" : "lugares de ".concat(nomePrimeiro)), React.createElement("div", {
     className: "cap-exp-sub"
-  }, "".concat(lugaresMorou.length, " ").concat(lugaresMorou.length === 1 ? "cidade" : "cidades", " onde a vida passou"))),
+  }, "".concat(lugaresMorou.length) // v350 (UX 4): frase "onde a vida passou" removida — só a contagem.
+  )),
   // MINI-MAPA DE CONTEXTO
   lugaresMorou.length > 0 ? React.createElement("div", {
     className: "cap-exp-mapa"
@@ -6904,30 +6905,11 @@ function CapituloLugares(_ref21) {
         // v348 (UX 4): placeholder mais leve — antes era gradiente sólido
         // cheio (user-color-soft → user-color-deep), peso visual alto pra
         // um estado sem-foto. Agora gradiente translúcido + pin discreto.
-        background: "linear-gradient(135deg, var(--user-color-15), var(--user-color-soft))",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
+        background: "linear-gradient(135deg, var(--user-color-15), var(--user-color-soft))"
       }
-    }, React.createElement("svg", {
-      width: 22,
-      height: 22,
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "var(--user-color-deep)",
-      strokeWidth: 1.6,
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      style: {
-        opacity: 0.55
-      }
-    }, React.createElement("path", {
-      d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"
-    }), React.createElement("circle", {
-      cx: 12,
-      cy: 10,
-      r: 3
-    }))), React.createElement("div", {
+    }
+    // v350 (UX 7): pin SVG removido — mais minimalista, só o gradiente.
+    ), React.createElement("div", {
       className: "cap-exp-info"
     }, React.createElement("div", {
       className: "cap-exp-nome"
@@ -29388,7 +29370,7 @@ function MeusLugares(_ref131) {
       fontStyle: "italic",
       fontFamily: "Georgia,serif"
     }
-  }, lugares.length, " ", lugares.length === 1 ? "cidade onde a vida passou" : "cidades onde a vida passou")), /*#__PURE__*/React.createElement("button", {
+  }, lugares.length)), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       return setMostrarForm(function (v) {
         return !v;
@@ -29544,30 +29526,30 @@ function MeusLugares(_ref131) {
         color: T.muted,
         marginTop: 3
       }
-    }, l.city, l.uf ? ", ".concat(l.uf) : "", (l.y1 || l.y2) && /*#__PURE__*/React.createElement(React.Fragment, null, " \xB7 ", /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontWeight: 500
-      }
-    }, l.y1 || "?", " \u2013 ", l.y2 || "?"))), /*#__PURE__*/React.createElement("div", {
+    }, function () {
+      var nomeAcima = l.placeName || l.place_name || l.city;
+      var repetiCidade = nomeAcima === l.city;
+      var cidadeTxt = repetiCidade ? "" : "".concat(l.city).concat(l.uf ? ", ".concat(l.uf) : "");
+      var periodo = l.y1 || l.y2 ? "".concat(l.y1 || "?", " \u2013 ").concat(l.y2 || "?") : "";
+      if (cidadeTxt && periodo) return /*#__PURE__*/React.createElement(React.Fragment, null, cidadeTxt, " \xB7 ", /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontWeight: 500
+        }
+      }, periodo));
+      if (periodo) return /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontWeight: 500
+        }
+      }, periodo);
+      return cidadeTxt;
+    }()), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         gap: 4,
         marginTop: 8,
         alignItems: "center"
       }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 11,
-        fontWeight: 500,
-        fontFamily: "'Cormorant Garamond','Georgia',serif",
-        fontStyle: "italic",
-        letterSpacing: "0.01em",
-        color: era.color,
-        background: "".concat(era.color, "12"),
-        padding: "3px 10px",
-        borderRadius: 10
-      }
-    }, (era.label || "").toLowerCase()))), /*#__PURE__*/React.createElement("div", {
+    })), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         gap: 6,
@@ -30787,20 +30769,7 @@ function Cruzamentos(_ref133) {
         color: T.text,
         lineHeight: 1.5
       }
-    }, cruz.texto || "passaram juntos por ".concat(cruz.cidade || "um lugar comum")), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 11,
-        fontWeight: 500,
-        fontFamily: "'Cormorant Garamond','Georgia',serif",
-        fontStyle: "italic",
-        letterSpacing: "0.01em",
-        color: corScore,
-        background: corScore + "15",
-        padding: "3px 10px",
-        borderRadius: 10,
-        flexShrink: 0
-      }
-    }, cruz.tipo)), !jaContato && /*#__PURE__*/React.createElement("button", {
+    }, cruz.texto || "passaram juntos por ".concat(cruz.cidade || "um lugar comum"))), !jaContato && /*#__PURE__*/React.createElement("button", {
       onClick: function onClick(e) {
         e.stopPropagation();
         if (onAdd) onAdd(perfil);
