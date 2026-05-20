@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v351b — fix: remover memoria/capsula nao recarrega mais a pagina inteira ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v351c — fix: remover memoria/capsula atualiza estado local sem sair do capitulo ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -35432,8 +35432,12 @@ function Perfil(_ref156) {
                 throw error;
               case 3:
                 if (window.tnToast) window.tnToast("memória removida", "");
-                // v351b: em vez de recarregar a página, fecha o capítulo (volta pro perfil).
-                fecharCapituloPerfil();
+                // v351c: atualiza estado local sem recarregar nem fechar capítulo.
+                setMeusMomentos(function (prev) {
+                  return (prev || []).filter(function (x) {
+                    return x.id !== m.id;
+                  });
+                });
                 _context100.n = 5;
                 break;
               case 4:
@@ -35498,8 +35502,20 @@ function Perfil(_ref156) {
                 throw error;
               case 3:
                 if (window.tnToast) window.tnToast("cápsula removida", "");
-                // v351b: fecha capítulo em vez de reload.
-                fecharCapituloPerfil();
+                // v351c: atualiza estado local sem fechar capítulo.
+                setMinhasCapsulas(function (prev) {
+                  return {
+                    passado: ((prev === null || prev === void 0 ? void 0 : prev.passado) || []).filter(function (x) {
+                      return x.id !== c.id;
+                    }),
+                    presente: ((prev === null || prev === void 0 ? void 0 : prev.presente) || []).filter(function (x) {
+                      return x.id !== c.id;
+                    }),
+                    futuro: ((prev === null || prev === void 0 ? void 0 : prev.futuro) || []).filter(function (x) {
+                      return x.id !== c.id;
+                    })
+                  };
+                });
                 _context101.n = 5;
                 break;
               case 4:
