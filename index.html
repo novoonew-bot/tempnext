@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v350 — UX 4,5,6,7,8: frase, chip de força, pill, pin do lugar, nome duplicado ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v350b — UX 14: botão conectar com peso visual (sólido) ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -30775,14 +30775,16 @@ function Cruzamentos(_ref133) {
         if (onAdd) onAdd(perfil);
       },
       style: {
+        // v350b (UX 14): botão conectar com peso visual — antes era
+        // fundo claro com texto laranja, agora sólido.
         width: "100%",
         padding: "10px",
-        background: T.accentBg,
+        background: T.accent,
         border: "1px solid ".concat(T.accent),
         borderRadius: 10,
         cursor: "pointer",
         fontFamily: "inherit",
-        color: T.accent,
+        color: "#fff",
         fontSize: 13,
         fontWeight: 600,
         transition: "all 0.15s",
