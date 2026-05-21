@@ -12862,7 +12862,9 @@ function MapaLeaflet(_ref66) {
     _ref66$interactive = _ref66.interactive,
     interactive = _ref66$interactive === void 0 ? true : _ref66$interactive,
     _ref66$borderRadius = _ref66.borderRadius,
-    borderRadius = _ref66$borderRadius === void 0 ? 12 : _ref66$borderRadius;
+    borderRadius = _ref66$borderRadius === void 0 ? 12 : _ref66$borderRadius,
+    _ref66$showZoomContro = _ref66.showZoomControl,
+    showZoomControl = _ref66$showZoomContro === void 0 ? null : _ref66$showZoomContro;
   var mapRef = useRef(null);
   var containerRef = useRef(null);
   var mapInstanceRef = useRef(null);
@@ -12909,7 +12911,7 @@ function MapaLeaflet(_ref66) {
     }
     // Centra + ajusta zoom aos pontos
     var map = L.map(containerRef.current, {
-      zoomControl: interactive,
+      zoomControl: showZoomControl !== null ? showZoomControl : interactive,
       dragging: interactive,
       touchZoom: interactive,
       scrollWheelZoom: false,
@@ -52786,12 +52788,13 @@ function HV9LugarImersivo(_ref248) {
           color: "#1E88E5",
           size: 12,
           style: "disco_haste",
-          pulsate: false // v333s: pin gota azul (disco c/ haste) — base da haste marca o ponto exato; disco fica acima do label da cidade
+          pulsate: false
         }],
         center: [lat, lng],
         zoom: 12,
         height: 130,
         interactive: true,
+        showZoomControl: false,
         borderRadius: 0
       }));
     }
