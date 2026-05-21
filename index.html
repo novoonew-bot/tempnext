@@ -35407,23 +35407,17 @@ function Perfil(_ref156) {
       }))) : null);
     }
     if (capituloAbertoPerfil === "memorias") {
+      // v352: removidos console.log de debug (RLS resolvido via SQL no Supabase, D11 quitada)
       var removerMemoria = /*#__PURE__*/function () {
         var _ref162 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee99(m) {
           var _yield$db$from$delete8, data, error, _t110;
           return _regenerator().w(function (_context100) {
             while (1) switch (_context100.p = _context100.n) {
               case 0:
-                // v351d: log explicito pra diagnostico
-                console.log("[removerMemoria] iniciado", {
-                  id: m === null || m === void 0 ? void 0 : m.id,
-                  lugar: m === null || m === void 0 ? void 0 : m.lugar,
-                  user_id_app: userLogado === null || userLogado === void 0 ? void 0 : userLogado.id
-                });
                 if (m !== null && m !== void 0 && m.id) {
                   _context100.n = 1;
                   break;
                 }
-                console.warn("[removerMemoria] abortado: sem id");
                 return _context100.a(2);
               case 1:
                 _context100.p = 1;
@@ -35433,10 +35427,6 @@ function Perfil(_ref156) {
                 _yield$db$from$delete8 = _context100.v;
                 data = _yield$db$from$delete8.data;
                 error = _yield$db$from$delete8.error;
-                console.log("[removerMemoria] resposta", {
-                  affected: data === null || data === void 0 ? void 0 : data.length,
-                  error: error
-                });
                 if (!error) {
                   _context100.n = 3;
                   break;
@@ -35447,7 +35437,6 @@ function Perfil(_ref156) {
                   _context100.n = 4;
                   break;
                 }
-                console.warn("[removerMemoria] 0 linhas afetadas — provavelmente RLS bloqueando");
                 if (window.tnToast) window.tnToast("sem permissão pra remover", "verifique se está logado com a conta certa");
                 return _context100.a(2);
               case 4:
@@ -52888,21 +52877,31 @@ function HV9LugarImersivo(_ref248) {
   }, linhaTempo.anos.map(function (_ref250) {
     var ano = _ref250.ano,
       count = _ref250.count;
-    var altura = linhaTempo.maxCount > 0 ? Math.max(count / linhaTempo.maxCount * 100, count > 0 ? 6 : 3) : 3;
-    var isPico = ano === linhaTempo.anoPico && count > 0;
-    var isSelecionado = ano === anoFiltrado;
+    var temAcao = count > 0;
+    var altura = linhaTempo.maxCount > 0 ? Math.max(count / linhaTempo.maxCount * 100, 6) : 0;
+    var isPico = ano === linhaTempo.anoPico && temAcao;
+    var isSelecionado = ano === anoFiltrado && temAcao;
+    if (!temAcao) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: ano,
+        style: {
+          flex: 1,
+          height: 0,
+          pointerEvents: "none"
+        }
+      });
+    }
     return /*#__PURE__*/React.createElement("div", {
       key: ano,
       onClick: function onClick() {
-        if (count === 0) return;
-        setAnoFiltrado(anoFiltrado === ano ? null : ano);
+        return setAnoFiltrado(anoFiltrado === ano ? null : ano);
       },
       style: {
         flex: 1,
         height: "".concat(altura, "%"),
-        background: isSelecionado ? "#fff" : isPico ? "#c17e3a" : "rgba(255,255,255,0.18)",
+        background: isSelecionado ? "#fff" : isPico ? "#c17e3a" : "rgba(255,255,255,0.55)",
         borderRadius: 1,
-        cursor: count > 0 ? "pointer" : "default",
+        cursor: "pointer",
         boxShadow: isSelecionado ? "0 0 0 1.5px #fff, 0 0 0 3px rgba(255,255,255,0.25)" : "none",
         transition: "background 0.15s, box-shadow 0.15s",
         position: "relative"
