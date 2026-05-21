@@ -58235,6 +58235,14 @@ function App() {
   // ═════════════════════════════════════════════════════════════════
   function navAbrirPerfilOutro(pessoa) {
     if (!pessoa) return;
+    // v353a: se for o próprio user, abre tela 'perfil' (não 'perfil_outro')
+    if (user && user.id && pessoa.id === user.id) {
+      setTela("perfil");
+      try {
+        window.history.pushState({ tn: "perfil" }, "", "?");
+      } catch (e) {}
+      return;
+    }
     setPerfilVisualizando(pessoa);
     setTela("perfil_outro");
     try {
