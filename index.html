@@ -16039,11 +16039,19 @@ function PerfilOutroFiltrado(_ref82) {
     totalPessoasReais: pessoasReaisCount
   };
 
-  // v265: feed de lugares (camada 4a — rolagem infinita) — prioridade sobre o capítulo
+  // v353: card de lugar no perfil de outro user abre PerfilLugar filtrado por aquele user
   if (itemAberto && itemAberto.tipo === "lugar" && itemAberto.dados && !itemAberto._aguardandoCarga) {
+    var _lugarItem = itemAberto.dados;
+    var _placeIdLugar = _lugarItem.placeId || _lugarItem.place_id || _lugarItem.id || null;
+    var _lugarPayload = _placeIdLugar ? null : {
+      name: _lugarItem.city || _lugarItem.name || "",
+      city: _lugarItem.city || "",
+      state: _lugarItem.uf || _lugarItem.state || "",
+      country: _lugarItem.country || "Brasil"
+    };
     return React.createElement(HV9LugarImersivoWrapper, {
-      lugar: itemAberto.dados,
-      lugarId: itemAberto.dados.id || null,
+      lugar: _lugarPayload || _lugarItem.city || _lugarItem.name || "",
+      lugarId: _placeIdLugar,
       user: userLogado,
       userFiltro: pessoa,
       onFechar: fecharItem
