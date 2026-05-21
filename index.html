@@ -810,7 +810,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v352d ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v353 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -16041,26 +16041,12 @@ function PerfilOutroFiltrado(_ref82) {
 
   // v265: feed de lugares (camada 4a — rolagem infinita) — prioridade sobre o capítulo
   if (itemAberto && itemAberto.tipo === "lugar" && itemAberto.dados && !itemAberto._aguardandoCarga) {
-    return React.createElement(LugaresFeed, {
-      lugares: lugaresDela || [],
-      lugarInicialId: buildLugarId(pessoa === null || pessoa === void 0 ? void 0 : pessoa.id, itemAberto.dados),
-      pessoa: pessoa,
-      userLogado: userLogado,
-      onBack: fecharItem,
-      onLugarVisivel: function onLugarVisivel(lVisivel) {
-        try {
-          var newId = buildLugarId(pessoa === null || pessoa === void 0 ? void 0 : pessoa.id, lVisivel);
-          var params = new URLSearchParams(window.location.search);
-          if (params.get("id") !== newId) {
-            params.set("id", newId);
-            window.history.replaceState({
-              tn: "item",
-              id: pessoa === null || pessoa === void 0 ? void 0 : pessoa.id,
-              itemId: newId
-            }, "", "?".concat(params.toString()));
-          }
-        } catch (_unused28) {}
-      }
+    return React.createElement(HV9LugarImersivoWrapper, {
+      lugar: itemAberto.dados,
+      lugarId: itemAberto.dados.id || null,
+      user: userLogado,
+      userFiltro: pessoa,
+      onFechar: fecharItem
     });
   }
   // v255: capítulo lugares (camada 3) — com onAbrirItem
@@ -52212,6 +52198,7 @@ function HV9LugarImersivoWrapper(_ref246) {
   var lugar = _ref246.lugar,
     lugarId = _ref246.lugarId,
     user = _ref246.user,
+    userFiltro = _ref246.userFiltro,
     onFechar = _ref246.onFechar;
   var _React$useState175 = React.useState(null),
     _React$useState176 = _slicedToArray(_React$useState175, 2),
@@ -52456,12 +52443,14 @@ function HV9LugarImersivoWrapper(_ref246) {
   return /*#__PURE__*/React.createElement(HV9LugarImersivo, {
     hero: hero,
     user: user,
+    userFiltro: userFiltro,
     onFechar: onFechar
   });
 }
 function HV9LugarImersivo(_ref248) {
   var hero = _ref248.hero,
     user = _ref248.user,
+    userFiltro = _ref248.userFiltro,
     onFechar = _ref248.onFechar;
   var lugarHero = (hero === null || hero === void 0 ? void 0 : hero._lugarHero) || null;
   var placeId = (lugarHero === null || lugarHero === void 0 ? void 0 : lugarHero.id) || null;
@@ -52514,6 +52503,9 @@ function HV9LugarImersivo(_ref248) {
             if (lugarNome) {
               q = q.ilike("lugar", "%".concat(lugarNome, "%"));
             }
+            if (userFiltro && userFiltro.id) {
+              q = q.eq("user_id", userFiltro.id);
+            }
             _context151.n = 1;
             return q;
           case 1:
@@ -52535,7 +52527,7 @@ function HV9LugarImersivo(_ref248) {
         }
       }, _callee149, null, [[0, 2, 3, 4]]);
     }))();
-  }, [lugarNome, placeId]);
+  }, [lugarNome, placeId, userFiltro === null || userFiltro === void 0 ? void 0 : userFiltro.id]);
 
   // Computa stats do lugar
   var stats = React.useMemo(function () {
