@@ -52575,9 +52575,9 @@ function HV9LugarImersivo(_ref248) {
       return a - b;
     });
     if (anosOrdenados.length === 0) return null;
+    var ANO_ATUAL = new Date().getFullYear();
     var anoMin = anosOrdenados[0];
-    var anoMax = anosOrdenados[anosOrdenados.length - 1];
-    // Preenche anos vazios entre min e max
+    var anoMax = Math.max(anosOrdenados[anosOrdenados.length - 1], ANO_ATUAL); // v352a: range vai até o ano atual
     var todos = [];
     for (var a = anoMin; a <= anoMax; a++) {
       todos.push({
@@ -52596,7 +52596,8 @@ function HV9LugarImersivo(_ref248) {
       anoMin: anoMin,
       anoMax: anoMax,
       maxCount: maxCount,
-      anoPico: anoPico
+      anoPico: anoPico,
+      anoAtual: ANO_ATUAL
     };
   }, [momentosLugar]);
 
@@ -52748,16 +52749,6 @@ function HV9LugarImersivo(_ref248) {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontFamily: "'Cormorant Garamond','Georgia',serif",
-      fontSize: 14,
-      fontStyle: "italic",
-      opacity: 0.75,
-      letterSpacing: "0.01em",
-      marginBottom: 4,
-      fontWeight: 500
-    }
-  }, "um lugar"), /*#__PURE__*/React.createElement("div", {
-    style: {
       fontFamily: "Georgia,serif",
       fontSize: 26,
       fontWeight: 500,
@@ -52839,147 +52830,86 @@ function HV9LugarImersivo(_ref248) {
   }(), linhaTempo && linhaTempo.anos.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       margin: "0 14px 14px",
-      padding: "12px 14px",
-      background: "rgba(255,255,255,0.04)",
-      borderRadius: 12,
-      border: "0.5px solid rgba(255,255,255,0.08)"
+      padding: "10px 12px",
+      background: "rgba(255,255,255,0.02)",
+      borderRadius: 10,
+      border: "0.5px solid rgba(255,255,255,0.05)"
     }
   }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "baseline",
-      marginBottom: 10
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      color: "rgba(255,255,255,0.55)",
-      letterSpacing: "0.12em",
-      textTransform: "uppercase",
-      fontWeight: 500
-    }
-  }, "linha do tempo"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: "Georgia,serif",
-      fontStyle: "italic",
-      fontSize: 9,
-      color: "rgba(255,255,255,0.4)"
-    }
-  }, linhaTempo.anoMin, " \u2014 ", linhaTempo.anoMax)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       alignItems: "flex-end",
-      gap: 1.5,
-      height: 42,
+      gap: 2,
+      height: 36,
       padding: "0 2px"
     }
   }, linhaTempo.anos.map(function (_ref250) {
     var ano = _ref250.ano,
       count = _ref250.count;
     var temAcao = count > 0;
-    var altura = linhaTempo.maxCount > 0 ? Math.max(count / linhaTempo.maxCount * 100, 6) : 0;
+    var altura = temAcao ? Math.max(count / linhaTempo.maxCount * 100, 25) : 8;
     var isPico = ano === linhaTempo.anoPico && temAcao;
     var isSelecionado = ano === anoFiltrado && temAcao;
-    if (!temAcao) {
-      return /*#__PURE__*/React.createElement("div", {
-        key: ano,
-        style: {
-          flex: 1,
-          height: 0,
-          pointerEvents: "none"
-        }
-      });
-    }
+    var bg = isSelecionado ? "#fff" : isPico ? "var(--user-color-deep)" : temAcao ? "var(--user-color-soft)" : "rgba(255,255,255,0.12)";
     return /*#__PURE__*/React.createElement("div", {
       key: ano,
       onClick: function onClick() {
-        return setAnoFiltrado(anoFiltrado === ano ? null : ano);
+        if (!temAcao) return;
+        setAnoFiltrado(anoFiltrado === ano ? null : ano);
       },
       style: {
         flex: 1,
         height: "".concat(altura, "%"),
-        background: isSelecionado ? "#fff" : isPico ? "#c17e3a" : "rgba(255,255,255,0.55)",
+        background: bg,
         borderRadius: 1,
-        cursor: "pointer",
+        cursor: temAcao ? "pointer" : "default",
         boxShadow: isSelecionado ? "0 0 0 1.5px #fff, 0 0 0 3px rgba(255,255,255,0.25)" : "none",
-        transition: "background 0.15s, box-shadow 0.15s",
-        position: "relative"
+        transition: "background 0.15s, box-shadow 0.15s"
       },
       title: "".concat(ano, " \xB7 ").concat(count, " momento").concat(count !== 1 ? "s" : "")
     });
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      marginTop: 6,
-      padding: "0 2px"
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: "rgba(255,255,255,0.35)",
-      fontSize: 8
-    }
-  }, linhaTempo.anoMin), linhaTempo.anoMax - linhaTempo.anoMin > 4 && /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: "rgba(255,255,255,0.35)",
-      fontSize: 8
-    }
-  }, Math.round((linhaTempo.anoMin + linhaTempo.anoMax) / 2)), /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: "rgba(255,255,255,0.35)",
-      fontSize: 8
-    }
-  }, linhaTempo.anoMax)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 8,
-      paddingTop: 8,
-      borderTop: "0.5px solid rgba(255,255,255,0.08)",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      flexWrap: "wrap",
-      gap: 4
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 6,
-      alignItems: "center"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 6,
-      height: 6,
-      background: "#c17e3a",
-      borderRadius: 1
-    }
-  }), /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: "rgba(255,255,255,0.5)",
-      fontSize: 8
-    }
-  }, "pico"), anoFiltrado && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 6,
-      height: 6,
-      background: "#fff",
-      borderRadius: 1,
-      marginLeft: 6
-    }
-  }), /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: "rgba(255,255,255,0.5)",
-      fontSize: 8
-    }
-  }, "selecionado"))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: "Georgia,serif",
-      fontStyle: "italic",
-      fontSize: 8,
-      color: "rgba(255,255,255,0.4)"
-    }
-  }, anoFiltrado ? "toque pra limpar" : "toque num ano pra filtrar"))), /*#__PURE__*/React.createElement("div", {
+  })), function () {
+    var marcas = _toConsumableArray(new Set([linhaTempo.anoMin, linhaTempo.anoPico, linhaTempo.anoAtual])).sort(function (a, b) {
+      return a - b;
+    });
+    var total = linhaTempo.anos.length;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "relative",
+        height: 12,
+        marginTop: 6,
+        padding: "0 2px"
+      }
+    }, marcas.map(function (a) {
+      var i = a - linhaTempo.anoMin;
+      var pctEsq = (i + 0.5) / total * 100;
+      var ehAtual = a === linhaTempo.anoAtual;
+      var ehPico = a === linhaTempo.anoPico && linhaTempo.anos.some(function (x) {
+        return x.ano === a && x.count > 0;
+      });
+      var cor = "rgba(255,255,255,0.35)";
+      var weight = 400;
+      if (ehAtual) {
+        cor = "var(--user-color-deep)";
+        weight = 500;
+      } else if (ehPico) {
+        cor = "var(--user-color-deep)";
+      }
+      return /*#__PURE__*/React.createElement("span", {
+        key: a,
+        style: {
+          position: "absolute",
+          top: 0,
+          left: "".concat(pctEsq, "%"),
+          transform: "translateX(-50%)",
+          fontSize: 9,
+          color: cor,
+          fontWeight: weight,
+          whiteSpace: "nowrap"
+        }
+      }, a);
+    }));
+  }()), /*#__PURE__*/React.createElement("div", {
     style: {
       margin: "0 14px 16px",
       padding: "12px 12px",
