@@ -3843,7 +3843,7 @@ function _tnLugaresDoProfile() {
         case 1:
           _context195.p = 1;
           _context195.n = 2;
-          return dbRead.from("place_profiles").select("id, place_id, profile_id, year_start, year_end, place_type, era, place_label, label_visibilidade, display_order, places(id, name, city, state, country, lat, lng, type, cep)").eq("profile_id", profileId).order("display_order", {
+          return dbRead.from("place_profiles").select("id, place_id, profile_id, year_start, year_end, place_type, era, visit_kind, place_label, label_visibilidade, display_order, places(id, name, city, state, country, lat, lng, type, cep)").eq("profile_id", profileId).order("display_order", {
             ascending: true,
             nullsFirst: false
           }).order("year_start", {
@@ -3887,6 +3887,7 @@ function _tnLugaresDoProfile() {
               place_id: pp.place_id,
               pp_id: pp.id,
               // place_profiles.id — necessário pra edit/remove por linha
+              visit_kind: pp.visit_kind || "morou",
               place_label: pp.place_label || null,
               label_visibilidade: pp.label_visibilidade || "privado",
               display_order: pp.display_order != null ? pp.display_order : 0
@@ -6753,8 +6754,10 @@ function CapituloLugares(_ref21) {
       cancelled = true;
     };
   }, [userLogado === null || userLogado === void 0 ? void 0 : userLogado.id]);
-  var lugaresMorou = (dados === null || dados === void 0 ? void 0 : dados.lugaresMorou) || []; // [{x,y,label,anos,uf,memorias,capsulas}]
-  var lugaresPassou = (dados === null || dados === void 0 ? void 0 : dados.lugaresPassou) || []; // por enquanto vazio (não temos viagens no schema)
+  var lugaresRaw = (dados === null || dados === void 0 ? void 0 : dados.lugaresMorou) || [];
+  // v353n: separa morou vs visitou por place_profiles.visit_kind (coluna real, sem inferência)
+  var lugaresMorou = lugaresRaw.filter(function (l) { return (l.visit_kind || "morou") === "morou"; });
+  var lugaresPassou = lugaresRaw.filter(function (l) { return l.visit_kind === "visitou"; });
 
   // Lugares filtrados pela tab
   var lugaresFiltrados = function () {
@@ -7027,9 +7030,9 @@ function CapituloLugares(_ref21) {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
     className: "cap-exp-vazio-eye"
-  }, "— passeios —"), React.createElement("div", {
+  }, "— visitas —"), React.createElement("div", {
     className: "cap-exp-vazio-tx"
-  }, "viagens ainda não estão sendo guardadas no app")) : null,
+  }, "ainda nenhuma visita guardada")) : null,
   // v319a: SEÇÃO QUERO IR — registros de "Registrando agora" do user
   tab === "tudo" || tab === "quero_ir" ? React.createElement(React.Fragment, null, tab === "tudo" && queroIr.length > 0 ? React.createElement("div", {
     className: "cap-exp-secao-tit"
@@ -39991,6 +39994,7 @@ function ModalAdicionarLugar(_ref183) {
               place_type: p.type || "outro",
               // herda do canônico (opção A da F1.B)
               era: eraFinal,
+              visit_kind: d.modo || "morou",
               place_label: d.labelPessoal.trim() || null
               // label_visibilidade fica no default 'privado'
               // display_order fica no default 0 (C.0)
