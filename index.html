@@ -6337,14 +6337,14 @@ function VerTudoCapituloI(_ref17) {
   var totalPreenchidos = preenchidos.length;
   var gruposVisiveis = GRUPOS_BIO.map(function (g) {
     return _objectSpread(_objectSpread({}, g), {}, {
-      itens: g.chaves.filter(function (k) {
-        return bio[k] && String(bio[k]).trim();
-      }).map(function (k) {
-        return [k, String(bio[k]).trim()];
+      itens: g.chaves.map(function (k) {
+        return [k, bio[k] && String(bio[k]).trim() || ""];
       })
     });
   }).filter(function (g) {
-    return g.itens.length > 0;
+    // v353c: dono sempre vê todos os grupos (vazios incluso); outros só vêem com conteúdo
+    if (ehDono) return true;
+    return g.itens.some(function (it) { return it[1]; });
   });
   return React.createElement(TelaPadrao, {
     user: userLogado,
@@ -6417,7 +6417,8 @@ function VerTudoCapituloI(_ref17) {
     }
   }, "abra o menu ⋮ no topo pra começar")),
   // Grupos das frases livres (só renderiza se houver algo preenchido)
-  totalPreenchidos > 0 && React.createElement("div", {
+  // v353c: dono sempre vê o bloco (mesmo vazio, com placeholders); outros só se tiver preenchimento
+  (ehDono || totalPreenchidos > 0) && React.createElement("div", {
     style: {
       padding: "8px 18px 80px"
     }
@@ -6486,9 +6487,11 @@ function VerTudoCapituloI(_ref17) {
         }
       }, LABELS_BIO[chave]), React.createElement("span", {
         style: {
-          flex: 1
+          flex: 1,
+          opacity: valor ? 1 : 0.45,
+          fontStyle: valor ? "normal" : "italic"
         }
-      }, valor));
+      }, valor || (ehDono ? PLACEHOLDERS_BIO[chave] : "")));
     })));
   })), menuAberto && ehDono ? React.createElement(ShareMenu, {
     titulo: "o que quer fazer?",
