@@ -29364,10 +29364,15 @@ function MeusLugares(_ref131) {
     onClose: function onClose() {
       return setMostrarForm(false);
     },
-    onSave: function onSave() {
+    onSave: function onSave(_u, novoLugar) {
       setMostrarForm(false);
-      // v353l: pequeno delay pra Supabase propagar antes do refetch
-      setTimeout(recarregar, 350);
+      // v353o: optimistic update — insere o lugar já no state, sem esperar refetch.
+      if (novoLugar) {
+        setLugares(function (prev) {
+          var sem = (prev || []).filter(function (x) { return x.pp_id !== novoLugar.pp_id; });
+          return [novoLugar].concat(sem);
+        });
+      }
     }
   }), carregando ? /*#__PURE__*/React.createElement("div", {
     style: {
@@ -39934,6 +39939,29 @@ function ModalAdicionarLugar(_ref183) {
   var user = _ref183.user,
     onClose = _ref183.onClose,
     onSave = _ref183.onSave;
+  // v353o: mesmo shape que tnLugaresDoProfile devolve (compat com leituras existentes)
+  function _mapPpToLugar(pp, placeFallback) {
+    var pl = pp.places || placeFallback || {};
+    return {
+      city: pl.city || "",
+      uf: pl.state || "",
+      y1: pp.year_start != null ? String(pp.year_start) : "",
+      y2: pp.year_end != null ? String(pp.year_end) : "",
+      placeName: pl.name || "",
+      placeType: pp.place_type || pl.type || "outro",
+      era: pp.era || "passado",
+      lat: pl.lat,
+      lng: pl.lng,
+      pais: pl.country || "Brasil",
+      cep: pl.cep || "",
+      place_id: pp.place_id,
+      pp_id: pp.id,
+      visit_kind: pp.visit_kind || "morou",
+      place_label: pp.place_label || null,
+      label_visibilidade: pp.label_visibilidade || "privado",
+      display_order: pp.display_order != null ? pp.display_order : 0
+    };
+  }
   var temaCor = getTema(user).main;
   var temaBg = getTema(user).bg;
   // F1.B Sessão C.2a (15/mai/2026): state migrado pra schema canônico.
@@ -40002,7 +40030,7 @@ function ModalAdicionarLugar(_ref183) {
             inserted = null;
             _context121.p = 2;
             _context121.n = 3;
-            return db.from("place_profiles").insert(ppRow).select().single();
+            return db.from("place_profiles").insert(ppRow).select("id, place_id, profile_id, year_start, year_end, place_type, era, visit_kind, place_label, label_visibilidade, display_order, places(id, name, city, state, country, lat, lng, type, cep)").single();
           case 3:
             _yield$db$from$insert9 = _context121.v;
             data = _yield$db$from$insert9.data;
@@ -40129,7 +40157,9 @@ function ModalAdicionarLugar(_ref183) {
             // onSave chama o handler do componente pai. As Sessões B vão trocar leituras
             // pra usar tnLugaresDoProfile() em vez de user.lugares. Até lá, não passamos
             // mais o array — perfil pai precisará re-fetchar.
-            onSave(user);
+            // v353o: passa o lugar recém-inserido enriquecido pra o handler pai
+            // fazer optimistic update sem refetch (substitui setTimeout/recarregar).
+            onSave(user, inserted ? _mapPpToLugar(inserted, p) : null);
             setSaving(false);
             setDone(true);
           case 7:
