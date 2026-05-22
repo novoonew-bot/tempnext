@@ -39930,6 +39930,8 @@ function ModalAdicionarLugar(_ref183) {
       cep: "",
       y1: "",
       y2: "",
+      mes: "",
+      modo: "morou",
       era: "passado"
     }),
     _useState394 = _slicedToArray(_useState393, 2),
@@ -40237,13 +40239,13 @@ function ModalAdicionarLugar(_ref183) {
       fontWeight: 700,
       color: T.text
     }
-  }, "Adicionar lugar"), /*#__PURE__*/React.createElement("div", {
+  }, "Adicionar cidade"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 13,
       color: T.muted,
       marginTop: 3
     }
-  }, "Novo local ou per\xEDodo da sua vida")), /*#__PURE__*/React.createElement("button", {
+  }, "um lugar onde voc\xEA esteve")), /*#__PURE__*/React.createElement("button", {
     onClick: onClose,
     style: {
       background: "none",
@@ -40259,7 +40261,7 @@ function ModalAdicionarLugar(_ref183) {
       flexDirection: "column",
       gap: 14
     }
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "Lugar *"), /*#__PURE__*/React.createElement(CampoLugar, {
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "Cidade *"), /*#__PURE__*/React.createElement(CampoLugar, {
     value: d.lugarSelecionado,
     onChange: function onChange(place, label) {
       return setD(function (v) {
@@ -40271,8 +40273,82 @@ function ModalAdicionarLugar(_ref183) {
     },
     allowCustomLabel: true,
     createdById: user === null || user === void 0 ? void 0 : user.id,
-    placeholder: "onde voc\xEA morou ou passou..."
-  })), /*#__PURE__*/React.createElement("div", {
+    placeholder: "onde voc\xEA morou ou visitou..."
+  })),
+  // v353g: toggle morou/visitou — define se mostra range (de–até) ou ponto (mês/ano)
+  /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "Como foi *"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 8
+    }
+  }, [
+    {id: "morou", label: "morou", desc: "por um per\xEDodo"},
+    {id: "visitou", label: "visitou", desc: "viagem ou passagem"}
+  ].map(function (opt) {
+    var ativo = (d.modo || "morou") === opt.id;
+    return /*#__PURE__*/React.createElement("button", {
+      key: opt.id,
+      onClick: function onClick() {
+        setD(function (prev) {
+          var next = _objectSpread(_objectSpread({}, prev), {}, {modo: opt.id});
+          if (opt.id === "visitou") { next.y2 = prev.y1; }
+          return next;
+        });
+      },
+      style: {
+        padding: "10px 12px",
+        border: ativo ? "1.5px solid var(--user-color-deep, " + T.accent + ")" : "1px solid " + T.border,
+        background: ativo ? "var(--user-color-soft, " + T.accentBg + ")" : "#fff",
+        borderRadius: 10,
+        cursor: "pointer",
+        fontFamily: "inherit",
+        textAlign: "left",
+        transition: "all 0.15s"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {fontSize: 13.5, fontWeight: 600, color: ativo ? "var(--user-color-deep, " + T.accent + ")" : T.text}
+    }, opt.label), /*#__PURE__*/React.createElement("div", {
+      style: {fontSize: 11, color: T.muted, marginTop: 2, fontStyle: "italic", fontFamily: "'Cormorant Garamond',Georgia,serif"}
+    }, opt.desc));
+  }))),
+  // Datas: morou → De/Até (anos). Visitou → Mês + Ano único.
+  (d.modo || "morou") === "visitou" ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "M\xEAs"), /*#__PURE__*/React.createElement("select", {
+    value: d.mes || "",
+    onChange: function onChange(e) {
+      var v = e.target.value;
+      setD(function (prev) { return _objectSpread(_objectSpread({}, prev), {}, {mes: v}); });
+    },
+    style: {
+      width: "100%", padding: "10px 12px",
+      border: "1px solid " + T.border, borderRadius: 8,
+      fontSize: 14, fontFamily: "inherit", background: "#fff", boxSizing: "border-box"
+    }
+  }, [/*#__PURE__*/React.createElement("option", {key: "", value: ""}, "\u2014"),
+    ["01","jan"],["02","fev"],["03","mar"],["04","abr"],["05","mai"],["06","jun"],
+    ["07","jul"],["08","ago"],["09","set"],["10","out"],["11","nov"],["12","dez"]
+  ].map(function (m) {
+    return Array.isArray(m) ? /*#__PURE__*/React.createElement("option", {key: m[0], value: m[0]}, m[1]) : m;
+  }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "Ano *"), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    placeholder: "2025",
+    value: d.y1,
+    onChange: function onChange(e) {
+      var v = e.target.value.slice(0, 4);
+      setD(function (prev) {
+        return _objectSpread(_objectSpread({}, prev), {}, {
+          y1: v, y2: v,
+          era: detectarEra(v, v)
+        });
+      });
+    }
+  }))) : /*#__PURE__*/React.createElement("div", {
     style: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
