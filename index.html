@@ -29363,7 +29363,8 @@ function MeusLugares(_ref131) {
     },
     onSave: function onSave() {
       setMostrarForm(false);
-      recarregar();
+      // v353l: pequeno delay pra Supabase propagar antes do refetch
+      setTimeout(recarregar, 350);
     }
   }), carregando ? /*#__PURE__*/React.createElement("div", {
     style: {
