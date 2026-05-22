@@ -52525,6 +52525,10 @@ function HV9LugarImersivo(_ref248) {
   var lugarCidade = (lugarHero === null || lugarHero === void 0 ? void 0 : lugarHero.city) || "";
   var lugarUF = (lugarHero === null || lugarHero === void 0 ? void 0 : lugarHero.state) || "";
   var lugarPais = (lugarHero === null || lugarHero === void 0 ? void 0 : lugarHero.country) || "Brasil";
+  var lugarType = (lugarHero === null || lugarHero === void 0 ? void 0 : lugarHero.type) || "";
+  // v353k: cidade é protagonista quando type ≠ cidade
+  var tituloPrincipal = (lugarType && lugarType !== "cidade" && lugarCidade) ? lugarCidade : lugarNome;
+  var subtituloPOI = (lugarType && lugarType !== "cidade" && lugarCidade) ? lugarNome : "";
   var photoUrl = (lugarHero === null || lugarHero === void 0 ? void 0 : lugarHero.photo_url) || (hero === null || hero === void 0 ? void 0 : hero.img) || null;
 
   // Estados
