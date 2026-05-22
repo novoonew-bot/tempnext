@@ -32824,6 +32824,27 @@ function ModalEditarPerfil(_ref148) {
       width: "100%"
     }
   })),
+  // v353t: paleta de cor afetiva (movida do header)
+  /*#__PURE__*/React.createElement(SecaoTitulo, null, "apar\xEAncia"),
+  /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: T.muted,
+      fontStyle: "italic",
+      fontFamily: "'Cormorant Garamond',Georgia,serif",
+      marginBottom: 14,
+      marginTop: -2
+    }
+  }, "a cor que acompanha o seu perfil"),
+  /*#__PURE__*/React.createElement(PaletaAfetivaPicker, {
+    user: f,
+    compact: false,
+    onUpdateUser: function onUpdateUser(u) {
+      setF(function (prev) {
+        return _objectSpread(_objectSpread({}, prev), {}, {paleta_cor: u.paleta_cor});
+      });
+    }
+  }),
   // v353b: bloco SOBRE removido daqui — migrou pra "ver tudo" do Capítulo I
   /*#__PURE__*/React.createElement("div", {
     style: {
@@ -57552,81 +57573,7 @@ function TempnexTopBar(_ref269) {
       position: "relative"
     }
   },
-  // Swatch paleta
-  React.createElement("button", {
-    onClick: function onClick(e) {
-      e.stopPropagation();
-      setPaletaPickerAberto(function (v) {
-        return !v;
-      });
-    },
-    title: "Trocar paleta",
-    /* v333b fix: era borda branca translúcida pra contrastar com fundo cor cheia.
-       Agora fundo é claro/translúcido, borda escura é necessária pra delimitar o swatch. */
-    style: {
-      width: 22,
-      height: 22,
-      borderRadius: "50%",
-      border: paletaPickerAberto ? "2px solid var(--user-color-deep, #2a201a)" : "1.5px solid var(--user-color-30, rgba(42,32,26,0.25))",
-      background: "var(--user-color-deep)",
-      cursor: "pointer",
-      padding: 0,
-      flexShrink: 0,
-      transition: "border 0.15s ease"
-    }
-  }),
-  // Mini-picker
-  paletaPickerAberto && React.createElement(React.Fragment, null, React.createElement("div", {
-    onClick: function onClick() {
-      return setPaletaPickerAberto(false);
-    },
-    style: {
-      position: "fixed",
-      inset: 0,
-      zIndex: 200,
-      background: "transparent"
-    }
-  }), React.createElement("div", {
-    /* v333b fix: zIndex bem maior pra ficar acima de tabs sticky em outras telas
-       (notificações tem TabsGeralEu sticky com zIndex 5, mas em contextos com
-       backdrop-filter o cálculo de stacking context muda — segurança extra).
-       Background branco puro: contrasta limpo com qualquer paleta da topbar. */
-    style: {
-      position: "absolute",
-      top: "calc(100% + 8px)",
-      right: 0,
-      zIndex: 9999,
-      background: "#fff",
-      border: "1px solid rgba(42,32,26,0.18)",
-      borderRadius: 14,
-      padding: "14px 14px 12px",
-      boxShadow: "0 12px 32px rgba(42,32,26,0.22), 0 4px 12px rgba(42,32,26,0.10)",
-      minWidth: 240
-    }
-  }, React.createElement("div", {
-    style: {
-      fontFamily: "'Cormorant Garamond',Georgia,serif",
-      fontStyle: "italic",
-      fontSize: 13,
-      color: "#5a4a38",
-      marginBottom: 10,
-      textAlign: "center"
-    }
-  }, "cor afetiva"), React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "center"
-    }
-  }, React.createElement(PaletaAfetivaPicker, {
-    user: user,
-    compact: true,
-    onUpdateUser: function onUpdateUser(u) {
-      if (_onUpdateUser) _onUpdateUser(u);
-      setTimeout(function () {
-        return setPaletaPickerAberto(false);
-      }, 250);
-    }
-  })))),
+  // v353t: swatch paleta + popover removidos do header; mover pra Configurações
   // Sino comum
   React.createElement("button", {
     onClick: onNotificacoes,
