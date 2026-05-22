@@ -5706,14 +5706,9 @@ function LivroRegistros(_ref13) {
     }
   }, [lugaresMorou.length > 0 ? "".concat(lugaresMorou.length, " ").concat(lugaresMorou.length === 1 ? "lugar" : "lugares", " na vida") : null, ((dados === null || dados === void 0 ? void 0 : dados.totalMemoriasRaw) || 0) > 0 ? "".concat(dados.totalMemoriasRaw, " ").concat(dados.totalMemoriasRaw === 1 ? "memória guardada" : "memórias guardadas") : null, ((dados === null || dados === void 0 ? void 0 : dados.totalCapsulasRaw) || 0) > 0 ? "".concat(dados.totalCapsulasRaw, " ").concat(dados.totalCapsulasRaw === 1 ? "cápsula" : "cápsulas") : null].filter(Boolean).join(" · "))
   // v329s: removido lema do Cap 1 — mesma razão (capítulos já comunicam quem é a pessoa)
-  )),
-  // v322: BlocoAfinidade dentro do Capítulo I (via wrapper)
-  React.createElement(BlocoAfinidadeWrap, {
-    pessoaId: pessoa === null || pessoa === void 0 ? void 0 : pessoa.id,
-    userLogadoId: userLogado === null || userLogado === void 0 ? void 0 : userLogado.id,
-    ehDono: ehDono,
-    nomeOutro: nomePrimeiro
-  })),
+  ))
+  // v353b: BlocoAfinidade removido daqui — acessar via "ver tudo" do Cap I
+  ),
   // CAPÍTULO II — POR ONDE PASSOU (só se tiver lugares)
   livroInfo.capitulos.includes("II") ? React.createElement("div", {
     className: "capitulo-r"
