@@ -32781,77 +32781,9 @@ function ModalEditarPerfil(_ref148) {
     style: {
       width: "100%"
     }
-  })), /*#__PURE__*/React.createElement(SecaoTitulo, null, "sobre"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: T.muted,
-      fontStyle: "italic",
-      fontFamily: "'Cormorant Garamond',Georgia,serif",
-      marginBottom: 14,
-      marginTop: -2
-    }
-  }, "tudo opcional \xB7 s\xF3 aparece o que voc\xEA preencher"), GRUPOS_BIO.map(function (grupo) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: grupo.titulo,
-      style: {
-        marginBottom: 18
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 13,
-        fontFamily: "'Cormorant Garamond','Georgia',serif",
-        fontStyle: "italic",
-        fontWeight: 500,
-        letterSpacing: "0.01em",
-        color: T.muted,
-        marginBottom: 8
-      }
-    }, (grupo.titulo || "").toLowerCase()), /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        flexDirection: "column",
-        gap: 10
-      }
-    }, grupo.chaves.map(function (chave) {
-      var valor = f.bioEstendida && f.bioEstendida[chave] || "";
-      var restante = 80 - valor.length;
-      return /*#__PURE__*/React.createElement("div", {
-        key: chave
-      }, /*#__PURE__*/React.createElement("label", {
-        style: {
-          fontSize: 11,
-          fontWeight: 500,
-          color: T.sub,
-          marginBottom: 4,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          fontStyle: "italic",
-          fontFamily: "'Cormorant Garamond',Georgia,serif",
-          letterSpacing: "0.02em"
-        }
-      }, /*#__PURE__*/React.createElement("span", null, LABELS_BIO[chave]), /*#__PURE__*/React.createElement("span", {
-        style: {
-          fontSize: 10,
-          color: restante < 10 ? T.accent : T.muted,
-          fontStyle: "normal"
-        }
-      }, valor.length, "/80")), /*#__PURE__*/React.createElement("input", {
-        type: "text",
-        maxLength: 80,
-        value: valor,
-        placeholder: PLACEHOLDERS_BIO[chave],
-        onChange: function onChange(e) {
-          var v = e.target.value;
-          setF(function (prev) {
-            return _objectSpread(_objectSpread({}, prev), {}, {
-              bioEstendida: _objectSpread(_objectSpread({}, prev.bioEstendida || {}), {}, _defineProperty({}, chave, v))
-            });
-          });
-        }
-      }));
-    })));
-  }), /*#__PURE__*/React.createElement("div", {
+  })),
+  // v353b: bloco SOBRE removido daqui — migrou pra "ver tudo" do Capítulo I
+  /*#__PURE__*/React.createElement("div", {
     style: {
       paddingTop: 24
     }
