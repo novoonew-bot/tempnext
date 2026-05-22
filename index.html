@@ -39310,29 +39310,29 @@ function ListaSugestoesLugar(_ref180) {
   if (!sugs || sugs.length === 0) return null;
   return /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 6,
-      borderRadius: 10,
-      border: "1px solid #DDD8D0",
-      background: "#fff",
-      maxHeight: 280,
+      marginTop: 8,
+      background: "transparent",
+      maxHeight: 320,
       overflowY: "auto"
     }
   }, sugs.map(function (s, i) {
+    var ehNovo = !(s.fonte === "interno" || s.id);
     return /*#__PURE__*/React.createElement("div", {
       key: "".concat(s.id || s.name, "-").concat(i),
       onClick: function onClick() {
         return onPick(s);
       },
       style: {
-        padding: "10px 12px",
-        borderBottom: i < sugs.length - 1 ? "1px solid #EEE9DF" : "none",
+        padding: "12px 14px",
+        borderBottom: i < sugs.length - 1 ? "0.5px solid " + T.border : "none",
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
-        gap: 10
+        gap: 12,
+        transition: "background 0.15s"
       },
       onMouseEnter: function onMouseEnter(e) {
-        return e.currentTarget.style.background = "#FAF6EC";
+        return e.currentTarget.style.background = T.faint;
       },
       onMouseLeave: function onMouseLeave(e) {
         return e.currentTarget.style.background = "transparent";
@@ -39341,61 +39341,67 @@ function ListaSugestoesLugar(_ref180) {
       src: s.photo_url,
       alt: "",
       style: {
-        width: 40,
-        height: 40,
-        borderRadius: 6,
+        width: 38,
+        height: 38,
+        borderRadius: 8,
         objectFit: "cover",
         flexShrink: 0
       }
-    }) : /*#__PURE__*/React.createElement("div", {
+    }) : /*#__PURE__*/React.createElement("svg", {
+      width: 22,
+      height: 22,
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "var(--user-color-deep, " + T.accent + ")",
+      strokeWidth: 1.5,
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
       style: {
-        width: 40,
-        height: 40,
-        borderRadius: 6,
-        background: "#EAE3D2",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: 16,
-        flexShrink: 0
+        flexShrink: 0,
+        marginLeft: 4,
+        marginRight: 4,
+        opacity: 0.65
       }
-    }, "\uD83D\uDCCD"), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M12 21s-7-7.5-7-12a7 7 0 1 1 14 0c0 4.5-7 12-7 12z"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: 12,
+      cy: 9,
+      r: 2.5
+    })), /*#__PURE__*/React.createElement("div", {
       style: {
         flex: 1,
         minWidth: 0
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 14,
+        fontSize: 14.5,
         fontWeight: 500,
         color: T.text,
         whiteSpace: "nowrap",
         overflow: "hidden",
-        textOverflow: "ellipsis"
+        textOverflow: "ellipsis",
+        fontFamily: "Georgia,serif"
       }
     }, s.name), /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 11,
+        fontSize: 12,
         color: T.muted,
-        marginTop: 1
+        marginTop: 2,
+        fontStyle: "italic",
+        fontFamily: "'Cormorant Garamond',Georgia,serif"
       }
-    }, s.city, s.state ? ", ".concat(s.state) : "", s.type ? " \xB7 ".concat(TN_PLACE_TYPE_LABELS[s.type] || s.type) : "")), s.fonte === "interno" || s.id ? /*#__PURE__*/React.createElement("span", {
+    }, s.city, s.state ? ", ".concat(s.state) : "", s.type ? " \xB7 ".concat(TN_PLACE_TYPE_LABELS[s.type] || s.type) : "")), ehNovo && /*#__PURE__*/React.createElement("span", {
       style: {
         fontSize: 10,
-        color: "#888",
-        padding: "2px 6px",
-        borderRadius: 4,
-        background: "#EEE9DF",
-        flexShrink: 0
-      }
-    }, "existente") : /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 10,
-        color: "#888",
-        padding: "2px 6px",
-        borderRadius: 4,
-        background: "#F4F0E5",
-        flexShrink: 0
+        color: "var(--user-color-deep, " + T.accent + ")",
+        padding: "2px 8px",
+        borderRadius: 10,
+        border: "0.5px solid " + T.border,
+        background: "transparent",
+        flexShrink: 0,
+        fontStyle: "italic",
+        fontFamily: "'Cormorant Garamond',Georgia,serif"
       }
     }, "novo"));
   }));
