@@ -39441,7 +39441,8 @@ function CampoLugarCriarNovo(_ref181) {
     error = _useState382[0],
     setError = _useState382[1];
   var tipos = tiposPermitidos && tiposPermitidos.length > 0 ? tiposPermitidos : TN_PLACE_TYPES;
-  var canSave = name.trim() && city.trim() && type;
+  // v353h: quando type===cidade, name vira city
+  var canSave = name.trim() && (type === "cidade" || city.trim()) && type;
   function salvar() {
     return _salvar6.apply(this, arguments);
   }
@@ -39463,7 +39464,7 @@ function CampoLugarCriarNovo(_ref181) {
             _context118.n = 3;
             return tnCriarPlace({
               name: name,
-              city: city,
+              city: type === "cidade" ? name : city,
               state: state,
               country: (candidato === null || candidato === void 0 ? void 0 : candidato.country) || "Brasil",
               type: type,
@@ -39530,7 +39531,7 @@ function CampoLugarCriarNovo(_ref181) {
       display: "flex",
       gap: 8
     }
-  }, /*#__PURE__*/React.createElement("input", {
+  }, type !== "cidade" && /*#__PURE__*/React.createElement("input", {
     type: "text",
     value: city,
     onChange: function onChange(e) {
@@ -39555,7 +39556,8 @@ function CampoLugarCriarNovo(_ref181) {
     placeholder: "UF",
     maxLength: 2,
     style: {
-      flex: 1,
+      flex: type !== "cidade" ? 1 : 0,
+      width: type === "cidade" ? "100%" : undefined,
       padding: "8px 10px",
       border: "1px solid #DDD8D0",
       borderRadius: 8,
@@ -40239,7 +40241,7 @@ function ModalAdicionarLugar(_ref183) {
       fontWeight: 700,
       color: T.text
     }
-  }, "Adicionar cidade"), /*#__PURE__*/React.createElement("div", {
+  }, "Adicionar"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 13,
       color: T.muted,
@@ -40275,8 +40277,8 @@ function ModalAdicionarLugar(_ref183) {
     createdById: user === null || user === void 0 ? void 0 : user.id,
     placeholder: "onde voc\xEA morou ou visitou..."
   })),
-  // v353g: toggle morou/visitou — define se mostra range (de–até) ou ponto (mês/ano)
-  /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Lbl, null, "Como foi *"), /*#__PURE__*/React.createElement("div", {
+  // v353h: toggle morou/visitou — sem label "Como foi"
+  /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
@@ -40400,9 +40402,9 @@ function ModalAdicionarLugar(_ref183) {
     var era = eraInfo(d.era || detectarEra(d.y1, d.y2));
     return /*#__PURE__*/React.createElement("div", {
       style: {
-        padding: "10px 14px",
-        background: "".concat(era.color, "10"),
-        border: "1.5px solid ".concat(era.color),
+        padding: "12px 14px",
+        background: "transparent",
+        border: "0.5px solid " + T.border,
         borderRadius: 10
       }
     }, /*#__PURE__*/React.createElement("div", {
@@ -40411,28 +40413,33 @@ function ModalAdicionarLugar(_ref183) {
         alignItems: "center",
         justifyContent: "space-between",
         flexWrap: "wrap",
-        gap: 8
+        gap: 10
       }
     }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 11,
         color: T.muted,
-        fontWeight: 600,
-        textTransform: "uppercase",
-        letterSpacing: "0.06em"
+        fontStyle: "italic",
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        letterSpacing: "0.02em"
       }
-    }, "Detectado como"), /*#__PURE__*/React.createElement("div", {
+    }, "detectado como"), /*#__PURE__*/React.createElement("div", {
       style: {
-        fontSize: 14,
-        fontWeight: 700,
-        color: era.color
+        fontSize: 15,
+        fontFamily: "Georgia,serif",
+        fontWeight: 500,
+        color: era.color,
+        marginTop: 2
       }
-    }, era.label, " \xB7 ", era.desc)), /*#__PURE__*/React.createElement("div", {
+    }, era.label.toLowerCase(), " \xB7 ", /*#__PURE__*/React.createElement("span", {
+      style: {fontStyle: "italic", fontFamily: "'Cormorant Garamond',Georgia,serif", opacity: 0.85, fontWeight: 400}
+    }, era.desc.toLowerCase()))), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
-        gap: 4
+        gap: 6
       }
     }, ERAS.map(function (e) {
+      var ativo = d.era === e.value;
       return /*#__PURE__*/React.createElement("div", {
         key: e.value,
         onClick: function onClick() {
@@ -40443,17 +40450,18 @@ function ModalAdicionarLugar(_ref183) {
           });
         },
         style: {
-          padding: "4px 10px",
-          borderRadius: 16,
+          padding: "4px 12px",
+          borderRadius: 14,
           cursor: "pointer",
-          fontSize: 11,
-          fontWeight: 700,
-          background: d.era === e.value ? e.color : "transparent",
-          color: d.era === e.value ? "#fff" : e.color,
-          border: "1.5px solid ".concat(e.color),
+          fontSize: 12,
+          fontFamily: "'Cormorant Garamond',Georgia,serif",
+          fontStyle: "italic",
+          background: ativo ? e.color : "transparent",
+          color: ativo ? "#fff" : T.muted,
+          border: "0.5px solid " + (ativo ? e.color : T.border),
           transition: "all .15s"
         }
-      }, e.label);
+      }, e.label.toLowerCase());
     }))));
   }(), !canSave && d.lugarSelecionado && /*#__PURE__*/React.createElement("div", {
     style: {
