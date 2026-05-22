@@ -6332,6 +6332,29 @@ function VerTudoCapituloI(_ref17) {
     _React$useState12 = _slicedToArray(_React$useState11, 2),
     campoEditando = _React$useState12[0],
     setCampoEditando = _React$useState12[1];
+  // v353d: edição inline (substitui modal). Salva debounced no banco.
+  var _React$useState11b = React.useState(""),
+    _React$useState12b = _slicedToArray(_React$useState11b, 2),
+    valorEditando = _React$useState12b[0],
+    setValorEditando = _React$useState12b[1];
+  var salvandoCampo = React.useRef(false);
+  async function salvarCampoBioInline(chave, novoValor) {
+    if (salvandoCampo.current) return;
+    salvandoCampo.current = true;
+    try {
+      var novaBio = _objectSpread({}, pessoa.bio_estendida || {});
+      var v = (novoValor || "").trim();
+      if (v) novaBio[chave] = v;
+      else delete novaBio[chave];
+      var updated = _objectSpread(_objectSpread({}, pessoa), {}, { bio_estendida: novaBio });
+      await db.from("profiles").update({ bio_estendida: novaBio }).eq("id", pessoa.id);
+      if (onUpdateUser) onUpdateUser(updated);
+    } catch (e) {
+      tnLog && tnLog("Erro salvar inline:", e);
+    } finally {
+      salvandoCampo.current = false;
+    }
+  }
   var bio = (pessoa === null || pessoa === void 0 ? void 0 : pessoa.bio_estendida) || {};
   var preenchidos = bioPreenchidos(bio);
   var totalPreenchidos = preenchidos.length;
@@ -6456,25 +6479,28 @@ function VerTudoCapituloI(_ref17) {
       var _ref19 = _slicedToArray(_ref18, 2),
         chave = _ref19[0],
         valor = _ref19[1];
+      var emEdicao = campoEditando === chave;
       return React.createElement("div", {
         key: chave,
-        onClick: ehDono ? function () {
-          return setCampoEditando(chave);
+        onClick: ehDono && !emEdicao ? function () {
+          setValorEditando(valor || "");
+          setCampoEditando(chave);
         } : undefined,
         style: {
           display: "flex",
           alignItems: "baseline",
           gap: 8,
-          cursor: ehDono ? "pointer" : "default",
+          cursor: ehDono && !emEdicao ? "pointer" : "default",
           padding: "4px 6px",
           margin: "-4px -6px",
           borderRadius: 6,
-          transition: "background 0.15s"
+          transition: "background 0.15s",
+          background: emEdicao ? T.faint : "transparent"
         },
-        onMouseEnter: ehDono ? function (e) {
+        onMouseEnter: ehDono && !emEdicao ? function (e) {
           return e.currentTarget.style.background = T.faint;
         } : undefined,
-        onMouseLeave: ehDono ? function (e) {
+        onMouseLeave: ehDono && !emEdicao ? function (e) {
           return e.currentTarget.style.background = "transparent";
         } : undefined
       }, React.createElement("span", {
@@ -6485,7 +6511,35 @@ function VerTudoCapituloI(_ref17) {
           minWidth: 120,
           flexShrink: 0
         }
-      }, LABELS_BIO[chave]), React.createElement("span", {
+      }, LABELS_BIO[chave]), emEdicao ? React.createElement("input", {
+        autoFocus: true,
+        type: "text",
+        maxLength: 80,
+        value: valorEditando,
+        placeholder: PLACEHOLDERS_BIO[chave],
+        onChange: function onChange(e) { setValorEditando(e.target.value); },
+        onBlur: function onBlur() {
+          var v = valorEditando;
+          setCampoEditando(null);
+          if ((v || "").trim() !== (valor || "").trim()) {
+            salvarCampoBioInline(chave, v);
+          }
+        },
+        onKeyDown: function onKeyDown(e) {
+          if (e.key === "Enter") { e.target.blur(); }
+          else if (e.key === "Escape") { setValorEditando(valor || ""); setCampoEditando(null); }
+        },
+        style: {
+          flex: 1,
+          border: "none",
+          outline: "none",
+          background: "transparent",
+          fontFamily: "'Cormorant Garamond',Georgia,serif",
+          fontSize: 15,
+          color: T.sub,
+          padding: 0
+        }
+      }) : React.createElement("span", {
         style: {
           flex: 1,
           opacity: valor ? 1 : 0.45,
@@ -6507,16 +6561,7 @@ function VerTudoCapituloI(_ref17) {
         if (onEditarTudo) onEditarTudo();
       }
     }]
-  }) : null, campoEditando ? React.createElement(ModalEditarCampoBio, {
-    user: pessoa,
-    chave: campoEditando,
-    onClose: function onClose() {
-      return setCampoEditando(null);
-    },
-    onSave: function onSave(updated) {
-      if (onUpdateUser) onUpdateUser(updated);
-    }
-  }) : null) /* v330f: fecha React.createElement("div", className:"cap-exp") */);
+  }) : null, null) /* v330f: fecha React.createElement("div", className:"cap-exp") */);
 }
 
 // v317h: Helper renderiza só o BOTÃO kebab/concluído. O ShareMenu vai fora do header.
