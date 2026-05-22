@@ -7067,7 +7067,9 @@ function CapituloLugares(_ref21) {
           onAbrirItem({
             city: q.cidade,
             uf: q.uf,
-            placeName: q.lugar || q.cidade,
+            // v353r: city tem que ser o lookup principal (lugar livre é rótulo afetivo, não existe em places)
+            name: q.cidade,
+            placeName: q.cidade,
             y1: dt ? String(dt.getFullYear()) : "",
             y2: "",
             era: "futuro"
