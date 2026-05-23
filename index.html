@@ -3758,7 +3758,14 @@ function _searchPlacesInteligente() {
               var locCity = tnNormalizarNome(loc.city || "");
               return locNorm === extNorm && locCity === extCity;
             });
-          }); // Resultado final: locais primeiro (score maior), depois externos, depois opção criar manual
+          }); 
+          // v353z: rankear externos — cidades primeiro, depois POIs/bairros
+          externosFiltrados.sort(function (a, b) {
+            var aCidade = (a.type === "cidade" || a.type === "city") ? 0 : 1;
+            var bCidade = (b.type === "cidade" || b.type === "city") ? 0 : 1;
+            return aCidade - bCidade;
+          });
+          // Resultado final: locais primeiro (score maior), depois externos rankeados, depois opção criar manual
           sugestoes = [].concat(_toConsumableArray(locais), _toConsumableArray(externosFiltrados)).slice(0, 8);
           resultado = {
             sugestoes: sugestoes,
