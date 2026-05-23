@@ -3843,7 +3843,7 @@ function _tnLugaresDoProfile() {
         case 1:
           _context195.p = 1;
           _context195.n = 2;
-          return dbRead.from("place_profiles").select("id, place_id, profile_id, year_start, year_end, place_type, era, visit_kind, place_label, label_visibilidade, display_order, places(id, name, city, state, country, lat, lng, type, cep)").eq("profile_id", profileId).order("display_order", {
+          return dbRead.from("place_profiles").select("id, place_id, profile_id, year_start, year_end, month_start, month_end, place_type, era, visit_kind, place_label, label_visibilidade, display_order, places(id, name, city, state, country, lat, lng, type, cep)").eq("profile_id", profileId).order("display_order", {
             ascending: true,
             nullsFirst: false
           }).order("year_start", {
@@ -3888,6 +3888,8 @@ function _tnLugaresDoProfile() {
               pp_id: pp.id,
               // place_profiles.id — necessário pra edit/remove por linha
               visit_kind: pp.visit_kind || "morou",
+              month_start: pp.month_start,
+              month_end: pp.month_end,
               place_label: pp.place_label || null,
               label_visibilidade: pp.label_visibilidade || "privado",
               display_order: pp.display_order != null ? pp.display_order : 0
@@ -29645,7 +29647,10 @@ function EditarLugarInline(_ref132) {
       y1: lugar.y1 || "",
       y2: lugar.y2 || "",
       era: lugar.era || detectarEra(lugar.y1, lugar.y2),
-      place_label: lugar.place_label || ""
+      place_label: lugar.place_label || "",
+      // v353w: edita visit_kind também
+      visit_kind: lugar.visit_kind || "morou",
+      month_start: lugar.month_start || ""
     }),
     _useState236 = _slicedToArray(_useState235, 2),
     d = _useState236[0],
@@ -29678,7 +29683,67 @@ function EditarLugarInline(_ref132) {
       fontWeight: 600,
       color: T.text
     }
-  }, lugar.placeName || lugar.city), lugar.city ? " \xB7 ".concat(lugar.city) : "", lugar.uf ? ", ".concat(lugar.uf) : ""), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, lugar.placeName || lugar.city), lugar.city ? " \xB7 ".concat(lugar.city) : "", lugar.uf ? ", ".concat(lugar.uf) : ""),
+  // v353w: toggle morou/visitou (mesmo padrão do modal Adicionar)
+  /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8}
+  }, [{id:"morou",label:"morou",desc:"por um per\xEDodo"},{id:"visitou",label:"visitou",desc:"viagem ou passagem"}].map(function (opt) {
+    var ativo = (d.visit_kind || "morou") === opt.id;
+    return /*#__PURE__*/React.createElement("button", {
+      key: opt.id,
+      onClick: function onClick() {
+        setD(function (prev) {
+          var next = _objectSpread(_objectSpread({}, prev), {}, {visit_kind: opt.id});
+          if (opt.id === "visitou") next.y2 = prev.y1;
+          return next;
+        });
+      },
+      style: {
+        padding: "10px 12px",
+        border: ativo ? "1.5px solid var(--user-color-deep, " + T.accent + ")" : "1px solid " + T.border,
+        background: ativo ? "var(--user-color-soft, " + T.accentBg + ")" : "#fff",
+        borderRadius: 10,
+        cursor: "pointer",
+        fontFamily: "inherit",
+        textAlign: "left",
+        transition: "all 0.15s"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {fontSize: 13.5, fontWeight: 600, color: ativo ? "var(--user-color-deep, " + T.accent + ")" : T.text}
+    }, opt.label), /*#__PURE__*/React.createElement("div", {
+      style: {fontSize: 11, color: T.muted, marginTop: 2, fontStyle: "italic", fontFamily: "'Cormorant Garamond',Georgia,serif"}
+    }, opt.desc));
+  }))),
+  (d.visit_kind || "morou") === "visitou" ? /*#__PURE__*/React.createElement("div", {
+    style: {display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10}
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {fontSize: 11, color: T.sub, marginBottom: 6, fontFamily: "Georgia,serif", fontStyle: "italic", letterSpacing: "0.02em"}
+  }, "m\xEAs"), /*#__PURE__*/React.createElement("select", {
+    value: d.month_start || "",
+    onChange: function onChange(e) {
+      var v = e.target.value;
+      setD(function (prev) { return _objectSpread(_objectSpread({}, prev), {}, {month_start: v}); });
+    },
+    style: {width: "100%", padding: "10px 12px", border: "1px solid " + T.border, borderRadius: 8, fontSize: 14, fontFamily: "inherit", background: "#fff", boxSizing: "border-box"}
+  }, [/*#__PURE__*/React.createElement("option", {key: "", value: ""}, "\u2014"),
+    ["1","janeiro"],["2","fevereiro"],["3","mar\xE7o"],["4","abril"],["5","maio"],["6","junho"],
+    ["7","julho"],["8","agosto"],["9","setembro"],["10","outubro"],["11","novembro"],["12","dezembro"]
+  ].map(function (m) {
+    return Array.isArray(m) ? /*#__PURE__*/React.createElement("option", {key: m[0], value: m[0]}, m[1]) : m;
+  }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {fontSize: 11, color: T.sub, marginBottom: 6, fontFamily: "Georgia,serif", fontStyle: "italic", letterSpacing: "0.02em"}
+  }, "ano"), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    value: d.y1,
+    placeholder: "2025",
+    onChange: function onChange(e) {
+      var v = e.target.value.slice(0, 4);
+      setD(function (prev) {
+        return _objectSpread(_objectSpread({}, prev), {}, {y1: v, y2: v, era: detectarEra(v, v)});
+      });
+    },
+    style: {textAlign: "center"}
+  }))) : /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 11,
       color: T.sub,
@@ -35177,6 +35242,7 @@ function Perfil(_ref156) {
           y2: l.y2,
           era: l.era,
           visit_kind: l.visit_kind,
+          month_start: l.month_start,
           placeName: l.placeName,
           place_label: l.place_label
         };
@@ -35384,7 +35450,10 @@ function Perfil(_ref156) {
                   year_start: parseInt(dados.y1) || null,
                   year_end: parseInt(dados.y2) || null,
                   era: dados.era || detectarEra(dados.y1, dados.y2),
-                  place_label: (dados.place_label || "").trim() || null
+                  place_label: (dados.place_label || "").trim() || null,
+                  // v353w: persiste visit_kind + month_start
+                  visit_kind: dados.visit_kind || "morou",
+                  month_start: dados.month_start ? parseInt(dados.month_start) : null
                 };
                 _context99.n = 2;
                 return db.from("place_profiles").update(patch).eq("id", lugarEditando.pp_id);
@@ -40055,6 +40124,8 @@ function ModalAdicionarLugar(_ref183) {
       place_id: pp.place_id,
       pp_id: pp.id,
       visit_kind: pp.visit_kind || "morou",
+      month_start: pp.month_start,
+      month_end: pp.month_end,
       place_label: pp.place_label || null,
       label_visibilidade: pp.label_visibilidade || "privado",
       display_order: pp.display_order != null ? pp.display_order : 0
@@ -40128,7 +40199,7 @@ function ModalAdicionarLugar(_ref183) {
             inserted = null;
             _context121.p = 2;
             _context121.n = 3;
-            return db.from("place_profiles").insert(ppRow).select("id, place_id, profile_id, year_start, year_end, place_type, era, visit_kind, place_label, label_visibilidade, display_order, places(id, name, city, state, country, lat, lng, type, cep)").single();
+            return db.from("place_profiles").insert(ppRow).select("id, place_id, profile_id, year_start, year_end, month_start, month_end, place_type, era, visit_kind, place_label, label_visibilidade, display_order, places(id, name, city, state, country, lat, lng, type, cep)").single();
           case 3:
             _yield$db$from$insert9 = _context121.v;
             data = _yield$db$from$insert9.data;
