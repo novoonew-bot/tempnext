@@ -9607,7 +9607,7 @@ function MemoriasFeed(_ref40) {
     });
   }, [memorias]);
 
-  // Scroll inicial pra memória que abriu
+  // Scroll inicial pra memória que abriu — v354b: dep só do id, lista mudar não dispara re-scroll
   React.useEffect(function () {
     if (!memoriaInicialId || !containerRef.current) return;
     var idx = lista.findIndex(function (m) {
@@ -9623,7 +9623,8 @@ function MemoriasFeed(_ref40) {
         block: "start"
       });
     }, 50);
-  }, [memoriaInicialId, lista]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [memoriaInicialId]);
 
   // Detecta qual memória está visível (scroll-snap)
   React.useEffect(function () {
@@ -10135,7 +10136,9 @@ function LugaresFeed(_ref42) {
         block: "start"
       });
     }, 50);
-  }, [lugarInicialId, lista, pessoa === null || pessoa === void 0 ? void 0 : pessoa.id]);
+    // v354b: mesma correção do scroll de memórias — dep só do id
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lugarInicialId, pessoa === null || pessoa === void 0 ? void 0 : pessoa.id]);
 
   // Detecta lugar visível
   React.useEffect(function () {
@@ -43176,7 +43179,7 @@ function ModalMomento(_ref191) {
       fontFamily: "'Cormorant Garamond',Georgia,serif",
       fontStyle: "italic"
     }
-  }, "algo que voc\xEA quer guardar")), /*#__PURE__*/React.createElement("button", {
+  }, "algo que voc\xEA quer guardar"))), /*#__PURE__*/React.createElement("button", {
     onClick: onClose,
     style: {
       background: "none",
