@@ -444,7 +444,7 @@ input:focus,select:focus,textarea:focus{
 .mem-feed-page{scroll-snap-align:start;scroll-snap-stop:always;min-height:88vh;display:flex;flex-direction:column;background:#FAF7F2;padding:14px 14px 6px;gap:10px}
 /* v275: quando o card tem comentários abertos, libera o snap e o teto de altura — assim
    o usuário pode rolar livre pra alcançar o input sem ser puxado pro próximo card. */
-.mem-feed-page.tn-page-expandido{scroll-snap-align:start;scroll-snap-stop:normal;min-height:88vh;padding-bottom:24px}
+.mem-feed-page.tn-page-expandido{scroll-snap-align:start;scroll-snap-stop:normal;min-height:100vh;padding-bottom:40px}
 
 /* v264: card único envolvendo foto+row+quote */
 .mem-feed-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 14px rgba(42,32,26,0.08);border:0.5px solid rgba(42,32,26,0.05);display:flex;flex-direction:column}
@@ -576,10 +576,11 @@ input:focus,select:focus,textarea:focus{
 .tn-coment-inline-input-row{display:flex;align-items:center;gap:6px}
 /* v276: variante do input quando aparece no TOPO (acima da lista) */
 .tn-coment-inline-input-top{margin-top:0;padding-top:2px;padding-bottom:8px;border-top:none;border-bottom:0.3px solid rgba(0,0,0,0.05);margin-bottom:6px}
-.tn-coment-inline-input{flex:1;border:none;outline:none;background:#F4F0E8;padding:7px 12px;border-radius:14px;font-size:13px;color:#2C2C2A;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic}
+.tn-coment-inline-input{flex:1;border:0.5px solid rgba(42,32,26,0.18);outline:none;background:#fff;padding:9px 14px;border-radius:14px;font-size:13px;color:#2C2C2A;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;transition:border-color 0.15s}
+.tn-coment-inline-input:focus{border-color:var(--user-color-deep, #2a201a)}
 .tn-coment-inline-input::placeholder{color:#a89e8c;font-style:italic}
-.tn-coment-inline-send{background:#E0DDD2;color:#FFFEF8;border:none;border-radius:14px;padding:6px 12px;font-size:11px;font-weight:600;cursor:default;font-family:inherit;letter-spacing:0.3px;transition:background 0.2s}
-.tn-coment-inline-send.ativo{background:#2C2C2A;cursor:pointer}
+.tn-coment-inline-send{background:transparent;color:var(--user-color-deep, #2a201a);border:0.5px solid rgba(42,32,26,0.2);border-radius:14px;padding:8px 14px;font-size:12px;font-weight:500;cursor:not-allowed;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;letter-spacing:0.3px;transition:all 0.15s;opacity:0.5}
+.tn-coment-inline-send.ativo{background:var(--user-color-deep, #2a201a);color:#fff;border-color:transparent;cursor:pointer;opacity:1}
 
 /* Cruzamento — fora do card, separado abaixo */
 .mem-feed-cruz{padding:14px 16px;background:rgba(245,236,214,0.55);border-left:2px solid var(--user-color);border-radius:0 8px 8px 0}
