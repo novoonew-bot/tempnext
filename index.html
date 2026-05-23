@@ -29672,7 +29672,16 @@ function EditarLugarInline(_ref132) {
     _useState236 = _slicedToArray(_useState235, 2),
     d = _useState236[0],
     setD = _useState236[1];
-  var podeSalvar = !!(d.y1 && d.y2);
+  // v354k: regra de domínio — morou/visitou só passado, quero_ir só futuro
+  var anoAtual = new Date().getFullYear();
+  var anosValidos = (function () {
+    var y1n = parseInt(d.y1), y2n = parseInt(d.y2);
+    if (!y1n || !y2n) return false;
+    var ehFuturo = (d.visit_kind || "morou") === "quero_ir";
+    if (ehFuturo) return y1n >= anoAtual && y2n >= anoAtual;
+    return y1n <= anoAtual && y2n <= anoAtual;
+  })();
+  var podeSalvar = !!(d.y1 && d.y2) && anosValidos;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
@@ -34608,6 +34617,11 @@ function Perfil(_ref156) {
     _useState324 = _slicedToArray(_useState323, 2),
     lugarEditando = _useState324[0],
     setLugarEditando = _useState324[1];
+  // v354j: estado pra confirmação de remoção de lugar (morou/visitou)
+  var _useStateRemoverLugar = useState(null),
+    _useStateRemoverLugar2 = _slicedToArray(_useStateRemoverLugar, 2),
+    lugarPraRemover = _useStateRemoverLugar2[0],
+    setLugarPraRemover = _useStateRemoverLugar2[1];
   var _useState325 = useState(null),
     _useState326 = _slicedToArray(_useState325, 2),
     capituloAbertoPerfil = _useState326[0],
@@ -35524,8 +35538,23 @@ function Perfil(_ref156) {
           // F1.B B2: abre EditarLugarInline em overlay (edita período+rótulo via pp_id).
           if (lugar !== null && lugar !== void 0 && lugar.pp_id) setLugarEditando(lugar);
         },
-        onRemover: removerLugar
-      }), lugarEditando ? React.createElement("div", {
+        onRemover: function onRemover(lugar) {
+          // v354j: abre confirmação em vez de deletar direto
+          setLugarPraRemover(lugar);
+        }
+      }), lugarPraRemover ? React.createElement(ModalConfirmacao, {
+        titulo: "remover este lugar?",
+        descricao: "".concat(lugarPraRemover.placeName || lugarPraRemover.city || "").concat(lugarPraRemover.uf ? ", " + lugarPraRemover.uf : ""),
+        textoConfirmar: "remover",
+        perigo: true,
+        onCancelar: function onCancelar() {
+          return setLugarPraRemover(null);
+        },
+        onConfirmar: function onConfirmar() {
+          removerLugar(lugarPraRemover);
+          setLugarPraRemover(null);
+        }
+      }) : null, lugarEditando ? React.createElement("div", {
         style: {
           position: "fixed",
           inset: 0,
