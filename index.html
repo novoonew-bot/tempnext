@@ -443,7 +443,7 @@ input:focus,select:focus,textarea:focus{
 .mem-feed-page{scroll-snap-align:start;scroll-snap-stop:always;min-height:88vh;display:flex;flex-direction:column;background:#FAF7F2;padding:14px 14px 6px;gap:10px}
 /* v275: quando o card tem comentários abertos, libera o snap e o teto de altura — assim
    o usuário pode rolar livre pra alcançar o input sem ser puxado pro próximo card. */
-.mem-feed-page.tn-page-expandido{scroll-snap-align:none;scroll-snap-stop:normal;min-height:auto;padding-bottom:24px}
+.mem-feed-page.tn-page-expandido{scroll-snap-align:start;scroll-snap-stop:normal;min-height:88vh;padding-bottom:24px}
 
 /* v264: card único envolvendo foto+row+quote */
 .mem-feed-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 14px rgba(42,32,26,0.08);border:0.5px solid rgba(42,32,26,0.05);display:flex;flex-direction:column}
