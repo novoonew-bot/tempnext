@@ -437,6 +437,7 @@ input:focus,select:focus,textarea:focus{
 
 /* Container scroll com snap */
 .mem-feed-scroll{flex:1;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.mem-feed-scroll.has-expanded{scroll-snap-type:y proximity}
 .mem-feed-scroll::-webkit-scrollbar{width:0;display:none}
 
 /* Página individual (espaço de uma memória completa) — snap por padrão */
@@ -9521,11 +9522,6 @@ function MemoriasFeed(_ref40) {
   function abrirEdicao(m) {
     setEditandoId(m.id);
     setTextoEditado(m.texto || "");
-    // v354e: rola pro topo do card sendo editado
-    setTimeout(function () {
-      var el = document.querySelector('[data-mem-id="' + m.id + '"]');
-      if (el) el.scrollIntoView({behavior: "smooth", block: "start"});
-    }, 60);
   }
   function cancelarEdicao() {
     setEditandoId(null);
@@ -9598,16 +9594,7 @@ function MemoriasFeed(_ref40) {
   function toggleAberto(id) {
     setAbertos(function (prev) {
       var next = new Set(prev);
-      var abrindo = !next.has(id);
-      if (abrindo) next.add(id);
-      else next["delete"](id);
-      // v354e: ao abrir, rola pro topo do próprio card pra não vazar pro próximo
-      if (abrindo) {
-        setTimeout(function () {
-          var el = document.querySelector('[data-mem-id="' + id + '"]');
-          if (el) el.scrollIntoView({behavior: "smooth", block: "start"});
-        }, 60);
-      }
+      if (next.has(id)) next["delete"](id);else next.add(id);
       return next;
     });
   }
@@ -9702,7 +9689,7 @@ function MemoriasFeed(_ref40) {
   })), " Memórias")),
   // FEED COM SNAP SCROLL
   React.createElement("div", {
-    className: "mem-feed-scroll",
+    className: "mem-feed-scroll" + (abertos.size > 0 || editandoId ? " has-expanded" : ""),
     ref: containerRef
   }, lista.map(function (m, i) {
     var _overrides$m$id;
