@@ -9608,24 +9608,26 @@ function MemoriasFeed(_ref40) {
     });
   }, [memorias]);
 
-  // Scroll inicial pra memória que abriu — v354b: dep só do id, lista mudar não dispara re-scroll
+  // Scroll inicial pra memória que abriu — v354g: dispara uma única vez,
+  // só quando a memória-alvo já está na lista e DOM já montou (rAF).
+  var jaRolouParaInicialRef = React.useRef(false);
   React.useEffect(function () {
+    if (jaRolouParaInicialRef.current) return;
     if (!memoriaInicialId || !containerRef.current) return;
     var idx = lista.findIndex(function (m) {
       return m.id === memoriaInicialId;
     });
-    if (idx < 0) return;
-    // Pequeno delay pra DOM montar
-    setTimeout(function () {
+    if (idx < 0) return; // memória ainda não chegou no array
+    jaRolouParaInicialRef.current = true;
+    requestAnimationFrame(function () {
       var _containerRef$current;
       var el = (_containerRef$current = containerRef.current) === null || _containerRef$current === void 0 || (_containerRef$current = _containerRef$current.children) === null || _containerRef$current === void 0 ? void 0 : _containerRef$current[idx];
       if (el) el.scrollIntoView({
         behavior: "instant",
         block: "start"
       });
-    }, 50);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [memoriaInicialId]);
+    });
+  }, [memoriaInicialId, lista]);
 
   // Detecta qual memória está visível (scroll-snap)
   React.useEffect(function () {
@@ -10122,24 +10124,26 @@ function LugaresFeed(_ref42) {
     return null;
   }
 
-  // Scroll inicial pra lugar específico (deep link)
+  // Scroll inicial pra lugar específico (deep link) — v354g: dispara uma única vez,
+  // só quando o lugar-alvo já está na lista e DOM já montou (rAF).
+  var jaRolouParaLugarInicialRef = React.useRef(false);
   React.useEffect(function () {
+    if (jaRolouParaLugarInicialRef.current) return;
     if (!lugarInicialId || !containerRef.current) return;
     var idx = lista.findIndex(function (l) {
       return buildLugarId(pessoa === null || pessoa === void 0 ? void 0 : pessoa.id, l) === lugarInicialId;
     });
     if (idx < 0) return;
-    setTimeout(function () {
+    jaRolouParaLugarInicialRef.current = true;
+    requestAnimationFrame(function () {
       var _containerRef$current2;
       var el = (_containerRef$current2 = containerRef.current) === null || _containerRef$current2 === void 0 || (_containerRef$current2 = _containerRef$current2.children) === null || _containerRef$current2 === void 0 ? void 0 : _containerRef$current2[idx];
       if (el) el.scrollIntoView({
         behavior: "instant",
         block: "start"
       });
-    }, 50);
-    // v354b: mesma correção do scroll de memórias — dep só do id
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lugarInicialId, pessoa === null || pessoa === void 0 ? void 0 : pessoa.id]);
+    });
+  }, [lugarInicialId, lista, pessoa === null || pessoa === void 0 ? void 0 : pessoa.id]);
 
   // Detecta lugar visível
   React.useEffect(function () {
