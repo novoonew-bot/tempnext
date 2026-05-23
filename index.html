@@ -29684,9 +29684,9 @@ function EditarLugarInline(_ref132) {
       color: T.text
     }
   }, lugar.placeName || lugar.city), lugar.city ? " \xB7 ".concat(lugar.city) : "", lugar.uf ? ", ".concat(lugar.uf) : ""),
-  // v353w: toggle morou/visitou (mesmo padrão do modal Adicionar)
+  // v353y: toggle morou/visitou — minimalista (sem fundo, sem negrito)
   /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    style: {display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8}
+    style: {display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0, borderBottom: "0.5px solid " + T.border}
   }, [{id:"morou",label:"morou",desc:"por um per\xEDodo"},{id:"visitou",label:"visitou",desc:"viagem ou passagem"}].map(function (opt) {
     var ativo = (d.visit_kind || "morou") === opt.id;
     return /*#__PURE__*/React.createElement("button", {
@@ -29699,19 +29699,20 @@ function EditarLugarInline(_ref132) {
         });
       },
       style: {
-        padding: "10px 12px",
-        border: ativo ? "1.5px solid var(--user-color-deep, " + T.accent + ")" : "1px solid " + T.border,
-        background: ativo ? "var(--user-color-soft, " + T.accentBg + ")" : "#fff",
-        borderRadius: 10,
+        padding: "14px 8px",
+        border: "none",
+        background: "transparent",
         cursor: "pointer",
         fontFamily: "inherit",
-        textAlign: "left",
+        textAlign: "center",
+        borderBottom: ativo ? "1.5px solid var(--user-color-deep, " + T.accent + ")" : "1.5px solid transparent",
+        marginBottom: "-0.5px",
         transition: "all 0.15s"
       }
     }, /*#__PURE__*/React.createElement("div", {
-      style: {fontSize: 13.5, fontWeight: 600, color: ativo ? "var(--user-color-deep, " + T.accent + ")" : T.text}
+      style: {fontSize: 15, fontFamily: "Georgia,serif", color: ativo ? "var(--user-color-deep, " + T.accent + ")" : T.text, opacity: ativo ? 1 : 0.55}
     }, opt.label), /*#__PURE__*/React.createElement("div", {
-      style: {fontSize: 11, color: T.muted, marginTop: 2, fontStyle: "italic", fontFamily: "'Cormorant Garamond',Georgia,serif"}
+      style: {fontSize: 11, color: T.muted, marginTop: 2, fontStyle: "italic", fontFamily: "'Cormorant Garamond',Georgia,serif", opacity: ativo ? 1 : 0.6}
     }, opt.desc));
   }))),
   (d.visit_kind || "morou") === "visitou" ? /*#__PURE__*/React.createElement("div", {
@@ -29846,7 +29847,7 @@ function EditarLugarInline(_ref132) {
       padding: "11px",
       borderRadius: 10,
       border: "none",
-      background: podeSalvar ? T.accent : "#E8E2D4",
+      background: podeSalvar ? "var(--user-color-deep, " + T.accent + ")" : "#E8E2D4",
       cursor: podeSalvar && !salvando ? "pointer" : "default",
       fontSize: 14,
       fontWeight: 500,
@@ -40504,12 +40505,13 @@ function ModalAdicionarLugar(_ref183) {
     createdById: user === null || user === void 0 ? void 0 : user.id,
     placeholder: "onde voc\xEA morou ou visitou..."
   })),
-  // v353x: toggle morou/visitou — sem label
+  // v353y: toggle morou/visitou — minimalista (sem fundo, sem negrito)
   /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
-      gap: 8
+      gap: 0,
+      borderBottom: "0.5px solid " + T.border
     }
   }, [
     {id: "morou", label: "morou", desc: "por um per\xEDodo"},
@@ -40526,19 +40528,20 @@ function ModalAdicionarLugar(_ref183) {
         });
       },
       style: {
-        padding: "10px 12px",
-        border: ativo ? "1.5px solid var(--user-color-deep, " + T.accent + ")" : "1px solid " + T.border,
-        background: ativo ? "var(--user-color-soft, " + T.accentBg + ")" : "#fff",
-        borderRadius: 10,
+        padding: "14px 8px",
+        border: "none",
+        background: "transparent",
         cursor: "pointer",
         fontFamily: "inherit",
-        textAlign: "left",
+        textAlign: "center",
+        borderBottom: ativo ? "1.5px solid var(--user-color-deep, " + T.accent + ")" : "1.5px solid transparent",
+        marginBottom: "-0.5px",
         transition: "all 0.15s"
       }
     }, /*#__PURE__*/React.createElement("div", {
-      style: {fontSize: 13.5, fontWeight: 600, color: ativo ? "var(--user-color-deep, " + T.accent + ")" : T.text}
+      style: {fontSize: 15, fontFamily: "Georgia,serif", color: ativo ? "var(--user-color-deep, " + T.accent + ")" : T.text, opacity: ativo ? 1 : 0.55}
     }, opt.label), /*#__PURE__*/React.createElement("div", {
-      style: {fontSize: 11, color: T.muted, marginTop: 2, fontStyle: "italic", fontFamily: "'Cormorant Garamond',Georgia,serif"}
+      style: {fontSize: 11, color: T.muted, marginTop: 2, fontStyle: "italic", fontFamily: "'Cormorant Garamond',Georgia,serif", opacity: ativo ? 1 : 0.6}
     }, opt.desc));
   }))),
   // Datas: morou → De/Até (anos). Visitou → Mês + Ano único.
@@ -40707,12 +40710,25 @@ function ModalAdicionarLugar(_ref183) {
       border: "1px solid #f5c2c0",
       borderRadius: 10
     }
-  }, erroSalvar), /*#__PURE__*/React.createElement(Btn, {
-    full: true,
+  }, erroSalvar), /*#__PURE__*/React.createElement("button", {
     onClick: salvar,
     disabled: !canSave || saving,
-    size: "lg"
-  }, saving ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Spinner, null), "Salvando\u2026") : "Salvar lugar"))));
+    style: {
+      width: "100%",
+      padding: "14px 20px",
+      background: !canSave || saving ? T.faint : "var(--user-color-deep, " + T.accent + ")",
+      color: !canSave || saving ? T.muted : "#fff",
+      border: "none",
+      borderRadius: 12,
+      fontFamily: "'Cormorant Garamond',Georgia,serif",
+      fontSize: 15,
+      fontStyle: "italic",
+      letterSpacing: "0.02em",
+      cursor: !canSave || saving ? "not-allowed" : "pointer",
+      transition: "all 0.15s",
+      marginTop: 4
+    }
+  }, saving ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Spinner, null), "salvando\u2026") : "salvar"))));
 }
 
 // ── Modal: Menu Rápido (+) ────────────────────────────────────
