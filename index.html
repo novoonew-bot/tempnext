@@ -29763,6 +29763,7 @@ function EditarLugarInline(_ref132) {
     type: "number",
     value: d.y1,
     placeholder: "2025",
+    max: String(anoAtual),
     onChange: function onChange(e) {
       var v = e.target.value.slice(0, 4);
       setD(function (prev) {
@@ -29790,6 +29791,7 @@ function EditarLugarInline(_ref132) {
     type: "number",
     value: d.y1,
     placeholder: "de",
+    max: String(anoAtual),
     onChange: function onChange(e) {
       var v = e.target.value.slice(0, 4);
       setD(function (prev) {
@@ -29813,6 +29815,7 @@ function EditarLugarInline(_ref132) {
     type: "number",
     value: d.y2,
     placeholder: "at\xE9",
+    max: String(anoAtual),
     onChange: function onChange(e) {
       var v = e.target.value.slice(0, 4);
       setD(function (prev) {
@@ -40208,7 +40211,15 @@ function ModalAdicionarLugar(_ref183) {
     _useState400 = _slicedToArray(_useState399, 2),
     erroSalvar = _useState400[0],
     setErroSalvar = _useState400[1];
-  var canSave = !!(d.lugarSelecionado && d.y1 && d.y2);
+  // v354k: regra de domínio — morou/visitou só passado
+  var anoAtualSalvar = new Date().getFullYear();
+  var anosValidosModal = (function () {
+    var y1n = parseInt(d.y1), y2n = parseInt(d.y2);
+    if (!y1n || !y2n) return false;
+    // Modal Adicionar só cobre morou/visitou (não quero_ir ainda — D13)
+    return y1n <= anoAtualSalvar && y2n <= anoAtualSalvar;
+  })();
+  var canSave = !!(d.lugarSelecionado && d.y1 && d.y2) && anosValidosModal;
   function salvar() {
     return _salvar7.apply(this, arguments);
   }
@@ -40617,6 +40628,7 @@ function ModalAdicionarLugar(_ref183) {
     type: "number",
     placeholder: "2025",
     value: d.y1,
+    max: String(anoAtualSalvar),
     onChange: function onChange(e) {
       var v = e.target.value.slice(0, 4);
       setD(function (prev) {
@@ -40636,6 +40648,7 @@ function ModalAdicionarLugar(_ref183) {
     type: "number",
     placeholder: "1990",
     value: d.y1,
+    max: String(anoAtualSalvar),
     onChange: function onChange(e) {
       var v = e.target.value.slice(0, 4);
       setD(function (prev) {
@@ -40649,6 +40662,7 @@ function ModalAdicionarLugar(_ref183) {
     type: "number",
     placeholder: "2025",
     value: d.y2,
+    max: String(anoAtualSalvar),
     onChange: function onChange(e) {
       var v = e.target.value.slice(0, 4);
       setD(function (prev) {
