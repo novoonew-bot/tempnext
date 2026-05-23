@@ -7024,7 +7024,83 @@ function CapituloLugares(_ref21) {
       className: "cap-exp-arr"
     }, "›"));
   }))) : null,
-  // SEÇÃO: PASSAGENS (vazia por enquanto)
+  // v353v: SEÇÃO VISITEI — mesma estrutura do "onde morei"
+  (tab === "tudo" || tab === "passou") && lugaresPassou.length > 0 ? React.createElement(React.Fragment, null, tab === "tudo" ? React.createElement("div", {
+    className: "cap-exp-secao-tit"
+  }, ehDono ? "— visitei —" : "— visitou —") : null, React.createElement("div", {
+    className: "cap-exp-lista"
+  }, lugaresPassou.map(function (l, i) {
+    var cruzaqui = cidadesCruz.has((l.label || "").toLowerCase().trim());
+    var lugarOriginal = l;
+    var emEdicao = modo === "editando" && ehDono;
+    return React.createElement("div", {
+      key: "v-" + i,
+      className: "cap-exp-card",
+      style: {
+        outline: emEdicao ? "2px solid var(--user-color, ".concat(T.accent, ")") : "none",
+        position: "relative"
+      },
+      onClick: function onClick() {
+        if (emEdicao) return;
+        onAbrirItem && onAbrirItem(lugarOriginal);
+      }
+    }, React.createElement("div", {
+      className: "cap-exp-foto morou",
+      style: {
+        background: "linear-gradient(135deg, var(--user-color-15), var(--user-color-soft))"
+      }
+    }), React.createElement("div", {
+      className: "cap-exp-info"
+    }, React.createElement("div", {
+      className: "cap-exp-nome"
+    }, l.label || "\u2014"), l.anos ? React.createElement("div", {
+      className: "cap-exp-anos"
+    }, l.anos) : null, cruzaqui ? React.createElement("span", {
+      className: "cap-exp-bdg"
+    }, "voc\xEAs estiveram juntos aqui") : null), emEdicao ? React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 6,
+        alignItems: "center"
+      }
+    }, React.createElement("button", {
+      onClick: function onClick(e) {
+        e.stopPropagation();
+        onEditar && onEditar(lugarOriginal);
+      },
+      title: "editar este lugar",
+      style: {
+        background: "transparent",
+        border: "none",
+        cursor: "pointer",
+        padding: 4,
+        color: T.muted
+      }
+    }, React.createElement("svg", {
+      width: 18, height: 18, viewBox: "0 0 24 24", fill: "none",
+      stroke: "currentColor", strokeWidth: 1.8,
+      strokeLinecap: "round", strokeLinejoin: "round"
+    }, React.createElement("path", {d: "M12 20h9"}), React.createElement("path", {d: "M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"}))), React.createElement("button", {
+      onClick: function onClick(e) {
+        e.stopPropagation();
+        onRemover && onRemover(lugarOriginal);
+      },
+      title: "remover este lugar",
+      style: {
+        background: "transparent",
+        border: "none",
+        cursor: "pointer",
+        padding: 4,
+        color: "#B0413E"
+      }
+    }, React.createElement("svg", {
+      width: 18, height: 18, viewBox: "0 0 24 24", fill: "none",
+      stroke: "currentColor", strokeWidth: 1.8,
+      strokeLinecap: "round", strokeLinejoin: "round"
+    }, React.createElement("path", {d: "M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"})))) : React.createElement("div", {
+      className: "cap-exp-arr"
+    }, "\u203A"));
+  }))) : null,
   (tab === "tudo" || tab === "passou") && lugaresPassou.length === 0 ? React.createElement("div", {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
