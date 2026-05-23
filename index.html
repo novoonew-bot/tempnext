@@ -9521,6 +9521,11 @@ function MemoriasFeed(_ref40) {
   function abrirEdicao(m) {
     setEditandoId(m.id);
     setTextoEditado(m.texto || "");
+    // v354e: rola pro topo do card sendo editado
+    setTimeout(function () {
+      var el = document.querySelector('[data-mem-id="' + m.id + '"]');
+      if (el) el.scrollIntoView({behavior: "smooth", block: "start"});
+    }, 60);
   }
   function cancelarEdicao() {
     setEditandoId(null);
@@ -9593,7 +9598,16 @@ function MemoriasFeed(_ref40) {
   function toggleAberto(id) {
     setAbertos(function (prev) {
       var next = new Set(prev);
-      if (next.has(id)) next["delete"](id);else next.add(id);
+      var abrindo = !next.has(id);
+      if (abrindo) next.add(id);
+      else next["delete"](id);
+      // v354e: ao abrir, rola pro topo do próprio card pra não vazar pro próximo
+      if (abrindo) {
+        setTimeout(function () {
+          var el = document.querySelector('[data-mem-id="' + id + '"]');
+          if (el) el.scrollIntoView({behavior: "smooth", block: "start"});
+        }, 60);
+      }
       return next;
     });
   }
