@@ -41565,31 +41565,52 @@ function ModalRegistrandoAgora(_ref188) {
   var temaCor = getTema(user).main;
   var temaBg = getTema(user).bg;
 
+  // v356: lê registro pré-carregado pra edição (vem do lápis em "meus lugares > quero ir").
+  var edicaoInicial = typeof window !== "undefined" ? window.__queroIrEdicaoInicial : null;
+  var editId = edicaoInicial && edicaoInicial.id ? edicaoInicial.id : null;
+  // Consome assim que monta pra não vazar pra próxima abertura.
+  if (typeof window !== "undefined" && window.__queroIrEdicaoInicial) {
+    try { delete window.__queroIrEdicaoInicial; } catch (_e) { window.__queroIrEdicaoInicial = null; }
+  }
+
   // v319b: simplificado — sem CEP, sem região, sem datas precisas
   var _useState401 = useState({
-      pais: "Brasil",
-      uf: (user === null || user === void 0 ? void 0 : user.current_state) || (user === null || user === void 0 ? void 0 : user.state) || "MT",
-      city: "",
-      placeName: "",
+      pais: (edicaoInicial && edicaoInicial.pais) || "Brasil",
+      uf: (edicaoInicial && edicaoInicial.uf) || (user === null || user === void 0 ? void 0 : user.current_state) || (user === null || user === void 0 ? void 0 : user.state) || "MT",
+      city: (edicaoInicial && edicaoInicial.cidade) || "",
+      placeName: (edicaoInicial && edicaoInicial.lugar) || "",
       citySugs: [],
       cityLoading: false
     }),
     _useState402 = _slicedToArray(_useState401, 2),
     locD = _useState402[0],
     setLocD = _useState402[1];
-  var _useState403 = useState(""),
+  var _useState403 = useState((function () {
+    // v356: extrai mês de dt_inicio (formato YYYY-MM-DD) se houver edição
+    if (edicaoInicial && edicaoInicial.dt_inicio) {
+      var m = String(edicaoInicial.dt_inicio).slice(5, 7);
+      if (m && m !== "00") return m;
+    }
+    return "";
+  })()),
     _useState404 = _slicedToArray(_useState403, 2),
     mes = _useState404[0],
     setMes = _useState404[1]; // 01-12 ou "" pra "ainda não sei"
-  var _useState405 = useState(""),
+  var _useState405 = useState((function () {
+    if (edicaoInicial && edicaoInicial.dt_inicio) {
+      var y = String(edicaoInicial.dt_inicio).slice(0, 4);
+      if (y) return y;
+    }
+    return "";
+  })()),
     _useState406 = _slicedToArray(_useState405, 2),
     ano = _useState406[0],
     setAno = _useState406[1];
-  var _useState407 = useState(""),
+  var _useState407 = useState((edicaoInicial && edicaoInicial.frase) || ""),
     _useState408 = _slicedToArray(_useState407, 2),
     frase = _useState408[0],
     setFrase = _useState408[1];
-  var _useState409 = useState(null),
+  var _useState409 = useState((edicaoInicial && edicaoInicial.foto_url) || null),
     _useState410 = _slicedToArray(_useState409, 2),
     foto = _useState410[0],
     setFoto = _useState410[1]; // URL preview
@@ -41597,7 +41618,7 @@ function ModalRegistrandoAgora(_ref188) {
     _useState412 = _slicedToArray(_useState411, 2),
     fotoFile = _useState412[0],
     setFotoFile = _useState412[1];
-  var _useState413 = useState("contatos"),
+  var _useState413 = useState((edicaoInicial && edicaoInicial.privacidade) || "contatos"),
     _useState414 = _slicedToArray(_useState413, 2),
     privacidade = _useState414[0],
     setPrivacidade = _useState414[1];
@@ -41796,6 +41817,19 @@ function ModalRegistrandoAgora(_ref188) {
             dtInicio = "".concat(ano, "-").concat(mes.padStart(2, "0"), "-01");
             dtFim = "".concat(ano, "-").concat(mes.padStart(2, "0"), "-").concat(String(ultimoDia).padStart(2, "0"));
             _context125.n = 7;
+            // v356: se for edição, UPDATE; senão INSERT (fluxo original).
+            if (editId) {
+              return db.from("registrando_agora").update({
+                cidade: locD.city,
+                uf: locD.uf || null,
+                pais: locD.pais || "Brasil",
+                lugar: locD.placeName || null,
+                dt_inicio: dtInicio,
+                dt_fim: dtFim,
+                frase: frase || null,
+                privacidade: privacidade || "contatos"
+              }).eq("id", editId).eq("user_id", user.id).select().single().then(function (r) { return { data: r.data, error: r.error }; });
+            }
             return criarRegistrandoAgora({
               userId: user.id,
               cidade: locD.city,
@@ -41840,6 +41874,14 @@ function ModalRegistrandoAgora(_ref188) {
             _t140 = _context125.v;
             tnLog("Erro update foto_url:", _t140);
           case 12:
+            // v356: notificações de cruzamento só no INSERT (não reenviar em edição).
+            if (editId) {
+              setResultado({ qtdCruzamentos: 0, edicao: true });
+              setSaving(false);
+              if (onSave) onSave(reg);
+              setTimeout(function () { return onClose && onClose(); }, 1500);
+              return _context125.a(2);
+            }
             _context125.n = 13;
             return notificarCruzamentosRegistrandoAgora({
               userId: user.id,
