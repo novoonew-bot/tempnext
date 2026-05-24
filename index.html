@@ -53344,33 +53344,39 @@ function HV9LugarImersivo(_ref248) {
     var temAcao = count > 0;
     var isSelecionado = ano === anoFiltrado;
     var isPico = ano === linhaTempo.anoPico && temAcao;
-    // v355: anos sem ação = contorno fino; anos com ação = barra preenchida com altura proporcional. Item 18.
+    var ehAnoAtual = ano === linhaTempo.anoAtual;
+    // v359: click no ano atual = limpar filtro (ele é o ponto neutro do gráfico).
+    var handleClick = function handleClick() {
+      if (ehAnoAtual) {
+        setAnoFiltrado(null);
+        return;
+      }
+      setAnoFiltrado(isSelecionado ? null : ano);
+    };
+    // v355: anos sem ação = contorno fino; anos com ação = barra preenchida com altura proporcional.
+    // v359: barras vazias mais discretas (15% altura, borda 0.25px).
     if (!temAcao) {
       return /*#__PURE__*/React.createElement("div", {
         key: ano,
-        onClick: function onClick() {
-          setAnoFiltrado(isSelecionado ? null : ano);
-        },
+        onClick: handleClick,
         style: {
           flex: 1,
-          height: "25%",
+          height: "15%",
           background: "transparent",
-          border: "0.5px solid " + (isSelecionado ? "#fff" : "rgba(255,255,255,0.22)"),
+          border: "0.25px solid " + (isSelecionado ? "#fff" : "rgba(255,255,255,0.18)"),
           borderRadius: 1,
           cursor: "pointer",
           boxSizing: "border-box",
           transition: "border-color 0.15s"
         },
-        title: String(ano)
+        title: ehAnoAtual ? ano + " (ver todos)" : String(ano)
       });
     }
     var altura = Math.max(count / linhaTempo.maxCount * 100, 35);
     var bg = isSelecionado ? "#fff" : isPico ? "var(--user-color-deep)" : "var(--user-color-soft)";
     return /*#__PURE__*/React.createElement("div", {
       key: ano,
-      onClick: function onClick() {
-        setAnoFiltrado(isSelecionado ? null : ano);
-      },
+      onClick: handleClick,
       style: {
         flex: 1,
         height: "".concat(altura, "%"),
