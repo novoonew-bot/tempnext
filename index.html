@@ -6793,8 +6793,16 @@ function CapituloLugares(_ref21) {
   return React.createElement(TelaPadrao, {
     user: userLogado,
     titulo: ehDono ? "meus lugares" : "lugares de ".concat(nomePrimeiro),
-    onVoltar: onBack
-    // v355: botão concluído/kebab removido — lápis/lixeira sempre visíveis pro dono (sem modo edição global)
+    onVoltar: onBack,
+    // v358: kebab ⋮ restaurado — abre menu "gerenciar" → ativa modo edição.
+    acoes: React.createElement(BotaoKebabSubTela, {
+      ehDono: ehDono,
+      modo: modo,
+      setModo: setModo,
+      onAbrirMenu: function onAbrirMenu() {
+        return setMenuAberto(true);
+      }
+    })
   }, React.createElement("div", {
     className: "cap-exp"
   },
@@ -6918,18 +6926,17 @@ function CapituloLugares(_ref21) {
     var lugarOriginal = l;
 
     // v329v: clique simples abre o lugar direto (HV9LugarImersivo via onAbrirItem).
-    // v355: lápis + lixeira sempre visíveis pro dono (removido modo edição global).
-    //        Cards continuam clicáveis no resto da área (abre lugar).
-    var emEdicao = ehDono;
+    // v358: ações voltam a depender de modo de edição (kebab → "gerenciar" → ativa)
+    var emEdicao = modo === "editando" && ehDono;
     return React.createElement("div", {
       key: "m-" + i,
       className: "cap-exp-card",
       style: {
-        // v357: sem outline — ações agora ficam sempre visíveis pro dono, sem modo edição global.
+        outline: emEdicao ? "2px solid var(--user-color, ".concat(T.accent, ")") : "none",
         position: "relative"
       },
       onClick: function onClick(e) {
-        // v357: clique em botão (lápis/lixeira) não navega. Caso contrário abre o lugar.
+        if (emEdicao) return;
         if (e.target.closest("button")) return;
         onAbrirItem && onAbrirItem(lugarOriginal);
       }
@@ -7038,15 +7045,16 @@ function CapituloLugares(_ref21) {
   }, lugaresPassou.map(function (l, i) {
     var cruzaqui = cidadesCruz.has((l.label || "").toLowerCase().trim());
     var lugarOriginal = l;
-    var emEdicao = ehDono; // v355: lápis/lixeira sempre visíveis pro dono
+    var emEdicao = modo === "editando" && ehDono; // v358: volta ao modo edição
     return React.createElement("div", {
       key: "v-" + i,
       className: "cap-exp-card",
       style: {
-        // v357: sem outline — ações sempre visíveis pro dono.
+        outline: emEdicao ? "2px solid var(--user-color, ".concat(T.accent, ")") : "none",
         position: "relative"
       },
       onClick: function onClick(e) {
+        if (emEdicao) return;
         if (e.target.closest("button")) return;
         onAbrirItem && onAbrirItem(lugarOriginal);
       }
@@ -7131,17 +7139,18 @@ function CapituloLugares(_ref21) {
     var dt = q.dt_inicio ? new Date(q.dt_inicio + "T00:00") : null;
     var periodo = dt ? "".concat(meses[dt.getMonth()], "/").concat(dt.getFullYear()) : "";
     var cidadeLabel = q.lugar ? "".concat(q.lugar, " \xB7 ").concat(q.cidade).concat(q.uf ? ", " + q.uf : "") : "".concat(q.cidade).concat(q.uf ? ", " + q.uf : "");
-    // v355: lápis/lixeira sempre visíveis pro dono
-    var emEdicao = ehDono;
+    // v358: volta ao modo edição
+    var emEdicao = modo === "editando" && ehDono;
     return React.createElement("div", {
       key: q.id,
       className: "cap-exp-card",
       style: {
-        // v357: sem outline — ações sempre visíveis pro dono.
+        outline: emEdicao ? "2px solid var(--user-color, " + T.accent + ")" : "none",
         borderLeft: "3px solid #3DB5C9",
-        cursor: "pointer"
+        cursor: emEdicao ? "default" : "pointer"
       },
       onClick: function onClick(e) {
+        if (emEdicao) return;
         if (e.target.closest("button")) return;
         if (onAbrirItem) {
           // v329w: clique normal abre o lugar (mesmo padrão dos cards "morou")
@@ -53538,22 +53547,47 @@ function HV9LugarImersivo(_ref248) {
     }
   }, "seja a primeira pessoa a guardar uma mem\xF3ria deste lugar."))) : /*#__PURE__*/React.createElement("div", {
     style: {
-      display: "grid",
-      gridTemplateColumns: "repeat(3,1fr)",
-      gap: 3
+      // v358: wrapper agora é block — grids 3 col vivem dentro de cada grupo de ano.
+      display: "block"
     }
-  }, gridItems.map(function (it, idx) {
-    return /*#__PURE__*/React.createElement("div", {
+  }, gridItems.length === 0 ? null : (function () {
+    // v358: agrupa por ano (desc) e renderiza header + grid 3 colunas por bloco. Item 18b.
+    var grupos = [];
+    var ultimoAno = null;
+    var idxGlobal = 0;
+    gridItems.forEach(function (it) {
+      if (it.ano !== ultimoAno) {
+        grupos.push({ ano: it.ano, items: [] });
+        ultimoAno = it.ano;
+      }
+      grupos[grupos.length - 1].items.push({ it: it, idxGlobal: idxGlobal });
+      idxGlobal++;
+    });
+    var todosMomentos = gridItems.map(function (g) { return g.momento; });
+    return grupos.map(function (g, gi) {
+      return /*#__PURE__*/React.createElement(React.Fragment, { key: "ano-" + g.ano }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "Georgia,serif",
+          fontStyle: "italic",
+          fontSize: 13,
+          color: "rgba(255,255,255,0.55)",
+          letterSpacing: "0.05em",
+          margin: gi === 0 ? "0 0 8px" : "14px 0 8px"
+        }
+      }, g.ano), /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "grid",
+          gridTemplateColumns: "repeat(3,1fr)",
+          gap: 3
+        }
+      }, g.items.map(function (entry) {
+        var it = entry.it;
+        var idx = entry.idxGlobal;
+        return /*#__PURE__*/React.createElement("div", {
       key: it.momento.id,
       onClick: function onClick() {
-        // v329k: passa gridItems.map(g=>g.momento) em vez de momentosFiltrados.
-        // gridItems descarta momentos sem foto via .filter(i=>i.fotoUrl), então
-        // o idx do grid não bate com momentosFiltrados (causava abrir foto errada
-        // ou cair em momento sem foto = tela "sem foto").
         setGaleriaIdx(idx);
-        setGaleriaItems(gridItems.map(function (g) {
-          return g.momento;
-        }));
+        setGaleriaItems(todosMomentos);
       },
       style: {
         aspectRatio: 1,
@@ -53587,20 +53621,10 @@ function HV9LugarImersivo(_ref248) {
         fontWeight: 600,
         lineHeight: 1
       }
-    }, "+", it.totalFotos - 1), /*#__PURE__*/React.createElement("div", {
-      style: {
-        position: "absolute",
-        bottom: 3,
-        right: 5,
-        color: "#fff",
-        fontSize: 7,
-        fontFamily: "Georgia,serif",
-        fontStyle: "italic",
-        textShadow: "0 1px 2px rgba(0,0,0,0.7)",
-        opacity: 0.85
-      }
-    }, it.ano));
-  }))), galeriaItems && galeriaItems.length > 0 && /*#__PURE__*/React.createElement(MomentGalleryViewer, {
+    }, "+", it.totalFotos - 1));
+      })));
+    });
+  })())), galeriaItems && galeriaItems.length > 0 && /*#__PURE__*/React.createElement(MomentGalleryViewer, {
     momentos: galeriaItems,
     indiceInicial: galeriaIdx,
     lugarNome: lugarNome,
