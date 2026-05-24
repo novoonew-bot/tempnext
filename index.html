@@ -53353,8 +53353,7 @@ function HV9LugarImersivo(_ref248) {
       }
       setAnoFiltrado(isSelecionado ? null : ano);
     };
-    // v355: anos sem ação = contorno fino; anos com ação = barra preenchida com altura proporcional.
-    // v359: barras vazias mais discretas (15% altura, borda 0.25px).
+    // v360: barras vazias agora preenchidas com cor suave (quase invisível) em vez de contorno.
     if (!temAcao) {
       return /*#__PURE__*/React.createElement("div", {
         key: ano,
@@ -53362,18 +53361,25 @@ function HV9LugarImersivo(_ref248) {
         style: {
           flex: 1,
           height: "15%",
-          background: "transparent",
-          border: "0.25px solid " + (isSelecionado ? "#fff" : "rgba(255,255,255,0.18)"),
+          background: isSelecionado ? "#fff" : "rgba(255,255,255,0.06)",
           borderRadius: 1,
           cursor: "pointer",
           boxSizing: "border-box",
-          transition: "border-color 0.15s"
+          transition: "background 0.15s"
         },
         title: ehAnoAtual ? ano + " (ver todos)" : String(ano)
       });
     }
-    var altura = Math.max(count / linhaTempo.maxCount * 100, 35);
-    var bg = isSelecionado ? "#fff" : isPico ? "var(--user-color-deep)" : "var(--user-color-soft)";
+    // v360: altura escalonada por faixa de intensidade.
+    // 1 ção = 25% · 2-5 = 45% · 6-10 = 60% · 11-20 = 80% · 21+ = 100% (tom escuro).
+    var altura;
+    if (count === 1) altura = 25;
+    else if (count <= 5) altura = 45;
+    else if (count <= 10) altura = 60;
+    else if (count <= 20) altura = 80;
+    else altura = 100;
+    var ehIntenso = count >= 21;
+    var bg = isSelecionado ? "#fff" : ehIntenso ? "var(--user-color-deep)" : "var(--user-color-soft)";
     return /*#__PURE__*/React.createElement("div", {
       key: ano,
       onClick: handleClick,
