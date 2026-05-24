@@ -10687,8 +10687,28 @@ function CapsulaPresenteCard(_ref45) {
     ehFutura: false
   }))),
   // QUOTE (revelada se já revelou)
+  // v360e: dono edita o texto da cápsula direto (mesma lógica da memória — v360c)
   capsula.texto && revelado ? React.createElement("p", {
-    className: "verso-serif verso-capitalize mem-feed-quote"
+    className: "verso-serif verso-capitalize mem-feed-quote",
+    contentEditable: ehDono,
+    suppressContentEditableWarning: true,
+    spellCheck: false,
+    onBlur: ehDono ? function (e) {
+      var raw = (e.currentTarget.textContent || "").replace(/^“|”$|^"|"$/g, "").trim();
+      var antigo = (capsula.texto || "").trim();
+      if (raw === antigo) { e.currentTarget.textContent = "\"" + antigo + "\""; return; }
+      db.from("momentos").update({ texto: raw }).eq("id", capsula.id).then(function (r) {
+        if (r.error) { if (window.tnToast) window.tnToast("erro ao salvar", r.error.message || ""); e.currentTarget.textContent = "\"" + antigo + "\""; return; }
+        if (window.tnToast) window.tnToast("c\xE1psula atualizada", "");
+        capsula.texto = raw;
+        e.currentTarget.textContent = "\"" + raw + "\"";
+      });
+    } : null,
+    onKeyDown: ehDono ? function (e) {
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); e.currentTarget.blur(); }
+      if (e.key === "Escape") { e.currentTarget.textContent = "\"" + (capsula.texto || "") + "\""; e.currentTarget.blur(); }
+    } : null,
+    style: ehDono ? { outline: "none", cursor: "text" } : null
   }, "\"".concat(capsula.texto, "\"")) : null,
   // v274: ComentariosInline — só se revelado (pra não spoiler antes de abrir)
   revelado ? React.createElement(ComentariosInline, {
@@ -10846,8 +10866,28 @@ function CapsulaPassadaCard(_ref48) {
     pessoa: pessoa,
     userLogado: userLogado,
     ehFutura: false
+  // v360e: dono edita texto da cápsula passada inline
   }))), capsula.texto ? React.createElement("p", {
-    className: "verso-serif verso-capitalize mem-feed-quote"
+    className: "verso-serif verso-capitalize mem-feed-quote",
+    contentEditable: ehDono,
+    suppressContentEditableWarning: true,
+    spellCheck: false,
+    onBlur: ehDono ? function (e) {
+      var raw = (e.currentTarget.textContent || "").replace(/^“|”$|^"|"$/g, "").trim();
+      var antigo = (capsula.texto || "").trim();
+      if (raw === antigo) { e.currentTarget.textContent = "\"" + antigo + "\""; return; }
+      db.from("momentos").update({ texto: raw }).eq("id", capsula.id).then(function (r) {
+        if (r.error) { if (window.tnToast) window.tnToast("erro ao salvar", r.error.message || ""); e.currentTarget.textContent = "\"" + antigo + "\""; return; }
+        if (window.tnToast) window.tnToast("c\xE1psula atualizada", "");
+        capsula.texto = raw;
+        e.currentTarget.textContent = "\"" + raw + "\"";
+      });
+    } : null,
+    onKeyDown: ehDono ? function (e) {
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); e.currentTarget.blur(); }
+      if (e.key === "Escape") { e.currentTarget.textContent = "\"" + (capsula.texto || "") + "\""; e.currentTarget.blur(); }
+    } : null,
+    style: ehDono ? { outline: "none", cursor: "text" } : null
   }, "\"".concat(capsula.texto, "\"")) : null,
   // v274: ComentariosInline
   React.createElement(ComentariosInline, {
@@ -11219,51 +11259,7 @@ function CapsulasFeed(_ref49) {
       }
     }));
   })),
-  // v329z3: botão flutuante "✏️" pra dono editar a cápsula visível.
-  // Aparece no canto inferior esquerdo (não conflita com nav inferior centralizada).
-  // Não aparece em cápsula futura (lacrada — não dá pra editar antes de abrir).
-  ehDono && capsulaVisivelInterna && !editandoId && function () {
-    var estadoVis = classificarCapsula(capsulaVisivelInterna);
-    if (estadoVis === "futura") return null;
-    return React.createElement("button", {
-      onClick: function onClick() {
-        return abrirEdicao(capsulaVisivelInterna);
-      },
-      title: "editar esta cápsula",
-      style: {
-        position: "fixed",
-        bottom: 96,
-        left: 16,
-        zIndex: 50,
-        width: 48,
-        height: 48,
-        borderRadius: "50%",
-        background: "rgba(255,255,255,0.96)",
-        border: "1px solid rgba(42,32,26,0.12)",
-        color: "var(--user-color-deep, #5a4a38)",
-        cursor: "pointer",
-        padding: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "0 4px 14px rgba(0,0,0,0.12)",
-        backdropFilter: "blur(8px)"
-      }
-    }, React.createElement("svg", {
-      width: 18,
-      height: 18,
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.8,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    }, React.createElement("path", {
-      d: "M12 20h9"
-    }), React.createElement("path", {
-      d: "M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
-    })));
-  }(),
+  // v360e: FAB lápis flutuante removido — edição agora é clicar direto no texto da cápsula (contentEditable inline).
   // v329z3: painel flutuante de edição quando editandoId está setado.
   // Cobre o feed inteiro (overlay) com textarea + cancelar/salvar centralizados.
   editandoId && function () {
@@ -11442,17 +11438,7 @@ function CapsulasFeed(_ref49) {
     var descricao = dataTxt;
     var ehDonoC = userLogado && c.user_id === userLogado.id;
     var opcoes = [];
-    if (ehDonoC) {
-      opcoes.push({
-        icone: "\u270E",
-        label: "editar",
-        descricao: "alterar texto da cápsula",
-        onClick: function onClick() {
-          setKebabAberto(false);
-          abrirEdicao(c);
-        }
-      });
-    }
+    // v360e: "editar" removido do kebab — texto vira contentEditable direto no card.
     opcoes.push({
       label: "compartilhar",
       descricao: descricao,
