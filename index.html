@@ -6793,15 +6793,8 @@ function CapituloLugares(_ref21) {
   return React.createElement(TelaPadrao, {
     user: userLogado,
     titulo: ehDono ? "meus lugares" : "lugares de ".concat(nomePrimeiro),
-    onVoltar: onBack,
-    acoes: React.createElement(BotaoKebabSubTela, {
-      ehDono: ehDono,
-      modo: modo,
-      setModo: setModo,
-      onAbrirMenu: function onAbrirMenu() {
-        return setMenuAberto(true);
-      }
-    })
+    onVoltar: onBack
+    // v355: botão concluído/kebab removido — lápis/lixeira sempre visíveis pro dono (sem modo edição global)
   }, React.createElement("div", {
     className: "cap-exp"
   },
@@ -6925,9 +6918,9 @@ function CapituloLugares(_ref21) {
     var lugarOriginal = l;
 
     // v329v: clique simples abre o lugar direto (HV9LugarImersivo via onAbrirItem).
-    // v329y: em modo "editando", card mostra ✏️ + 🗑️ inline (Opção 1 toggle).
-    //        Cards continuam clicáveis no modo normal (abre lugar).
-    var emEdicao = modo === "editando" && ehDono;
+    // v355: lápis + lixeira sempre visíveis pro dono (removido modo edição global).
+    //        Cards continuam clicáveis no resto da área (abre lugar).
+    var emEdicao = ehDono;
     return React.createElement("div", {
       key: "m-" + i,
       className: "cap-exp-card",
@@ -7044,7 +7037,7 @@ function CapituloLugares(_ref21) {
   }, lugaresPassou.map(function (l, i) {
     var cruzaqui = cidadesCruz.has((l.label || "").toLowerCase().trim());
     var lugarOriginal = l;
-    var emEdicao = modo === "editando" && ehDono;
+    var emEdicao = ehDono; // v355: lápis/lixeira sempre visíveis pro dono
     return React.createElement("div", {
       key: "v-" + i,
       className: "cap-exp-card",
@@ -7137,8 +7130,8 @@ function CapituloLugares(_ref21) {
     var dt = q.dt_inicio ? new Date(q.dt_inicio + "T00:00") : null;
     var periodo = dt ? "".concat(meses[dt.getMonth()], "/").concat(dt.getFullYear()) : "";
     var cidadeLabel = q.lugar ? "".concat(q.lugar, " \xB7 ").concat(q.cidade).concat(q.uf ? ", " + q.uf : "") : "".concat(q.cidade).concat(q.uf ? ", " + q.uf : "");
-    // v329y: em modo edição mostra ações inline (mesmo padrão de "morou")
-    var emEdicao = modo === "editando" && ehDono;
+    // v355: lápis/lixeira sempre visíveis pro dono
+    var emEdicao = ehDono;
     return React.createElement("div", {
       key: q.id,
       className: "cap-exp-card",
@@ -58383,6 +58376,11 @@ function App() {
     window.__onAdicionarLugar = function () {
       setShowAdicionarLugar(true);
     };
+    window.__onAdicionarQueroIr = function () {
+      // v355: lápis dos cards "quero ir" no Cap II abre o modal.
+      // TODO: ModalRegistrandoAgora ainda não lê __queroIrEdicaoInicial — abre vazio.
+      setShowRegistrandoAgora(true);
+    };
     window.__onAdicionarMomento = function () {
       if (verificarPerfilCompleto()) setShowMomento(true);
     };
@@ -58396,6 +58394,7 @@ function App() {
       delete window.__onVerPerfilOutro;
       delete window.__onVerMomento;
       delete window.__onAdicionarLugar;
+      delete window.__onAdicionarQueroIr;
       delete window.__onAdicionarMomento;
       delete window.__notificacoesLidas;
     };
