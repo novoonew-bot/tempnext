@@ -52957,7 +52957,7 @@ function HV9LugarImersivo(_ref248) {
     });
     if (anosOrdenados.length === 0) return null;
     var ANO_ATUAL = new Date().getFullYear();
-    var RANGE_MIN = 10;
+    var RANGE_MIN = 30;
     var primeiroAcao = anosOrdenados[0];
     var ultimoAcao = anosOrdenados[anosOrdenados.length - 1];
     var anoMin = Math.min(primeiroAcao, ANO_ATUAL - RANGE_MIN + 1);
@@ -53239,21 +53239,35 @@ function HV9LugarImersivo(_ref248) {
   }, linhaTempo.anos.map(function (_ref250) {
     var ano = _ref250.ano,
       count = _ref250.count;
-    // v355: anos sem ação ficam invisíveis (spacer mantém eixo do tempo). Item 18 da nota UX.
-    if (count === 0) {
+    var temAcao = count > 0;
+    var isSelecionado = ano === anoFiltrado;
+    var isPico = ano === linhaTempo.anoPico && temAcao;
+    // v355: anos sem ação = contorno fino; anos com ação = barra preenchida com altura proporcional. Item 18.
+    if (!temAcao) {
       return /*#__PURE__*/React.createElement("div", {
         key: ano,
-        style: { flex: 1 }
+        onClick: function onClick() {
+          setAnoFiltrado(isSelecionado ? null : ano);
+        },
+        style: {
+          flex: 1,
+          height: "25%",
+          background: "transparent",
+          border: "0.5px solid " + (isSelecionado ? "#fff" : "rgba(255,255,255,0.22)"),
+          borderRadius: 1,
+          cursor: "pointer",
+          boxSizing: "border-box",
+          transition: "border-color 0.15s"
+        },
+        title: String(ano)
       });
     }
-    var altura = Math.max(count / linhaTempo.maxCount * 100, 25);
-    var isPico = ano === linhaTempo.anoPico;
-    var isSelecionado = ano === anoFiltrado;
+    var altura = Math.max(count / linhaTempo.maxCount * 100, 35);
     var bg = isSelecionado ? "#fff" : isPico ? "var(--user-color-deep)" : "var(--user-color-soft)";
     return /*#__PURE__*/React.createElement("div", {
       key: ano,
       onClick: function onClick() {
-        setAnoFiltrado(anoFiltrado === ano ? null : ano);
+        setAnoFiltrado(isSelecionado ? null : ano);
       },
       style: {
         flex: 1,
@@ -53266,48 +53280,16 @@ function HV9LugarImersivo(_ref248) {
       },
       title: "".concat(ano, " \xB7 ").concat(count, " momento").concat(count !== 1 ? "s" : "")
     });
-  })), function () {
-    var marcas = _toConsumableArray(new Set([linhaTempo.anoMin, linhaTempo.anoPico, linhaTempo.anoAtual])).sort(function (a, b) {
-      return a - b;
-    });
-    var total = linhaTempo.anos.length;
-    return /*#__PURE__*/React.createElement("div", {
-      style: {
-        position: "relative",
-        height: 12,
-        marginTop: 6,
-        padding: "0 2px"
-      }
-    }, marcas.map(function (a) {
-      var i = a - linhaTempo.anoMin;
-      var pctEsq = (i + 0.5) / total * 100;
-      var ehAtual = a === linhaTempo.anoAtual;
-      var ehPico = a === linhaTempo.anoPico && linhaTempo.anos.some(function (x) {
-        return x.ano === a && x.count > 0;
-      });
-      var cor = "rgba(255,255,255,0.35)";
-      var weight = 400;
-      if (ehAtual) {
-        cor = "var(--user-color-deep)";
-        weight = 500;
-      } else if (ehPico) {
-        cor = "var(--user-color-deep)";
-      }
-      return /*#__PURE__*/React.createElement("span", {
-        key: a,
-        style: {
-          position: "absolute",
-          top: 0,
-          left: "".concat(pctEsq, "%"),
-          transform: "translateX(-50%)",
-          fontSize: 9,
-          color: cor,
-          fontWeight: weight,
-          whiteSpace: "nowrap"
-        }
-      }, a);
-    }));
-  }()), /*#__PURE__*/React.createElement("div", {
+  })), anoFiltrado && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      fontSize: 11,
+      color: "var(--user-color-deep)",
+      fontFamily: "Georgia,serif",
+      fontStyle: "italic",
+      marginTop: 6
+    }
+  }, anoFiltrado)), /*#__PURE__*/React.createElement("div", {
     style: {
       margin: "0 14px 16px",
       padding: "12px 12px",
