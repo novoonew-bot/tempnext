@@ -10925,6 +10925,11 @@ function CapsulasFeed(_ref49) {
     _React$useState134 = _slicedToArray(_React$useState133, 2),
     overrides = _React$useState134[0],
     setOverrides = _React$useState134[1]; // { [id]: { texto } }
+  // v360d: state pra confirmação de remoção (mesmo padrão dos demais capítulos)
+  var _useStateCapRem = React.useState(null),
+    _useStateCapRem2 = _slicedToArray(_useStateCapRem, 2),
+    capsulaPraRemover = _useStateCapRem2[0],
+    setCapsulaPraRemover = _useStateCapRem2[1];
 
   function abrirEdicao(c) {
     setEditandoId(c.id);
@@ -11404,6 +11409,23 @@ function CapsulasFeed(_ref49) {
     })), salvando ? "salvando..." : "salvar"))));
   }(),
   // v328b: ShareMenu pra compartilhar a cápsula visível
+  // v360d: padrão dos demais capítulos — editar + compartilhar + remover (só dono)
+  capsulaPraRemover && React.createElement(ModalConfirmacao, {
+    titulo: "remover esta cápsula?",
+    descricao: capsulaPraRemover.lugar || "",
+    textoConfirmar: "remover",
+    perigo: true,
+    onCancelar: function onCancelar() { setCapsulaPraRemover(null); },
+    onConfirmar: function onConfirmar() {
+      var id = capsulaPraRemover.id;
+      db.from("momentos")["delete"]().eq("id", id).then(function (r) {
+        if (r.error) { if (window.tnToast) window.tnToast("erro ao remover", r.error.message || ""); return; }
+        if (window.tnToast) window.tnToast("cápsula removida", "");
+        setCapsulaPraRemover(null);
+        if (typeof onBack === "function") onBack();
+      });
+    }
+  }),
   kebabAberto && capsulaVisivelInterna && function () {
     var c = capsulaVisivelInterna;
     var dt = c.capsula_revela_em || c.ts;
@@ -11418,15 +11440,40 @@ function CapsulasFeed(_ref49) {
     var lugar = c.lugar || "";
     var titulo = lugar ? "C\xE1psula em ".concat(lugar) : "Uma cápsula";
     var descricao = dataTxt;
+    var ehDonoC = userLogado && c.user_id === userLogado.id;
+    var opcoes = [];
+    if (ehDonoC) {
+      opcoes.push({
+        icone: "\u270E",
+        label: "editar",
+        descricao: "alterar texto da cápsula",
+        onClick: function onClick() {
+          setKebabAberto(false);
+          abrirEdicao(c);
+        }
+      });
+    }
+    opcoes.push({
+      label: "compartilhar",
+      descricao: descricao,
+      titulo: titulo,
+      texto: "Uma c\xE1psula no Tempnext".concat(lugar ? " — " + lugar : "").concat(dataTxt ? " · " + dataTxt : ""),
+      url: "https://tempnext-brown.vercel.app/?capsula=".concat(c.id || "")
+    });
+    if (ehDonoC) {
+      opcoes.push({
+        icone: "\u2212",
+        label: "remover",
+        descricao: "apagar esta cápsula",
+        onClick: function onClick() {
+          setKebabAberto(false);
+          setCapsulaPraRemover(c);
+        }
+      });
+    }
     return React.createElement(ShareMenu, {
       titulo: titulo,
-      opcoes: [{
-        label: "Compartilhar esta cápsula",
-        descricao: descricao,
-        titulo: titulo,
-        texto: "Uma c\xE1psula no Tempnext".concat(lugar ? " — " + lugar : "").concat(dataTxt ? " · " + dataTxt : ""),
-        url: "https://tempnext-brown.vercel.app/?capsula=".concat(c.id || "")
-      }],
+      opcoes: opcoes,
       onClose: function onClose() {
         return setKebabAberto(false);
       }
