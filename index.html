@@ -6792,7 +6792,7 @@ function CapituloLugares(_ref21) {
   }
   return React.createElement(TelaPadrao, {
     user: userLogado,
-    titulo: modo === "editando" ? "Editando" : modo === "removendo" ? "Removendo" : ehDono ? "meus lugares" : "lugares de ".concat(nomePrimeiro),
+    titulo: ehDono ? "meus lugares" : "lugares de ".concat(nomePrimeiro),
     onVoltar: onBack,
     acoes: React.createElement(BotaoKebabSubTela, {
       ehDono: ehDono,
@@ -53239,15 +53239,20 @@ function HV9LugarImersivo(_ref248) {
   }, linhaTempo.anos.map(function (_ref250) {
     var ano = _ref250.ano,
       count = _ref250.count;
-    var temAcao = count > 0;
-    var altura = temAcao ? Math.max(count / linhaTempo.maxCount * 100, 25) : 8;
-    var isPico = ano === linhaTempo.anoPico && temAcao;
-    var isSelecionado = ano === anoFiltrado && temAcao;
-    var bg = isSelecionado ? "#fff" : isPico ? "var(--user-color-deep)" : temAcao ? "var(--user-color-soft)" : "rgba(255,255,255,0.12)";
+    // v355: anos sem ação ficam invisíveis (spacer mantém eixo do tempo). Item 18 da nota UX.
+    if (count === 0) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: ano,
+        style: { flex: 1 }
+      });
+    }
+    var altura = Math.max(count / linhaTempo.maxCount * 100, 25);
+    var isPico = ano === linhaTempo.anoPico;
+    var isSelecionado = ano === anoFiltrado;
+    var bg = isSelecionado ? "#fff" : isPico ? "var(--user-color-deep)" : "var(--user-color-soft)";
     return /*#__PURE__*/React.createElement("div", {
       key: ano,
       onClick: function onClick() {
-        if (!temAcao) return;
         setAnoFiltrado(anoFiltrado === ano ? null : ano);
       },
       style: {
@@ -53255,7 +53260,7 @@ function HV9LugarImersivo(_ref248) {
         height: "".concat(altura, "%"),
         background: bg,
         borderRadius: 1,
-        cursor: temAcao ? "pointer" : "default",
+        cursor: "pointer",
         boxShadow: isSelecionado ? "0 0 0 1.5px #fff, 0 0 0 3px rgba(255,255,255,0.25)" : "none",
         transition: "background 0.15s, box-shadow 0.15s"
       },
