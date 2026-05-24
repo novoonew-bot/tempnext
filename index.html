@@ -9516,6 +9516,11 @@ function MemoriasFeed(_ref40) {
     _React$useState98 = _slicedToArray(_React$useState97, 2),
     textoEditado = _React$useState98[0],
     setTextoEditado = _React$useState98[1];
+  // v360b: edita também o nome do lugar (ex: "Casa Teste" → "Casa dos meus pais")
+  var _useStateLugarEd = React.useState(""),
+    _useStateLugarEd2 = _slicedToArray(_useStateLugarEd, 2),
+    lugarEditado = _useStateLugarEd2[0],
+    setLugarEditado = _useStateLugarEd2[1];
   var _React$useState99 = React.useState(false),
     _React$useState100 = _slicedToArray(_React$useState99, 2),
     salvando = _React$useState100[0],
@@ -9529,10 +9534,12 @@ function MemoriasFeed(_ref40) {
   function abrirEdicao(m) {
     setEditandoId(m.id);
     setTextoEditado(m.texto || "");
+    setLugarEditado(m.lugar || ""); // v360b
   }
   function cancelarEdicao() {
     setEditandoId(null);
     setTextoEditado("");
+    setLugarEditado(""); // v360b
   }
   function salvarEdicao(_x55) {
     return _salvarEdicao2.apply(this, arguments);
@@ -9550,19 +9557,28 @@ function MemoriasFeed(_ref40) {
             return _context24.a(2);
           case 1:
             novoTexto = (textoEditado || "").trim();
-            if (!(novoTexto === (m.texto || "").trim())) {
+            var novoLugar = (lugarEditado || "").trim();
+            var lugarOriginal = (m.lugar || "").trim();
+            var textoMudou = novoTexto !== (m.texto || "").trim();
+            var lugarMudou = novoLugar !== lugarOriginal;
+            if (!(textoMudou || lugarMudou)) {
               _context24.n = 2;
               break;
             }
             cancelarEdicao();
             return _context24.a(2);
           case 2:
+            // Reabre se cancelou indevido (não deveria entrar aqui)
+            if (!(textoMudou || lugarMudou)) {
+              return _context24.a(2);
+            }
             setSalvando(true);
             _context24.p = 3;
             _context24.n = 4;
-            return db.from("momentos").update({
-              texto: novoTexto
-            }).eq("id", m.id);
+            var patch = {};
+            if (textoMudou) patch.texto = novoTexto;
+            if (lugarMudou) patch.lugar = novoLugar || null;
+            return db.from("momentos").update(patch).eq("id", m.id);
           case 4:
             _yield$db$from$update2 = _context24.v;
             error = _yield$db$from$update2.error;
@@ -9574,9 +9590,11 @@ function MemoriasFeed(_ref40) {
           case 5:
             // Atualiza override local pra refletir a mudança sem precisar refazer fetch
             setOverrides(function (prev) {
-              return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, m.id, _objectSpread(_objectSpread({}, prev[m.id] || {}), {}, {
-                texto: novoTexto
-              })));
+              var atual = prev[m.id] || {};
+              var novoOverride = _objectSpread({}, atual);
+              if (textoMudou) novoOverride.texto = novoTexto;
+              if (lugarMudou) novoOverride.lugar = novoLugar || null;
+              return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, m.id, novoOverride));
             });
             if (window.tnToast) window.tnToast("memória atualizada", "");
             cancelarEdicao();
@@ -9813,7 +9831,25 @@ function MemoriasFeed(_ref40) {
       style: {
         padding: "6px 18px 100px"
       }
-    }, React.createElement("textarea", {
+    }, React.createElement("input", {
+      value: lugarEditado,
+      onChange: function onChange(e) { setLugarEditado(e.target.value); },
+      placeholder: "nome do lugar (ex: casa dos meus pais)",
+      style: {
+        width: "100%",
+        boxSizing: "border-box",
+        fontFamily: "Cardo, Georgia, serif",
+        fontSize: 14,
+        fontStyle: "italic",
+        color: "#2C2C2A",
+        padding: "8px 14px",
+        borderRadius: 10,
+        border: "1px solid rgba(42,32,26,0.18)",
+        background: "#fff",
+        outline: "none",
+        marginBottom: 8
+      }
+    }), React.createElement("textarea", {
       value: textoEditado,
       onChange: function onChange(e) {
         setTextoEditado(e.target.value);
