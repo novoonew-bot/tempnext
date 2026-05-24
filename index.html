@@ -8526,6 +8526,8 @@ function CoracaoMemoria(_ref32) {
   }
 
   // v262: cor da paleta do USER LOGADO (visitante), não fixa
+  // v357: dono não renderiza coração do próprio momento. Retorno tardio mantém ordem dos hooks.
+  if (ehDono) return null;
   return React.createElement("button", {
     className: "mem-feed-coracao" + (curtido ? " curtido" : "") + (animando ? " animando" : ""),
     onClick: handleCurtir,
@@ -9761,7 +9763,7 @@ function MemoriasFeed(_ref40) {
       onClick: function onClick() {
         return toggleAberto(m.id);
       }
-    }) : null, React.createElement(CoracaoMemoria, {
+    }) : null, !ehDono && React.createElement(CoracaoMemoria, {
       memoria: m,
       pessoa: pessoa,
       userLogado: userLogado
@@ -17195,7 +17197,10 @@ function FormularioCapsulaUnificado(_ref86) {
       setAnoVeioDeExif(true);
       // se ano detectado é passado, snap a régua pra "passado"
       var anoAtual = new Date().getFullYear();
-      if (parseInt(sug.ano) < anoAtual && !ehMomento) {
+      // v357: ano antigo da foto agora pode mudar a régua também em modo momento
+      // (porque modo momento ganhou os chips agora/antes — então snap pra "passado"
+      // é válido e dispara o campo mês/ano).
+      if (parseInt(sug.ano) < anoAtual) {
         setPos(POSICOES_BASE.passado);
       }
     }
@@ -18370,7 +18375,59 @@ function FormularioCapsulaUnificado(_ref86) {
     style: {
       width: 40
     }
-  })), !ehMomento && /*#__PURE__*/React.createElement("div", {
+  })),
+  // v357: chips "agora" / "antes" no modo momento (sem régua de cápsula).
+  ehMomento && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      padding: "12px 20px 4px",
+      justifyContent: "center"
+    }
+  }, [{ id: "presente", label: "agora", p: POSICOES_BASE.agora }, { id: "passado", label: "antes", p: POSICOES_BASE.passado }].map(function (op) {
+    var ativo = tipo === op.id;
+    return /*#__PURE__*/React.createElement("button", {
+      key: op.id,
+      onClick: function onClick() { setPos(op.p); },
+      style: {
+        background: ativo ? "var(--user-color-deep, #C17E3A)" : "transparent",
+        color: ativo ? "#fff" : "#2a201a",
+        border: "1px solid " + (ativo ? "var(--user-color-deep, #C17E3A)" : "rgba(42,32,26,0.18)"),
+        padding: "6px 18px",
+        borderRadius: 20,
+        fontSize: 13,
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        cursor: "pointer",
+        transition: "all 0.15s"
+      }
+    }, op.label);
+  })),
+  // v357: campo mês/ano quando "antes" está selecionado no modo momento.
+  ehMomento && tipo === "passado" && /*#__PURE__*/React.createElement("div", {
+    style: { padding: "8px 20px 0", textAlign: "center" }
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    value: dataPassado,
+    onChange: function onChange(e) { setDataPassado(e.target.value); },
+    placeholder: "AAAA ou AAAA-MM (ex: 2015 ou 2015-05)",
+    style: {
+      width: "100%",
+      maxWidth: 280,
+      padding: "8px 14px",
+      border: "1px solid rgba(42,32,26,0.18)",
+      borderRadius: 10,
+      fontSize: 14,
+      fontFamily: "Georgia,serif",
+      fontStyle: "italic",
+      textAlign: "center",
+      background: "#fff",
+      color: "#2a201a",
+      outline: "none"
+    }
+  }), dataInvalidaMsg ? /*#__PURE__*/React.createElement("div", {
+    style: { color: "#b85450", fontSize: 11, marginTop: 4, fontStyle: "italic" }
+  }, dataInvalidaMsg) : null), !ehMomento && /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "14px 20px 8px"
     }
@@ -48475,7 +48532,7 @@ function MomentGalleryItem(_ref214) {
       gap: 14,
       flexShrink: 0
     }
-  }, /*#__PURE__*/React.createElement(CoracaoMemoria, {
+  }, autor && user && autor.id !== user.id && /*#__PURE__*/React.createElement(CoracaoMemoria, {
     memoria: momento,
     pessoa: autor,
     userLogado: user
