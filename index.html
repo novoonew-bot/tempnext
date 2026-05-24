@@ -6925,11 +6925,12 @@ function CapituloLugares(_ref21) {
       key: "m-" + i,
       className: "cap-exp-card",
       style: {
-        outline: emEdicao ? "2px solid var(--user-color, ".concat(T.accent, ")") : "none",
+        // v357: sem outline — ações agora ficam sempre visíveis pro dono, sem modo edição global.
         position: "relative"
       },
-      onClick: function onClick() {
-        if (emEdicao) return; // em modo edição, clique no card não navega - só os botões agem
+      onClick: function onClick(e) {
+        // v357: clique em botão (lápis/lixeira) não navega. Caso contrário abre o lugar.
+        if (e.target.closest("button")) return;
         onAbrirItem && onAbrirItem(lugarOriginal);
       }
     }, React.createElement("div", {
@@ -7042,11 +7043,11 @@ function CapituloLugares(_ref21) {
       key: "v-" + i,
       className: "cap-exp-card",
       style: {
-        outline: emEdicao ? "2px solid var(--user-color, ".concat(T.accent, ")") : "none",
+        // v357: sem outline — ações sempre visíveis pro dono.
         position: "relative"
       },
-      onClick: function onClick() {
-        if (emEdicao) return;
+      onClick: function onClick(e) {
+        if (e.target.closest("button")) return;
         onAbrirItem && onAbrirItem(lugarOriginal);
       }
     }, React.createElement("div", {
@@ -7136,12 +7137,12 @@ function CapituloLugares(_ref21) {
       key: q.id,
       className: "cap-exp-card",
       style: {
-        outline: emEdicao ? "2px solid var(--user-color, " + T.accent + ")" : "none",
+        // v357: sem outline — ações sempre visíveis pro dono.
         borderLeft: "3px solid #3DB5C9",
-        cursor: emEdicao ? "default" : "pointer"
+        cursor: "pointer"
       },
-      onClick: function onClick() {
-        if (emEdicao) return;
+      onClick: function onClick(e) {
+        if (e.target.closest("button")) return;
         if (onAbrirItem) {
           // v329w: clique normal abre o lugar (mesmo padrão dos cards "morou")
           onAbrirItem({
