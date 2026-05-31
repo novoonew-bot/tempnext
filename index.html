@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v369 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v370 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -41069,7 +41069,7 @@ function MenuRapido(_ref185) {
     return /*#__PURE__*/React.createElement("button", {
       onClick: function onClick() {
         if (disabledByLogin) return;
-        try { window.__tnSecao && window.__tnSecao.realizar("inicio"); } catch(e){}
+        try { window.__tnSecao && window.__tnSecao.realizar("inicio"); window.__tnSecao.realizar("guardar"); } catch(e){}
         onMomento && onMomento();
         onClose();
       },
@@ -41334,7 +41334,12 @@ function MenuRapido(_ref185) {
       color: T.muted,
       lineHeight: 1.5
     }
-  }, "o que voc\xEA quer marcar")), /*#__PURE__*/React.createElement("div", {
+  }, "o que voc\xEA quer marcar")), (function(){
+    if (typeof window === "undefined" || !window.__tnSecao || window.__tnSecao.feito("guardar")) return null;
+    return /*#__PURE__*/React.createElement("div", { style: { margin: "0 18px 14px", background: "var(--user-color-10, rgba(192,106,62,0.10))", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.3))", borderRadius: 12, padding: "10px 14px", display: "flex", gap: 10, alignItems: "center" } },
+      /*#__PURE__*/React.createElement("span", { style: { color: "var(--user-color, #c06a3e)", fontSize: 16, flexShrink: 0, lineHeight: 1 } }, "\u24D8"),
+      /*#__PURE__*/React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 13, color: "#5a4d40", lineHeight: 1.4 } }, "Momento guarda uma foto com lugar e data. C\xE1psula abre no futuro. Quero ir marca um lugar do seu futuro."));
+  })(), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "0 18px",
       display: "flex",
@@ -58236,6 +58241,7 @@ var TN_SECAO_TEXTO = {
   inicio: "Seu in\xEDcio re\xFAne os momentos que voc\xEA guardou. Toque no + para guardar o primeiro.",
   buscar: "Busque lugares e pessoas. Encontre quem passou por onde voc\xEA passou.",
   olhar: "Aqui aparece quem viveu o mesmo lugar que voc\xEA, no mesmo tempo.",
+  perfil: "Seu perfil re\xFAne seus lugares, mem\xF3rias e c\xE1psulas. Toque na engrenagem para ajustes.",
   lugares: "Os lugares onde voc\xEA esteve: onde morou, passou ou quer ir.",
   capsulas: "Mem\xF3rias lacradas que abrem na data certa, para as pessoas certas.",
   contatos: "As pessoas que passaram pelos seus lugares e tempos.",
@@ -58348,7 +58354,7 @@ function TelaPadrao(_ref271) {
       user: user,
       titulo: titulo,
       onBack: onVoltar
-    }), React.createElement(FaixaSecao, { titulo: titulo, vazio: faixaVazio }), children);
+    }), children);
   }
 
   // CASO 2 (v330d): props especiais → renderiza TopBar custom interno
@@ -58464,7 +58470,7 @@ function TelaPadrao(_ref271) {
       minWidth: 24,
       justifyContent: "flex-end"
     }
-  }, acoes || null))), React.createElement(FaixaSecao, { titulo: titulo, vazio: faixaVazio }), children);
+  }, acoes || null))), children);
 }
 function App() {
   var _useState551 = useState("inicio"),
@@ -58624,6 +58630,10 @@ function App() {
     if (typeof window !== "undefined") window.addEventListener("tn:secao", on);
     return function(){ if (typeof window !== "undefined") window.removeEventListener("tn:secao", on); };
   }, []);
+  // v370: perfil nao tem acao - marca realizado na 1a visita (faixa some na proxima vez)
+  useEffect(function(){
+    if (tela === "perfil") { try { window.__tnSecao && window.__tnSecao.realizar("perfil"); } catch(e){} }
+  }, [tela]);
   // v214: aplica a paleta AFETIVA do user no <html> via CSS variables
   // Reativo: muda imediatamente quando user troca paleta no perfil
   // Convive com sistema antigo de personalização (PersonalizacaoPerfil)
@@ -60648,8 +60658,8 @@ function App() {
       position: "relative"
     }
   }, (function(){
-    // v368: faixa explicativa da secao atual (some quando a pessoa realiza a acao)
-    var mapa = { inicio: "inicio", buscar: "buscar", cruzamentos: "olhar" };
+    // v370: fonte unica da faixa explicativa - por tela real (inicio/buscar/cruzamentos/perfil)
+    var mapa = { inicio: "inicio", buscar: "buscar", cruzamentos: "olhar", perfil: "perfil" };
     var sec = mapa[tela];
     if (!sec) return null;
     return /*#__PURE__*/React.createElement(FaixaSecao, { secao: sec, key: "faixa-" + sec });
