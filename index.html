@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v361 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v362 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -57949,8 +57949,10 @@ function TempnexTopBar(_ref269) {
     alertasRegiao = _ref269$alertasRegiao === void 0 ? 0 : _ref269$alertasRegiao,
     onAlertasRegiao = _ref269.onAlertasRegiao,
     titulo = _ref269.titulo,
-    onTitulo = _ref269.onTitulo,
+    _onTituloProp = _ref269.onTitulo,
     onBack = _ref269.onBack;
+  // v362: fallback pro registry global (home monta TempnexTopBar direto, sem passar onTitulo)
+  var onTitulo = _onTituloProp || (typeof window !== "undefined" && window.__tnTopBar && window.__tnTopBar.onTitulo) || null;
   var _React$useState253 = React.useState(false),
     _React$useState254 = _slicedToArray(_React$useState253, 2),
     paletaPickerAberto = _React$useState254[0],
