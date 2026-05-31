@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v365 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v366 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -58214,21 +58214,26 @@ function TelaHistoria(_refHist) {
   ));
   kids.push(React.createElement("p", { key: "p0", style: pStyle },
     React.createElement("span", { style: { fontFamily: COR, "float": "left", fontSize: 56, lineHeight: 0.78, color: ACC, margin: "5px 9px 0 0", fontWeight: 500 } }, "H"),
-    "\xE1 \xE9pocas que continuam morando na gente mesmo depois de ter ido embora delas. A escola, a esquina, o quintal de uma certa idade \u2014 lugares que guardam as pessoas que um dia foram presentes em nossas vidas, e que o tempo, devagar, foi levando pra longe."));
+    "\xE1 lugares que nunca deixamos. A escola. A fazenda. O campo de futebol. O quintal de uma certa idade. Lugares que guardam as pessoas que um dia estiveram perto \u2014 e que o tempo levou pra longe."));
   kids.push(ruleEl(24, 0.26, "22px auto", "r1"));
   kids.push(React.createElement("p", { key: "p1", style: pStyle },
-    "O Tempnext nasceu de uma saudade. Da vontade de saber por onde andam os rostos daquele tempo, daquele lugar, daquele endere\xE7o. N\xE3o para traz\xEA-los de volta \u2014 isso o tempo n\xE3o devolve \u2014 mas para descobrir que talvez um dia nos aproximemos sem saber, nos mesmos lugares onde a vida passa."));
+    "O Tempnext nasceu de uma vontade: saber por onde elas andam hoje, e como est\xE3o os lugares por onde passei. N\xE3o para voltar atr\xE1s. O tempo n\xE3o volta. Mas para descobrir quem passou por onde passei, no mesmo tempo."));
   kids.push(ruleEl(24, 0.26, "22px auto", "r2"));
   kids.push(React.createElement("p", { key: "p2", style: pStyle },
-    "Porque um lugar \xE9 mais do que um endere\xE7o. \xC9 o passado. \xC9 mais do que uma hist\xF3ria."));
+    "Porque um lugar \xE9 mais do que um endere\xE7o. \xC9 o passado, inteiro, guardado ali."));
   kids.push(ruleEl(24, 0.26, "22px auto", "r3"));
   kids.push(React.createElement("p", { key: "p3", style: pStyle },
-    "Aqui voc\xEA guarda o seu tempo, antes que a mem\xF3ria se apague aos poucos. Marca o presente, enquanto ele ainda \xE9 agora. E deixa guardada uma lembran\xE7a que s\xF3 o ",
-    React.createElement("span", { style: { color: BLUE } }, "futuro"),
-    " saber\xE1 abrir \u2014 uma c\xE1psula que o tempo entrega no dia certo, para as pessoas certas, quando voc\xEA talvez j\xE1 tenha esquecido que a deixou ali."));
-  kids.push(ruleEl(24, 0.26, "22px auto", "r4"));
-  kids.push(React.createElement("p", { key: "p4", style: pStyle },
-    "O mundo n\xE3o para de rolar. Aqui, pede o contr\xE1rio. Pede que voc\xEA desacelere. Que lembre devagar, sem pressa de mostrar. Que repare como o tempo aproxima quem nunca se viu \u2014 e quem h\xE1 muito n\xE3o se v\xEA."));
+    "Aqui voc\xEA marca onde esteve e quando. Registra o presente, enquanto ele ainda \xE9 agora."));
+  // bloco de destaque: A CAPSULA (climax do conceito)
+  kids.push(React.createElement("div", { key: "capsula", style: { margin: "30px 0", padding: "22px 22px", background: "linear-gradient(135deg, var(--user-color-10, rgba(192,106,62,0.07)), var(--user-color-deep-18, rgba(138,74,42,0.05)))", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.28))", borderRadius: 16, textAlign: "center" } },
+    React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: ACC, margin: "0 0 12px" } }, "a c\xE1psula"),
+    React.createElement("p", { style: { fontFamily: COR, fontSize: 24, fontWeight: 500, color: DEEP, margin: 0, lineHeight: 1.34 } }, "Voc\xEA guarda algo hoje. O tempo entrega no dia certo, para as pessoas certas."),
+    React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 16, color: "#8a8178", margin: "12px 0 0", lineHeight: 1.4 } },
+      "uma carta para o ",
+      React.createElement("span", { style: { color: BLUE } }, "futuro"),
+      ", que s\xF3 abre quando chega a hora.")));
+  kids.push(React.createElement("p", { key: "p4", style: _objectSpread(_objectSpread({}, pStyle), {}, { marginTop: 30 }) },
+    "O mundo n\xE3o para de rolar. Aqui \xE9 o contr\xE1rio. Voc\xEA desacelera. Lembra sem pressa. E descobre como o tempo reaproxima quem n\xE3o se v\xEA h\xE1 anos \u2014 e aproxima quem nunca se conheceu, mas dividiu o mesmo lugar em outro tempo, por outro momento."));
   kids.push(React.createElement("div", { key: "fim", style: { textAlign: "center", marginTop: 34 } },
     ruleEl(42, 0.4, "0 auto 18px", "rf"),
     React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 21, color: DEEP, margin: "0 0 14px", lineHeight: 1.4 } }, "lembrar \xE9 estar em dois tempos ao mesmo tempo"),
