@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v372 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v373 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -58176,6 +58176,7 @@ function TempnexTopBarConectada(_ref270) {
 // Cor via --user-color (terra default). Back generico (tela != inicio) ja volta pra home.
 function TelaHistoria(_refHist) {
   var onBack = _refHist.onBack;
+  var _faq = React.useState(-1), faqAberto = _faq[0], setFaqAberto = _faq[1];
   var ACC = "var(--user-color, #c06a3e)";
   var DEEP = "var(--user-color-deep, #8a4a2a)";
   var BLUE = "var(--user-color-second, #3878b8)";
@@ -58194,28 +58195,28 @@ function TelaHistoria(_refHist) {
     React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 19, color: ACC, margin: "10px 0 0" } }, "o tempo no seu lugar"),
     ruleEl(42, 0.4, "22px auto 0", "rh")
   ));
-  kids.push(React.createElement("p", { key: "p0", style: pStyle },
-    React.createElement("span", { style: { fontFamily: COR, "float": "left", fontSize: 56, lineHeight: 0.78, color: ACC, margin: "5px 9px 0 0", fontWeight: 500 } }, "H"),
-    "\xE1 lugares que nunca deixamos. A escola. A fazenda. O campo de futebol. O quintal de uma certa idade. Lugares que guardam as pessoas que um dia estiveram perto \u2014 e que o tempo levou pra longe."));
-  kids.push(ruleEl(24, 0.26, "22px auto", "r1"));
-  kids.push(React.createElement("p", { key: "p1", style: pStyle },
-    "O Tempnext nasceu de uma vontade: saber por onde elas andam hoje, e como est\xE3o os lugares por onde passei. N\xE3o para voltar atr\xE1s. O tempo n\xE3o volta. Mas para descobrir quem passou por onde passei, no mesmo tempo."));
-  kids.push(ruleEl(24, 0.26, "22px auto", "r2"));
-  kids.push(React.createElement("p", { key: "p2", style: pStyle },
-    "Porque um lugar \xE9 mais do que um endere\xE7o. \xC9 o passado, inteiro, guardado ali."));
-  kids.push(ruleEl(24, 0.26, "22px auto", "r3"));
-  kids.push(React.createElement("p", { key: "p3", style: pStyle },
-    "Aqui voc\xEA marca onde esteve e quando. Registra o presente, enquanto ele ainda \xE9 agora."));
-  // bloco de destaque: A CAPSULA (climax do conceito)
-  kids.push(React.createElement("div", { key: "capsula", style: { margin: "30px 0", padding: "22px 22px", background: "linear-gradient(135deg, var(--user-color-10, rgba(192,106,62,0.07)), var(--user-color-deep-18, rgba(138,74,42,0.05)))", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.28))", borderRadius: 16, textAlign: "center" } },
-    React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: ACC, margin: "0 0 12px" } }, "a c\xE1psula"),
-    React.createElement("p", { style: { fontFamily: COR, fontSize: 24, fontWeight: 500, color: DEEP, margin: 0, lineHeight: 1.34 } }, "Voc\xEA guarda algo hoje. O tempo entrega no dia certo, para as pessoas certas."),
-    React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 16, color: "#8a8178", margin: "12px 0 0", lineHeight: 1.4 } },
-      "uma carta para o ",
-      React.createElement("span", { style: { color: BLUE } }, "futuro"),
-      ", que s\xF3 abre quando chega a hora.")));
-  kids.push(React.createElement("p", { key: "p4", style: _objectSpread(_objectSpread({}, pStyle), {}, { marginTop: 30 }) },
+  // texto curto poetico (sem revelar a tese mecanica do app)
+  kids.push(React.createElement("p", { key: "curto", style: pStyle },
     "O mundo n\xE3o para de rolar. Aqui \xE9 o contr\xE1rio. Voc\xEA desacelera. Lembra sem pressa. E descobre como o tempo reaproxima quem n\xE3o se v\xEA h\xE1 anos \u2014 e aproxima quem nunca se conheceu, mas dividiu o mesmo lugar em outro tempo, por outro momento."));
+  // FAQ tira-duvidas (acordeao). Pratico, sem expor a tese inteira de uma vez.
+  var perguntas = [
+    { q: "Como guardo um momento?", a: "Toque no + e escolha Momento. Adicione uma foto, o lugar e a data." },
+    { q: "O que \xE9 uma c\xE1psula?", a: "Uma mem\xF3ria que voc\xEA lacra hoje e que abre numa data futura, para quem voc\xEA escolher." },
+    { q: "O que \xE9 o Olhar?", a: "Mostra pessoas que registraram o mesmo lugar e per\xEDodo que voc\xEA." },
+    { q: "Quem v\xEA o que eu registro?", a: "Voc\xEA define em cada registro: p\xFAblico, s\xF3 contatos, ou privado." },
+    { q: "O que \xE9 Quero ir?", a: "Um lugar que voc\xEA ainda pretende visitar." }
+  ];
+  kids.push(ruleEl(42, 0.4, "30px auto 18px", "rfaq"));
+  kids.push(React.createElement("p", { key: "faqtit", style: { fontFamily: "system-ui,sans-serif", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "#b6a89b", textAlign: "center", margin: "0 0 16px" } }, "d\xFAvidas"));
+  kids.push(React.createElement("div", { key: "faq", style: { display: "flex", flexDirection: "column", gap: 8 } },
+    perguntas.map(function(item, i) {
+      var aberto = faqAberto === i;
+      return React.createElement("div", { key: "faq" + i, style: { border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.25))", borderRadius: 12, overflow: "hidden", background: aberto ? "var(--user-color-10, rgba(192,106,62,0.06))" : "transparent" } },
+        React.createElement("button", { onClick: function(){ setFaqAberto(aberto ? -1 : i); }, style: { width: "100%", textAlign: "left", background: "none", border: "none", cursor: "pointer", padding: "13px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 } },
+          React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 14, fontWeight: 500, color: DEEP } }, item.q),
+          React.createElement("span", { style: { color: ACC, fontSize: 18, lineHeight: 1, flexShrink: 0, transform: aberto ? "rotate(45deg)" : "none", transition: "transform 0.2s" } }, "+")),
+        aberto ? React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 13, color: "#5a4d40", lineHeight: 1.5, margin: 0, padding: "0 16px 14px" } }, item.a) : null);
+    })));
   kids.push(React.createElement("div", { key: "fim", style: { textAlign: "center", marginTop: 34 } },
     ruleEl(42, 0.4, "0 auto 18px", "rf"),
     React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 21, color: DEEP, margin: "0 0 14px", lineHeight: 1.4 } }, "lembrar \xE9 estar em dois tempos ao mesmo tempo"),
