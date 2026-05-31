@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v373 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v374 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -62021,6 +62021,119 @@ if ("serviceWorker" in navigator) {
     });
   });
 }
+</script>
+<script type="text/javascript">
+// v374: Banner inteligente de instalacao (PWA). Auto-contido, fora do React.
+(function(){
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+
+  function jaInstalado(){
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  }
+  function ehIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream; }
+  function ehSafariIOS(){ return ehIOS() && /safari/i.test(navigator.userAgent) && !/crios|fxios|edgios/i.test(navigator.userAgent); }
+  function ehNavegadorInterno(){
+    var ua = navigator.userAgent || "";
+    return /FBAN|FBAV|Instagram|WhatsApp|Line\/|Twitter|musical_ly|TikTok/i.test(ua);
+  }
+
+  var deferredPrompt = null;
+  var KEY = "tn_install_dismiss_v1";
+  function dispensado(){ try { return localStorage.getItem(KEY) === "1"; } catch(e){ return false; } }
+  function marcarDispensado(){ try { localStorage.setItem(KEY, "1"); } catch(e){} }
+
+  var ACC = "var(--user-color, #c06a3e)";
+  var DEEP = "var(--user-color-deep, #8a4a2a)";
+
+  function montaBanner(conteudoHTML, comAcao){
+    if (document.getElementById("tn-install-banner")) return;
+    var wrap = document.createElement("div");
+    wrap.id = "tn-install-banner";
+    wrap.style.cssText = "position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:99999;max-width:440px;margin:0 auto;background:#fff;border:0.5px solid var(--user-color-30,rgba(192,106,62,0.35));border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.2);padding:14px 16px;font-family:system-ui,sans-serif;animation:tnInstallUp .35s ease;";
+    wrap.innerHTML = conteudoHTML;
+    document.body.appendChild(wrap);
+
+    var st = document.createElement("style");
+    st.textContent = "@keyframes tnInstallUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}";
+    document.head.appendChild(st);
+
+    var fechar = wrap.querySelector("[data-tn-fechar]");
+    if (fechar) fechar.onclick = function(){ marcarDispensado(); wrap.remove(); };
+    return wrap;
+  }
+
+  function bannerAndroid(){
+    var html = ''
+      + '<div style="display:flex;align-items:center;gap:12px;">'
+      +   '<div style="flex:1;">'
+      +     '<div style="font-size:14px;font-weight:600;color:#2a2622;margin-bottom:2px;">Instalar o Tempnext</div>'
+      +     '<div style="font-size:12px;color:#7a6e60;">Acesse direto da tela inicial, como um app.</div>'
+      +   '</div>'
+      +   '<button data-tn-instalar style="flex-shrink:0;background:' + ACC + ';color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;">Instalar</button>'
+      +   '<button data-tn-fechar aria-label="Dispensar" style="flex-shrink:0;background:none;border:none;color:#b6a89b;font-size:20px;line-height:1;cursor:pointer;padding:2px 4px;">&times;</button>'
+      + '</div>';
+    var w = montaBanner(html, true);
+    if (!w) return;
+    var btn = w.querySelector("[data-tn-instalar]");
+    btn.onclick = function(){
+      if (!deferredPrompt) { w.remove(); return; }
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(){ deferredPrompt = null; w.remove(); });
+    };
+  }
+
+  function bannerIOS(){
+    var html = ''
+      + '<div style="display:flex;align-items:flex-start;gap:12px;">'
+      +   '<div style="flex:1;">'
+      +     '<div style="font-size:14px;font-weight:600;color:#2a2622;margin-bottom:3px;">Adicione o Tempnext \xE0 tela inicial</div>'
+      +     '<div style="font-size:12px;color:#7a6e60;line-height:1.45;">Toque em <b>Compartilhar</b> e depois em <b>Adicionar \xE0 Tela de In\xEDcio</b>.</div>'
+      +   '</div>'
+      +   '<button data-tn-fechar aria-label="Dispensar" style="flex-shrink:0;background:none;border:none;color:#b6a89b;font-size:20px;line-height:1;cursor:pointer;padding:2px 4px;">&times;</button>'
+      + '</div>';
+    montaBanner(html, false);
+  }
+
+  function bannerAbrirChrome(){
+    var html = ''
+      + '<div style="display:flex;align-items:flex-start;gap:12px;">'
+      +   '<div style="flex:1;">'
+      +     '<div style="font-size:14px;font-weight:600;color:#2a2622;margin-bottom:3px;">Abra no navegador para instalar</div>'
+      +     '<div style="font-size:12px;color:#7a6e60;line-height:1.45;">Toque no menu (\u22EE) e escolha <b>Abrir no Chrome</b> ou <b>Abrir no navegador</b>.</div>'
+      +   '</div>'
+      +   '<button data-tn-fechar aria-label="Dispensar" style="flex-shrink:0;background:none;border:none;color:#b6a89b;font-size:20px;line-height:1;cursor:pointer;padding:2px 4px;">&times;</button>'
+      + '</div>';
+    montaBanner(html, false);
+  }
+
+  // Decisao de qual banner mostrar
+  if (jaInstalado() || dispensado()) return;
+
+  // Android Chrome: espera o evento nativo
+  window.addEventListener("beforeinstallprompt", function(e){
+    e.preventDefault();
+    deferredPrompt = e;
+    // mostra so depois de um tempinho de uso (nao na hora do login)
+    setTimeout(function(){ if (!jaInstalado() && !dispensado()) bannerAndroid(); }, 8000);
+  });
+
+  // iOS Safari: sem evento; mostra instrucao apos uso
+  if (ehSafariIOS()) {
+    setTimeout(function(){ if (!jaInstalado() && !dispensado()) bannerIOS(); }, 8000);
+  }
+
+  // Navegador interno (WhatsApp/Instagram): orienta abrir no Chrome (aparece mais cedo, e o atrito real)
+  if (ehNavegadorInterno()) {
+    setTimeout(function(){ if (!dispensado()) bannerAbrirChrome(); }, 4000);
+  }
+
+  // some quando instalar de fato
+  window.addEventListener("appinstalled", function(){
+    var b = document.getElementById("tn-install-banner");
+    if (b) b.remove();
+    marcarDispensado();
+  });
+})();
 </script>
 </body>
 </html>
