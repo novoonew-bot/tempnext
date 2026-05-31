@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v367 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v368 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -874,41 +874,22 @@ const _observer = new MutationObserver(()=>{
 _observer.observe(document.getElementById('root'), {childList:true});
 </script>
 <script type="text/javascript">
-// v363: Onboarding 3 estagios (guardar -> olhar -> capsula). Estado em localStorage, idempotente.
+// v368: Faixa explicativa por secao. Aparece a cada visita ATE a pessoa realizar a acao da secao; depois some.
 (function(){
   if (typeof window === "undefined") return;
-  var K = "tn_onb_v1";
+  var K = "tn_secao_v1";
   function ler(){ try { return JSON.parse(localStorage.getItem(K)) || {}; } catch(e){ return {}; } }
   function grava(o){ try { localStorage.setItem(K, JSON.stringify(o)); } catch(e){} }
-  window.__tnOnb = {
-    estado: function(){
+  window.__tnSecao = {
+    feito: function(secao){ var o = ler(); return !!o[secao]; },
+    realizar: function(secao){
       var o = ler();
-      // estagio: 1=guardar(inicial) 2=olhar 3=capsula 0=concluido
-      if (o.concluido) return { stage:0, atoVisto:true };
-      if (o.olhou) return { stage:3, atoVisto:!!o.ato3 };
-      if (o.guardou) return { stage:2, atoVisto:!!o.ato2 };
-      return { stage:1, atoVisto:!!o.ato1 };
-    },
-    marcar: function(chave){
-      var o = ler();
-      if (o[chave]) return;
-      o[chave] = true;
+      if (o[secao]) return;
+      o[secao] = true;
       grava(o);
-      try { window.dispatchEvent(new CustomEvent("tn:onb")); } catch(e){}
-    },
-    descartar: function(){
-      var o = ler();
-      o.concluido = true;
-      grava(o);
-      try { window.dispatchEvent(new CustomEvent("tn:onb")); } catch(e){}
+      try { window.dispatchEvent(new CustomEvent("tn:secao")); } catch(e){}
     }
   };
-  // CSS do pulso (uma vez)
-  try {
-    var st = document.createElement("style");
-    st.textContent = "@keyframes tnOnbPulse{0%,100%{box-shadow:0 0 0 2px var(--user-color,#c06a3e),0 0 0 6px var(--user-color-30,rgba(192,106,62,.3));opacity:.85}50%{box-shadow:0 0 0 3px var(--user-color,#c06a3e),0 0 0 11px rgba(192,106,62,0);opacity:1}}.tn-onb-pulse{animation:tnOnbPulse 1.7s ease-in-out infinite;border-radius:50%}";
-    document.head.appendChild(st);
-  } catch(e){}
 })();
 </script>
 <script type="text/javascript">
@@ -7158,13 +7139,13 @@ function CapituloLugares(_ref21) {
       className: "cap-exp-arr"
     }, "\u203A"));
   }))) : null,
-  (tab === "tudo" || tab === "passou") && lugaresPassou.length === 0 ? React.createElement(React.Fragment, null, ehDono ? React.createElement(CardFantasma, { tipo: "lugar" }) : null, React.createElement("div", {
+  (tab === "tudo" || tab === "passou") && lugaresPassou.length === 0 ? React.createElement("div", {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
     className: "cap-exp-vazio-eye"
   }, "— visitas —"), React.createElement("div", {
     className: "cap-exp-vazio-tx"
-  }, "ainda nenhuma visita guardada"))) : null,
+  }, "ainda nenhuma visita guardada")) : null,
   // v319a: SEÇÃO QUERO IR — registros de "Registrando agora" do user
   tab === "tudo" || tab === "quero_ir" ? React.createElement(React.Fragment, null, tab === "tudo" && queroIr.length > 0 ? React.createElement("div", {
     className: "cap-exp-secao-tit"
@@ -7468,13 +7449,13 @@ function CapituloMemorias(_ref24) {
     return a !== "sem data";
   }).length === 1 ? "ano" : "anos", " de hist\xF3ria") : ""))),
   // ESTADO VAZIO
-  memorias.length === 0 ? React.createElement(React.Fragment, null, ehDono ? React.createElement(CardFantasma, { tipo: "memoria" }) : null, React.createElement("div", {
+  memorias.length === 0 ? React.createElement("div", {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
     className: "cap-exp-vazio-eye"
   }, "— silêncio —"), React.createElement("div", {
     className: "cap-exp-vazio-tx"
-  }, ehDono ? "ainda não guardei nada por aqui" : "nada foi guardado por aqui ainda"))) : null,
+  }, ehDono ? "ainda não guardei nada por aqui" : "nada foi guardado por aqui ainda")) : null,
   // DESTAQUE (memória com texto + foto, em destaque)
   destaque && memorias.length > 0 ? function () {
     var emEdicao = modo === "editando" && ehDono;
@@ -7838,13 +7819,13 @@ function CapituloCapsulas(_ref25) {
     className: "cap-exp-sub"
   }, totalCapsulas === 0 ? "nenhuma cápsula ainda" : "".concat(totalCapsulas, " ").concat(totalCapsulas === 1 ? "cápsula" : "cápsulas", " ").concat(faixa ? "· " + faixa : ""))),
   // ESTADO VAZIO
-  totalCapsulas === 0 ? React.createElement(React.Fragment, null, ehDono ? React.createElement(CardFantasma, { tipo: "capsula" }) : null, React.createElement("div", {
+  totalCapsulas === 0 ? React.createElement("div", {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
     className: "cap-exp-vazio-eye"
   }, "— silêncio no tempo —"), React.createElement("div", {
     className: "cap-exp-vazio-tx"
-  }, ehDono ? "ainda não lacrei nenhuma cápsula" : "nenhuma cápsula foi lacrada ainda"))) : null,
+  }, ehDono ? "ainda não lacrei nenhuma cápsula" : "nenhuma cápsula foi lacrada ainda")) : null,
   // SEÇÃO: PRESENTE (cápsulas vivas agora)
   capsulas.presente.length > 0 ? React.createElement("div", {
     className: "cap-cap-secao"
@@ -8167,13 +8148,13 @@ function CapituloPessoas(_ref26) {
     className: "cap-pes-spinner"
   })) : null,
   // ESTADO VAZIO
-  !loading && pessoasDetalhadas.length === 0 ? React.createElement(React.Fragment, null, ehDono ? React.createElement(CardFantasma, { tipo: "cruzamento" }) : null, React.createElement("div", {
+  !loading && pessoasDetalhadas.length === 0 ? React.createElement("div", {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
     className: "cap-exp-vazio-eye"
   }, "— silêncio —"), React.createElement("div", {
     className: "cap-exp-vazio-tx"
-  }, ehDono ? "ainda ninguém passou pelo meu caminho por aqui" : "ainda ninguém passou por esse caminho aqui"))) : null,
+  }, ehDono ? "ainda ninguém passou pelo meu caminho por aqui" : "ainda ninguém passou por esse caminho aqui")) : null,
   // GRID POR CIDADE
   !loading && pessoasDetalhadas.length > 0 ? React.createElement("div", {
     className: "cap-pes-corpo"
@@ -27174,6 +27155,7 @@ function Buscar(_ref122) {
     return _executarBuscaPorCep.apply(this, arguments);
   }
   function executarBusca() {
+    try { window.__tnSecao && window.__tnSecao.realizar("buscar"); } catch(e){}
     return _executarBusca.apply(this, arguments);
   }
   function _executarBusca() {
@@ -41085,7 +41067,7 @@ function MenuRapido(_ref185) {
     return /*#__PURE__*/React.createElement("button", {
       onClick: function onClick() {
         if (disabledByLogin) return;
-        try { window.__tnOnb && window.__tnOnb.marcar("guardou"); } catch(e){}
+        try { window.__tnSecao && window.__tnSecao.realizar("inicio"); } catch(e){}
         onMomento && onMomento();
         onClose();
       },
@@ -41350,14 +41332,7 @@ function MenuRapido(_ref185) {
       color: T.muted,
       lineHeight: 1.5
     }
-  }, "o que voc\xEA quer marcar")), (function(){
-    var dica = typeof tnOnbDicaMenu === "function" ? tnOnbDicaMenu() : null;
-    if (!dica) return null;
-    return /*#__PURE__*/React.createElement("div", {
-      style: { margin: "0 18px 16px", background: "var(--user-color-10, rgba(192,106,62,0.10))", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.35))", borderRadius: 12, padding: "11px 14px", display: "flex", gap: 10, alignItems: "center" }
-    }, /*#__PURE__*/React.createElement("span", { style: { color: "var(--user-color, #c06a3e)", fontSize: 18, flexShrink: 0 } }, "\u2193"),
-      /*#__PURE__*/React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 14, color: "#2a2622", lineHeight: 1.35 } }, dica.texto));
-  })(), /*#__PURE__*/React.createElement("div", {
+  }, "o que voc\xEA quer marcar")), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "0 18px",
       display: "flex",
@@ -58252,114 +58227,25 @@ function TelaHistoria(_refHist) {
   return React.createElement("div", { style: { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 250, background: "#FAF7F2", display: "flex", flexDirection: "column" } }, header, body);
 }
 
-// v367: CardFantasma - molde ilustrativo (empty state). Imita o card real da camada,
-// com texto explicando o que vai ali. Some quando chega conteudo real.
-function CardFantasma(_refF) {
-  var tipo = _refF.tipo;
-  var ACC = "var(--user-color, #c06a3e)";
-  var DEEP = "var(--user-color-deep, #8a4a2a)";
-  var COR = "'Cormorant Garamond',Georgia,serif";
-  var traco = "1.5px dashed var(--user-color-30, rgba(192,106,62,0.4))";
-  var fundo = "var(--user-color-10, rgba(192,106,62,0.06))";
-  function selo(txt) {
-    return React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: ACC, background: "var(--user-color-15, rgba(192,106,62,0.15))", padding: "3px 8px", borderRadius: 20 } }, txt);
-  }
-  function txtMolde(t, sub) {
-    return React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 4, alignItems: "center", textAlign: "center", padding: "0 14px" } },
-      React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 16, color: DEEP, margin: 0, lineHeight: 1.4 } }, t),
-      sub ? React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 11, color: "#9a8d7e", margin: 0, lineHeight: 1.4 } }, sub) : null);
-  }
-  var base = { margin: "8px 14px 14px", border: traco, borderRadius: 14, background: fundo, position: "relative", overflow: "hidden" };
-
-  if (tipo === "momento") {
-    // imita o card de feed: foto grande + lugar + ano
-    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { minHeight: 200, display: "flex", flexDirection: "column" }) },
-      React.createElement("div", { style: { flex: 1, minHeight: 130, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, borderBottom: traco } },
-        React.createElement("span", { style: { fontSize: 30, color: ACC, opacity: 0.6 } }, "\u25A6"),
-        txtMolde("aqui aparece a foto que voc\xEA guardar", "um lugar e um tempo da sua vida")),
-      React.createElement("div", { style: { padding: "12px 14px", display: "flex", flexDirection: "column", gap: 4 } },
-        React.createElement("span", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 16, color: DEEP } }, "o lugar \xB7 o ano"),
-        React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 11, color: "#9a8d7e" } }, "aparecem aqui embaixo")));
-  }
-  if (tipo === "capsula") {
-    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { minHeight: 180, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, padding: "26px 14px", background: "linear-gradient(135deg, var(--user-color-10, rgba(192,106,62,0.08)), var(--user-color-deep-18, rgba(138,74,42,0.05)))" }) },
-      selo("lacrada"),
-      React.createElement("span", { style: { fontSize: 34, color: ACC, opacity: 0.55 } }, "\uD83D\uDD12"),
-      txtMolde("aqui fica a c\xE1psula que voc\xEA reservar", "uma mem\xF3ria que abre s\xF3 na data certa, para quem voc\xEA escolher"));
-  }
-  if (tipo === "lugar") {
-    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { display: "flex", alignItems: "center", gap: 12, padding: "16px 16px", minHeight: 72 }) },
-      React.createElement("span", { style: { fontSize: 24, color: ACC, opacity: 0.6, flexShrink: 0 } }, "\u25CE"),
-      txtMolde("aqui ficam os lugares onde voc\xEA esteve", "cidades onde morou, passou ou quer ir"));
-  }
-  if (tipo === "pessoa") {
-    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { display: "flex", alignItems: "center", gap: 12, padding: "16px 16px", minHeight: 72 }) },
-      React.createElement("div", { style: { width: 38, height: 38, borderRadius: "50%", border: traco, flexShrink: 0 } }),
-      txtMolde("aqui aparecem as pessoas que passaram", "quem dividiu seus lugares e tempos"));
-  }
-  if (tipo === "cruzamento") {
-    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, padding: "24px 14px", minHeight: 120 }) },
-      React.createElement("span", { style: { fontSize: 28, color: ACC, opacity: 0.6 } }, "\u21C4"),
-      txtMolde("aqui aparece quem viveu seu tempo e seu lugar", "pessoas que passaram por onde voc\xEA passou"));
-  }
-  // memoria (fallback)
-  return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, padding: "22px 14px", minHeight: 110 }) },
-    React.createElement("span", { style: { fontSize: 26, color: ACC, opacity: 0.6 } }, "\u25A4"),
-    txtMolde("aqui ficam as mem\xF3rias que voc\xEA guardar", "fotos, lugares e momentos da sua vida"));
-}
-
-// v363: OnboardingOverlay - ato contemplativo que recua pra pulso, destrava por marco real.
-// v364: textos do onboarding em linguagem direta (operacional, nao contemplativa).
-var TN_ONB_ATOS = {
-  1: { rotulo: "comece aqui", titulo: "Toque no + para salvar uma foto com data em um determinado lugar.", alvo: "cadastrar" },
-  2: { rotulo: "pr\xF3ximo passo", titulo: "Toque em Olhar para ver quem passou pelos mesmos lugares que voc\xEA.", alvo: "olhar" },
-  3: { rotulo: "guarde para o futuro", titulo: "Toque no + e escolha C\xE1psula para guardar algo que abre numa data futura.", alvo: "cadastrar" }
-};
-// Card de orientacao ancorado a nav (com seta apontando o botao alvo). Sem dim escuro.
-function OnboardingOverlay() {
-  var _r = React.useState(0); var setTick = _r[1];
-  React.useEffect(function(){
-    function on(){ setTick(function(t){ return t+1; }); }
-    window.addEventListener("tn:onb", on);
-    return function(){ window.removeEventListener("tn:onb", on); };
-  }, []);
-  if (typeof window === "undefined" || !window.__tnOnb) return null;
-  var est = window.__tnOnb.estado();
-  if (est.stage === 0) return null;
-  var ato = TN_ONB_ATOS[est.stage];
-  if (!ato) return null;
-  var ACC = "var(--user-color, #c06a3e)";
-  // posicao horizontal da seta: aponta o item de nav alvo. Nav = 5 itens iguais; + e o do meio (indice 2), Olhar indice 3.
-  var idx = ato.alvo === "olhar" ? 3 : 2;
-  var leftPct = (idx + 0.5) * 20; // centro do item, em %
-  return React.createElement("div", { style: { position: "fixed", left: 0, right: 0, bottom: 70, zIndex: 300, pointerEvents: "none", display: "flex", justifyContent: "center" } },
-    React.createElement("div", { style: { position: "relative", pointerEvents: "auto", width: "calc(100% - 32px)", maxWidth: 398, background: "#fff", borderRadius: 14, padding: "14px 16px", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.4))", boxShadow: "0 8px 30px rgba(0,0,0,0.16)" } },
-      React.createElement("button", { onClick: function(){ try { window.__tnOnb.descartar(); } catch(e){} }, "aria-label": "Dispensar", style: { position: "absolute", top: 8, right: 8, background: "none", border: "none", color: "#b6a89b", cursor: "pointer", fontSize: 16, lineHeight: 1, padding: 4 } }, "\xD7"),
-      React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: ACC, margin: "0 0 4px" } }, ato.rotulo),
-      React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 15, color: "#2a2622", margin: 0, lineHeight: 1.4 } }, ato.titulo),
-      // seta apontando o botao alvo
-      React.createElement("div", { style: { position: "absolute", bottom: -9, left: "calc(" + leftPct + "% - 9px)", width: 0, height: 0, borderLeft: "9px solid transparent", borderRight: "9px solid transparent", borderTop: "9px solid #fff", filter: "drop-shadow(0 2px 1px rgba(0,0,0,0.06))" } })
-    )
-  );
-}
-// helper - qual item de nav deve pulsar agora (null = nenhum). Pulso acompanha o card.
-function tnOnbPulsaEm() {
-  if (typeof window === "undefined" || !window.__tnOnb) return null;
-  var est = window.__tnOnb.estado();
-  if (est.stage === 0) return null;
-  var ato = TN_ONB_ATOS[est.stage];
-  return ato ? ato.alvo : null;
-}
-// helper - faixa de orientacao DENTRO do MenuRapido (so durante estagio 1: guardar).
-function tnOnbDicaMenu() {
-  if (typeof window === "undefined" || !window.__tnOnb) return null;
-  var est = window.__tnOnb.estado();
-  if (est.stage === 1) return { card: "momento", texto: "Toque em Momento para salvar sua foto, data e lugar." };
-  if (est.stage === 3) return { card: "capsula", texto: "Toque em C\xE1psula para guardar algo que abre numa data futura." };
-  return null;
-}
 
 // ═════════════════════════════════════════════════════════════════
+// v368: FaixaSecao - explica o que a secao faz. Visivel ate a pessoa realizar a acao; depois some.
+var TN_SECAO_TEXTO = {
+  inicio: "Seu in\xEDcio re\xFAne os momentos que voc\xEA guardou. Toque no + para guardar o primeiro.",
+  buscar: "Busque lugares e pessoas. Encontre quem passou por onde voc\xEA passou.",
+  olhar: "Aqui aparece quem viveu o mesmo lugar que voc\xEA, no mesmo tempo."
+};
+function FaixaSecao(_refS) {
+  var secao = _refS.secao;
+  if (typeof window === "undefined" || !window.__tnSecao) return null;
+  if (window.__tnSecao.feito(secao)) return null;
+  var texto = TN_SECAO_TEXTO[secao];
+  if (!texto) return null;
+  return React.createElement("div", { style: { margin: "10px 14px 4px", background: "var(--user-color-10, rgba(192,106,62,0.10))", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.3))", borderRadius: 12, padding: "10px 14px", display: "flex", gap: 10, alignItems: "center" } },
+    React.createElement("span", { style: { color: "var(--user-color, #c06a3e)", fontSize: 16, flexShrink: 0, lineHeight: 1 } }, "\u24D8"),
+    React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 13, color: "#5a4d40", lineHeight: 1.4 } }, texto));
+}
+
 // v330a/d: COMPONENTE WRAPPER TelaPadrao
 //
 // ┌─ ARQUITETURA DE TELAS DO TEMPNEXT ──────────────────────────┐
@@ -58716,12 +58602,12 @@ function App() {
       alertasRegiaoCount: countAzul
     };
   }, [alertsNovos, marcarVisitadoRegiao, naoLidasRegionaisPersistidas]);
-  // v363: re-render quando um marco de onboarding muda (pulso migra de botao)
-  var _onbR = useState(0), _onbTick = _onbR[0], _setOnbTick = _onbR[1];
+  // v368: re-render quando uma secao e realizada (faixa some)
+  var _secR = useState(0), _secTick = _secR[0], _setSecTick = _secR[1];
   useEffect(function(){
-    function on(){ _setOnbTick(function(t){ return t+1; }); }
-    if (typeof window !== "undefined") window.addEventListener("tn:onb", on);
-    return function(){ if (typeof window !== "undefined") window.removeEventListener("tn:onb", on); };
+    function on(){ _setSecTick(function(t){ return t+1; }); }
+    if (typeof window !== "undefined") window.addEventListener("tn:secao", on);
+    return function(){ if (typeof window !== "undefined") window.removeEventListener("tn:secao", on); };
   }, []);
   // v214: aplica a paleta AFETIVA do user no <html> via CSS variables
   // Reativo: muda imediatamente quando user troca paleta no perfil
@@ -60746,7 +60632,13 @@ function App() {
     style: {
       position: "relative"
     }
-  }, tela === "historia" && /*#__PURE__*/React.createElement(TelaHistoria, {
+  }, (function(){
+    // v368: faixa explicativa da secao atual (some quando a pessoa realiza a acao)
+    var mapa = { inicio: "inicio", buscar: "buscar", cruzamentos: "olhar" };
+    var sec = mapa[tela];
+    if (!sec) return null;
+    return /*#__PURE__*/React.createElement(FaixaSecao, { secao: sec, key: "faixa-" + sec });
+  })(), tela === "historia" && /*#__PURE__*/React.createElement(TelaHistoria, {
     onBack: function onBackHist() { return setTela("inicio"); }
   }), tela === "inicio" && /*#__PURE__*/React.createElement(HomeV9Preview, {
     user: user,
@@ -61373,7 +61265,6 @@ function App() {
       },
       style: wrapperStyle
     }, /*#__PURE__*/React.createElement("div", {
-      className: tnOnbPulsaEm() === "cadastrar" ? "tn-onb-pulse" : undefined,
       style: _objectSpread(_objectSpread({}, circleOutline), {}, {
         background: "var(--user-color)",
         border: "1.5px solid var(--user-color)"
@@ -61442,7 +61333,7 @@ function App() {
         if (showMenuRapido) setShowMenuRapido(false);
         if (isOlhar) {
           setTela("cruzamentos");
-          try { window.__tnOnb && window.__tnOnb.marcar("olhou"); } catch(e){}
+          try { window.__tnSecao && window.__tnSecao.realizar("olhar"); } catch(e){}
           return;
         }
         // v326b: se user clica Início estando JÁ em "inicio", reseta HomeV9 (volta pra topo)
@@ -61460,7 +61351,6 @@ function App() {
       },
       style: wrapperStyle
     }, /*#__PURE__*/React.createElement("div", {
-      className: tnOnbPulsaEm() === t.id ? "tn-onb-pulse" : undefined,
       style: _objectSpread(_objectSpread({}, circleOutline), {}, {
         boxShadow: isActiveStyle ? "0 0 0 3px var(--user-color-15, rgba(193,126,58,0.18))" : "none",
         fontWeight: isActiveStyle ? 700 : 500
@@ -61484,7 +61374,7 @@ function App() {
         padding: "0 3px"
       }
     }, t.badge)));
-  })), user && /*#__PURE__*/React.createElement(OnboardingOverlay, null), showLogin && /*#__PURE__*/React.createElement(TelaLogin, {
+  })), showLogin && /*#__PURE__*/React.createElement(TelaLogin, {
     onClose: function onClose() {
       return setShowLogin(false);
     },
