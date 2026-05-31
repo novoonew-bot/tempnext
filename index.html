@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v366 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v367 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -7158,13 +7158,13 @@ function CapituloLugares(_ref21) {
       className: "cap-exp-arr"
     }, "\u203A"));
   }))) : null,
-  (tab === "tudo" || tab === "passou") && lugaresPassou.length === 0 ? React.createElement("div", {
+  (tab === "tudo" || tab === "passou") && lugaresPassou.length === 0 ? React.createElement(React.Fragment, null, ehDono ? React.createElement(CardFantasma, { tipo: "lugar" }) : null, React.createElement("div", {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
     className: "cap-exp-vazio-eye"
   }, "— visitas —"), React.createElement("div", {
     className: "cap-exp-vazio-tx"
-  }, "ainda nenhuma visita guardada")) : null,
+  }, "ainda nenhuma visita guardada"))) : null,
   // v319a: SEÇÃO QUERO IR — registros de "Registrando agora" do user
   tab === "tudo" || tab === "quero_ir" ? React.createElement(React.Fragment, null, tab === "tudo" && queroIr.length > 0 ? React.createElement("div", {
     className: "cap-exp-secao-tit"
@@ -7468,13 +7468,13 @@ function CapituloMemorias(_ref24) {
     return a !== "sem data";
   }).length === 1 ? "ano" : "anos", " de hist\xF3ria") : ""))),
   // ESTADO VAZIO
-  memorias.length === 0 ? React.createElement("div", {
+  memorias.length === 0 ? React.createElement(React.Fragment, null, ehDono ? React.createElement(CardFantasma, { tipo: "memoria" }) : null, React.createElement("div", {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
     className: "cap-exp-vazio-eye"
   }, "— silêncio —"), React.createElement("div", {
     className: "cap-exp-vazio-tx"
-  }, ehDono ? "ainda não guardei nada por aqui" : "nada foi guardado por aqui ainda")) : null,
+  }, ehDono ? "ainda não guardei nada por aqui" : "nada foi guardado por aqui ainda"))) : null,
   // DESTAQUE (memória com texto + foto, em destaque)
   destaque && memorias.length > 0 ? function () {
     var emEdicao = modo === "editando" && ehDono;
@@ -7838,13 +7838,13 @@ function CapituloCapsulas(_ref25) {
     className: "cap-exp-sub"
   }, totalCapsulas === 0 ? "nenhuma cápsula ainda" : "".concat(totalCapsulas, " ").concat(totalCapsulas === 1 ? "cápsula" : "cápsulas", " ").concat(faixa ? "· " + faixa : ""))),
   // ESTADO VAZIO
-  totalCapsulas === 0 ? React.createElement("div", {
+  totalCapsulas === 0 ? React.createElement(React.Fragment, null, ehDono ? React.createElement(CardFantasma, { tipo: "capsula" }) : null, React.createElement("div", {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
     className: "cap-exp-vazio-eye"
   }, "— silêncio no tempo —"), React.createElement("div", {
     className: "cap-exp-vazio-tx"
-  }, ehDono ? "ainda não lacrei nenhuma cápsula" : "nenhuma cápsula foi lacrada ainda")) : null,
+  }, ehDono ? "ainda não lacrei nenhuma cápsula" : "nenhuma cápsula foi lacrada ainda"))) : null,
   // SEÇÃO: PRESENTE (cápsulas vivas agora)
   capsulas.presente.length > 0 ? React.createElement("div", {
     className: "cap-cap-secao"
@@ -8167,13 +8167,13 @@ function CapituloPessoas(_ref26) {
     className: "cap-pes-spinner"
   })) : null,
   // ESTADO VAZIO
-  !loading && pessoasDetalhadas.length === 0 ? React.createElement("div", {
+  !loading && pessoasDetalhadas.length === 0 ? React.createElement(React.Fragment, null, ehDono ? React.createElement(CardFantasma, { tipo: "cruzamento" }) : null, React.createElement("div", {
     className: "cap-exp-vazio"
   }, React.createElement("div", {
     className: "cap-exp-vazio-eye"
   }, "— silêncio —"), React.createElement("div", {
     className: "cap-exp-vazio-tx"
-  }, ehDono ? "ainda ninguém passou pelo meu caminho por aqui" : "ainda ninguém passou por esse caminho aqui")) : null,
+  }, ehDono ? "ainda ninguém passou pelo meu caminho por aqui" : "ainda ninguém passou por esse caminho aqui"))) : null,
   // GRID POR CIDADE
   !loading && pessoasDetalhadas.length > 0 ? React.createElement("div", {
     className: "cap-pes-corpo"
@@ -58250,6 +58250,62 @@ function TelaHistoria(_refHist) {
   var body = React.createElement("div", { style: { flex: 1, overflowY: "auto", WebkitOverflowScrolling: "touch" } },
     React.createElement("div", { style: { maxWidth: 540, margin: "0 auto", padding: "32px 24px 56px" } }, kids));
   return React.createElement("div", { style: { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 250, background: "#FAF7F2", display: "flex", flexDirection: "column" } }, header, body);
+}
+
+// v367: CardFantasma - molde ilustrativo (empty state). Imita o card real da camada,
+// com texto explicando o que vai ali. Some quando chega conteudo real.
+function CardFantasma(_refF) {
+  var tipo = _refF.tipo;
+  var ACC = "var(--user-color, #c06a3e)";
+  var DEEP = "var(--user-color-deep, #8a4a2a)";
+  var COR = "'Cormorant Garamond',Georgia,serif";
+  var traco = "1.5px dashed var(--user-color-30, rgba(192,106,62,0.4))";
+  var fundo = "var(--user-color-10, rgba(192,106,62,0.06))";
+  function selo(txt) {
+    return React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: ACC, background: "var(--user-color-15, rgba(192,106,62,0.15))", padding: "3px 8px", borderRadius: 20 } }, txt);
+  }
+  function txtMolde(t, sub) {
+    return React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 4, alignItems: "center", textAlign: "center", padding: "0 14px" } },
+      React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 16, color: DEEP, margin: 0, lineHeight: 1.4 } }, t),
+      sub ? React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 11, color: "#9a8d7e", margin: 0, lineHeight: 1.4 } }, sub) : null);
+  }
+  var base = { margin: "8px 14px 14px", border: traco, borderRadius: 14, background: fundo, position: "relative", overflow: "hidden" };
+
+  if (tipo === "momento") {
+    // imita o card de feed: foto grande + lugar + ano
+    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { minHeight: 200, display: "flex", flexDirection: "column" }) },
+      React.createElement("div", { style: { flex: 1, minHeight: 130, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, borderBottom: traco } },
+        React.createElement("span", { style: { fontSize: 30, color: ACC, opacity: 0.6 } }, "\u25A6"),
+        txtMolde("aqui aparece a foto que voc\xEA guardar", "um lugar e um tempo da sua vida")),
+      React.createElement("div", { style: { padding: "12px 14px", display: "flex", flexDirection: "column", gap: 4 } },
+        React.createElement("span", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 16, color: DEEP } }, "o lugar \xB7 o ano"),
+        React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 11, color: "#9a8d7e" } }, "aparecem aqui embaixo")));
+  }
+  if (tipo === "capsula") {
+    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { minHeight: 180, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, padding: "26px 14px", background: "linear-gradient(135deg, var(--user-color-10, rgba(192,106,62,0.08)), var(--user-color-deep-18, rgba(138,74,42,0.05)))" }) },
+      selo("lacrada"),
+      React.createElement("span", { style: { fontSize: 34, color: ACC, opacity: 0.55 } }, "\uD83D\uDD12"),
+      txtMolde("aqui fica a c\xE1psula que voc\xEA reservar", "uma mem\xF3ria que abre s\xF3 na data certa, para quem voc\xEA escolher"));
+  }
+  if (tipo === "lugar") {
+    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { display: "flex", alignItems: "center", gap: 12, padding: "16px 16px", minHeight: 72 }) },
+      React.createElement("span", { style: { fontSize: 24, color: ACC, opacity: 0.6, flexShrink: 0 } }, "\u25CE"),
+      txtMolde("aqui ficam os lugares onde voc\xEA esteve", "cidades onde morou, passou ou quer ir"));
+  }
+  if (tipo === "pessoa") {
+    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { display: "flex", alignItems: "center", gap: 12, padding: "16px 16px", minHeight: 72 }) },
+      React.createElement("div", { style: { width: 38, height: 38, borderRadius: "50%", border: traco, flexShrink: 0 } }),
+      txtMolde("aqui aparecem as pessoas que passaram", "quem dividiu seus lugares e tempos"));
+  }
+  if (tipo === "cruzamento") {
+    return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, padding: "24px 14px", minHeight: 120 }) },
+      React.createElement("span", { style: { fontSize: 28, color: ACC, opacity: 0.6 } }, "\u21C4"),
+      txtMolde("aqui aparece quem viveu seu tempo e seu lugar", "pessoas que passaram por onde voc\xEA passou"));
+  }
+  // memoria (fallback)
+  return React.createElement("div", { style: _objectSpread(_objectSpread({}, base), {}, { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, padding: "22px 14px", minHeight: 110 }) },
+    React.createElement("span", { style: { fontSize: 26, color: ACC, opacity: 0.6 } }, "\u25A4"),
+    txtMolde("aqui ficam as mem\xF3rias que voc\xEA guardar", "fotos, lugares e momentos da sua vida"));
 }
 
 // v363: OnboardingOverlay - ato contemplativo que recua pra pulso, destrava por marco real.
