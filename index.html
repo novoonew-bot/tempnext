@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v362 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v363 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -858,7 +858,12 @@ const _observer = new MutationObserver(()=>{
   if(root && root.children.length > 0){
     const loader = document.getElementById('loading');
     if(loader){
-      tocarSomEntrada();
+      // v363: AudioContext so inicia apos gesto do usuario (evita 15 warnings no console).
+      try {
+        var _tnSom = function(){ try{ tocarSomEntrada(); }catch(e){} window.removeEventListener('pointerdown', _tnSom); window.removeEventListener('keydown', _tnSom); };
+        window.addEventListener('pointerdown', _tnSom, { once:true });
+        window.addEventListener('keydown', _tnSom, { once:true });
+      } catch(e){}
       loader.style.transition = 'opacity 0.5s';
       loader.style.opacity = '0';
       setTimeout(()=>loader.remove(), 500);
@@ -867,6 +872,38 @@ const _observer = new MutationObserver(()=>{
   }
 });
 _observer.observe(document.getElementById('root'), {childList:true});
+</script>
+<script type="text/javascript">
+// v363: Onboarding 3 estagios (guardar -> olhar -> capsula). Estado em localStorage, idempotente.
+(function(){
+  if (typeof window === "undefined") return;
+  var K = "tn_onb_v1";
+  function ler(){ try { return JSON.parse(localStorage.getItem(K)) || {}; } catch(e){ return {}; } }
+  function grava(o){ try { localStorage.setItem(K, JSON.stringify(o)); } catch(e){} }
+  window.__tnOnb = {
+    estado: function(){
+      var o = ler();
+      // estagio: 1=guardar(inicial) 2=olhar 3=capsula 0=concluido
+      if (o.concluido) return { stage:0, atoVisto:true };
+      if (o.olhou) return { stage:3, atoVisto:!!o.ato3 };
+      if (o.guardou) return { stage:2, atoVisto:!!o.ato2 };
+      return { stage:1, atoVisto:!!o.ato1 };
+    },
+    marcar: function(chave){
+      var o = ler();
+      if (o[chave]) return;
+      o[chave] = true;
+      grava(o);
+      try { window.dispatchEvent(new CustomEvent("tn:onb")); } catch(e){}
+    }
+  };
+  // CSS do pulso (uma vez)
+  try {
+    var st = document.createElement("style");
+    st.textContent = "@keyframes tnOnbPulse{0%,100%{box-shadow:0 0 0 2px var(--user-color,#c06a3e),0 0 0 6px var(--user-color-30,rgba(192,106,62,.3));opacity:.85}50%{box-shadow:0 0 0 3px var(--user-color,#c06a3e),0 0 0 11px rgba(192,106,62,0);opacity:1}}.tn-onb-pulse{animation:tnOnbPulse 1.7s ease-in-out infinite;border-radius:50%}";
+    document.head.appendChild(st);
+  } catch(e){}
+})();
 </script>
 <script type="text/javascript">
 "use strict";
@@ -58220,6 +58257,48 @@ function TelaHistoria(_refHist) {
   return React.createElement("div", { style: { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 250, background: "#FAF7F2", display: "flex", flexDirection: "column" } }, header, body);
 }
 
+// v363: OnboardingOverlay - ato contemplativo que recua pra pulso, destrava por marco real.
+function OnboardingOverlay() {
+  var _r = React.useState(0), tick = _r[0], setTick = _r[1];
+  React.useEffect(function(){
+    function on(){ setTick(function(t){ return t+1; }); }
+    window.addEventListener("tn:onb", on);
+    return function(){ window.removeEventListener("tn:onb", on); };
+  }, []);
+  if (typeof window === "undefined" || !window.__tnOnb) return null;
+  var est = window.__tnOnb.estado();
+  if (est.stage === 0) return null;
+  var ACC = "var(--user-color, #c06a3e)";
+  var COR = "'Cormorant Garamond',Georgia,serif";
+  var atos = {
+    1: { tit: "guardar", a: "comece guardando um lugar e um tempo.", b: "todo lugar carrega quando voc\xEA esteve nele.", chave: "ato1" },
+    2: { tit: "olhar", a: "agora veja quem passou por onde voc\xEA passou.", b: "o tempo aproxima quem nunca se viu.", chave: "ato2" },
+    3: { tit: "c\xE1psula", a: "reserve uma mem\xF3ria para abrir mais tarde.", b: "o que voc\xEA guarda hoje, o tempo entrega depois.", chave: "ato3" }
+  };
+  var ato = atos[est.stage];
+  // Ato ainda nao visto: mostra o cartao contemplativo acima da nav.
+  if (!est.atoVisto) {
+    return React.createElement("div", { style: { position: "fixed", inset: 0, zIndex: 300, pointerEvents: "none" } },
+      React.createElement("div", { style: { position: "absolute", inset: 0, background: "rgba(20,16,12,0.30)", pointerEvents: "auto" } }),
+      React.createElement("div", { style: { position: "absolute", left: 18, right: 18, bottom: 84, pointerEvents: "auto", background: "#fff", borderRadius: 14, padding: "16px 18px", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.4))", boxShadow: "0 8px 30px rgba(0,0,0,0.18)", maxWidth: 400, margin: "0 auto" } },
+        React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: ACC, margin: "0 0 5px" } }, ato.tit),
+        React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 19, color: "#2a2622", margin: 0, lineHeight: 1.35 } }, ato.a),
+        React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 15, color: "#8a8178", margin: "6px 0 12px", lineHeight: 1.35 } }, ato.b),
+        React.createElement("button", { onClick: function(){ window.__tnOnb.marcar(ato.chave); }, style: { fontFamily: "system-ui,sans-serif", fontSize: 12, padding: "6px 16px", borderRadius: 8, border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.4))", background: "transparent", color: ACC, cursor: "pointer" } }, "entendi")
+      )
+    );
+  }
+  // Ato visto: o pulso aparece direto no botao alvo da nav (classe .tn-onb-pulse aplicada la).
+  return null;
+}
+// v363: helper - qual item de nav deve pulsar agora (null = nenhum).
+function tnOnbPulsaEm() {
+  if (typeof window === "undefined" || !window.__tnOnb) return null;
+  var est = window.__tnOnb.estado();
+  if (est.stage === 0 || !est.atoVisto) return null; // sem pulso durante o ato
+  return est.stage === 2 ? "olhar" : "cadastrar"; // stage 1 e 3 -> botao +
+}
+
 // ═════════════════════════════════════════════════════════════════
 // v330a/d: COMPONENTE WRAPPER TelaPadrao
 //
@@ -58577,6 +58656,13 @@ function App() {
       alertasRegiaoCount: countAzul
     };
   }, [alertsNovos, marcarVisitadoRegiao, naoLidasRegionaisPersistidas]);
+  // v363: re-render quando um marco de onboarding muda (pulso migra de botao)
+  var _onbR = useState(0), _onbTick = _onbR[0], _setOnbTick = _onbR[1];
+  useEffect(function(){
+    function on(){ _setOnbTick(function(t){ return t+1; }); }
+    if (typeof window !== "undefined") window.addEventListener("tn:onb", on);
+    return function(){ if (typeof window !== "undefined") window.removeEventListener("tn:onb", on); };
+  }, []);
   // v214: aplica a paleta AFETIVA do user no <html> via CSS variables
   // Reativo: muda imediatamente quando user troca paleta no perfil
   // Convive com sistema antigo de personalização (PersonalizacaoPerfil)
@@ -61223,10 +61309,14 @@ function App() {
     if (t.id === "cadastrar") return /*#__PURE__*/React.createElement("button", {
       key: "add",
       onClick: function onClick() {
-        if (verificarPerfilCompleto()) setShowMenuRapido(true);
+        if (verificarPerfilCompleto()) {
+          setShowMenuRapido(true);
+          try { window.__tnOnb && window.__tnOnb.marcar("guardou"); } catch(e){}
+        }
       },
       style: wrapperStyle
     }, /*#__PURE__*/React.createElement("div", {
+      className: tnOnbPulsaEm() === "cadastrar" ? "tn-onb-pulse" : undefined,
       style: _objectSpread(_objectSpread({}, circleOutline), {}, {
         background: "var(--user-color)",
         border: "1.5px solid var(--user-color)"
@@ -61295,6 +61385,7 @@ function App() {
         if (showMenuRapido) setShowMenuRapido(false);
         if (isOlhar) {
           setTela("cruzamentos");
+          try { window.__tnOnb && window.__tnOnb.marcar("olhou"); } catch(e){}
           return;
         }
         // v326b: se user clica Início estando JÁ em "inicio", reseta HomeV9 (volta pra topo)
@@ -61312,6 +61403,7 @@ function App() {
       },
       style: wrapperStyle
     }, /*#__PURE__*/React.createElement("div", {
+      className: tnOnbPulsaEm() === t.id ? "tn-onb-pulse" : undefined,
       style: _objectSpread(_objectSpread({}, circleOutline), {}, {
         boxShadow: isActiveStyle ? "0 0 0 3px var(--user-color-15, rgba(193,126,58,0.18))" : "none",
         fontWeight: isActiveStyle ? 700 : 500
@@ -61335,7 +61427,7 @@ function App() {
         padding: "0 3px"
       }
     }, t.badge)));
-  })), showLogin && /*#__PURE__*/React.createElement(TelaLogin, {
+  })), user && /*#__PURE__*/React.createElement(OnboardingOverlay, null), showLogin && /*#__PURE__*/React.createElement(TelaLogin, {
     onClose: function onClose() {
       return setShowLogin(false);
     },
