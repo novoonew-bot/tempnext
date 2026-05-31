@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v363 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v364 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -893,6 +893,12 @@ _observer.observe(document.getElementById('root'), {childList:true});
       var o = ler();
       if (o[chave]) return;
       o[chave] = true;
+      grava(o);
+      try { window.dispatchEvent(new CustomEvent("tn:onb")); } catch(e){}
+    },
+    descartar: function(){
+      var o = ler();
+      o.concluido = true;
       grava(o);
       try { window.dispatchEvent(new CustomEvent("tn:onb")); } catch(e){}
     }
@@ -41103,6 +41109,7 @@ function MenuRapido(_ref185) {
     return /*#__PURE__*/React.createElement("button", {
       onClick: function onClick() {
         if (disabledByLogin) return;
+        try { window.__tnOnb && window.__tnOnb.marcar("guardou"); } catch(e){}
         onMomento && onMomento();
         onClose();
       },
@@ -41367,7 +41374,14 @@ function MenuRapido(_ref185) {
       color: T.muted,
       lineHeight: 1.5
     }
-  }, "o que voc\xEA quer marcar")), /*#__PURE__*/React.createElement("div", {
+  }, "o que voc\xEA quer marcar")), (function(){
+    var dica = typeof tnOnbDicaMenu === "function" ? tnOnbDicaMenu() : null;
+    if (!dica) return null;
+    return /*#__PURE__*/React.createElement("div", {
+      style: { margin: "0 18px 16px", background: "var(--user-color-10, rgba(192,106,62,0.10))", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.35))", borderRadius: 12, padding: "11px 14px", display: "flex", gap: 10, alignItems: "center" }
+    }, /*#__PURE__*/React.createElement("span", { style: { color: "var(--user-color, #c06a3e)", fontSize: 18, flexShrink: 0 } }, "\u2193"),
+      /*#__PURE__*/React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 14, color: "#2a2622", lineHeight: 1.35 } }, dica.texto));
+  })(), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "0 18px",
       display: "flex",
@@ -58258,8 +58272,15 @@ function TelaHistoria(_refHist) {
 }
 
 // v363: OnboardingOverlay - ato contemplativo que recua pra pulso, destrava por marco real.
+// v364: textos do onboarding em linguagem direta (operacional, nao contemplativa).
+var TN_ONB_ATOS = {
+  1: { rotulo: "comece aqui", titulo: "Toque no + para salvar uma foto com data em um determinado lugar.", alvo: "cadastrar" },
+  2: { rotulo: "pr\xF3ximo passo", titulo: "Toque em Olhar para ver quem passou pelos mesmos lugares que voc\xEA.", alvo: "olhar" },
+  3: { rotulo: "guarde para o futuro", titulo: "Toque no + e escolha C\xE1psula para guardar algo que abre numa data futura.", alvo: "cadastrar" }
+};
+// Card de orientacao ancorado a nav (com seta apontando o botao alvo). Sem dim escuro.
 function OnboardingOverlay() {
-  var _r = React.useState(0), tick = _r[0], setTick = _r[1];
+  var _r = React.useState(0); var setTick = _r[1];
   React.useEffect(function(){
     function on(){ setTick(function(t){ return t+1; }); }
     window.addEventListener("tn:onb", on);
@@ -58268,35 +58289,37 @@ function OnboardingOverlay() {
   if (typeof window === "undefined" || !window.__tnOnb) return null;
   var est = window.__tnOnb.estado();
   if (est.stage === 0) return null;
+  var ato = TN_ONB_ATOS[est.stage];
+  if (!ato) return null;
   var ACC = "var(--user-color, #c06a3e)";
-  var COR = "'Cormorant Garamond',Georgia,serif";
-  var atos = {
-    1: { tit: "guardar", a: "comece guardando um lugar e um tempo.", b: "todo lugar carrega quando voc\xEA esteve nele.", chave: "ato1" },
-    2: { tit: "olhar", a: "agora veja quem passou por onde voc\xEA passou.", b: "o tempo aproxima quem nunca se viu.", chave: "ato2" },
-    3: { tit: "c\xE1psula", a: "reserve uma mem\xF3ria para abrir mais tarde.", b: "o que voc\xEA guarda hoje, o tempo entrega depois.", chave: "ato3" }
-  };
-  var ato = atos[est.stage];
-  // Ato ainda nao visto: mostra o cartao contemplativo acima da nav.
-  if (!est.atoVisto) {
-    return React.createElement("div", { style: { position: "fixed", inset: 0, zIndex: 300, pointerEvents: "none" } },
-      React.createElement("div", { style: { position: "absolute", inset: 0, background: "rgba(20,16,12,0.30)", pointerEvents: "auto" } }),
-      React.createElement("div", { style: { position: "absolute", left: 18, right: 18, bottom: 84, pointerEvents: "auto", background: "#fff", borderRadius: 14, padding: "16px 18px", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.4))", boxShadow: "0 8px 30px rgba(0,0,0,0.18)", maxWidth: 400, margin: "0 auto" } },
-        React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: ACC, margin: "0 0 5px" } }, ato.tit),
-        React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 19, color: "#2a2622", margin: 0, lineHeight: 1.35 } }, ato.a),
-        React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 15, color: "#8a8178", margin: "6px 0 12px", lineHeight: 1.35 } }, ato.b),
-        React.createElement("button", { onClick: function(){ window.__tnOnb.marcar(ato.chave); }, style: { fontFamily: "system-ui,sans-serif", fontSize: 12, padding: "6px 16px", borderRadius: 8, border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.4))", background: "transparent", color: ACC, cursor: "pointer" } }, "entendi")
-      )
-    );
-  }
-  // Ato visto: o pulso aparece direto no botao alvo da nav (classe .tn-onb-pulse aplicada la).
-  return null;
+  // posicao horizontal da seta: aponta o item de nav alvo. Nav = 5 itens iguais; + e o do meio (indice 2), Olhar indice 3.
+  var idx = ato.alvo === "olhar" ? 3 : 2;
+  var leftPct = (idx + 0.5) * 20; // centro do item, em %
+  return React.createElement("div", { style: { position: "fixed", left: 0, right: 0, bottom: 70, zIndex: 300, pointerEvents: "none", display: "flex", justifyContent: "center" } },
+    React.createElement("div", { style: { position: "relative", pointerEvents: "auto", width: "calc(100% - 32px)", maxWidth: 398, background: "#fff", borderRadius: 14, padding: "14px 16px", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.4))", boxShadow: "0 8px 30px rgba(0,0,0,0.16)" } },
+      React.createElement("button", { onClick: function(){ try { window.__tnOnb.descartar(); } catch(e){} }, "aria-label": "Dispensar", style: { position: "absolute", top: 8, right: 8, background: "none", border: "none", color: "#b6a89b", cursor: "pointer", fontSize: 16, lineHeight: 1, padding: 4 } }, "\xD7"),
+      React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: ACC, margin: "0 0 4px" } }, ato.rotulo),
+      React.createElement("p", { style: { fontFamily: "system-ui,sans-serif", fontSize: 15, color: "#2a2622", margin: 0, lineHeight: 1.4 } }, ato.titulo),
+      // seta apontando o botao alvo
+      React.createElement("div", { style: { position: "absolute", bottom: -9, left: "calc(" + leftPct + "% - 9px)", width: 0, height: 0, borderLeft: "9px solid transparent", borderRight: "9px solid transparent", borderTop: "9px solid #fff", filter: "drop-shadow(0 2px 1px rgba(0,0,0,0.06))" } })
+    )
+  );
 }
-// v363: helper - qual item de nav deve pulsar agora (null = nenhum).
+// helper - qual item de nav deve pulsar agora (null = nenhum). Pulso acompanha o card.
 function tnOnbPulsaEm() {
   if (typeof window === "undefined" || !window.__tnOnb) return null;
   var est = window.__tnOnb.estado();
-  if (est.stage === 0 || !est.atoVisto) return null; // sem pulso durante o ato
-  return est.stage === 2 ? "olhar" : "cadastrar"; // stage 1 e 3 -> botao +
+  if (est.stage === 0) return null;
+  var ato = TN_ONB_ATOS[est.stage];
+  return ato ? ato.alvo : null;
+}
+// helper - faixa de orientacao DENTRO do MenuRapido (so durante estagio 1: guardar).
+function tnOnbDicaMenu() {
+  if (typeof window === "undefined" || !window.__tnOnb) return null;
+  var est = window.__tnOnb.estado();
+  if (est.stage === 1) return { card: "momento", texto: "Toque em Momento para salvar sua foto, data e lugar." };
+  if (est.stage === 3) return { card: "capsula", texto: "Toque em C\xE1psula para guardar algo que abre numa data futura." };
+  return null;
 }
 
 // ═════════════════════════════════════════════════════════════════
@@ -61309,10 +61332,7 @@ function App() {
     if (t.id === "cadastrar") return /*#__PURE__*/React.createElement("button", {
       key: "add",
       onClick: function onClick() {
-        if (verificarPerfilCompleto()) {
-          setShowMenuRapido(true);
-          try { window.__tnOnb && window.__tnOnb.marcar("guardou"); } catch(e){}
-        }
+        if (verificarPerfilCompleto()) setShowMenuRapido(true);
       },
       style: wrapperStyle
     }, /*#__PURE__*/React.createElement("div", {
