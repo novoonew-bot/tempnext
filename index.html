@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v368 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v369 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -29501,7 +29501,8 @@ function MeusLugares(_ref131) {
   return /*#__PURE__*/React.createElement(TelaPadrao, {
     user: user,
     titulo: "lugares",
-    onVoltar: onBack
+    onVoltar: onBack,
+    faixaVazio: (lugares || []).length === 0
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "0 18px"
@@ -31427,7 +31428,8 @@ function Contatos(_ref146) {
   return /*#__PURE__*/React.createElement(TelaPadrao, {
     user: user,
     titulo: "contatos",
-    onVoltar: onBack
+    onVoltar: onBack,
+    faixaVazio: (contacts || []).length === 0
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "0 18px"
@@ -58229,18 +58231,30 @@ function TelaHistoria(_refHist) {
 
 
 // ═════════════════════════════════════════════════════════════════
-// v368: FaixaSecao - explica o que a secao faz. Visivel ate a pessoa realizar a acao; depois some.
+// v369: FaixaSecao - explica a tela. Visivel ate a pessoa realizar a acao; depois some. Chave = secao OU titulo normalizado.
 var TN_SECAO_TEXTO = {
   inicio: "Seu in\xEDcio re\xFAne os momentos que voc\xEA guardou. Toque no + para guardar o primeiro.",
   buscar: "Busque lugares e pessoas. Encontre quem passou por onde voc\xEA passou.",
-  olhar: "Aqui aparece quem viveu o mesmo lugar que voc\xEA, no mesmo tempo."
+  olhar: "Aqui aparece quem viveu o mesmo lugar que voc\xEA, no mesmo tempo.",
+  lugares: "Os lugares onde voc\xEA esteve: onde morou, passou ou quer ir.",
+  capsulas: "Mem\xF3rias lacradas que abrem na data certa, para as pessoas certas.",
+  contatos: "As pessoas que passaram pelos seus lugares e tempos.",
+  "quem viveu seu tempo": "Pessoas que viveram o mesmo lugar que voc\xEA, no mesmo tempo.",
+  "sua regiao": "O que est\xE1 acontecendo perto de voc\xEA, agora."
 };
+function tnNorm(t) {
+  return (t || "").toString().toLowerCase()
+    .replace(/[\xE1\xE0\xE2\xE3]/g, "a").replace(/[\xE9\xEA]/g, "e").replace(/[\xED]/g, "i")
+    .replace(/[\xF3\xF4\xF5]/g, "o").replace(/[\xFA]/g, "u").replace(/[\xE7]/g, "c").trim();
+}
 function FaixaSecao(_refS) {
-  var secao = _refS.secao;
-  if (typeof window === "undefined" || !window.__tnSecao) return null;
-  if (window.__tnSecao.feito(secao)) return null;
-  var texto = TN_SECAO_TEXTO[secao];
+  var chave = _refS.secao || tnNorm(_refS.titulo);
+  if (typeof window === "undefined" || !window.__tnSecao || !chave) return null;
+  var texto = TN_SECAO_TEXTO[chave];
   if (!texto) return null;
+  // Se "vazio" foi passado, a faixa segue o conteudo (some quando tem item). Senao, usa localStorage.
+  if (_refS.vazio !== undefined) { if (!_refS.vazio) return null; }
+  else if (window.__tnSecao.feito(chave)) return null;
   return React.createElement("div", { style: { margin: "10px 14px 4px", background: "var(--user-color-10, rgba(192,106,62,0.10))", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.3))", borderRadius: 12, padding: "10px 14px", display: "flex", gap: 10, alignItems: "center" } },
     React.createElement("span", { style: { color: "var(--user-color, #c06a3e)", fontSize: 16, flexShrink: 0, lineHeight: 1 } }, "\u24D8"),
     React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 13, color: "#5a4d40", lineHeight: 1.4 } }, texto));
@@ -58318,6 +58332,7 @@ function TelaPadrao(_ref271) {
     _ref271$topBarTranspa = _ref271.topBarTransparente,
     topBarTransparente = _ref271$topBarTranspa === void 0 ? false : _ref271$topBarTranspa,
     children = _ref271.children,
+    faixaVazio = _ref271.faixaVazio,
     estilo = _ref271.estilo;
   var padBaixo = semNav ? 0 : 100; // mesma medida que Olhar/Notif/Alertas usam
 
@@ -58333,7 +58348,7 @@ function TelaPadrao(_ref271) {
       user: user,
       titulo: titulo,
       onBack: onVoltar
-    }), children);
+    }), React.createElement(FaixaSecao, { titulo: titulo, vazio: faixaVazio }), children);
   }
 
   // CASO 2 (v330d): props especiais → renderiza TopBar custom interno
@@ -58449,7 +58464,7 @@ function TelaPadrao(_ref271) {
       minWidth: 24,
       justifyContent: "flex-end"
     }
-  }, acoes || null))), children);
+  }, acoes || null))), React.createElement(FaixaSecao, { titulo: titulo, vazio: faixaVazio }), children);
 }
 function App() {
   var _useState551 = useState("inicio"),
