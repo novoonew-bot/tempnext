@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v353 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v361 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -57949,6 +57949,7 @@ function TempnexTopBar(_ref269) {
     alertasRegiao = _ref269$alertasRegiao === void 0 ? 0 : _ref269$alertasRegiao,
     onAlertasRegiao = _ref269.onAlertasRegiao,
     titulo = _ref269.titulo,
+    onTitulo = _ref269.onTitulo,
     onBack = _ref269.onBack;
   var _React$useState253 = React.useState(false),
     _React$useState254 = _slicedToArray(_React$useState253, 2),
@@ -58012,10 +58013,13 @@ function TempnexTopBar(_ref269) {
     strokeLinecap: "round",
     strokeLinejoin: "round"
   }))), React.createElement("div", {
+    onClick: !titulo && onTitulo ? onTitulo : undefined,
+    title: !titulo && onTitulo ? "a história do Tempnext" : undefined,
     style: {
       fontFamily: "'Cormorant Garamond',Georgia,serif",
       fontSize: 18,
       fontWeight: 500,
+      cursor: !titulo && onTitulo ? "pointer" : "default",
       /* v333: texto TempnexT em cor afetiva profunda (não branco sobre claro) */
       color: "var(--user-color-deep, #2a201a)",
       letterSpacing: "-0.01em",
@@ -58151,9 +58155,67 @@ function TempnexTopBarConectada(_ref270) {
     titulo: titulo,
     onBack: onBack,
     onUpdateUser: handlers.onUpdateUser,
+    onTitulo: handlers.onTitulo,
     onNotificacoes: handlers.onNotificacoes,
     onAlertasRegiao: handlers.onAlertasRegiao
   });
+}
+
+// v361: TelaHistoria - tela contemplativa (Camada 1) aberta ao tocar o nome no topo.
+// Cor via --user-color (terra default). Back generico (tela != inicio) ja volta pra home.
+function TelaHistoria(_refHist) {
+  var onBack = _refHist.onBack;
+  var ACC = "var(--user-color, #c06a3e)";
+  var DEEP = "var(--user-color-deep, #8a4a2a)";
+  var BLUE = "var(--user-color-second, #3878b8)";
+  var INK = "#46362b";
+  var COR = "'Cormorant Garamond',Georgia,serif";
+  var SGN = "'Italianno',cursive";
+  function ruleEl(w, op, mar, k) {
+    return React.createElement("div", { key: k, style: { width: w, height: 1, background: ACC, opacity: op, margin: mar } });
+  }
+  var pStyle = { fontFamily: COR, fontSize: 19, lineHeight: 1.64, color: INK, margin: 0 };
+  var kids = [];
+  kids.push(React.createElement("div", { key: "hero", style: { textAlign: "center", marginBottom: 28 } },
+    React.createElement("p", { style: { fontFamily: COR, fontSize: 44, fontWeight: 500, margin: 0, lineHeight: 1 } },
+      React.createElement("span", { style: { color: ACC } }, "Tempnex"),
+      React.createElement("span", { style: { color: BLUE } }, "T")),
+    React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 19, color: ACC, margin: "10px 0 0" } }, "o tempo no seu lugar"),
+    ruleEl(42, 0.4, "22px auto 0", "rh")
+  ));
+  kids.push(React.createElement("p", { key: "p0", style: pStyle },
+    React.createElement("span", { style: { fontFamily: COR, "float": "left", fontSize: 56, lineHeight: 0.78, color: ACC, margin: "5px 9px 0 0", fontWeight: 500 } }, "H"),
+    "\xE1 \xE9pocas que continuam morando na gente mesmo depois de ter ido embora delas. A escola, a esquina, o quintal de uma certa idade \u2014 lugares que guardam as pessoas que um dia foram presentes em nossas vidas, e que o tempo, devagar, foi levando pra longe."));
+  kids.push(ruleEl(24, 0.26, "22px auto", "r1"));
+  kids.push(React.createElement("p", { key: "p1", style: pStyle },
+    "O Tempnext nasceu de uma saudade. Da vontade de saber por onde andam os rostos daquele tempo, daquele lugar, daquele endere\xE7o. N\xE3o para traz\xEA-los de volta \u2014 isso o tempo n\xE3o devolve \u2014 mas para descobrir que talvez um dia nos aproximemos sem saber, nos mesmos lugares onde a vida passa."));
+  kids.push(ruleEl(24, 0.26, "22px auto", "r2"));
+  kids.push(React.createElement("p", { key: "p2", style: pStyle },
+    "Porque um lugar \xE9 mais do que um endere\xE7o. \xC9 o passado. \xC9 mais do que uma hist\xF3ria."));
+  kids.push(ruleEl(24, 0.26, "22px auto", "r3"));
+  kids.push(React.createElement("p", { key: "p3", style: pStyle },
+    "Aqui voc\xEA guarda o seu tempo, antes que a mem\xF3ria se apague aos poucos. Marca o presente, enquanto ele ainda \xE9 agora. E deixa guardada uma lembran\xE7a que s\xF3 o ",
+    React.createElement("span", { style: { color: BLUE } }, "futuro"),
+    " saber\xE1 abrir \u2014 uma c\xE1psula que o tempo entrega no dia certo, para as pessoas certas, quando voc\xEA talvez j\xE1 tenha esquecido que a deixou ali."));
+  kids.push(ruleEl(24, 0.26, "22px auto", "r4"));
+  kids.push(React.createElement("p", { key: "p4", style: pStyle },
+    "O mundo n\xE3o para de rolar. Aqui, pede o contr\xE1rio. Pede que voc\xEA desacelere. Que lembre devagar, sem pressa de mostrar. Que repare como o tempo aproxima quem nunca se viu \u2014 e quem h\xE1 muito n\xE3o se v\xEA."));
+  kids.push(React.createElement("div", { key: "fim", style: { textAlign: "center", marginTop: 34 } },
+    ruleEl(42, 0.4, "0 auto 18px", "rf"),
+    React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 21, color: DEEP, margin: "0 0 14px", lineHeight: 1.4 } }, "lembrar \xE9 estar em dois tempos ao mesmo tempo"),
+    React.createElement("p", { style: { fontFamily: SGN, fontSize: 42, color: ACC, lineHeight: 1, margin: "0 0 14px" } }, "o tempo n\xE3o para \u2014 ele aproxima"),
+    React.createElement("p", { style: { fontFamily: COR, fontSize: 21, fontWeight: 500, margin: 0, lineHeight: 1 } },
+      React.createElement("span", { style: { color: ACC } }, "Tempnex"),
+      React.createElement("span", { style: { color: BLUE } }, "T"))
+  ));
+  var header = React.createElement("div", { style: { flexShrink: 0, height: 48, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "max(0px, env(safe-area-inset-top)) 16px 0", borderBottom: "0.5px solid var(--user-color-deep-18, rgba(138,74,42,0.18))", boxSizing: "border-box" } },
+    React.createElement("button", { onClick: onBack, title: "Voltar", "aria-label": "Voltar", style: { background: "none", border: "none", color: DEEP, cursor: "pointer", opacity: 0.75, padding: 4, display: "flex", alignItems: "center" } },
+      React.createElement("svg", { width: 16, height: 16, viewBox: "0 0 20 20", fill: "none" },
+        React.createElement("path", { d: "M13 4l-6 6 6 6", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" }))),
+    React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: "#b6a89b" } }, "a hist\xF3ria"));
+  var body = React.createElement("div", { style: { flex: 1, overflowY: "auto", WebkitOverflowScrolling: "touch" } },
+    React.createElement("div", { style: { maxWidth: 540, margin: "0 auto", padding: "32px 24px 56px" } }, kids));
+  return React.createElement("div", { style: { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 250, background: "#FAF7F2", display: "flex", flexDirection: "column" } }, header, body);
 }
 
 // ═════════════════════════════════════════════════════════════════
@@ -58485,6 +58547,12 @@ function App() {
     var countAzul = (alertsNovos ? alertsNovos.length : 0) + (naoLidasRegionaisPersistidas || 0);
     window.__tnTopBar = {
       onUpdateUser: setUser,
+      onTitulo: function onTitulo() {
+        try {
+          window.history.pushState({ tnExt: "historia" }, "", window.location.href);
+        } catch (_unusedHist) {}
+        setTela("historia");
+      },
       onNotificacoes: function onNotificacoes() {
         try {
           window.history.pushState({
@@ -60530,7 +60598,9 @@ function App() {
     style: {
       position: "relative"
     }
-  }, tela === "inicio" && /*#__PURE__*/React.createElement(HomeV9Preview, {
+  }, tela === "historia" && /*#__PURE__*/React.createElement(TelaHistoria, {
+    onBack: function onBackHist() { return setTela("inicio"); }
+  }), tela === "inicio" && /*#__PURE__*/React.createElement(HomeV9Preview, {
     user: user,
     onBack: null,
     seed: homeSeed,
