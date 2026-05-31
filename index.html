@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v370 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v371 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -41338,7 +41338,7 @@ function MenuRapido(_ref185) {
     if (typeof window === "undefined" || !window.__tnSecao || window.__tnSecao.feito("guardar")) return null;
     return /*#__PURE__*/React.createElement("div", { style: { margin: "0 18px 14px", background: "var(--user-color-10, rgba(192,106,62,0.10))", border: "0.5px solid var(--user-color-30, rgba(192,106,62,0.3))", borderRadius: 12, padding: "10px 14px", display: "flex", gap: 10, alignItems: "center" } },
       /*#__PURE__*/React.createElement("span", { style: { color: "var(--user-color, #c06a3e)", fontSize: 16, flexShrink: 0, lineHeight: 1 } }, "\u24D8"),
-      /*#__PURE__*/React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 13, color: "#5a4d40", lineHeight: 1.4 } }, "Momento guarda uma foto com lugar e data. C\xE1psula abre no futuro. Quero ir marca um lugar do seu futuro."));
+      /*#__PURE__*/React.createElement("span", { style: { fontFamily: "system-ui,sans-serif", fontSize: 13, color: "#5a4d40", lineHeight: 1.4 } }, "Momento: registra uma foto com lugar e data. C\xE1psula: registra uma mem\xF3ria com data de abertura e quem pode ver. Quero ir: marca um lugar que voc\xEA pretende visitar."));
   })(), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "0 18px",
@@ -58238,15 +58238,14 @@ function TelaHistoria(_refHist) {
 // ═════════════════════════════════════════════════════════════════
 // v369: FaixaSecao - explica a tela. Visivel ate a pessoa realizar a acao; depois some. Chave = secao OU titulo normalizado.
 var TN_SECAO_TEXTO = {
-  inicio: "Seu in\xEDcio re\xFAne os momentos que voc\xEA guardou. Toque no + para guardar o primeiro.",
-  buscar: "Busque lugares e pessoas. Encontre quem passou por onde voc\xEA passou.",
-  olhar: "Aqui aparece quem viveu o mesmo lugar que voc\xEA, no mesmo tempo.",
-  perfil: "Seu perfil re\xFAne seus lugares, mem\xF3rias e c\xE1psulas. Toque na engrenagem para ajustes.",
-  lugares: "Os lugares onde voc\xEA esteve: onde morou, passou ou quer ir.",
-  capsulas: "Mem\xF3rias lacradas que abrem na data certa, para as pessoas certas.",
-  contatos: "As pessoas que passaram pelos seus lugares e tempos.",
-  "quem viveu seu tempo": "Pessoas que viveram o mesmo lugar que voc\xEA, no mesmo tempo.",
-  "sua regiao": "O que est\xE1 acontecendo perto de voc\xEA, agora."
+  inicio: "Lista dos momentos que voc\xEA registrou.",
+  buscar: "Pesquise lugares e pessoas por nome, cidade ou CEP.",
+  olhar: "Pessoas que registraram o mesmo lugar e per\xEDodo que voc\xEA.",
+  perfil: "Seus lugares, momentos, c\xE1psulas e contatos.",
+  lugar_imersivo: "Momentos e pessoas registrados neste lugar.",
+  lugar_perfil: "Dados do lugar e quem o registrou.",
+  momento_perfil: "Detalhes do momento e quem registrou o mesmo lugar e per\xEDodo.",
+  perfil_outro: "Lugares e per\xEDodos em comum com voc\xEA."
 };
 function tnNorm(t) {
   return (t || "").toString().toLowerCase()
@@ -58630,9 +58629,13 @@ function App() {
     if (typeof window !== "undefined") window.addEventListener("tn:secao", on);
     return function(){ if (typeof window !== "undefined") window.removeEventListener("tn:secao", on); };
   }, []);
-  // v370: perfil nao tem acao - marca realizado na 1a visita (faixa some na proxima vez)
+  // v371: telas de ver (perfil + imersao) - faixa aparece na 1a visita e some ao SAIR (cleanup),
+  // pra nao desaparecer antes da pessoa ler.
   useEffect(function(){
-    if (tela === "perfil") { try { window.__tnSecao && window.__tnSecao.realizar("perfil"); } catch(e){} }
+    var verUmaVez = { perfil: 1, lugar_imersivo: 1, lugar_perfil: 1, momento_perfil: 1, perfil_outro: 1 };
+    var atual = tela;
+    if (!verUmaVez[atual]) return;
+    return function(){ try { window.__tnSecao && window.__tnSecao.realizar(atual); } catch(e){} };
   }, [tela]);
   // v214: aplica a paleta AFETIVA do user no <html> via CSS variables
   // Reativo: muda imediatamente quando user troca paleta no perfil
@@ -60659,7 +60662,8 @@ function App() {
     }
   }, (function(){
     // v370: fonte unica da faixa explicativa - por tela real (inicio/buscar/cruzamentos/perfil)
-    var mapa = { inicio: "inicio", buscar: "buscar", cruzamentos: "olhar", perfil: "perfil" };
+    var mapa = { inicio: "inicio", buscar: "buscar", cruzamentos: "olhar", perfil: "perfil",
+      lugar_imersivo: "lugar_imersivo", lugar_perfil: "lugar_perfil", momento_perfil: "momento_perfil", perfil_outro: "perfil_outro" };
     var sec = mapa[tela];
     if (!sec) return null;
     return /*#__PURE__*/React.createElement(FaixaSecao, { secao: sec, key: "faixa-" + sec });
