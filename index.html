@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v381 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v382 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -15338,12 +15338,14 @@ function BigCard(_ref81) {
       alignItems: "flex-start"
     }
   }, /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() { if (onView) onView(p); },
     style: {
       width: 62,
       height: 62,
       borderRadius: "50%",
       flexShrink: 0,
       overflow: "hidden",
+      cursor: "pointer",
       background: hasPhoto ? "transparent" : "linear-gradient(135deg, var(--user-color-soft), var(--user-color-deep))",
       display: "flex",
       alignItems: "center",
@@ -15441,53 +15443,7 @@ function BigCard(_ref81) {
       color: T.muted,
       marginTop: 4
     }
-  }, p.city, p.state ? ", ".concat(p.state) : "", p.year_start || p.year_end ? " \xB7 ".concat(p.year_start || "?", "\u2013").concat(p.year_end || "?") : ""))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      gap: 14,
-      marginTop: 14,
-      paddingTop: 12,
-      borderTop: "0.5px dashed ".concat(T.border)
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      return onView(p);
-    },
-    style: {
-      background: "none",
-      border: "none",
-      cursor: "pointer",
-      color: "var(--user-color-deep)",
-      fontFamily: "inherit",
-      fontSize: 13,
-      fontWeight: 500,
-      padding: 0,
-      textDecoration: "underline",
-      textDecorationThickness: "0.5px",
-      textUnderlineOffset: "3px"
-    }
-  }, "Ver perfil"), /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      if (statusSeguir === "aceito") { if (onView) onView(p); return; }
-      if (onAdd) onAdd(p);
-    },
-    style: {
-      background: statusSeguir === "aceito" ? "rgba(46,125,94,0.12)" : statusSeguir === "pendente" ? "rgba(42,32,26,0.06)" : "var(--user-color)",
-      border: statusSeguir === "pendente" ? "1px solid rgba(42,32,26,0.18)" : "none",
-      color: statusSeguir === "aceito" ? "#2E7D5E" : statusSeguir === "pendente" ? "#8a8178" : "var(--user-text-on-color)",
-      cursor: "pointer",
-      fontFamily: "inherit",
-      fontSize: 12,
-      fontWeight: 500,
-      padding: "7px 14px",
-      borderRadius: 999,
-      display: "flex",
-      alignItems: "center",
-      gap: 5
-    }
-  }, /*#__PURE__*/React.createElement("span", null, statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar"))))));
+  }, p.city, p.state ? ", ".concat(p.state) : "", p.year_start || p.year_end ? " \xB7 ".concat(p.year_start || "?", "\u2013").concat(p.year_end || "?") : ""))))));
 }
 
 // ── Modal: Reencontrar ── REMOVIDO em v333r ── 83 linhas (só era usado pelo Inicio legado, também apagado)
