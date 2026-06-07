@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v377 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v378 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -20269,6 +20269,25 @@ function Notificacoes(_ref92) {
     _useState88 = _slicedToArray(_useState87, 2),
     gruposExpandidos = _useState88[0],
     setGruposExpandidos = _useState88[1]; // v320h: ids dos grupos abertos
+  // v378: solicitacoes de seguir ja resolvidas (aceitas/recusadas) nesta sessao
+  var _useStateSol = useState({}), solResolvidas = _useStateSol[0], setSolResolvidas = _useStateSol[1];
+  var aceitarSeguir = function aceitarSeguir(n) {
+    var actorId = n.actor_id;
+    if (!actorId || !user) return;
+    setSolResolvidas(function (m) { var x = _objectSpread({}, m); x[n.id] = "aceito"; return x; });
+    db.from("contacts").update({ status: "aceito" }).eq("user_id", actorId).eq("contact_id", user.id).then(function (r) {
+      if (r && r.error) { console.error("aceitar seguir:", r.error); return; }
+      try { criarNotificacao({ tipo: "seguindo", recipientId: actorId, actorId: user.id }); } catch (e) {}
+    });
+  };
+  var recusarSeguir = function recusarSeguir(n) {
+    var actorId = n.actor_id;
+    if (!actorId || !user) return;
+    setSolResolvidas(function (m) { var x = _objectSpread({}, m); x[n.id] = "recusado"; return x; });
+    db.from("contacts")["delete"]().eq("user_id", actorId).eq("contact_id", user.id).then(function (r) {
+      if (r && r.error) console.error("recusar seguir:", r.error);
+    });
+  };
   // v323d: aba ativa — "geral" (outros) ou "eu" (você é o actor)
   var _useState89 = useState("geral"),
     _useState90 = _slicedToArray(_useState89, 2),
@@ -21094,7 +21113,17 @@ function Notificacoes(_ref92) {
         fontFamily: "'Cormorant Garamond',Georgia,serif",
         fontStyle: "italic"
       }
-    }, texto), meta.texto && /*#__PURE__*/React.createElement("div", {
+    }, texto), n.tipo === "solicitou_seguir" && !solResolvidas[n.id] ? /*#__PURE__*/React.createElement("div", {
+      style: { display: "flex", gap: 8, marginTop: 8 }
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: function (e) { e.stopPropagation(); aceitarSeguir(n); },
+      style: { flex: 1, padding: "7px 10px", borderRadius: 9, background: "var(--user-color, #c06a3e)", border: "none", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }
+    }, "Aceitar"), /*#__PURE__*/React.createElement("button", {
+      onClick: function (e) { e.stopPropagation(); recusarSeguir(n); },
+      style: { flex: 1, padding: "7px 10px", borderRadius: 9, background: "transparent", border: "1px solid rgba(42,32,26,0.2)", color: "#8a8178", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }
+    }, "Recusar")) : n.tipo === "solicitou_seguir" && solResolvidas[n.id] ? /*#__PURE__*/React.createElement("div", {
+      style: { marginTop: 6, fontSize: 12, color: T.muted, fontStyle: "italic", fontFamily: "'Cormorant Garamond',Georgia,serif" }
+    }, solResolvidas[n.id] === "aceito" ? "solicita\xE7\xE3o aceita" : "solicita\xE7\xE3o recusada") : null, meta.texto && /*#__PURE__*/React.createElement("div", {
       style: {
         marginTop: 6,
         paddingLeft: 10,
