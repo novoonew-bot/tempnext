@@ -813,7 +813,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v374 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v375 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -11641,7 +11641,9 @@ function CardMapaVida(_ref51) {
     onSeguir = _ref51.onSeguir,
     onEditarPerfil = _ref51.onEditarPerfil,
     _ref51$isContact = _ref51.isContact,
-    isContact = _ref51$isContact === void 0 ? false : _ref51$isContact;
+    isContact = _ref51$isContact === void 0 ? false : _ref51$isContact,
+    _ref51$statusSeg = _ref51.statusSeguir,
+    statusSeguir = _ref51$statusSeg === void 0 ? "nenhum" : _ref51$statusSeg;
   var ctx = ehDono ? "p" : "o";
   var _React$useState137 = React.useState("lugares"),
     _React$useState138 = _slicedToArray(_React$useState137, 2),
@@ -12254,9 +12256,9 @@ function CardMapaVida(_ref51) {
   !ehDono ? React.createElement("button", {
     className: "cmv-acao-btn" + (isContact ? " cmv-acao-seguindo" : ""),
     onClick: function onClick() {
-      if (!isContact && onSeguir) onSeguir();
+      if (statusSeguir === "nenhum" && onSeguir) onSeguir();
     }
-  }, isContact ? "✓ Seguindo" : "+ Seguir") : onEditarPerfil ? React.createElement("button", {
+  }, statusSeguir === "aceito" ? "✓ Seguindo" : statusSeguir === "pendente" ? "⏳ Solicitado" : "+ Seguir") : onEditarPerfil ? React.createElement("button", {
     className: "cmv-acao-btn cmv-acao-editar",
     onClick: onEditarPerfil
   }, "editar perfil") : null);
@@ -15239,6 +15241,7 @@ function BigCard(_ref81) {
     onView = _ref81.onView,
     onAdd = _ref81.onAdd,
     isContact = _ref81.isContact,
+    statusSeguir = _ref81.statusSeguir || "nenhum",
     _ref81$delay = _ref81.delay,
     delay = _ref81$delay === void 0 ? 0 : _ref81$delay,
     _ref81$userLogado = _ref81.userLogado,
@@ -20290,7 +20293,7 @@ function Notificacoes(_ref92) {
       return "lug:".concat(m.alvoId);
     }
     // "Começou a seguir" — dedupa por actor (mesmo seguidor não vira 5 cards)
-    if (n.tipo === "seguindo" && n.actor_id) {
+    if ((n.tipo === "seguindo" || n.tipo === "solicitou_seguir") && n.actor_id) {
       return "seg:".concat(n.actor_id);
     }
     return null; // não agrupa
@@ -20593,6 +20596,21 @@ function Notificacoes(_ref92) {
         }, meta.lugar || "um lugar"), " \u2014 voc\xEA esteve a\xED");
         onClick = function onClick() {
           return abrirMomentoDaNotif(n);
+        };
+        break;
+      case "solicitou_seguir":
+        simbolo = "✦";
+        texto = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("strong", {
+          style: {
+            color: T.text,
+            fontWeight: 700,
+            fontSize: 13,
+            fontFamily: "Georgia,serif",
+            fontStyle: "normal"
+          }
+        }, nome), " quer seguir voc\xEA");
+        onClick = function onClick() {
+          if (actor.id && onAbrirPerfil) onAbrirPerfil(actor);
         };
         break;
       case "seguindo":
@@ -34695,7 +34713,8 @@ function Perfil(_ref156) {
     onBack = _ref156.onBack,
     onFollow = _ref156.onFollow,
     onMsg = _ref156.onMsg,
-    isContact = _ref156.isContact;
+    isContact = _ref156.isContact,
+    statusSeguir = _ref156.statusSeguir || "nenhum";
   // Se visualizando outro user, `user` JÁ É o outro user (passado pela rota)
   // userLogado é quem está navegando (pra saber se é o próprio ou não)
   var perfilExibido = user;
@@ -36468,7 +36487,7 @@ function Perfil(_ref156) {
       fontFamily: "inherit",
       letterSpacing: "0.01em"
     }
-  }, isContact ? "✓ Seguindo" : "+ Seguir"), /*#__PURE__*/React.createElement("button", {
+  }, statusSeguir === "aceito" ? "✓ Seguindo" : statusSeguir === "pendente" ? "⏳ Solicitado" : "+ Seguir"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       if (onMsg) onMsg(perfilExibido);
     },
@@ -38325,7 +38344,7 @@ function ModalPerfil(_ref169) {
       fontFamily: "inherit",
       letterSpacing: "0.01em"
     }
-  }, isContact ? "✓ Seguindo" : "+ Seguir"), /*#__PURE__*/React.createElement("button", {
+  }, statusSeguir === "aceito" ? "✓ Seguindo" : statusSeguir === "pendente" ? "⏳ Solicitado" : "+ Seguir"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       onChat(p, "msg");
       onClose();
@@ -59678,7 +59697,7 @@ function App() {
           case 0:
             _context164.p = 0;
             _context164.n = 1;
-            return dbRead.from("contacts").select("contact_id, rel, is_family, profiles!contacts_contact_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type)").eq("user_id", user.id);
+            return dbRead.from("contacts").select("contact_id, rel, is_family, status, profiles!contacts_contact_id_fkey(id,name,first_name,last_name,nick,avatar_url,city,state,year_start,year_end,era,place_name,place_type)").eq("user_id", user.id);
           case 1:
             _yield$dbRead$from$se79 = _context164.v;
             data = _yield$dbRead$from$se79.data;
@@ -59690,7 +59709,8 @@ function App() {
             loaded = data.map(function (c) {
               return _objectSpread(_objectSpread({}, c.profiles), {}, {
                 _rel: c.rel || "conhecido",
-                _is_family: !!c.is_family
+                _is_family: !!c.is_family,
+                _status: c.status || "aceito"
               });
             }).filter(Boolean);
             setContacts(loaded);
@@ -59857,7 +59877,8 @@ function App() {
             return _context171.a(2);
           case 3:
             updated = [].concat(_toConsumableArray(contacts), [_objectSpread(_objectSpread({}, p), {}, {
-              _rel: rel
+              _rel: rel,
+              _status: "pendente"
             })]);
             setContacts(updated);
             try {
@@ -59872,7 +59893,8 @@ function App() {
             return db.from("contacts").upsert({
               user_id: user.id,
               contact_id: p.id,
-              rel: rel
+              rel: rel,
+              status: "pendente"
             }, {
               onConflict: "user_id,contact_id"
             });
@@ -59905,7 +59927,7 @@ function App() {
             // Notifica quem foi seguido
             if (p.id && p.id !== user.id) {
               criarNotificacao({
-                tipo: "seguindo",
+                tipo: "solicitou_seguir",
                 recipientId: p.id,
                 actorId: user.id
               });
@@ -60222,6 +60244,12 @@ function App() {
     return !!contacts.find(function (c) {
       return c.id === p.id;
     });
+  };
+  // v375: status do seguir: "nenhum" | "pendente" | "aceito"
+  var statusSeguir = function statusSeguir(p) {
+    var c = contacts.find(function (c) { return c.id === (p && p.id); });
+    if (!c) return "nenhum";
+    return c._status === "pendente" ? "pendente" : "aceito";
   };
   var unreadCount = Object.entries(msgs).filter(function (_ref279) {
     var _ref280 = _slicedToArray(_ref279, 2),
@@ -60889,6 +60917,7 @@ function App() {
       abrirChat(p, "msg");
     },
     isContact: isContact(perfilVisualizando),
+    statusSeguir: statusSeguir(perfilVisualizando),
     onVasculhar: function onVasculhar() {
       return setTela("perfil_vasculhar");
     },
@@ -60920,7 +60949,8 @@ function App() {
     onMsg: function onMsg(p) {
       return abrirChat(p, "msg");
     },
-    isContact: isContact(perfilVisualizando)
+    isContact: isContact(perfilVisualizando),
+    statusSeguir: statusSeguir(perfilVisualizando)
   }), tela === "momento_perfil" && momentoVisualizando && /*#__PURE__*/React.createElement(PerfilMomentoFiltrado, {
     momento: momentoVisualizando,
     user: user,
@@ -61658,7 +61688,8 @@ function App() {
     },
     onChat: abrirChat,
     user: user,
-    isContact: isContact(modal)
+    isContact: isContact(modal),
+    statusSeguir: statusSeguir(modal)
   }), chat && user && /*#__PURE__*/React.createElement(ModalChat, {
     user: user,
     dest: chat.dest,
