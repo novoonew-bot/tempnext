@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v379 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v380 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -59958,12 +59958,18 @@ function App() {
             if (window.tnToast) window.tnToast("não consegui adicionar o contato", "verifique a conexão");
             return _context171.a(2);
           case 8:
-            // Notifica quem foi seguido
+            // v380: notifica APENAS se ainda nao existe notificacao de solicitacao desse par.
+            // Dedup no banco (nao confia no estado local, que pode estar defasado entre telas).
             if (p.id && p.id !== user.id) {
-              criarNotificacao({
-                tipo: "solicitou_seguir",
-                recipientId: p.id,
-                actorId: user.id
+              dbRead.from("notificacoes").select("id").eq("user_id", p.id).eq("actor_id", user.id).eq("tipo", "solicitou_seguir").limit(1).then(function (rN) {
+                var jaTem = rN && rN.data && rN.data.length > 0;
+                if (!jaTem) {
+                  criarNotificacao({
+                    tipo: "solicitou_seguir",
+                    recipientId: p.id,
+                    actorId: user.id
+                  });
+                }
               });
             }
           case 9:
