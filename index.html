@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v380 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v381 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -12259,7 +12259,7 @@ function CardMapaVida(_ref51) {
     onClick: function onClick() {
       if (statusSeguir === "nenhum" && onSeguir) onSeguir();
     }
-  }, statusSeguir === "aceito" ? "Seguindo" : statusSeguir === "pendente" ? "Solicitado" : "Seguir") : onEditarPerfil ? React.createElement("button", {
+  }, statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar") : onEditarPerfil ? React.createElement("button", {
     className: "cmv-acao-btn cmv-acao-editar",
     onClick: onEditarPerfil
   }, "editar perfil") : null);
@@ -15468,14 +15468,15 @@ function BigCard(_ref81) {
       textDecorationThickness: "0.5px",
       textUnderlineOffset: "3px"
     }
-  }, "Ver perfil"), isContact ? /*#__PURE__*/React.createElement("button", {
+  }, "Ver perfil"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
-      return onView(p);
+      if (statusSeguir === "aceito") { if (onView) onView(p); return; }
+      if (onAdd) onAdd(p);
     },
     style: {
-      background: "rgba(46,125,94,0.12)",
-      border: "none",
-      color: "#2E7D5E",
+      background: statusSeguir === "aceito" ? "rgba(46,125,94,0.12)" : statusSeguir === "pendente" ? "rgba(42,32,26,0.06)" : "var(--user-color)",
+      border: statusSeguir === "pendente" ? "1px solid rgba(42,32,26,0.18)" : "none",
+      color: statusSeguir === "aceito" ? "#2E7D5E" : statusSeguir === "pendente" ? "#8a8178" : "var(--user-text-on-color)",
       cursor: "pointer",
       fontFamily: "inherit",
       fontSize: 12,
@@ -15486,46 +15487,7 @@ function BigCard(_ref81) {
       alignItems: "center",
       gap: 5
     }
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: "11",
-    height: "9",
-    viewBox: "0 0 13 11",
-    fill: "none"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M1 5.5l4 4L12 1",
-    stroke: "#2E7D5E",
-    strokeWidth: "1.8",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  })), /*#__PURE__*/React.createElement("span", null, "contato")) : /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      return onAdd(p);
-    },
-    style: {
-      background: "var(--user-color)",
-      border: "none",
-      color: "var(--user-text-on-color)",
-      cursor: "pointer",
-      fontFamily: "inherit",
-      fontSize: 12,
-      fontWeight: 500,
-      padding: "7px 14px",
-      borderRadius: 999,
-      display: "flex",
-      alignItems: "center",
-      gap: 5
-    }
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: "11",
-    height: "11",
-    viewBox: "0 0 11 11",
-    fill: "none"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M5.5 1v9M1 5.5h9",
-    stroke: "currentColor",
-    strokeWidth: "1.6",
-    strokeLinecap: "round"
-  })), /*#__PURE__*/React.createElement("span", null, "contato"))))));
+  }, /*#__PURE__*/React.createElement("span", null, statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar"))))));
 }
 
 // ── Modal: Reencontrar ── REMOVIDO em v333r ── 83 linhas (só era usado pelo Inicio legado, também apagado)
@@ -20275,8 +20237,14 @@ function Notificacoes(_ref92) {
     var actorId = n.actor_id;
     if (!actorId || !user) return;
     setSolResolvidas(function (m) { var x = _objectSpread({}, m); x[n.id] = "aceito"; return x; });
+    // 1) aceita a linha do solicitante (A->B)
     db.from("contacts").update({ status: "aceito" }).eq("user_id", actorId).eq("contact_id", user.id).then(function (r) {
-      if (r && r.error) { console.error("aceitar seguir:", r.error); return; }
+      if (r && r.error) { console.error("aceitar conexao:", r.error); return; }
+      // 2) MUTUO: cria a linha reciproca (B->A) ja aceita, sem nova solicitacao
+      db.from("contacts").upsert({ user_id: user.id, contact_id: actorId, rel: "conhecido", status: "aceito" }, { onConflict: "user_id,contact_id" }).then(function (r2) {
+        if (r2 && r2.error) console.error("conexao reciproca:", r2.error);
+      });
+      // 3) avisa o solicitante que foi aceito (conectados)
       try { criarNotificacao({ tipo: "seguindo", recipientId: actorId, actorId: user.id }); } catch (e) {}
     });
   };
@@ -20628,7 +20596,7 @@ function Notificacoes(_ref92) {
             fontFamily: "Georgia,serif",
             fontStyle: "normal"
           }
-        }, nome), " quer seguir voc\xEA");
+        }, nome), " quer se conectar com voc\xEA");
         onClick = function onClick() {
           if (actor.id && onAbrirPerfil) onAbrirPerfil(actor);
         };
@@ -20643,7 +20611,7 @@ function Notificacoes(_ref92) {
             fontFamily: "Georgia,serif",
             fontStyle: "normal"
           }
-        }, nome), " come\xE7ou a seguir voc\xEA");
+        }, nome), " se conectou com voc\xEA");
         onClick = function onClick() {
           if (actor.id && onAbrirPerfil) onAbrirPerfil(actor);
         };
@@ -31049,7 +31017,7 @@ function Cruzamentos(_ref133) {
       stroke: "currentColor",
       strokeWidth: "2",
       strokeLinecap: "round"
-    })), "conectar"));
+    })), "Conectar"));
   }))), !soCruzamentos && capsulasProximas.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SectionHeader, {
     titulo: "c\xE1psulas perto de abrir",
     subtitulo: "lacradas na sua regi\xE3o, abrem em breve",
@@ -36520,7 +36488,7 @@ function Perfil(_ref156) {
       fontFamily: "inherit",
       letterSpacing: "0.01em"
     }
-  }, statusSeguir === "aceito" ? "Seguindo" : statusSeguir === "pendente" ? "Solicitado" : "Seguir"), /*#__PURE__*/React.createElement("button", {
+  }, statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       if (onMsg) onMsg(perfilExibido);
     },
@@ -38378,7 +38346,7 @@ function ModalPerfil(_ref169) {
       fontFamily: "inherit",
       letterSpacing: "0.01em"
     }
-  }, statusSeguir === "aceito" ? "Seguindo" : statusSeguir === "pendente" ? "Solicitado" : "Seguir"), /*#__PURE__*/React.createElement("button", {
+  }, statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       onChat(p, "msg");
       onClose();
