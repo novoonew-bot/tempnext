@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v378 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v379 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -34742,6 +34742,7 @@ function Perfil(_ref156) {
     userLogado = _ref156.userLogado,
     onBack = _ref156.onBack,
     onFollow = _ref156.onFollow,
+    onDeixarSeguir = _ref156.onDeixarSeguir,
     onMsg = _ref156.onMsg,
     isContact = _ref156.isContact,
     statusSeguir = _ref156.statusSeguir || "nenhum";
@@ -36502,7 +36503,9 @@ function Perfil(_ref156) {
     }
   }, /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
-      if (!isContact && onFollow) onFollow(perfilExibido);
+      if (statusSeguir === "nenhum") { if (onFollow) onFollow(perfilExibido); }
+      else if (statusSeguir === "pendente") { if (onDeixarSeguir) onDeixarSeguir(perfilExibido); }
+      else if (statusSeguir === "aceito") { if (typeof window !== "undefined" && window.confirm("Deixar de seguir?")) { if (onDeixarSeguir) onDeixarSeguir(perfilExibido); } }
     },
     style: {
       flex: 1,
@@ -60944,6 +60947,9 @@ function App() {
     onFollow: function onFollow(p) {
       return addContact(p);
     },
+    onDeixarSeguir: function onDeixarSeguir(p) {
+      return removeContact(p);
+    },
     onMsg: function onMsg(p) {
       abrirChat(p, "msg");
     },
@@ -60976,6 +60982,9 @@ function App() {
     },
     onFollow: function onFollow(p) {
       return addContact(p);
+    },
+    onDeixarSeguir: function onDeixarSeguir(p) {
+      return removeContact(p);
     },
     onMsg: function onMsg(p) {
       return abrirChat(p, "msg");
