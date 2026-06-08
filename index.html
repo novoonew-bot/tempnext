@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v384 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v385 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -12245,6 +12245,11 @@ function CardMapaVida(_ref51) {
     !ehDono && onExplorar ? React.createElement("button", {
       className: "cmv-explorar-btn",
       onClick: function onClick() {
+        // v385: registros so abrem se conectado (aceito)
+        if (statusSeguir !== "aceito") {
+          if (typeof window !== "undefined" && window.tnToast) window.tnToast("conecte-se para ver", "os registros ficam vis\xEDveis quando voc\xEAs se conectarem");
+          return;
+        }
         return onExplorar();
       }
     }, React.createElement("span", null, labelBtn), React.createElement("span", {
