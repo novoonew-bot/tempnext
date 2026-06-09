@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v392 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v393 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -9832,34 +9832,7 @@ function MemoriasFeed(_ref40) {
       memoria: m,
       pessoa: pessoa,
       userLogado: userLogado
-    }), ehDono && !emEdicao ? React.createElement("button", {
-      onClick: function onClick() {
-        return abrirEdicao(m);
-      },
-      title: "editar esta memória",
-      style: {
-        background: "transparent",
-        border: "none",
-        cursor: "pointer",
-        padding: "4px 6px",
-        color: "var(--user-color-deep, #5a4a38)",
-        display: "flex",
-        alignItems: "center"
-      }
-    }, React.createElement("svg", {
-      width: 16,
-      height: 16,
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: 1.8,
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    }, React.createElement("path", {
-      d: "M12 20h9"
-    }), React.createElement("path", {
-      d: "M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
-    }))) : null)),
+    }), null)),
     // QUOTE — em modo edição vira textarea auto-grow + botões compactos
     // v329z4: textarea começa pequena (1 linha) e cresce conforme o texto.
     //         Botões "cancelar" / "salvar" aparecem logo abaixo, sempre visíveis,
@@ -9972,9 +9945,33 @@ function MemoriasFeed(_ref40) {
       strokeLinejoin: "round"
     }, React.createElement("path", {
       d: "M5 12l5 5L20 7"
-    })), salvando ? "salvando..." : "salvar"))) : textoExibido ? React.createElement("p", {
-      className: "verso-serif verso-capitalize mem-feed-quote"
-    }, "\"".concat(textoExibido, "\"")) : null,
+    })), salvando ? "salvando..." : "salvar"))) : textoExibido || ehDono ? React.createElement("p", {
+      className: "verso-serif verso-capitalize mem-feed-quote",
+      contentEditable: ehDono,
+      suppressContentEditableWarning: true,
+      spellCheck: false,
+      onBlur: ehDono ? function (e) {
+        var raw = (e.currentTarget.textContent || "").replace(/^\u201C|\u201D$|^"|"$/g, "").trim();
+        var antigo = (textoExibido || "").trim();
+        if (raw === antigo) { e.currentTarget.textContent = "\u201C" + antigo + "\u201D"; return; }
+        db.from("momentos").update({ texto: raw }).eq("id", m.id).select().then(function (r) {
+          if (r.error || !(r.data && r.data.length)) {
+            if (window.tnToast) window.tnToast("erro ao salvar", (r.error && r.error.message) || "");
+            e.currentTarget.textContent = "\u201C" + antigo + "\u201D";
+            return;
+          }
+          setOverrides(function (prev) {
+            return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, m.id, _objectSpread(_objectSpread({}, prev[m.id] || {}), {}, { texto: raw })));
+          });
+          if (window.tnToast) window.tnToast("mem\xF3ria atualizada", "");
+        });
+      } : null,
+      onKeyDown: ehDono ? function (e) {
+        if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); e.currentTarget.blur(); }
+        if (e.key === "Escape") { e.currentTarget.textContent = "\u201C" + (textoExibido || "") + "\u201D"; e.currentTarget.blur(); }
+      } : null,
+      style: ehDono ? { outline: "none", cursor: "text" } : null
+    }, "\u201C".concat(textoExibido || "", "\u201D")) : null,
     // v274: ComentariosInline — só renderiza quando aberto pra esta memória
     React.createElement(ComentariosInline, {
       alvoTipo: "momento",
