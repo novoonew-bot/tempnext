@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v389 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v390 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -9563,16 +9563,13 @@ function MemoriasFeed(_ref40) {
             var textoMudou = novoTexto !== (m.texto || "").trim();
             var lugarMudou = novoLugar !== lugarOriginal;
             if (!(textoMudou || lugarMudou)) {
-              _context24.n = 2;
-              break;
-            }
-            cancelarEdicao();
-            return _context24.a(2);
-          case 2:
-            // Reabre se cancelou indevido (não deveria entrar aqui)
-            if (!(textoMudou || lugarMudou)) {
+              // nada mudou: so fecha o editor
+              cancelarEdicao();
               return _context24.a(2);
             }
+            _context24.n = 2;
+            break;
+          case 2:
             setSalvando(true);
             _context24.p = 3;
             _context24.n = 4;
