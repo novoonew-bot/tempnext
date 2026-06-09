@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v391 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v392 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -9547,7 +9547,7 @@ function MemoriasFeed(_ref40) {
   }
   function _salvarEdicao2() {
     _salvarEdicao2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(m) {
-      var novoTexto, _yield$db$from$update2, error, _t23;
+      var novoTexto, _yield$db$from$update2, error, _t23, patch;
       return _regenerator().w(function (_context24) {
         while (1) switch (_context24.p = _context24.n) {
           case 0:
@@ -9571,11 +9571,11 @@ function MemoriasFeed(_ref40) {
             break;
           case 2:
             setSalvando(true);
-            _context24.p = 3;
-            _context24.n = 4;
-            var patch = {};
+            patch = {};
             if (textoMudou) patch.texto = novoTexto;
             if (lugarMudou) patch.lugar = novoLugar || null;
+            _context24.p = 3;
+            _context24.n = 4;
             return db.from("momentos").update(patch).eq("id", m.id).select();
           case 4:
             _yield$db$from$update2 = _context24.v;
