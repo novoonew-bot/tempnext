@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v388 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v389 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -28229,90 +28229,7 @@ function Buscar(_ref122) {
       color: T.muted,
       marginTop: 2
     }
-  }, meusLugaresBuscar.length, " ", meusLugaresBuscar.length === 1 ? "cidade" : "cidades")))), onAbrirCruzamentos && meusLugaresBuscar.length > 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 22
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    onClick: onAbrirCruzamentos,
-    style: {
-      display: "flex",
-      alignItems: "center",
-      gap: 14,
-      padding: "14px 16px",
-      borderRadius: 14,
-      background: "linear-gradient(135deg, var(--user-color-soft) 0%, rgba(255,255,255,0.6) 100%)",
-      border: "1px solid var(--user-color-30)",
-      cursor: "pointer",
-      transition: "all 0.2s",
-      boxShadow: "0 2px 12px rgba(0,0,0,0.04)"
-    },
-    onMouseEnter: function onMouseEnter(e) {
-      e.currentTarget.style.transform = "translateY(-1px)";
-      e.currentTarget.style.boxShadow = "0 4px 18px rgba(0,0,0,0.08)";
-    },
-    onMouseLeave: function onMouseLeave(e) {
-      e.currentTarget.style.transform = "translateY(0)";
-      e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.04)";
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 42,
-      height: 42,
-      borderRadius: "50%",
-      background: "var(--user-color)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      flexShrink: 0
-    }
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: "20",
-    height: "20",
-    viewBox: "0 0 24 24",
-    fill: "none"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M8 4l4 4-4 4M16 8l-4-4M16 20l-4-4 4-4M8 16l4 4",
-    stroke: "var(--user-text-on-color)",
-    strokeWidth: "1.6",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      flex: 1,
-      minWidth: 0
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: "'Cormorant Garamond',Georgia,serif",
-      fontStyle: "italic",
-      fontSize: 17,
-      color: T.text,
-      fontWeight: 500,
-      letterSpacing: "0.01em"
-    }
-  }, "encontros no tempo"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: T.muted,
-      marginTop: 2,
-      fontStyle: "italic",
-      fontFamily: "Georgia,serif"
-    }
-  }, "pessoas que estiveram no mesmo lugar, na mesma \xE9poca")), /*#__PURE__*/React.createElement("svg", {
-    width: "14",
-    height: "14",
-    viewBox: "0 0 14 14",
-    fill: "none",
-    style: {
-      flexShrink: 0
-    }
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M5 3l4 4-4 4",
-    stroke: T.muted,
-    strokeWidth: "1.8",
-    strokeLinecap: "round"
-  })))), lugaresAlta.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, meusLugaresBuscar.length, " ", meusLugaresBuscar.length === 1 ? "cidade" : "cidades")))), lugaresAlta.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 22,
       marginTop: 14
@@ -60770,9 +60687,6 @@ function App() {
     onAbrirLugares: function onAbrirLugares() {
       return setTela("meus_lugares");
     },
-    onAbrirCruzamentos: function onAbrirCruzamentos() {
-      return setTela("encontros_tempo");
-    }
   }), tela === "cruzamentos" && user && /*#__PURE__*/React.createElement(Cruzamentos, {
     user: user,
     onBack: function onBack() {
