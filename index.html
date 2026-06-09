@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v390 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v391 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -9576,15 +9576,19 @@ function MemoriasFeed(_ref40) {
             var patch = {};
             if (textoMudou) patch.texto = novoTexto;
             if (lugarMudou) patch.lugar = novoLugar || null;
-            return db.from("momentos").update(patch).eq("id", m.id);
+            return db.from("momentos").update(patch).eq("id", m.id).select();
           case 4:
             _yield$db$from$update2 = _context24.v;
             error = _yield$db$from$update2.error;
-            if (!error) {
-              _context24.n = 5;
-              break;
+            console.log("[edit memoria] id:", m.id, "patch:", patch, "linhas afetadas:", (_yield$db$from$update2.data || []).length, "erro:", error);
+            if (error) { throw error; }
+            if ((_yield$db$from$update2.data || []).length === 0) {
+              if (window.tnToast) window.tnToast("nao salvou", "nenhuma linha foi atualizada (id: " + m.id + ")");
+              setSalvando(false);
+              return _context24.a(2);
             }
-            throw error;
+            _context24.n = 5;
+            break;
           case 5:
             // Atualiza override local pra refletir a mudança sem precisar refazer fetch
             setOverrides(function (prev) {
