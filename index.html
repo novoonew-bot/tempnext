@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v394 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v395 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -26754,8 +26754,7 @@ function Buscar(_ref122) {
     onLugar = _ref122.onLugar,
     contacts = _ref122.contacts,
     onAbrirContatos = _ref122.onAbrirContatos,
-    onAbrirLugares = _ref122.onAbrirLugares,
-    onAbrirCruzamentos = _ref122.onAbrirCruzamentos;
+    onAbrirLugares = _ref122.onAbrirLugares;
   var _useState183 = useState(""),
     _useState184 = _slicedToArray(_useState183, 2),
     termo = _useState184[0],
@@ -58121,7 +58120,6 @@ var TN_SECAO_TEXTO = {
   perfil_outro: "Lugares e per\xEDodos em comum com voc\xEA.",
   meus_lugares: "Lugares que voc\xEA registrou: onde morou, passou ou pretende ir.",
   encontrei: "Pessoas que voc\xEA adicionou aos seus contatos.",
-  encontros_tempo: "Pessoas que registraram o mesmo lugar e per\xEDodo que voc\xEA.",
   notificacoes: "Avisos sobre c\xE1psulas, contatos e atividade nos seus lugares.",
   alertas_regionais: "Atividade recente nos lugares perto de voc\xEA.",
   painel: "Resumo dos seus registros e atividade na conta."
@@ -58512,7 +58510,7 @@ function App() {
   // pra nao desaparecer antes da pessoa ler.
   useEffect(function(){
     var verUmaVez = { perfil: 1, lugar_imersivo: 1, lugar_perfil: 1, momento_perfil: 1, perfil_outro: 1,
-      meus_lugares: 1, encontrei: 1, encontros_tempo: 1, notificacoes: 1, alertas_regionais: 1, painel: 1 };
+      meus_lugares: 1, encontrei: 1, notificacoes: 1, alertas_regionais: 1, painel: 1 };
     var atual = tela;
     if (!verUmaVez[atual]) return;
     return function(){ try { window.__tnSecao && window.__tnSecao.realizar(atual); } catch(e){} };
@@ -60559,7 +60557,7 @@ function App() {
     // v370: fonte unica da faixa explicativa - por tela real (inicio/buscar/cruzamentos/perfil)
     var mapa = { inicio: "inicio", buscar: "buscar", cruzamentos: "olhar", perfil: "perfil",
       lugar_imersivo: "lugar_imersivo", lugar_perfil: "lugar_perfil", momento_perfil: "momento_perfil", perfil_outro: "perfil_outro",
-      meus_lugares: "meus_lugares", encontrei: "encontrei", encontros_tempo: "encontros_tempo",
+      meus_lugares: "meus_lugares", encontrei: "encontrei",
       notificacoes: "notificacoes", alertas_regionais: "alertas_regionais", painel: "painel" };
     var sec = mapa[tela];
     if (!sec) return null;
@@ -60690,23 +60688,6 @@ function App() {
     user: user,
     onBack: function onBack() {
       return setTela("inicio");
-    },
-    onAbrirLivro: function onAbrirLivro(p) {
-      return navAbrirPerfilOutro(p);
-    },
-    onAdd: function onAdd(p) {
-      addContact(p);
-    },
-    contacts: contacts,
-    onLugar: function onLugar(lugar) {
-      setPerfilLugarAtual(typeof lugar === "string" ? lugar : lugar);
-      setTela("lugar_imersivo");
-    }
-  }), tela === "encontros_tempo" && user && /*#__PURE__*/React.createElement(Cruzamentos, {
-    soCruzamentos: true,
-    user: user,
-    onBack: function onBack() {
-      return setTela("buscar");
     },
     onAbrirLivro: function onAbrirLivro(p) {
       return navAbrirPerfilOutro(p);
