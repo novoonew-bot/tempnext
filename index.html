@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v398 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v399 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -21435,13 +21435,7 @@ function Notificacoes(_ref92) {
     var countEu = naoRegionais.filter(function (n) {
       return ehDeMim(n) && !n.lida;
     }).length;
-    return /*#__PURE__*/React.createElement(TabsGeralEu, {
-      tab: tab,
-      setTab: setTab,
-      countGeral: countGeral,
-      countEu: countEu,
-      corGeral: T.accent
-    });
+    return null; // v399: aba Eu removida — caixa de entrada de proposito unico (so o que chegou)
   }(), loading ? /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "40px 0",
@@ -21458,7 +21452,7 @@ function Notificacoes(_ref92) {
       return n && n.actor_id === (user === null || user === void 0 ? void 0 : user.id);
     };
     var notifsTudo = naoRegionais.filter(function (n) {
-      return tab === "eu" ? ehDeMim(n) : !ehDeMim(n);
+      return !ehDeMim(n);
     });
     if (notifsTudo.length === 0) {
       var msg = tab === "eu" ? /*#__PURE__*/React.createElement(React.Fragment, null, "nada que partiu de voc\xEA ainda.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
