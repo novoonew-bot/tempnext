@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v397 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v398 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -21404,7 +21404,7 @@ function Notificacoes(_ref92) {
   }
   return /*#__PURE__*/React.createElement(TelaPadrao, {
     user: user,
-    titulo: "o que aconteceu",
+    titulo: "o que chegou até você",
     onVoltar: onBack
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -57935,11 +57935,10 @@ function TempnexTopBar(_ref269) {
     }
   },
   // v353t: swatch paleta + popover removidos do header; mover pra Configurações
-  // Sino comum
+  // v398: porta unica — o que chegou ate voce (social + regiao tecidos)
   React.createElement("button", {
     onClick: onNotificacoes,
-    title: "Notificações",
-    /* v333: cor do sino — fundo agora claro, ícone escuro com cor afetiva profunda */
+    title: "o que chegou até você",
     style: {
       width: 28,
       height: 28,
@@ -57951,83 +57950,35 @@ function TempnexTopBar(_ref269) {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      color: "var(--user-color-deep, #2a201a)",
-      position: "relative"
-    }
-  }, React.createElement("svg", {
-    width: 15,
-    height: 15,
-    viewBox: "0 0 20 20",
-    fill: "none"
-  }, React.createElement("path", {
-    d: "M10 3a4 4 0 0 0-4 4v3l-2 2v1h12v-1l-2-2V7a4 4 0 0 0-4-4zM8.5 16a1.5 1.5 0 0 0 3 0",
-    stroke: "currentColor",
-    strokeWidth: 1.4,
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  })), naoLidas > 0 && React.createElement("span", {
-    style: {
-      position: "absolute",
-      top: 4,
-      right: 4,
-      width: 7,
-      height: 7,
-      borderRadius: "50%",
-      background: "#f5b942",
-      border: "1.5px solid var(--user-color)"
-    }
-  })),
-  // Sino azul
-  React.createElement("button", {
-    onClick: onAlertasRegiao,
-    title: "Cápsulas e alertas de região",
-    style: {
-      width: 28,
-      height: 28,
-      borderRadius: "50%",
-      border: "none",
-      background: "transparent",
-      cursor: "pointer",
-      padding: 0,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      /* v333: cor do sino azul para fundo claro */
       color: "var(--user-color-deep, #2a201a)",
       position: "relative",
-      // v323a: pulso suave quando há alertas regionais novos
-      animation: alertasRegiao > 0 ? "tn-pulse 1.6s ease-in-out infinite" : "none"
+      animation: (naoLidas > 0 || alertasRegiao > 0) ? "tn-pulse 1.6s ease-in-out infinite" : "none"
     }
   }, React.createElement("svg", {
-    width: 15,
-    height: 15,
-    viewBox: "0 0 20 20",
-    fill: "none"
-  }, React.createElement("path", {
-    d: "M10 3a4 4 0 0 0-4 4v3l-2 2v1h12v-1l-2-2V7a4 4 0 0 0-4-4zM8.5 16a1.5 1.5 0 0 0 3 0",
+    width: 18,
+    height: 18,
+    viewBox: "0 0 24 24",
+    fill: "none",
     stroke: "currentColor",
-    strokeWidth: 1.4,
+    strokeWidth: 1.8,
     strokeLinecap: "round",
     strokeLinejoin: "round"
-  }), React.createElement("circle", {
-    cx: 14.5,
-    cy: 5.5,
-    r: 2.4,
-    fill: "#4ab0e8",
-    stroke: "var(--user-color)",
-    strokeWidth: 1.2
-  })), alertasRegiao > 0 && React.createElement("span", {
+  }, React.createElement("path", {
+    d: "M3 7c3 -2 6 -2 9 0s6 2 9 0"
+  }), React.createElement("path", {
+    d: "M3 12c3 -2 6 -2 9 0s6 2 9 0"
+  }), React.createElement("path", {
+    d: "M3 17c3 -2 6 -2 9 0s6 2 9 0"
+  })), (naoLidas > 0 || alertasRegiao > 0) && React.createElement("span", {
     style: {
       position: "absolute",
-      top: 4,
-      right: 4,
+      top: 3,
+      right: 3,
       width: 7,
       height: 7,
       borderRadius: "50%",
-      background: "#4ab0e8",
-      border: "1.5px solid var(--user-color)",
-      // v323a: glow azul sutil pra reforçar o "tem novos"
-      boxShadow: "0 0 0 2px rgba(74,176,232,0.35)"
+      background: "#D85A30",
+      border: "1.5px solid var(--user-color)"
     }
   })))));
 }
