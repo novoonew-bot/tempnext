@@ -778,24 +778,9 @@ input:focus,select:focus,textarea:focus{
 </head>
 <body>
 <div id="root"></div>
-<div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:-apple-system,sans-serif">
-  <!-- Logo nova -->
-  <svg width="88" height="88" viewBox="0 0 100 100" style="filter:drop-shadow(0 0 9px rgba(111,159,214,.5))">
-    <circle cx="50" cy="50" r="29" fill="none" stroke="#6f9fd6" stroke-width="2.4" opacity="0.92"></circle>
-    <text x="50" y="50" text-anchor="middle" dominant-baseline="central" font-family="'Cormorant Garamond',Georgia,serif" font-size="54" font-weight="600" fill="#6f9fd6">T</text>
-  </svg>
-  <!-- Bolinhas -->
-  <div style="display:flex;gap:6px;margin-top:28px">
-    <div style="width:8px;height:8px;border-radius:50%;background:#C17E3A;animation:pulse 1.2s ease-in-out infinite"></div>
-    <div style="width:8px;height:8px;border-radius:50%;background:#6f9fd6;animation:pulse 1.2s ease-in-out 0.2s infinite"></div>
-    <div style="width:8px;height:8px;border-radius:50%;background:#9575CD;animation:pulse 1.2s ease-in-out 0.4s infinite"></div>
-  </div>
-</div>
-<style>
-@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
-</style>
+<div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v406 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v407 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
