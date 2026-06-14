@@ -1,5 +1,5 @@
-// Tempnext Service Worker v217.2
-const SW_VERSION = "v217.2";
+// Tempnext Service Worker v402
+const SW_VERSION = "v402";
 const CACHE_NAME = "tempnext-" + SW_VERSION + "-" + Date.now();
 const ASSETS_HOST = ["fonts.googleapis.com", "fonts.gstatic.com", "images.unsplash.com"];
 
@@ -33,7 +33,7 @@ self.addEventListener("fetch", (event) => {
 
   if(isHTML && url.origin === location.origin){
     event.respondWith(
-      fetch(req)
+      fetch(req, { cache: "no-store" })
         .then(response => {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(c => c.put(req, clone)).catch(()=>{});
