@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v396 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v397 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -9798,6 +9798,7 @@ function MemoriasFeed(_ref40) {
             var novo = (e.currentTarget.textContent || "").trim();
             var antigo = (m.lugar || "").trim();
             if (novo === antigo) return;
+            if (textoTemTermoBloqueado(novo)) { mostrarAvisoModeracao(); e.currentTarget.textContent = m.lugar || ""; return; }
             db.from("momentos").update({ lugar: novo || null }).eq("id", m.id).then(function (r) {
               if (r.error) { if (window.tnToast) window.tnToast("erro ao salvar lugar", r.error.message || ""); return; }
               setOverrides(function (prev) {
@@ -9966,6 +9967,7 @@ function MemoriasFeed(_ref40) {
         var raw = (e.currentTarget.textContent || "").replace(/^\u201C|\u201D$|^"|"$/g, "").trim();
         var antigo = (textoExibido || "").trim();
         if (raw === antigo) { e.currentTarget.textContent = "\u201C" + antigo + "\u201D"; return; }
+        if (textoTemTermoBloqueado(raw)) { mostrarAvisoModeracao(); e.currentTarget.textContent = "\u201C" + antigo + "\u201D"; return; }
         db.from("momentos").update({ texto: raw }).eq("id", m.id).select().then(function (r) {
           if (r.error || !(r.data && r.data.length)) {
             if (window.tnToast) window.tnToast("erro ao salvar", (r.error && r.error.message) || "");
@@ -10708,6 +10710,7 @@ function CapsulaPresenteCard(_ref45) {
       var raw = (e.currentTarget.textContent || "").replace(/^“|”$|^"|"$/g, "").trim();
       var antigo = (capsula.texto || "").trim();
       if (raw === antigo) { e.currentTarget.textContent = "\"" + antigo + "\""; return; }
+      if (textoTemTermoBloqueado(raw)) { mostrarAvisoModeracao(); e.currentTarget.textContent = "\"" + antigo + "\""; return; }
       db.from("momentos").update({ texto: raw }).eq("id", capsula.id).then(function (r) {
         if (r.error) { if (window.tnToast) window.tnToast("erro ao salvar", r.error.message || ""); e.currentTarget.textContent = "\"" + antigo + "\""; return; }
         if (window.tnToast) window.tnToast("c\xE1psula atualizada", "");
@@ -10887,6 +10890,7 @@ function CapsulaPassadaCard(_ref48) {
       var raw = (e.currentTarget.textContent || "").replace(/^“|”$|^"|"$/g, "").trim();
       var antigo = (capsula.texto || "").trim();
       if (raw === antigo) { e.currentTarget.textContent = "\"" + antigo + "\""; return; }
+      if (textoTemTermoBloqueado(raw)) { mostrarAvisoModeracao(); e.currentTarget.textContent = "\"" + antigo + "\""; return; }
       db.from("momentos").update({ texto: raw }).eq("id", capsula.id).then(function (r) {
         if (r.error) { if (window.tnToast) window.tnToast("erro ao salvar", r.error.message || ""); e.currentTarget.textContent = "\"" + antigo + "\""; return; }
         if (window.tnToast) window.tnToast("c\xE1psula atualizada", "");
