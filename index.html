@@ -780,33 +780,14 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:-apple-system,sans-serif">
   <!-- Logo nova -->
-  <div style="text-align:center">
-    <div style="font-family:Georgia,serif;font-size:38px;font-weight:300;letter-spacing:-0.5px;line-height:1">
-      <span style="color:#ece3d2;font-weight:700">Tempnex</span><span style="color:#6f9fd6;font-weight:700;text-shadow:0 0 18px rgba(111,159,214,.45)">T</span>
-    </div>
-    <div style="font-size:11px;color:#9a8b71;margin-top:8px;font-style:italic;font-family:Georgia,serif">guarda histórias, marca o presente e aproxima o futuro</div>
-    <div id="tn-splash-frase" style="font-family:'Italianno','Cormorant Garamond',cursive;font-size:42px;color:#9a8d79;margin-top:14px;letter-spacing:0;line-height:1;font-weight:400;opacity:0;transition:opacity .4s ease">o tempo não para, ele aproxima</div>
-  </div>
-  <script>
-  /* v336: fim do FOUT da Italianno. A frase nasce com opacity:0 e só aparece
-     (fade .4s) quando a fonte real terminou de baixar — sem flash de encolher
-     do fallback cursive. Fallback de 1.2s caso fonts.ready demore/falhe. */
-  (function(){
-    var el=document.getElementById('tn-splash-frase');
-    if(!el) return;
-    var mostrar=function(){ el.style.opacity='1'; };
-    if(document.fonts && document.fonts.ready){
-      document.fonts.load("42px 'Italianno'").then(function(){ document.fonts.ready.then(mostrar); });
-      setTimeout(mostrar, 1200);
-    } else {
-      setTimeout(mostrar, 300);
-    }
-  })();
-  </script>
+  <svg width="88" height="88" viewBox="0 0 100 100" style="filter:drop-shadow(0 0 9px rgba(111,159,214,.5))">
+    <circle cx="50" cy="50" r="29" fill="none" stroke="#6f9fd6" stroke-width="2.4" opacity="0.92"></circle>
+    <text x="50" y="50" text-anchor="middle" dominant-baseline="central" font-family="'Cormorant Garamond',Georgia,serif" font-size="54" font-weight="600" fill="#6f9fd6">T</text>
+  </svg>
   <!-- Bolinhas -->
   <div style="display:flex;gap:6px;margin-top:28px">
     <div style="width:8px;height:8px;border-radius:50%;background:#C17E3A;animation:pulse 1.2s ease-in-out infinite"></div>
-    <div style="width:8px;height:8px;border-radius:50%;background:#1E88E5;animation:pulse 1.2s ease-in-out 0.2s infinite"></div>
+    <div style="width:8px;height:8px;border-radius:50%;background:#6f9fd6;animation:pulse 1.2s ease-in-out 0.2s infinite"></div>
     <div style="width:8px;height:8px;border-radius:50%;background:#9575CD;animation:pulse 1.2s ease-in-out 0.4s infinite"></div>
   </div>
 </div>
@@ -814,7 +795,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v403 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v404 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -60142,50 +60123,31 @@ function App() {
         position: "relative",
         zIndex: 1
       }
-    }, /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: 88,
+      height: 88,
+      viewBox: "0 0 100 100",
       style: {
-        fontSize: 38,
-        fontWeight: 300,
-        color: T.text,
-        letterSpacing: "-0.5px",
-        fontFamily: "Georgia,serif"
+        filter: "drop-shadow(0 0 9px rgba(111,159,214,.5))"
       }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: T.accent,
-        fontWeight: 700
-      }
-    }, "Temp"), /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: T.blueStrong,
-        fontWeight: 700
-      }
-    }, "nexT")), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 11,
-        color: T.muted,
-        marginTop: 8,
-        fontStyle: "italic",
-        fontFamily: "Georgia,serif",
-        textAlign: "center",
-        maxWidth: 300,
-        padding: "0 32px"
-      }
-    }, "guarda hist\xF3rias, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontFamily: "'Italianno','Cormorant Garamond',cursive",
-        fontSize: 30,
-        color: "#9a8d79",
-        marginTop: 6,
-        letterSpacing: 0,
-        lineHeight: 1,
-        textAlign: "center"
-      }
-    }, "o tempo n\xE3o para ", /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: T.accent
-      }
-    }, "\u2014"), " ele aproxima"), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("circle", {
+      cx: 50,
+      cy: 50,
+      r: 29,
+      fill: "none",
+      stroke: "#6f9fd6",
+      strokeWidth: 2.4,
+      opacity: 0.92
+    }), /*#__PURE__*/React.createElement("text", {
+      x: 50,
+      y: 50,
+      textAnchor: "middle",
+      dominantBaseline: "central",
+      fontFamily: "'Cormorant Garamond',Georgia,serif",
+      fontSize: 54,
+      fontWeight: 600,
+      fill: "#6f9fd6"
+    }, "T")), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         gap: 6,
