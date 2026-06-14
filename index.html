@@ -814,7 +814,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
 </style>
 <script>
-console.log("%c Tempnext v395 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v396 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -1076,7 +1076,18 @@ function mostrarAvisoModeracao() {
 
 // Helper que junta os dois — se moderar bloquear, mostra aviso e retorna false.
 // Caso contrário, retorna true (pode salvar).
+var MOD_EXATOS = ["sexo", "puta", "puto", "cu", "cuzao", "foda", "foder", "fodase", "merda", "bosta", "porra", "cacete", "viado", "bicha", "corno", "vadia", "piranha", "escroto", "babaca", "otario", "fdp", "tesao", "transar", "transa", "gozar", "gozada", "punheta", "retardado", "mongoloide", "caceta"];
+var MOD_SUBSTRING = ["caralho", "buceta", "boceta", "xoxota", "xereca", "filhadaputa", "filhodaputa", "arrombado", "arrombada", "pornografia", "pornografico", "masturba", "pedofil", "estupr", "viadinho", "cuzudo", "pauzudo", "pirocao", "siririca", "suruba", "vagabunda", "putaria"];
+function _tnNormMod(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[4@]/g, "a").replace(/3/g, "e").replace(/[1!|]/g, "i").replace(/0/g, "o").replace(/[5$]/g, "s"); }
+function textoTemTermoBloqueado(t) {
+  var n = _tnNormMod(t);
+  var palavras = n.split(/[^a-z]+/).filter(Boolean);
+  if (MOD_EXATOS.some(function (w) { return palavras.indexOf(w) !== -1; })) return true;
+  var junto = n.replace(/[^a-z]/g, "");
+  return MOD_SUBSTRING.some(function (w) { return junto.indexOf(w) !== -1; });
+}
 function validarTextoUsuario(_x2) {
+  if (textoTemTermoBloqueado(_x2)) { mostrarAvisoModeracao(); return Promise.resolve(false); }
   return _validarTextoUsuario.apply(this, arguments);
 } // ─────────────────────────────────────────────────────────────────────
 // ── POPULAR TESTE: 30 perfis fictícios pra teste visual ─────────────
