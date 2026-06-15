@@ -780,7 +780,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v412 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v413 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -60142,7 +60142,15 @@ function App() {
       onClick: function onClick() {
         setShowLogin(true);
       }
-    }, /*#__PURE__*/React.createElement("span", null, "criar meu tempo"))));
+    }, /*#__PURE__*/React.createElement("span", null, "criar meu tempo"))), showLogin && /*#__PURE__*/React.createElement(TelaLogin, {
+      onClose: function onClose() {
+        return setShowLogin(false);
+      },
+      onLoggedIn: function onLoggedIn(p) {
+        setUser(p);
+        setShowLogin(false);
+      }
+    }));
   }
   var temaCor = getTema(user).main;
   var NAV_COLORS = {
