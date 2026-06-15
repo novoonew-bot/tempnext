@@ -781,7 +781,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v419 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v420 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -59920,6 +59920,7 @@ function App() {
     }
   })), /*#__PURE__*/React.createElement("div", {
     style: {
+      width: "100%",
       maxWidth: 430,
       margin: "0 auto",
       minHeight: "100vh",
@@ -61229,6 +61230,13 @@ function App() {
   }, "Sair")))))));
 }
 ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));
+// v420: forca reflow de viewport no boot do PWA standalone (largura estreita ate primeiro resize)
+try {
+  var _tnFixVw = function(){ document.documentElement.style.width = window.innerWidth + "px"; void document.documentElement.offsetWidth; document.documentElement.style.width = ""; };
+  requestAnimationFrame(function(){ _tnFixVw(); requestAnimationFrame(_tnFixVw); });
+  window.addEventListener("load", _tnFixVw);
+  window.addEventListener("pageshow", _tnFixVw);
+} catch(e){}
 
 // ─────────────────────────────────────────────────────────────────
 // v217.2: Service Worker ROBUSTO sobre base v214a (estável)
