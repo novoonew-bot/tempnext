@@ -56,6 +56,7 @@ input:focus,select:focus,textarea:focus{
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes pop{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
 @keyframes tn-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.55;transform:scale(0.8)}}
+@keyframes tnsPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.85}50%{transform:translate(-50%,-50%) scale(1.1);opacity:.48}}
 /* Cápsula: brilho pulsante e partículas */
 @keyframes capBreathe{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:0.95;transform:scale(1.2)}}
 @keyframes capPulseGlow{0%,100%{opacity:0.35}50%{opacity:0.8}}
@@ -781,7 +782,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v425 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v426 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -57530,9 +57531,9 @@ function TempnexTopBar(_ref269) {
       // a cor afetiva no fundo bege sem dominar. Mantém identidade da paleta sem agressividade.
       width: "100%",
       padding: "max(0px, env(safe-area-inset-top)) 14px 0",
-      background: "linear-gradient(180deg, var(--user-color-soft) 0%, rgba(250,247,242,0.92) 100%)",
-      color: "var(--user-color-deep, #2a201a)",
-      borderBottom: "0.5px solid var(--user-color-30, rgba(42,32,26,0.10))",
+      background: "#1b150d",
+      color: "#ece3d2",
+      borderBottom: "0.5px solid rgba(111,159,214,0.14)",
       boxSizing: "border-box",
       backdropFilter: "saturate(120%) blur(2px)"
     }
@@ -57560,7 +57561,7 @@ function TempnexTopBar(_ref269) {
     style: {
       background: "none",
       border: "none",
-      color: "var(--user-color-deep, #2a201a)",
+      color: "#cdbfa8",
       cursor: "pointer",
       opacity: .75,
       padding: 2,
@@ -57583,16 +57584,16 @@ function TempnexTopBar(_ref269) {
     title: !titulo && onTitulo ? "a história do Tempnext" : undefined,
     style: {
       fontFamily: "'Cormorant Garamond',Georgia,serif",
-      fontSize: 18,
-      fontWeight: 500,
+      fontSize: 20,
+      fontWeight: 600,
       cursor: !titulo && onTitulo ? "pointer" : "default",
       /* v333: texto TempnexT em cor afetiva profunda (não branco sobre claro) */
-      color: "var(--user-color-deep, #2a201a)",
-      letterSpacing: "-0.01em",
+      color: "#ece3d2",
+      letterSpacing: "-0.008em",
       userSelect: "none",
       lineHeight: 1
     }
-  }, titulo || "TempnexT")),
+  }, titulo ? titulo : React.createElement(React.Fragment, null, React.createElement("span", { style: { color: "#ece3d2" } }, "Tempnex"), React.createElement("span", { style: { position: "relative", display: "inline-block", marginLeft: 2 } }, React.createElement("span", { style: { color: "#6f9fd6", textShadow: "0 0 12px rgba(111,159,214,.5)" } }, "T"), React.createElement("span", { "aria-hidden": true, style: { position: "absolute", top: "48%", left: "52%", width: 22, height: 22, border: "1px solid rgba(111,159,214,0.55)", borderRadius: "50%", boxShadow: "0 0 8px rgba(111,159,214,.22)", transform: "translate(-50%,-50%)", pointerEvents: "none" } }))))),
   // Direita: swatch + 2 sinos
   React.createElement("div", {
     style: {
@@ -57609,8 +57610,8 @@ function TempnexTopBar(_ref269) {
     onClick: onNotificacoes,
     title: "o que chegou até você",
     style: {
-      width: 28,
-      height: 28,
+      width: 32,
+      height: 32,
       borderRadius: "50%",
       border: "none",
       background: "transparent",
@@ -57619,35 +57620,41 @@ function TempnexTopBar(_ref269) {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      color: "var(--user-color-deep, #2a201a)",
-      position: "relative",
-      animation: (naoLidas > 0 || alertasRegiao > 0) ? "tn-pulse 1.6s ease-in-out infinite" : "none"
+      position: "relative"
     }
-  }, React.createElement("svg", {
-    width: 18,
-    height: 18,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }, React.createElement("path", {
-    d: "M3 7c3 -2 6 -2 9 0s6 2 9 0"
-  }), React.createElement("path", {
-    d: "M3 12c3 -2 6 -2 9 0s6 2 9 0"
-  }), React.createElement("path", {
-    d: "M3 17c3 -2 6 -2 9 0s6 2 9 0"
-  })), (naoLidas > 0 || alertasRegiao > 0) && React.createElement("span", {
+  }, React.createElement("span", {
+    style: {
+      fontFamily: "'Cormorant Garamond',Georgia,serif",
+      fontSize: 22,
+      lineHeight: 1,
+      color: "#6f9fd6",
+      textShadow: "0 0 12px rgba(111,159,214,.55)"
+    }
+  }, "T"), React.createElement("span", {
+    "aria-hidden": true,
     style: {
       position: "absolute",
-      top: 3,
-      right: 3,
-      width: 7,
-      height: 7,
+      top: "50%",
+      left: "50%",
+      width: 30,
+      height: 30,
+      border: "1.3px solid #6f9fd6",
+      borderRadius: "50%",
+      boxShadow: "0 0 12px rgba(111,159,214,.4)",
+      transform: "translate(-50%,-50%)",
+      pointerEvents: "none",
+      animation: (naoLidas > 0 || alertasRegiao > 0) ? "tnsPulse 2.8s ease-in-out infinite" : "none"
+    }
+  }), (naoLidas > 0 || alertasRegiao > 0) && React.createElement("span", {
+    style: {
+      position: "absolute",
+      top: 1,
+      right: 1,
+      width: 8,
+      height: 8,
       borderRadius: "50%",
       background: "#D85A30",
-      border: "1.5px solid var(--user-color)"
+      border: "1.5px solid #1b150d"
     }
   })))));
 }
