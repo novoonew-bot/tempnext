@@ -782,7 +782,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v428 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v429 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -56427,7 +56427,6 @@ function HomeV9Preview(_ref265) {
     var hero1 = heroPool[0];
     var hero2 = heroPool[1] || heroPool[0];
     var cruz = pools.crossings[Math.floor(Math.random() * pools.crossings.length)];
-    var mapAntesDoHero2 = Math.random() < 0.5;
     var s1 = 4 + Math.floor(Math.random() * 2);
     var s2 = 3 + Math.floor(Math.random() * 2);
     var parte1 = tiles.slice(0, s1);
@@ -56440,7 +56439,6 @@ function HomeV9Preview(_ref265) {
       hero1: hero1,
       hero2: hero2,
       cruz: cruz,
-      mapAntesDoHero2: mapAntesDoHero2,
       parte1: parte1,
       parte2: parte2,
       parte3: parte3
@@ -57042,15 +57040,11 @@ function HomeV9Preview(_ref265) {
         return handleTileClick(t);
       }
     });
-  })), c.mapAntesDoHero2 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(HV9MapBlock, {
-    c: c.cruz,
+  })), /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(HV9Hero, {
+    hero: c.hero2,
+    secondary: true,
     onClick: function onClick() {
-      return handleTileClick({
-        type: "mapa",
-        _uid: "mapa",
-        _navegar: null,
-        _cruz: c.cruz
-      });
+      return handleHeroClick(c.hero2);
     }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -57066,33 +57060,7 @@ function HomeV9Preview(_ref265) {
         return handleTileClick(t);
       }
     });
-  })), /*#__PURE__*/React.createElement(HV9Hero, {
-    hero: c.hero2,
-    secondary: true,
-    onClick: function onClick() {
-      return handleHeroClick(c.hero2);
-    }
-  })) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      columnCount: 2,
-      columnGap: 8,
-      WebkitColumnGap: 8
-    }
-  }, c.parte2.map(function (t, i) {
-    return /*#__PURE__*/React.createElement(HV9Tile, {
-      key: "p2-".concat(i, "-").concat(seed),
-      t: t,
-      onClick: function onClick() {
-        return handleTileClick(t);
-      }
-    });
-  })), /*#__PURE__*/React.createElement(HV9Hero, {
-    hero: c.hero2,
-    secondary: true,
-    onClick: function onClick() {
-      return handleHeroClick(c.hero2);
-    }
-  }), /*#__PURE__*/React.createElement(HV9MapBlock, {
+  })), /*#__PURE__*/React.createElement(HV9MapBlock, {
     c: c.cruz,
     onClick: function onClick() {
       return handleTileClick({
