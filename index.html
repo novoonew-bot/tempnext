@@ -782,7 +782,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v426 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v427 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -57702,10 +57702,10 @@ function TelaHistoria(_refHist) {
   var pStyle = { fontFamily: COR, fontSize: 19, lineHeight: 1.64, color: INK, margin: 0 };
   var kids = [];
   kids.push(React.createElement("div", { key: "hero", style: { textAlign: "center", marginBottom: 28 } },
-    React.createElement("p", { style: { fontFamily: COR, fontSize: 44, fontWeight: 500, margin: 0, lineHeight: 1 } },
-      React.createElement("span", { style: { color: ACC } }, "Tempnex"),
-      React.createElement("span", { style: { color: BLUE } }, "T")),
-    React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 19, color: ACC, margin: "10px 0 0" } }, "o tempo no seu lugar"),
+    React.createElement("p", { style: { fontFamily: COR, fontSize: 44, fontWeight: 600, margin: 0, lineHeight: 1 } },
+      React.createElement("span", { style: { color: "#2a201a" } }, "Tempnex"),
+      React.createElement("span", { style: { position: "relative", display: "inline-block", marginLeft: 3 } }, React.createElement("span", { style: { color: "#6f9fd6", textShadow: "0 0 16px rgba(111,159,214,.45)" } }, "T"), React.createElement("span", { "aria-hidden": true, style: { position: "absolute", top: "46%", left: "52%", width: 46, height: 46, border: "1.3px solid rgba(111,159,214,0.55)", borderRadius: "50%", boxShadow: "0 0 14px rgba(111,159,214,.28)", transform: "translate(-50%,-50%)", pointerEvents: "none" } }))),
+    React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 19, color: ACC, margin: "10px 0 0" } }, "o tempo n\xE3o para, ele aproxima"),
     ruleEl(42, 0.4, "22px auto 0", "rh")
   ));
   // texto curto poetico (sem revelar a tese mecanica do app)
@@ -57734,9 +57734,9 @@ function TelaHistoria(_refHist) {
     ruleEl(42, 0.4, "0 auto 18px", "rf"),
     React.createElement("p", { style: { fontFamily: COR, fontStyle: "italic", fontSize: 21, color: DEEP, margin: "0 0 14px", lineHeight: 1.4 } }, "lembrar \xE9 estar em dois tempos ao mesmo tempo"),
     React.createElement("p", { style: { fontFamily: SGN, fontSize: 42, color: ACC, lineHeight: 1, margin: "0 0 14px" } }, "o tempo n\xE3o para \u2014 ele aproxima"),
-    React.createElement("p", { style: { fontFamily: COR, fontSize: 21, fontWeight: 500, margin: 0, lineHeight: 1 } },
-      React.createElement("span", { style: { color: ACC } }, "Tempnex"),
-      React.createElement("span", { style: { color: BLUE } }, "T"))
+    React.createElement("p", { style: { fontFamily: COR, fontSize: 21, fontWeight: 600, margin: 0, lineHeight: 1 } },
+      React.createElement("span", { style: { color: "#2a201a" } }, "Tempnex"),
+      React.createElement("span", { style: { position: "relative", display: "inline-block", marginLeft: 2 } }, React.createElement("span", { style: { color: "#6f9fd6", textShadow: "0 0 10px rgba(111,159,214,.4)" } }, "T"), React.createElement("span", { "aria-hidden": true, style: { position: "absolute", top: "48%", left: "52%", width: 23, height: 23, border: "1px solid rgba(111,159,214,0.55)", borderRadius: "50%", boxShadow: "0 0 8px rgba(111,159,214,.22)", transform: "translate(-50%,-50%)", pointerEvents: "none" } })))
   ));
   var header = React.createElement("div", { style: { flexShrink: 0, height: 48, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "max(0px, env(safe-area-inset-top)) 16px 0", borderBottom: "0.5px solid var(--user-color-deep-18, rgba(138,74,42,0.18))", boxSizing: "border-box" } },
     React.createElement("button", { onClick: onBack, title: "Voltar", "aria-label": "Voltar", style: { background: "none", border: "none", color: DEEP, cursor: "pointer", opacity: 0.75, padding: 4, display: "flex", alignItems: "center" } },
