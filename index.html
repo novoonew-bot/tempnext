@@ -57,6 +57,10 @@ input:focus,select:focus,textarea:focus{
 @keyframes pop{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
 @keyframes tn-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.55;transform:scale(0.8)}}
 @keyframes tnsPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.85}50%{transform:translate(-50%,-50%) scale(1.1);opacity:.48}}
+@keyframes tnFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.tncad-line{width:100%;box-sizing:border-box;background:transparent;border:none;border-bottom:1px solid rgba(180,168,148,.3);color:#f3ecdd;font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;text-align:center;padding:8px 4px;outline:none;transition:border-color .25s}
+.tncad-line:focus{border-color:#6f9fd6}
+.tncad-line::placeholder{color:#6f6552}
 /* Cápsula: brilho pulsante e partículas */
 @keyframes capBreathe{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:0.95;transform:scale(1.2)}}
 @keyframes capPulseGlow{0%,100%{opacity:0.35}50%{opacity:0.8}}
@@ -782,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v431 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v432 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -44391,6 +44395,9 @@ function CadastroSimples(_ref194) {
     addrSugs = _useState476[0],
     setAddrSugs = _useState476[1];
   var addrTimer = useRef(null);
+  var _stepCad = useState(0);
+  var step = _stepCad[0];
+  var setStep = _stepCad[1];
 
   // Autocomplete de lugar (mundial — sem forçar Brasil)
   function searchAddr(q) {
@@ -44687,288 +44694,20 @@ function CadastroSimples(_ref194) {
   }
   var idade = calcularIdade(f.birthDay, f.birthMonth, f.birthYear);
   var dataValida = idade !== null && idade >= 13 && idade <= 120;
-  var canSave = f.fullName.trim().length >= 2 && f.placeName.trim().length >= 1 && dataValida;
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "48px 28px 40px",
-      minHeight: "100vh",
-      background: "radial-gradient(circle at 50% 40%, #1b150d 0%, #110c07 74%)",
-      display: "flex",
-      flexDirection: "column"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "center",
-      marginBottom: 32
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 36,
-      fontWeight: 300,
-      color: T.text,
-      letterSpacing: "-0.5px",
-      fontFamily: "Georgia,serif",
-      marginBottom: 6
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: T.accent,
-      fontWeight: 700
-    }
-  }, "Temp"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: T.blueStrong,
-      fontWeight: 700
-    }
-  }, "nexT")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: T.muted,
-      fontStyle: "italic",
-      fontFamily: "Georgia,serif",
-      lineHeight: 1.55,
-      maxWidth: 300,
-      margin: "0 auto"
-    }
-  }, "guarda hist\xF3rias, marca o presente e aproxima o futuro"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: "'Italianno','Cormorant Garamond',cursive",
-      fontSize: 34,
-      color: "#9a8d79",
-      marginTop: 8,
-      letterSpacing: 0,
-      lineHeight: 1
-    }
-  }, "o tempo n\xE3o para ", /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: T.accent
-    }
-  }, "\u2014"), " ele aproxima")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 26,
-      textAlign: "center"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: "Georgia,serif",
-      fontSize: 18,
-      fontWeight: 400,
-      color: T.text,
-      lineHeight: 1.3
-    }
-  }, googleInfo !== null && googleInfo !== void 0 && googleInfo.name ? "Bem-vindo(a), ".concat(googleInfo.name.split(" ")[0]) : "Vamos começar"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12,
-      color: T.muted,
-      fontWeight: 300,
-      marginTop: 6
-    }
-  }, "S\xF3 tr\xEAs coisas pra come\xE7ar a sua jornada.")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 20
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      color: T.muted,
-      letterSpacing: "0.14em",
-      textTransform: "uppercase",
-      marginBottom: 7,
-      fontWeight: 600
-    }
-  }, "Nome completo"), /*#__PURE__*/React.createElement("input", {
-    value: f.fullName,
-    onChange: function onChange(e) {
-      return setF(function (v) {
-        return _objectSpread(_objectSpread({}, v), {}, {
-          fullName: e.target.value
-        });
-      });
-    },
-    placeholder: "Seu nome completo",
-    autoFocus: !googleInfo,
-    style: {
-      width: "100%",
-      padding: "14px 16px",
-      borderRadius: 12,
-      border: "1px solid ".concat(T.border),
-      background: "#fff",
-      fontSize: 15,
-      fontFamily: "inherit",
-      outline: "none"
-    }
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 20
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      color: T.muted,
-      letterSpacing: "0.14em",
-      textTransform: "uppercase",
-      marginBottom: 7,
-      fontWeight: 600
-    }
-  }, "Data de nascimento"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    value: f.birthDay,
-    onChange: function onChange(e) {
-      return setF(function (v) {
-        return _objectSpread(_objectSpread({}, v), {}, {
-          birthDay: e.target.value.replace(/\D/g, "").slice(0, 2)
-        });
-      });
-    },
-    placeholder: "DD",
-    inputMode: "numeric",
-    maxLength: 2,
-    style: {
-      flex: "0 0 68px",
-      padding: "13px 10px",
-      borderRadius: 12,
-      border: "1px solid ".concat(erroIdade ? T.red + "50" : T.border),
-      background: "#fff",
-      fontSize: 14,
-      fontFamily: "inherit",
-      outline: "none",
-      textAlign: "center"
-    }
-  }), /*#__PURE__*/React.createElement("input", {
-    value: f.birthMonth,
-    onChange: function onChange(e) {
-      return setF(function (v) {
-        return _objectSpread(_objectSpread({}, v), {}, {
-          birthMonth: e.target.value.replace(/\D/g, "").slice(0, 2)
-        });
-      });
-    },
-    placeholder: "MM",
-    inputMode: "numeric",
-    maxLength: 2,
-    style: {
-      flex: "0 0 68px",
-      padding: "13px 10px",
-      borderRadius: 12,
-      border: "1px solid ".concat(erroIdade ? T.red + "50" : T.border),
-      background: "#fff",
-      fontSize: 14,
-      fontFamily: "inherit",
-      outline: "none",
-      textAlign: "center"
-    }
-  }), /*#__PURE__*/React.createElement("input", {
-    value: f.birthYear,
-    onChange: function onChange(e) {
-      return setF(function (v) {
-        return _objectSpread(_objectSpread({}, v), {}, {
-          birthYear: e.target.value.replace(/\D/g, "").slice(0, 4)
-        });
-      });
-    },
-    placeholder: "AAAA",
-    inputMode: "numeric",
-    maxLength: 4,
-    style: {
-      flex: 1,
-      padding: "13px 14px",
-      borderRadius: 12,
-      border: "1px solid ".concat(erroIdade ? T.red + "50" : T.border),
-      background: "#fff",
-      fontSize: 14,
-      fontFamily: "inherit",
-      outline: "none",
-      textAlign: "center"
-    }
-  })), erroIdade && /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: T.red,
-      marginTop: 6,
-      fontStyle: "italic",
-      lineHeight: 1.5
-    }
-  }, erroIdade)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 28,
-      position: "relative"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      color: T.muted,
-      letterSpacing: "0.14em",
-      textTransform: "uppercase",
-      marginBottom: 7,
-      fontWeight: 600
-    }
-  }, "Onde voc\xEA mora hoje"), /*#__PURE__*/React.createElement(InputLugarInteligente, {
-    value: f.placeName,
-    placeholder: "Cidade, bairro, lugar...",
-    onChange: function onChange(termo) {
-      // Mantém state sincronizado mesmo sem escolher sugestão
-      setF(function (v) {
-        return _objectSpread(_objectSpread({}, v), {}, {
-          placeName: termo,
-          cidade: v.cidade || termo
-        });
-      });
-    },
-    onSelect: function onSelect(place) {
-      setF(function (v) {
-        return _objectSpread(_objectSpread({}, v), {}, {
-          placeName: place.name || "",
-          cidade: place.city || place.name || "",
-          uf: place.state || "",
-          pais: place.country || "Brasil",
-          lat: place.lat || null,
-          lng: place.lng || null
-        });
-      });
-    },
-    onCriarManual: function onCriarManual(termo) {
-      setF(function (v) {
-        return _objectSpread(_objectSpread({}, v), {}, {
-          placeName: termo,
-          cidade: termo
-        });
-      });
-    }
-  })), /*#__PURE__*/React.createElement("button", {
-    onClick: salvar,
-    disabled: !canSave || saving,
-    style: {
-      width: "100%",
-      padding: "15px",
-      borderRadius: 14,
-      border: "none",
-      background: canSave ? "linear-gradient(145deg,".concat(T.accent, "cc,").concat(T.accentDk, ")") : "rgba(0,0,0,0.08)",
-      color: canSave ? "#fff" : "rgba(0,0,0,0.4)",
-      fontSize: 14,
-      fontWeight: 600,
-      cursor: canSave && !saving ? "pointer" : "not-allowed",
-      fontFamily: "inherit",
-      boxShadow: canSave ? "0 4px 18px rgba(193,126,58,0.2)" : "none",
-      opacity: canSave && !saving ? 1 : 0.6,
-      marginTop: "auto",
-      letterSpacing: "0.02em"
-    }
-  }, saving ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Spinner, null), " Criando seu perfil\u2026") : "Entrar no Tempnext"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 10,
-      color: T.muted,
-      textAlign: "center",
-      marginTop: 14,
-      fontWeight: 300,
-      lineHeight: 1.5,
-      fontStyle: "italic",
-      fontFamily: "Georgia,serif"
-    }
-  }, "Voc\xEA adiciona outros lugares, \xE9pocas e fotos depois, no seu perfil."));
+  var nomeOk = f.fullName.trim().length >= 2;
+  var canSave = nomeOk && f.placeName.trim().length >= 1 && dataValida;
+  var primeiroNome = (f.fullName || "").trim().split(" ")[0];
+  var seedParts = [];
+  if (step >= 1 && primeiroNome) seedParts.push(primeiroNome);
+  if (step >= 2 && f.birthYear) seedParts.push(f.birthYear);
+  if (step >= 3 && f.placeName) seedParts.push((f.placeName || "").split(",")[0]);
+  var seedText = seedParts.length ? "◍  " + seedParts.join("  ·  ") : step === 0 ? "" : "sua primeira marca…";
+  var Q = { fontSize: 27, fontWeight: 500, color: "#ece3d2", lineHeight: 1.18, textAlign: "center", margin: "0 0 4px", fontFamily: "'Cormorant Garamond',Georgia,serif" };
+  var HINT = { fontSize: 15, fontStyle: "italic", color: "#9a8d79", textAlign: "center", margin: "0 0 30px" };
+  function goBtn(label, target, enabled) {
+    return React.createElement("div", { style: { marginTop: 30, display: "flex", justifyContent: "center" } }, React.createElement("button", { onClick: enabled ? function () { setStep(target); } : undefined, disabled: !enabled, style: { display: "inline-flex", alignItems: "center", gap: 9, background: "none", border: "none", color: enabled ? "#cdbfa8" : "#5f5648", fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 17, fontStyle: "italic", cursor: enabled ? "pointer" : "not-allowed", padding: 8 } }, label + " ", React.createElement("span", { style: { width: 30, height: 30, borderRadius: "50%", border: "1px solid rgba(111,159,214,.5)", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#6f9fd6", fontStyle: "normal", fontSize: 15 } }, "→")));
+  }
+  return React.createElement("div", { style: { minHeight: "100vh", background: "radial-gradient(circle at 50% 32%, #1f1810 0%, #0f0a05 80%)", display: "flex", flexDirection: "column", padding: "30px 26px 26px", fontFamily: "'Cormorant Garamond',Georgia,serif", position: "relative", overflow: "hidden" } }, React.createElement("div", { style: { display: "flex", justifyContent: "center", marginBottom: 8 } }, React.createElement("div", { style: { position: "relative", width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center" } }, React.createElement("span", { style: { fontSize: 24, color: "#6f9fd6", textShadow: "0 0 14px rgba(111,159,214,.6)", lineHeight: 1, fontWeight: 600 } }, "T"), React.createElement("div", { style: { position: "absolute", top: "50%", left: "50%", width: 32, height: 32, border: "1.2px solid #6f9fd6", borderRadius: "50%", boxShadow: "0 0 12px rgba(111,159,214,.35)", transform: "translate(-50%,-50%)", animation: "tnsPulse 2.8s ease-in-out infinite" } }))), React.createElement("div", { style: { flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" } }, step === 0 && React.createElement("div", { key: "s0", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: { fontSize: 18, fontStyle: "italic", color: "#9a8d79", textAlign: "center", margin: "18px 0 26px" } }, "o tempo não para — ele aproxima"), React.createElement("div", { style: { fontSize: 20, color: "#e6d6b6", textAlign: "center", lineHeight: 1.35 } }, "Toda história começa", React.createElement("br"), "em um tempo e um lugar."), React.createElement("div", { style: { fontSize: 15, fontStyle: "italic", color: "#9a8d79", textAlign: "center", marginTop: 10 } }, "Vamos marcar o seu."), goBtn("começar", 1, true)), step === 1 && React.createElement("div", { key: "s1", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "Como te chamam?"), React.createElement("div", { style: HINT }, "o nome que abre a sua história"), React.createElement("input", { className: "tncad-line", value: f.fullName, autoFocus: true, placeholder: "seu nome", onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { fullName: e.target.value }); }); } }), goBtn("continuar", 2, nomeOk)), step === 2 && React.createElement("div", { key: "s2", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "Quando você", React.createElement("br"), "chegou ao mundo?"), React.createElement("div", { style: HINT }, "o começo da sua linha do tempo"), React.createElement("div", { style: { display: "flex", gap: 18, justifyContent: "center" } }, React.createElement("input", { className: "tncad-line", style: { width: 54 }, value: f.birthDay, placeholder: "dia", inputMode: "numeric", maxLength: 2, onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { birthDay: e.target.value.replace(/\D/g, "").slice(0, 2) }); }); } }), React.createElement("input", { className: "tncad-line", style: { width: 54 }, value: f.birthMonth, placeholder: "mês", inputMode: "numeric", maxLength: 2, onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { birthMonth: e.target.value.replace(/\D/g, "").slice(0, 2) }); }); } }), React.createElement("input", { className: "tncad-line", style: { width: 84 }, value: f.birthYear, placeholder: "ano", inputMode: "numeric", maxLength: 4, onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { birthYear: e.target.value.replace(/\D/g, "").slice(0, 4) }); }); } })), erroIdade && React.createElement("div", { style: { fontSize: 12, color: "#d98a6a", marginTop: 14, fontStyle: "italic", textAlign: "center", lineHeight: 1.5 } }, erroIdade), goBtn("continuar", 3, dataValida)), step === 3 && React.createElement("div", { key: "s3", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "E onde tudo", React.createElement("br"), "começou?"), React.createElement("div", { style: HINT }, "o lugar onde você nasceu"), React.createElement("input", { className: "tncad-line", value: f.placeName, autoFocus: true, placeholder: "cidade, lugar…", onChange: function (e) { var termo = e.target.value; setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { placeName: termo, city: termo }); }); searchAddr(termo); } }), addrSugs.length > 0 && React.createElement("div", { style: { marginTop: 8, background: "rgba(20,12,8,.92)", border: "0.5px solid rgba(111,159,214,.2)", borderRadius: 10, overflow: "hidden", maxHeight: 180, overflowY: "auto" } }, addrSugs.map(function (sg, i) { return React.createElement("div", { key: i, onClick: function () { return selectAddr(sg); }, style: { padding: "10px 14px", fontSize: 13.5, color: "#d9c9a8", cursor: "pointer", borderTop: i ? "0.5px solid rgba(180,168,148,.12)" : "none", lineHeight: 1.35 } }, sg.display_name); })), React.createElement("button", { onClick: salvar, disabled: !canSave || saving, style: { marginTop: 30, width: "100%", padding: 14, borderRadius: 13, border: "none", background: canSave ? "#2f6fb0" : "rgba(255,255,255,.08)", color: canSave ? "#f3ecdd" : "rgba(243,236,221,.4)", fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 16, cursor: canSave && !saving ? "pointer" : "not-allowed", opacity: canSave && !saving ? 1 : 0.7 } }, saving ? React.createElement(React.Fragment, null, React.createElement(Spinner, null), " Criando seu perfil…") : "entrar no Tempnext"), React.createElement("div", { style: { textAlign: "center", fontSize: 13, fontStyle: "italic", color: "#6f6552", marginTop: 18, lineHeight: 1.4 } }, "Você guarda outros lugares, épocas e fotos depois, no seu perfil."))), React.createElement("div", { style: { textAlign: "center", fontSize: 14, fontStyle: "italic", color: "#7a6f5a", marginTop: "auto", paddingTop: 18, minHeight: 22, letterSpacing: ".02em" } }, seedText), React.createElement("div", { style: { display: "flex", gap: 7, justifyContent: "center", marginTop: 14 } }, [1, 2, 3].map(function (d) { return React.createElement("div", { key: d, style: { width: step === d ? 18 : 6, height: 6, borderRadius: step === d ? 3 : "50%", background: step === d ? "#6f9fd6" : "rgba(180,168,148,.25)", boxShadow: step === d ? "0 0 8px rgba(111,159,214,.6)" : "none", transition: "all .3s" } }); })));
 }
 
 // ── Tela de Curiosidade (antes do cadastro) ───────────────────
