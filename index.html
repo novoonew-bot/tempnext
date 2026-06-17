@@ -782,7 +782,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v430 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v431 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -56445,6 +56445,118 @@ function HomeV9Preview(_ref265) {
     };
   }, [seed, user === null || user === void 0 ? void 0 : user.id, dados.perfis, dados.momentos, dados.capsulas, dados.places, dados.cruzosComigo, dados.meuUltimoMomento]);
   var c = composicao;
+  var lugarCardEl = function () {
+    var cidadeUser = (user === null || user === void 0 ? void 0 : user.city) || "";
+    var estadoUser = (user === null || user === void 0 ? void 0 : user.state) || "";
+    var lugarTexto = cidadeUser ? estadoUser ? "".concat(cidadeUser, ", ").concat(estadoUser) : cidadeUser : "Em algum lugar do mundo";
+    var cruzamentos = cidadeUser ? dados.perfis.filter(function (p) {
+      return p.id !== (user === null || user === void 0 ? void 0 : user.id) && (p.city || "").toLowerCase() === cidadeUser.toLowerCase();
+    }).length : 0;
+    var textoFrase;
+    if (!cidadeUser) textoFrase = "complete seu perfil pra ver quem passou pelo mesmo lugar";else if (cruzamentos === 0) textoFrase = "você é o primeiro";else if (cruzamentos === 1) textoFrase = "1 passou pelo mesmo lugar";else textoFrase = "".concat(cruzamentos, " passaram pelo mesmo lugar");
+    var podeClicar = !!cidadeUser;
+    // Tamanhos: nível 1 cresce um pouco, nível 0 é compacto
+    var padding = nivel === 1 ? "16px 18px" : "14px 16px";
+    var tituloSize = nivel === 1 ? 22 : 19;
+    var fraseSize = nivel === 1 ? 13 : 12;
+    return /*#__PURE__*/React.createElement("div", {
+      onClick: podeClicar ? function () {
+        return onAbrirLugar && onAbrirLugar(cidadeUser);
+      } : undefined,
+      style: {
+        position: "relative",
+        margin: "10px 0 14px",
+        padding: padding,
+        borderRadius: 14,
+        background: "linear-gradient(135deg, #3a2d22 0%, #2a201a 100%)",
+        color: "#f5ecd6",
+        display: "flex",
+        alignItems: "center",
+        gap: 14,
+        cursor: podeClicar ? "pointer" : "default",
+        overflow: "hidden",
+        boxShadow: "0 4px 16px -4px rgba(42,32,26,.25)"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 14,
+        height: 14,
+        borderRadius: "50%",
+        background: "var(--user-color)",
+        flexShrink: 0,
+        boxShadow: "0 0 0 4px var(--user-color-25)"
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        fontSize: tituloSize,
+        fontWeight: 400,
+        color: "#fff",
+        lineHeight: 1.1,
+        marginBottom: 4
+      }
+    }, lugarTexto), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        fontSize: fraseSize,
+        color: "rgba(245,236,214,.65)",
+        lineHeight: 1.3
+      }
+    }, textoFrase)), /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick(e) {
+        e.stopPropagation();
+        reembaralhar();
+      },
+      title: "Ver outras combina\xE7\xF5es",
+      style: {
+        width: 30,
+        height: 30,
+        borderRadius: "50%",
+        border: "1px solid rgba(255,255,255,.18)",
+        background: "rgba(255,255,255,.06)",
+        cursor: "pointer",
+        padding: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "rgba(255,255,255,.85)",
+        flexShrink: 0
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "13",
+      height: "13",
+      viewBox: "0 0 16 16",
+      fill: "none"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M3 5l4 4-4 4M9 5h4l-4 4 4 4H9",
+      stroke: "currentColor",
+      strokeWidth: "1.4",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }))), podeClicar && /*#__PURE__*/React.createElement("svg", {
+      width: "9",
+      height: "14",
+      viewBox: "0 0 9 14",
+      fill: "none",
+      style: {
+        opacity: 0.5,
+        flexShrink: 0,
+        marginLeft: -2
+      }
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M1 1l6 6-6 6",
+      stroke: "#fff",
+      strokeWidth: "1.5",
+      strokeLinecap: "round"
+    })));
+  }();
 
   // v221: navegação por níveis em vez de jump direto pra perfil
   // Nível 0: tap em qualquer card → expande home (nivel 1)
@@ -56910,7 +57022,7 @@ function HomeV9Preview(_ref265) {
     style: {
       padding: "0 12px 100px"
     }
-  }, nivel === 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(HV9Hero, {
+  }, nivel === 1 ? lugarCardEl : null, nivel === 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(HV9Hero, {
     hero: c.hero1,
     onClick: function onClick() {
       return handleHeroClick(c.hero1);
@@ -56929,118 +57041,7 @@ function HomeV9Preview(_ref265) {
         return handleTileClick(t);
       }
     });
-  })), function () {
-    var cidadeUser = (user === null || user === void 0 ? void 0 : user.city) || "";
-    var estadoUser = (user === null || user === void 0 ? void 0 : user.state) || "";
-    var lugarTexto = cidadeUser ? estadoUser ? "".concat(cidadeUser, ", ").concat(estadoUser) : cidadeUser : "Em algum lugar do mundo";
-    var cruzamentos = cidadeUser ? dados.perfis.filter(function (p) {
-      return p.id !== (user === null || user === void 0 ? void 0 : user.id) && (p.city || "").toLowerCase() === cidadeUser.toLowerCase();
-    }).length : 0;
-    var textoFrase;
-    if (!cidadeUser) textoFrase = "complete seu perfil pra ver quem passou pelo mesmo lugar";else if (cruzamentos === 0) textoFrase = "você é o primeiro";else if (cruzamentos === 1) textoFrase = "1 passou pelo mesmo lugar";else textoFrase = "".concat(cruzamentos, " passaram pelo mesmo lugar");
-    var podeClicar = !!cidadeUser;
-    // Tamanhos: nível 1 cresce um pouco, nível 0 é compacto
-    var padding = nivel === 1 ? "16px 18px" : "14px 16px";
-    var tituloSize = nivel === 1 ? 22 : 19;
-    var fraseSize = nivel === 1 ? 13 : 12;
-    return /*#__PURE__*/React.createElement("div", {
-      onClick: podeClicar ? function () {
-        return onAbrirLugar && onAbrirLugar(cidadeUser);
-      } : undefined,
-      style: {
-        position: "relative",
-        margin: "10px 0 14px",
-        padding: padding,
-        borderRadius: 14,
-        background: "linear-gradient(135deg, #3a2d22 0%, #2a201a 100%)",
-        color: "#f5ecd6",
-        display: "flex",
-        alignItems: "center",
-        gap: 14,
-        cursor: podeClicar ? "pointer" : "default",
-        overflow: "hidden",
-        boxShadow: "0 4px 16px -4px rgba(42,32,26,.25)"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        width: 14,
-        height: 14,
-        borderRadius: "50%",
-        background: "var(--user-color)",
-        flexShrink: 0,
-        boxShadow: "0 0 0 4px var(--user-color-25)"
-      }
-    }), /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: 1,
-        minWidth: 0
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontFamily: "'Cormorant Garamond',Georgia,serif",
-        fontStyle: "italic",
-        fontSize: tituloSize,
-        fontWeight: 400,
-        color: "#fff",
-        lineHeight: 1.1,
-        marginBottom: 4
-      }
-    }, lugarTexto), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontFamily: "'Cormorant Garamond',Georgia,serif",
-        fontStyle: "italic",
-        fontSize: fraseSize,
-        color: "rgba(245,236,214,.65)",
-        lineHeight: 1.3
-      }
-    }, textoFrase)), /*#__PURE__*/React.createElement("button", {
-      onClick: function onClick(e) {
-        e.stopPropagation();
-        reembaralhar();
-      },
-      title: "Ver outras combina\xE7\xF5es",
-      style: {
-        width: 30,
-        height: 30,
-        borderRadius: "50%",
-        border: "1px solid rgba(255,255,255,.18)",
-        background: "rgba(255,255,255,.06)",
-        cursor: "pointer",
-        padding: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "rgba(255,255,255,.85)",
-        flexShrink: 0
-      }
-    }, /*#__PURE__*/React.createElement("svg", {
-      width: "13",
-      height: "13",
-      viewBox: "0 0 16 16",
-      fill: "none"
-    }, /*#__PURE__*/React.createElement("path", {
-      d: "M3 5l4 4-4 4M9 5h4l-4 4 4 4H9",
-      stroke: "currentColor",
-      strokeWidth: "1.4",
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    }))), podeClicar && /*#__PURE__*/React.createElement("svg", {
-      width: "9",
-      height: "14",
-      viewBox: "0 0 9 14",
-      fill: "none",
-      style: {
-        opacity: 0.5,
-        flexShrink: 0,
-        marginLeft: -2
-      }
-    }, /*#__PURE__*/React.createElement("path", {
-      d: "M1 1l6 6-6 6",
-      stroke: "#fff",
-      strokeWidth: "1.5",
-      strokeLinecap: "round"
-    })));
-  }(), /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(HV9Hero, {
+  })), lugarCardEl, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(HV9Hero, {
     hero: c.hero2,
     secondary: true,
     onClick: function onClick() {
