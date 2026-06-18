@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v432 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v433 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -44378,10 +44378,18 @@ function CadastroSimples(_ref194) {
       birthDay: "",
       birthMonth: "",
       birthYear: "",
+      birthPlaceName: "",
+      birthCity: "",
+      birthUf: "",
+      birthCountry: "Brasil",
+      birthLat: null,
+      birthLng: null,
       placeName: "",
       city: "",
       uf: "",
-      country: "Brasil"
+      country: "Brasil",
+      lat: null,
+      lng: null
     }),
     _useState472 = _slicedToArray(_useState471, 2),
     f = _useState472[0],
@@ -44395,7 +44403,7 @@ function CadastroSimples(_ref194) {
     addrSugs = _useState476[0],
     setAddrSugs = _useState476[1];
   var addrTimer = useRef(null);
-  var _stepCad = useState(0);
+  var _stepCad = useState(1);
   var step = _stepCad[0];
   var setStep = _stepCad[1];
 
@@ -44433,7 +44441,7 @@ function CadastroSimples(_ref194) {
       }, _callee134, null, [[0, 3]]);
     })), 500);
   }
-  function selectAddr(s) {
+  function selectAddr(s, campo) {
     var addr = s.address || {};
     var city = addr.city || addr.town || addr.village || addr.municipality || addr.county || "";
     var SM = {
@@ -44471,6 +44479,14 @@ function CadastroSimples(_ref194) {
     var lat = s.lat ? parseFloat(s.lat) : null;
     var lng = s.lon ? parseFloat(s.lon) : null;
     setF(function (v) {
+      if (campo === "birth") return _objectSpread(_objectSpread({}, v), {}, {
+        birthPlaceName: placeName,
+        birthCity: city || placeName,
+        birthUf: uf,
+        birthCountry: country,
+        birthLat: lat,
+        birthLng: lng
+      });
       return _objectSpread(_objectSpread({}, v), {}, {
         placeName: placeName,
         city: city || placeName,
@@ -44521,11 +44537,11 @@ function CadastroSimples(_ref194) {
   }
   function _salvar0() {
     _salvar0 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee135() {
-      var idade, authId, _yield$db$auth$getSes, session, nomeCompleto, partes, firstName, lastName, birthDate, payload, lugarInicialCadastro, saved, _yield$db$from$insert1, data, error, payloadSemBirth, _yield$db$from$insert10, _data, _error2, _yield$db$from$upsert, _data2, _error3, _t153, _t154, _t155, _t156;
+      var idade, authId, _yield$db$auth$getSes, session, nomeCompleto, partes, firstName, lastName, birthDate, payload, lugarInicialCadastro, lugarNascimento, saved, _yield$db$from$insert1, data, error, payloadSemBirth, _yield$db$from$insert10, _data, _error2, _yield$db$from$upsert, _data2, _error3, _t153, _t154, _t155, _t156;
       return _regenerator().w(function (_context137) {
         while (1) switch (_context137.p = _context137.n) {
           case 0:
-            if (!(!f.fullName.trim() || !f.placeName.trim())) {
+            if (!(!f.fullName.trim() || !f.birthPlaceName.trim() || !f.placeName.trim())) {
               _context137.n = 1;
               break;
             }
@@ -44588,6 +44604,17 @@ function CadastroSimples(_ref194) {
               // F1.B C.5: profiles.lugares NÃO é mais populado no cadastro.
               // O lugar inicial vai direto pra place_profiles via syncLugaresToPlaces abaixo.
             }; // Lugar inicial do cadastro — passado direto pro sync (não via profiles.lugares)
+            lugarNascimento = {
+              placeName: f.birthPlaceName.trim(),
+              city: f.birthCity.trim() || f.birthPlaceName.trim(),
+              uf: f.birthUf || "",
+              pais: f.birthCountry || "Brasil",
+              lat: f.birthLat || null,
+              lng: f.birthLng || null,
+              y1: parseInt(f.birthYear) || new Date().getFullYear(),
+              y2: parseInt(f.birthYear) || new Date().getFullYear(),
+              era: "passado"
+            };
             lugarInicialCadastro = {
               placeName: f.placeName.trim(),
               city: f.city.trim() || f.placeName.trim(),
@@ -44678,7 +44705,7 @@ function CadastroSimples(_ref194) {
               } catch (_unused61) {}
               if (saved.id && !saved.id.toString().startsWith("local_")) {
                 // F1.B C.5: cria o lugar inicial direto em places + place_profiles
-                syncLugaresToPlaces(saved.id, [lugarInicialCadastro])["catch"](function (e) {
+                syncLugaresToPlaces(saved.id, [lugarNascimento, lugarInicialCadastro])["catch"](function (e) {
                   return tnLog("Sync lugar inicial:", e);
                 });
               }
@@ -44695,19 +44722,25 @@ function CadastroSimples(_ref194) {
   var idade = calcularIdade(f.birthDay, f.birthMonth, f.birthYear);
   var dataValida = idade !== null && idade >= 13 && idade <= 120;
   var nomeOk = f.fullName.trim().length >= 2;
-  var canSave = nomeOk && f.placeName.trim().length >= 1 && dataValida;
+  var birthOk = f.birthPlaceName.trim().length >= 1;
+  var atualOk = f.placeName.trim().length >= 1;
+  var canSave = nomeOk && dataValida && birthOk && atualOk;
   var primeiroNome = (f.fullName || "").trim().split(" ")[0];
   var seedParts = [];
   if (step >= 1 && primeiroNome) seedParts.push(primeiroNome);
   if (step >= 2 && f.birthYear) seedParts.push(f.birthYear);
-  if (step >= 3 && f.placeName) seedParts.push((f.placeName || "").split(",")[0]);
-  var seedText = seedParts.length ? "◍  " + seedParts.join("  ·  ") : step === 0 ? "" : "sua primeira marca…";
+  if (step >= 3 && f.birthPlaceName) seedParts.push((f.birthPlaceName || "").split(",")[0]);
+  if (step >= 4 && f.placeName) seedParts.push((f.placeName || "").split(",")[0]);
+  var seedText = seedParts.length ? "◍  " + seedParts.join("  ·  ") : "sua primeira marca…";
   var Q = { fontSize: 27, fontWeight: 500, color: "#ece3d2", lineHeight: 1.18, textAlign: "center", margin: "0 0 4px", fontFamily: "'Cormorant Garamond',Georgia,serif" };
   var HINT = { fontSize: 15, fontStyle: "italic", color: "#9a8d79", textAlign: "center", margin: "0 0 30px" };
   function goBtn(label, target, enabled) {
     return React.createElement("div", { style: { marginTop: 30, display: "flex", justifyContent: "center" } }, React.createElement("button", { onClick: enabled ? function () { setStep(target); } : undefined, disabled: !enabled, style: { display: "inline-flex", alignItems: "center", gap: 9, background: "none", border: "none", color: enabled ? "#cdbfa8" : "#5f5648", fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 17, fontStyle: "italic", cursor: enabled ? "pointer" : "not-allowed", padding: 8 } }, label + " ", React.createElement("span", { style: { width: 30, height: 30, borderRadius: "50%", border: "1px solid rgba(111,159,214,.5)", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#6f9fd6", fontStyle: "normal", fontSize: 15 } }, "→")));
   }
-  return React.createElement("div", { style: { minHeight: "100vh", background: "radial-gradient(circle at 50% 32%, #1f1810 0%, #0f0a05 80%)", display: "flex", flexDirection: "column", padding: "30px 26px 26px", fontFamily: "'Cormorant Garamond',Georgia,serif", position: "relative", overflow: "hidden" } }, React.createElement("div", { style: { display: "flex", justifyContent: "center", marginBottom: 8 } }, React.createElement("div", { style: { position: "relative", width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center" } }, React.createElement("span", { style: { fontSize: 24, color: "#6f9fd6", textShadow: "0 0 14px rgba(111,159,214,.6)", lineHeight: 1, fontWeight: 600 } }, "T"), React.createElement("div", { style: { position: "absolute", top: "50%", left: "50%", width: 32, height: 32, border: "1.2px solid #6f9fd6", borderRadius: "50%", boxShadow: "0 0 12px rgba(111,159,214,.35)", transform: "translate(-50%,-50%)", animation: "tnsPulse 2.8s ease-in-out infinite" } }))), React.createElement("div", { style: { flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" } }, step === 0 && React.createElement("div", { key: "s0", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: { fontSize: 18, fontStyle: "italic", color: "#9a8d79", textAlign: "center", margin: "18px 0 26px" } }, "o tempo não para — ele aproxima"), React.createElement("div", { style: { fontSize: 20, color: "#e6d6b6", textAlign: "center", lineHeight: 1.35 } }, "Toda história começa", React.createElement("br"), "em um tempo e um lugar."), React.createElement("div", { style: { fontSize: 15, fontStyle: "italic", color: "#9a8d79", textAlign: "center", marginTop: 10 } }, "Vamos marcar o seu."), goBtn("começar", 1, true)), step === 1 && React.createElement("div", { key: "s1", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "Como te chamam?"), React.createElement("div", { style: HINT }, "o nome que abre a sua história"), React.createElement("input", { className: "tncad-line", value: f.fullName, autoFocus: true, placeholder: "seu nome", onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { fullName: e.target.value }); }); } }), goBtn("continuar", 2, nomeOk)), step === 2 && React.createElement("div", { key: "s2", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "Quando você", React.createElement("br"), "chegou ao mundo?"), React.createElement("div", { style: HINT }, "o começo da sua linha do tempo"), React.createElement("div", { style: { display: "flex", gap: 18, justifyContent: "center" } }, React.createElement("input", { className: "tncad-line", style: { width: 54 }, value: f.birthDay, placeholder: "dia", inputMode: "numeric", maxLength: 2, onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { birthDay: e.target.value.replace(/\D/g, "").slice(0, 2) }); }); } }), React.createElement("input", { className: "tncad-line", style: { width: 54 }, value: f.birthMonth, placeholder: "mês", inputMode: "numeric", maxLength: 2, onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { birthMonth: e.target.value.replace(/\D/g, "").slice(0, 2) }); }); } }), React.createElement("input", { className: "tncad-line", style: { width: 84 }, value: f.birthYear, placeholder: "ano", inputMode: "numeric", maxLength: 4, onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { birthYear: e.target.value.replace(/\D/g, "").slice(0, 4) }); }); } })), erroIdade && React.createElement("div", { style: { fontSize: 12, color: "#d98a6a", marginTop: 14, fontStyle: "italic", textAlign: "center", lineHeight: 1.5 } }, erroIdade), goBtn("continuar", 3, dataValida)), step === 3 && React.createElement("div", { key: "s3", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "E onde tudo", React.createElement("br"), "começou?"), React.createElement("div", { style: HINT }, "o lugar onde você nasceu"), React.createElement("input", { className: "tncad-line", value: f.placeName, autoFocus: true, placeholder: "cidade, lugar…", onChange: function (e) { var termo = e.target.value; setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { placeName: termo, city: termo }); }); searchAddr(termo); } }), addrSugs.length > 0 && React.createElement("div", { style: { marginTop: 8, background: "rgba(20,12,8,.92)", border: "0.5px solid rgba(111,159,214,.2)", borderRadius: 10, overflow: "hidden", maxHeight: 180, overflowY: "auto" } }, addrSugs.map(function (sg, i) { return React.createElement("div", { key: i, onClick: function () { return selectAddr(sg); }, style: { padding: "10px 14px", fontSize: 13.5, color: "#d9c9a8", cursor: "pointer", borderTop: i ? "0.5px solid rgba(180,168,148,.12)" : "none", lineHeight: 1.35 } }, sg.display_name); })), React.createElement("button", { onClick: salvar, disabled: !canSave || saving, style: { marginTop: 30, width: "100%", padding: 14, borderRadius: 13, border: "none", background: canSave ? "#2f6fb0" : "rgba(255,255,255,.08)", color: canSave ? "#f3ecdd" : "rgba(243,236,221,.4)", fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 16, cursor: canSave && !saving ? "pointer" : "not-allowed", opacity: canSave && !saving ? 1 : 0.7 } }, saving ? React.createElement(React.Fragment, null, React.createElement(Spinner, null), " Criando seu perfil…") : "entrar no Tempnext"), React.createElement("div", { style: { textAlign: "center", fontSize: 13, fontStyle: "italic", color: "#6f6552", marginTop: 18, lineHeight: 1.4 } }, "Você guarda outros lugares, épocas e fotos depois, no seu perfil."))), React.createElement("div", { style: { textAlign: "center", fontSize: 14, fontStyle: "italic", color: "#7a6f5a", marginTop: "auto", paddingTop: 18, minHeight: 22, letterSpacing: ".02em" } }, seedText), React.createElement("div", { style: { display: "flex", gap: 7, justifyContent: "center", marginTop: 14 } }, [1, 2, 3].map(function (d) { return React.createElement("div", { key: d, style: { width: step === d ? 18 : 6, height: 6, borderRadius: step === d ? 3 : "50%", background: step === d ? "#6f9fd6" : "rgba(180,168,148,.25)", boxShadow: step === d ? "0 0 8px rgba(111,159,214,.6)" : "none", transition: "all .3s" } }); })));
+  function campoLugar(valorKey, campo) {
+    return React.createElement(React.Fragment, null, React.createElement("input", { className: "tncad-line", value: f[valorKey], autoFocus: true, placeholder: "cidade, lugar…", onChange: function (e) { var termo = e.target.value; setF(function (v) { var u = _objectSpread({}, v); u[valorKey] = termo; if (campo === "birth") u.birthCity = termo;else u.city = termo; return u; }); searchAddr(termo); } }), addrSugs.length > 0 && React.createElement("div", { style: { marginTop: 8, background: "rgba(20,12,8,.92)", border: "0.5px solid rgba(111,159,214,.2)", borderRadius: 10, overflow: "hidden", maxHeight: 180, overflowY: "auto" } }, addrSugs.map(function (sg, i) { return React.createElement("div", { key: i, onClick: function () { return selectAddr(sg, campo); }, style: { padding: "10px 14px", fontSize: 13.5, color: "#d9c9a8", cursor: "pointer", borderTop: i ? "0.5px solid rgba(180,168,148,.12)" : "none", lineHeight: 1.35 } }, sg.display_name); })));
+  }
+  return React.createElement("div", { style: { minHeight: "100vh", background: "radial-gradient(circle at 50% 32%, #1f1810 0%, #0f0a05 80%)", display: "flex", flexDirection: "column", padding: "30px 26px 26px", fontFamily: "'Cormorant Garamond',Georgia,serif", position: "relative", overflow: "hidden" } }, React.createElement("div", { style: { display: "flex", justifyContent: "center", marginBottom: 8 } }, React.createElement("div", { style: { position: "relative", width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center" } }, React.createElement("span", { style: { fontSize: 24, color: "#6f9fd6", textShadow: "0 0 14px rgba(111,159,214,.6)", lineHeight: 1, fontWeight: 600 } }, "T"), React.createElement("div", { style: { position: "absolute", top: "50%", left: "50%", width: 32, height: 32, border: "1.2px solid #6f9fd6", borderRadius: "50%", boxShadow: "0 0 12px rgba(111,159,214,.35)", transform: "translate(-50%,-50%)", animation: "tnsPulse 2.8s ease-in-out infinite" } }))), React.createElement("div", { style: { flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" } }, step === 1 && React.createElement("div", { key: "s1", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "Como te chamam?"), React.createElement("div", { style: HINT }, "o nome que abre a sua história"), React.createElement("input", { className: "tncad-line", value: f.fullName, autoFocus: true, placeholder: "seu nome", onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { fullName: e.target.value }); }); } }), goBtn("continuar", 2, nomeOk)), step === 2 && React.createElement("div", { key: "s2", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "Quando você", React.createElement("br"), "chegou ao mundo?"), React.createElement("div", { style: HINT }, "o começo da sua linha do tempo"), React.createElement("div", { style: { display: "flex", gap: 18, justifyContent: "center" } }, React.createElement("input", { className: "tncad-line", style: { width: 54 }, value: f.birthDay, placeholder: "dia", inputMode: "numeric", maxLength: 2, onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { birthDay: e.target.value.replace(/\D/g, "").slice(0, 2) }); }); } }), React.createElement("input", { className: "tncad-line", style: { width: 54 }, value: f.birthMonth, placeholder: "mês", inputMode: "numeric", maxLength: 2, onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { birthMonth: e.target.value.replace(/\D/g, "").slice(0, 2) }); }); } }), React.createElement("input", { className: "tncad-line", style: { width: 84 }, value: f.birthYear, placeholder: "ano", inputMode: "numeric", maxLength: 4, onChange: function (e) { return setF(function (v) { return _objectSpread(_objectSpread({}, v), {}, { birthYear: e.target.value.replace(/\D/g, "").slice(0, 4) }); }); } })), erroIdade && React.createElement("div", { style: { fontSize: 12, color: "#d98a6a", marginTop: 14, fontStyle: "italic", textAlign: "center", lineHeight: 1.5 } }, erroIdade), goBtn("continuar", 3, dataValida)), step === 3 && React.createElement("div", { key: "s3", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "E onde tudo", React.createElement("br"), "começou?"), React.createElement("div", { style: HINT }, "o lugar onde você nasceu"), campoLugar("birthPlaceName", "birth"), goBtn("continuar", 4, birthOk)), step === 4 && React.createElement("div", { key: "s4", style: { animation: "tnFadeUp .5s ease both" } }, React.createElement("div", { style: Q }, "E onde você", React.createElement("br"), "vive hoje?"), React.createElement("div", { style: HINT }, "o lugar do seu presente"), campoLugar("placeName", "atual"), React.createElement("button", { onClick: salvar, disabled: !canSave || saving, style: { marginTop: 30, width: "100%", padding: 14, borderRadius: 13, border: "none", background: canSave ? "#2f6fb0" : "rgba(255,255,255,.08)", color: canSave ? "#f3ecdd" : "rgba(243,236,221,.4)", fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 16, cursor: canSave && !saving ? "pointer" : "not-allowed", opacity: canSave && !saving ? 1 : 0.7 } }, saving ? React.createElement(React.Fragment, null, React.createElement(Spinner, null), " Criando seu perfil…") : "entrar no Tempnext"), React.createElement("div", { style: { textAlign: "center", fontSize: 13, fontStyle: "italic", color: "#6f6552", marginTop: 18, lineHeight: 1.4 } }, "Você guarda outros lugares, épocas e fotos depois, no seu perfil."))), React.createElement("div", { style: { textAlign: "center", fontSize: 14, fontStyle: "italic", color: "#7a6f5a", marginTop: "auto", paddingTop: 18, minHeight: 22, letterSpacing: ".02em" } }, seedText), React.createElement("div", { style: { display: "flex", gap: 7, justifyContent: "center", marginTop: 14 } }, [1, 2, 3, 4].map(function (d) { return React.createElement("div", { key: d, style: { width: step === d ? 18 : 6, height: 6, borderRadius: step === d ? 3 : "50%", background: step === d ? "#6f9fd6" : "rgba(180,168,148,.25)", boxShadow: step === d ? "0 0 8px rgba(111,159,214,.6)" : "none", transition: "all .3s" } }); })));
 }
 
 // ── Tela de Curiosidade (antes do cadastro) ───────────────────
@@ -55905,6 +55938,8 @@ function HomeV9Preview(_ref265) {
     _onAbrirPerfil2 = _ref265.onAbrirPerfil,
     onAbrirLugar = _ref265.onAbrirLugar,
     onAbrirBuscar = _ref265.onAbrirBuscar,
+    onAbrirMenuRapido = _ref265.onAbrirMenuRapido,
+    onAbrirCapsula = _ref265.onAbrirCapsula,
     _onAbrirPerfilProprio = _ref265.onAbrirPerfilProprio,
     onNotificacoes = _ref265.onNotificacoes,
     onAlertasRegiao = _ref265.onAlertasRegiao,
@@ -56746,16 +56781,14 @@ function HomeV9Preview(_ref265) {
   }(), !dados.loading && !dados.meuUltimoMomento ? /*#__PURE__*/React.createElement(HV9EstadoVazio, {
     user: user,
     onMarcarMomento: function onMarcarMomento() {
-      // Buscar = melhor entrada pra primeira marcação (escolher lugar real)
-      onAbrirBuscar && onAbrirBuscar();
+      // Abre o Menu Rapido (mesmo do botao +): momento, lugar, passagem, capsula
+      onAbrirMenuRapido ? onAbrirMenuRapido() : onAbrirBuscar && onAbrirBuscar();
     },
     onBuscar: function onBuscar() {
       return onAbrirBuscar && onAbrirBuscar();
     },
     onCapsula: function onCapsula() {
-      // Por enquanto cápsula também passa pelo Buscar (escolher lugar primeiro)
-      // No futuro: rota dedicada de criação de cápsula
-      onAbrirBuscar && onAbrirBuscar();
+      onAbrirCapsula ? onAbrirCapsula() : onAbrirBuscar && onAbrirBuscar();
     }
   }) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -57753,6 +57786,9 @@ function App() {
     _useState572 = _slicedToArray(_useState571, 2),
     showLogin = _useState572[0],
     setShowLogin = _useState572[1];
+  var _stIniCad = useState(false);
+  var iniciarCadastro = _stIniCad[0];
+  var setIniciarCadastro = _stIniCad[1];
   var _useState573 = useState(false),
     _useState574 = _slicedToArray(_useState573, 2),
     showLoginPreview = _useState574[0],
@@ -59516,7 +59552,13 @@ function App() {
 
   // ── Tela de Login (se não tem user) ──
   if (!user) {
-    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("style", null, "@property --tnwla{syntax:'<angle>';inherits:false;initial-value:0deg}.tnw-sp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;padding:0 24px;z-index:2;transform:translateY(-34px);pointer-events:none}.tnw-mark{font-family:'Cormorant Garamond',Georgia,serif;font-size:51px;font-weight:600;letter-spacing:-.008em;line-height:1;white-space:nowrap;position:relative}.tnw-ink{color:#ece3d2;position:relative;z-index:2;opacity:0;animation:tnwNameUp 1s ease .3s forwards}.tnw-tWrap{position:relative}.tnw-b{color:#6f9fd6;text-shadow:0 0 20px rgba(111,159,214,.5);position:relative;z-index:2;display:inline-block;opacity:0;animation:tnwTSlow 2.4s ease-in-out 1s forwards}.tnw-rip{position:absolute;top:50%;left:50%;width:0;height:0;z-index:1}.tnw-rip i{position:absolute;top:0;left:0;border-radius:50%;border:1.3px solid #6f9fd6;opacity:0}.tnw-wave{width:0;height:0;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(111,159,214,.2);animation:tnwWaveExpand 6s linear .3s forwards}.tnw-wave.wd1{animation-delay:1.8s}.tnw-wave.wd2{animation-delay:3.3s}.tnw-wave.wd3{animation-delay:4.8s}.tnw-lock{width:66px;height:66px;transform:translate(-50%,-50%) scale(0);box-shadow:0 0 14px rgba(111,159,214,.3);animation:tnwLockIn 1.1s ease 8.4s forwards,tnwLockPulse 2.8s ease-in-out 9.5s infinite}.tnw-line{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:16px;color:#978b78;text-align:center;letter-spacing:.01em}.tnw-line .tnw-type{display:inline-block;clip-path:inset(0 100% 0 0);animation:tnwType 3s steps(30,end) 2s forwards}.tnw-triad{position:absolute;left:0;right:0;bottom:188px;text-align:center;z-index:2;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:15px;letter-spacing:.05em;color:#9a8d79;pointer-events:none}.tnw-triad span{opacity:0}.tnw-triad .w1{animation:tnwWordUp .6s ease 5.4s forwards}.tnw-triad .w2{animation:tnwWordUp .6s ease 6s forwards}.tnw-triad .w3{animation:tnwWordUp .6s ease 6.6s forwards}.tnw-btn{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-weight:600;letter-spacing:.01em;white-space:nowrap;padding:11px 30px;border-radius:24px;background:transparent;border:none;color:#cfe0f2;cursor:pointer;z-index:2;opacity:0;animation:tnwBtnUp .8s ease 3.5s forwards;pointer-events:auto;z-index:3}.tnw-btn span{position:relative;z-index:1}.tnw-btn::before{content:'';position:absolute;inset:0;border-radius:24px;padding:1.4px;background:conic-gradient(from var(--tnwla),rgba(111,159,214,.42) 0deg,rgba(214,236,255,.95) 55deg,rgba(111,159,214,.42) 130deg,rgba(111,159,214,.42) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;animation:tnwSpin 9s linear infinite;pointer-events:none}@keyframes tnwNameUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes tnwTSlow{from{opacity:0}to{opacity:1}}@keyframes tnwType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}@keyframes tnwWordUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}@keyframes tnwLockIn{0%{transform:translate(-50%,-50%) scale(0);opacity:0}70%{transform:translate(-50%,-50%) scale(1.14);opacity:.9}100%{transform:translate(-50%,-50%) scale(1);opacity:.85}}@keyframes tnwLockPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.85}50%{transform:translate(-50%,-50%) scale(1.1);opacity:.48}}@keyframes tnwBtnUp{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}@keyframes tnwSpin{to{--tnwla:360deg}}@keyframes tnwWaveExpand{0%{width:0;height:0;opacity:0}7%{opacity:.4}80%{opacity:.16}100%{width:900px;height:900px;opacity:0}}"), /*#__PURE__*/React.createElement("div", {
+    if (iniciarCadastro) return /*#__PURE__*/React.createElement(CadastroSimples, {
+      onDone: salvar,
+      onLogin: function onLogin() {
+        return setIniciarCadastro(false);
+      }
+    });
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("style", null, "@property --tnwla{syntax:'<angle>';inherits:false;initial-value:0deg}.tnw-sp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;padding:0 24px;z-index:2;transform:translateY(-34px);pointer-events:none}.tnw-mark{font-family:'Cormorant Garamond',Georgia,serif;font-size:51px;font-weight:600;letter-spacing:-.008em;line-height:1;white-space:nowrap;position:relative}.tnw-ink{color:#ece3d2;position:relative;z-index:2;opacity:0;animation:tnwNameUp 1s ease .3s forwards}.tnw-tWrap{position:relative}.tnw-b{color:#6f9fd6;text-shadow:0 0 20px rgba(111,159,214,.5);position:relative;z-index:2;display:inline-block;opacity:0;animation:tnwTSlow 2.4s ease-in-out 1s forwards}.tnw-rip{position:absolute;top:50%;left:50%;width:0;height:0;z-index:1}.tnw-rip i{position:absolute;top:0;left:0;border-radius:50%;border:1.3px solid #6f9fd6;opacity:0}.tnw-wave{width:0;height:0;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(111,159,214,.2);animation:tnwWaveExpand 6s linear .3s forwards}.tnw-wave.wd1{animation-delay:1.8s}.tnw-wave.wd2{animation-delay:3.3s}.tnw-wave.wd3{animation-delay:4.8s}.tnw-lock{width:66px;height:66px;transform:translate(-50%,-50%) scale(0);box-shadow:0 0 14px rgba(111,159,214,.3);animation:tnwLockIn 1.1s ease 8.4s forwards,tnwLockPulse 2.8s ease-in-out 9.5s infinite}.tnw-line{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:16px;color:#978b78;text-align:center;letter-spacing:.01em}.tnw-line .tnw-type{display:inline-block;clip-path:inset(0 100% 0 0);animation:tnwType 3s steps(30,end) 2s forwards}.tnw-triad{position:absolute;left:0;right:0;bottom:188px;text-align:center;z-index:2;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:15px;letter-spacing:.05em;color:#9a8d79;pointer-events:none}.tnw-triad span{opacity:0}.tnw-triad .w1{animation:tnwWordUp .6s ease 5.4s forwards}.tnw-triad .w2{animation:tnwWordUp .6s ease 6s forwards}.tnw-triad .w3{animation:tnwWordUp .6s ease 6.6s forwards}.tnw-btn{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-weight:600;letter-spacing:.01em;white-space:nowrap;padding:11px 30px;border-radius:24px;background:transparent;border:none;color:#cfe0f2;cursor:pointer;z-index:2;opacity:0;animation:tnwBtnUp .8s ease 3.5s forwards;pointer-events:auto;z-index:3}.tnw-btn span{position:relative;z-index:1}.tnw-btn::before{content:'';position:absolute;inset:0;border-radius:24px;padding:1.4px;background:conic-gradient(from var(--tnwla),rgba(111,159,214,.42) 0deg,rgba(214,236,255,.95) 55deg,rgba(111,159,214,.42) 130deg,rgba(111,159,214,.42) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;animation:tnwSpin 9s linear infinite;pointer-events:none}@keyframes tnwNameUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes tnwTSlow{from{opacity:0}to{opacity:1}}@keyframes tnwType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}@keyframes tnwWordUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}@keyframes tnwLockIn{0%{transform:translate(-50%,-50%) scale(0);opacity:0}70%{transform:translate(-50%,-50%) scale(1.14);opacity:.9}100%{transform:translate(-50%,-50%) scale(1);opacity:.85}}@keyframes tnwLockPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.85}50%{transform:translate(-50%,-50%) scale(1.1);opacity:.48}}@keyframes tnwBtnUp{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}@keyframes tnwSpin{to{--tnwla:360deg}}@keyframes tnwWaveExpand{0%{width:0;height:0;opacity:0}7%{opacity:.4}80%{opacity:.16}100%{width:900px;height:900px;opacity:0}}.tnw-enter{position:absolute;left:50%;bottom:62px;transform:translateX(-50%);background:none;border:none;color:#8a7d66;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:13px;cursor:pointer;z-index:3;opacity:0;animation:tnwBtnUp .8s ease 4s forwards}"), /*#__PURE__*/React.createElement("div", {
       className: "tnw-screen",
       style: {
         maxWidth: 430,
@@ -59563,9 +59605,14 @@ function App() {
     }, " \xB7 futuro")), /*#__PURE__*/React.createElement("button", {
       className: "tnw-btn",
       onClick: function onClick() {
+        setIniciarCadastro(true);
+      }
+    }, /*#__PURE__*/React.createElement("span", null, "criar meu tempo")), /*#__PURE__*/React.createElement("button", {
+      className: "tnw-enter",
+      onClick: function onClick() {
         setShowLogin(true);
       }
-    }, /*#__PURE__*/React.createElement("span", null, "criar meu tempo"))), showLogin && /*#__PURE__*/React.createElement(TelaLogin, {
+    }, "já tenho conta · entrar")), showLogin && /*#__PURE__*/React.createElement(TelaLogin, {
       onClose: function onClose() {
         return setShowLogin(false);
       },
@@ -59694,6 +59741,12 @@ function App() {
         }, "", window.location.href);
       } catch (_unused129) {}
       setTela("buscar");
+    },
+    onAbrirMenuRapido: function onAbrirMenuRapido() {
+      if (verificarPerfilCompleto()) setShowMenuRapido(true);
+    },
+    onAbrirCapsula: function onAbrirCapsula() {
+      setTela("capsula_nova");
     },
     onAbrirPerfilProprio: function onAbrirPerfilProprio() {
       try {
