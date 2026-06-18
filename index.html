@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v435 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v436 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -31956,7 +31956,7 @@ function ModalConfiguracoes(_ref147) {
     style: {
       position: "fixed",
       inset: 0,
-      background: "rgba(28,28,30,0.55)",
+      background: "rgba(10,7,4,0.66)",
       zIndex: 300,
       display: "flex",
       alignItems: "center",
@@ -31968,33 +31968,68 @@ function ModalConfiguracoes(_ref147) {
       return e.stopPropagation();
     },
     style: {
-      background: T.bg,
-      borderRadius: 18,
-      padding: "28px 26px 22px",
+      background: "#1f1810",
+      borderRadius: 22,
+      padding: "30px 26px 24px",
       maxWidth: 360,
       width: "100%",
-      boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-      border: "1px solid ".concat(T.border)
+      boxShadow: "0 24px 64px rgba(0,0,0,0.55)",
+      border: "1px solid rgba(111,159,214,0.18)"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative",
+      width: 40,
+      height: 40,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "'Cormorant Garamond',Georgia,serif",
+      fontSize: 26,
+      color: "#6f9fd6",
+      textShadow: "0 0 14px rgba(111,159,214,.5)",
+      lineHeight: 1,
+      fontWeight: 600
+    }
+  }, "T"), /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": true,
+    style: {
+      position: "absolute",
+      inset: 0,
+      border: "1.2px solid rgba(111,159,214,0.5)",
+      borderRadius: "50%",
+      boxShadow: "0 0 12px rgba(111,159,214,0.28)"
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
       fontFamily: "'Cormorant Garamond','Georgia',serif",
-      fontSize: 24,
+      fontSize: 25,
       fontWeight: 500,
-      color: T.text,
+      color: "#ece3d2",
       marginBottom: 10,
       letterSpacing: "-0.01em",
-      lineHeight: 1.2
+      lineHeight: 1.2,
+      textAlign: "center"
     }
   }, "Sair do Tempnext?"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
-      color: T.muted,
+      fontSize: 14,
+      color: "#9a8d79",
       lineHeight: 1.6,
       marginBottom: 22,
       fontWeight: 400,
       fontFamily: "'Cormorant Garamond','Georgia',serif",
-      fontStyle: "italic"
+      fontStyle: "italic",
+      textAlign: "center"
     }
   }, "Sua sess\xE3o ser\xE1 encerrada. Pra voltar voc\xEA precisar\xE1 fazer login de novo."), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -32007,15 +32042,15 @@ function ModalConfiguracoes(_ref147) {
     },
     style: {
       flex: 1,
-      padding: "12px",
-      borderRadius: 11,
-      background: T.faint,
-      border: "1px solid ".concat(T.border),
-      color: T.sub,
-      fontSize: 13,
+      padding: "13px",
+      borderRadius: 13,
+      background: "transparent",
+      border: "1px solid rgba(255,255,255,0.16)",
+      color: "#cdbfa8",
+      fontSize: 14,
       fontWeight: 600,
       cursor: "pointer",
-      fontFamily: "inherit"
+      fontFamily: "'Cormorant Garamond',Georgia,serif"
     }
   }, "Ficar"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
@@ -32024,15 +32059,15 @@ function ModalConfiguracoes(_ref147) {
     },
     style: {
       flex: 1,
-      padding: "12px",
-      borderRadius: 11,
-      background: T.text,
+      padding: "13px",
+      borderRadius: 13,
+      background: "#2f6fb0",
       border: "none",
-      color: "#fff",
-      fontSize: 13,
-      fontWeight: 700,
+      color: "#f3ecdd",
+      fontSize: 14,
+      fontWeight: 600,
       cursor: "pointer",
-      fontFamily: "inherit"
+      fontFamily: "'Cormorant Garamond',Georgia,serif"
     }
   }, "Sair"))))));
 }
@@ -52419,10 +52454,12 @@ function HV9LugarImersivo(_ref248) {
               q = q.eq("user_id", userFiltro.id);
             }
             _context151.n = 1;
-            return q;
+            return q.then(function (r) {
+              return filtrarCapsulasVisiveis(r.data || [], user);
+            });
           case 1:
             _yield$q2 = _context151.v;
-            data = _yield$q2.data;
+            data = _yield$q2;
             setMomentosLugar(data || []);
             _context151.n = 3;
             break;
@@ -60740,7 +60777,7 @@ function App() {
     style: {
       position: "fixed",
       inset: 0,
-      background: "rgba(28,28,30,0.55)",
+      background: "rgba(10,7,4,0.66)",
       zIndex: 300,
       display: "flex",
       alignItems: "center",
@@ -60752,33 +60789,68 @@ function App() {
       return e.stopPropagation();
     },
     style: {
-      background: T.bg,
-      borderRadius: 18,
-      padding: "28px 26px 22px",
+      background: "#1f1810",
+      borderRadius: 22,
+      padding: "30px 26px 24px",
       maxWidth: 360,
       width: "100%",
-      boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-      border: "1px solid ".concat(T.border)
+      boxShadow: "0 24px 64px rgba(0,0,0,0.55)",
+      border: "1px solid rgba(111,159,214,0.18)"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative",
+      width: 40,
+      height: 40,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "'Cormorant Garamond',Georgia,serif",
+      fontSize: 26,
+      color: "#6f9fd6",
+      textShadow: "0 0 14px rgba(111,159,214,.5)",
+      lineHeight: 1,
+      fontWeight: 600
+    }
+  }, "T"), /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": true,
+    style: {
+      position: "absolute",
+      inset: 0,
+      border: "1.2px solid rgba(111,159,214,0.5)",
+      borderRadius: "50%",
+      boxShadow: "0 0 12px rgba(111,159,214,0.28)"
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
       fontFamily: "'Cormorant Garamond','Georgia',serif",
-      fontSize: 24,
+      fontSize: 25,
       fontWeight: 500,
-      color: T.text,
+      color: "#ece3d2",
       marginBottom: 10,
       letterSpacing: "-0.01em",
-      lineHeight: 1.2
+      lineHeight: 1.2,
+      textAlign: "center"
     }
   }, "Sair do Tempnext?"), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 13,
-      color: T.muted,
+      fontSize: 14,
+      color: "#9a8d79",
       lineHeight: 1.6,
       marginBottom: 22,
       fontWeight: 400,
       fontFamily: "'Cormorant Garamond','Georgia',serif",
-      fontStyle: "italic"
+      fontStyle: "italic",
+      textAlign: "center"
     }
   }, "Sua sess\xE3o ser\xE1 encerrada. Pra voltar voc\xEA precisar\xE1 fazer login de novo."), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -60791,15 +60863,15 @@ function App() {
     },
     style: {
       flex: 1,
-      padding: "12px",
-      borderRadius: 11,
-      background: T.faint,
-      border: "1px solid ".concat(T.border),
-      color: T.sub,
-      fontSize: 13,
+      padding: "13px",
+      borderRadius: 13,
+      background: "transparent",
+      border: "1px solid rgba(255,255,255,0.16)",
+      color: "#cdbfa8",
+      fontSize: 14,
       fontWeight: 600,
       cursor: "pointer",
-      fontFamily: "inherit"
+      fontFamily: "'Cormorant Garamond',Georgia,serif"
     }
   }, "Ficar"), /*#__PURE__*/React.createElement("button", {
     onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee167() {
@@ -60820,15 +60892,15 @@ function App() {
     })),
     style: {
       flex: 1,
-      padding: "12px",
-      borderRadius: 11,
-      background: T.text,
+      padding: "13px",
+      borderRadius: 13,
+      background: "#2f6fb0",
       border: "none",
-      color: "#fff",
-      fontSize: 13,
-      fontWeight: 700,
+      color: "#f3ecdd",
+      fontSize: 14,
+      fontWeight: 600,
       cursor: "pointer",
-      fontFamily: "inherit"
+      fontFamily: "'Cormorant Garamond',Georgia,serif"
     }
   }, "Sair")))))));
 }
@@ -60857,13 +60929,8 @@ if ("serviceWorker" in navigator) {
         if (!novo) return;
         novo.addEventListener("statechange", function () {
           if (novo.state === "installed" && navigator.serviceWorker.controller) {
-            tnLog("[PWA] Nova versão detectada — atualizando...");
+            tnLog("[PWA] Nova versao instalada - sera aplicada no proximo carregamento.");
             novo.postMessage("skip-waiting");
-            setTimeout(function () {
-              if (confirm("Nova versão do Tempnext disponível. Atualizar agora?")) {
-                window.location.reload();
-              }
-            }, 800);
           }
         });
       });
