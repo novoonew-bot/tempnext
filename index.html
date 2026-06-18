@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v437 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v438 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -24510,10 +24510,12 @@ function GaleriaUser(_ref108) {
             _context61.n = 1;
             return dbRead.from("momentos").select("*").eq("user_id", pessoa.id).or("tipo.is.null,tipo.eq.momento,tipo.eq.capsula").order("ts", {
               ascending: false
-            }).limit(200);
+            }).limit(200).then(function (r) {
+              return filtrarCapsulasVisiveis(r.data || [], userLogado);
+            });
           case 1:
             _yield$dbRead$from$se34 = _context61.v;
-            data = _yield$dbRead$from$se34.data;
+            data = _yield$dbRead$from$se34;
             _context61.n = 2;
             return processarItems(data || [], pessoa);
           case 2:
@@ -24559,10 +24561,12 @@ function GaleriaUser(_ref108) {
             _context63.n = 3;
             return dbRead.from("momentos").select("*").neq("user_id", pessoa.id).or("tipo.is.null,tipo.eq.momento,tipo.eq.capsula").order("ts", {
               ascending: false
-            }).range(pagina * 15, (pagina + 1) * 15 - 1);
+            }).range(pagina * 15, (pagina + 1) * 15 - 1).then(function (r) {
+              return filtrarCapsulasVisiveis(r.data || [], userLogado);
+            });
           case 3:
             _yield$dbRead$from$se36 = _context63.v;
-            data = _yield$dbRead$from$se36.data;
+            data = _yield$dbRead$from$se36;
             if (!(!data || data.length === 0)) {
               _context63.n = 4;
               break;
@@ -24985,10 +24989,12 @@ function GaleriaImersaoMomento(_ref111) {
               query = query.gte("ts", "".concat(anoMin, "-01-01")).lte("ts", "".concat(anoMax, "-12-31"));
             }
             _context64.n = 2;
-            return query;
+            return query.then(function (r) {
+              return filtrarCapsulasVisiveis(r.data || [], userLogado);
+            });
           case 2:
             _yield$query2 = _context64.v;
-            data = _yield$query2.data;
+            data = _yield$query2;
             if (!(data && data.length > 0)) {
               _context64.n = 4;
               break;
@@ -25049,10 +25055,12 @@ function GaleriaImersaoMomento(_ref111) {
             _context66.n = 3;
             return dbRead.from("momentos").select("*").or("tipo.is.null,tipo.eq.momento,tipo.eq.capsula").order("ts", {
               ascending: false
-            }).range(pagina * 15, (pagina + 1) * 15 - 1);
+            }).range(pagina * 15, (pagina + 1) * 15 - 1).then(function (r) {
+              return filtrarCapsulasVisiveis(r.data || [], userLogado);
+            });
           case 3:
             _yield$dbRead$from$se38 = _context66.v;
-            data = _yield$dbRead$from$se38.data;
+            data = _yield$dbRead$from$se38;
             if (!(!data || data.length === 0)) {
               _context66.n = 4;
               break;
@@ -25560,10 +25568,12 @@ function FotoAmpliadaViewer(_ref114) {
             _context70.n = 3;
             return dbRead.from("momentos").select("*").or("tipo.is.null,tipo.eq.momento,tipo.eq.capsula").order("ts", {
               ascending: false
-            }).range(pagina * 20, (pagina + 1) * 20 - 1);
+            }).range(pagina * 20, (pagina + 1) * 20 - 1).then(function (r) {
+              return filtrarCapsulasVisiveis(r.data || [], userLogado);
+            });
           case 3:
             _yield$dbRead$from$se40 = _context70.v;
-            data = _yield$dbRead$from$se40.data;
+            data = _yield$dbRead$from$se40;
             if (!(!data || data.length === 0)) {
               _context70.n = 4;
               break;
@@ -47239,10 +47249,12 @@ function _fetchMomentosRelacionados() {
                       q = q.gte("ts", ini).lte("ts", fim);
                     }
                     _context214.n = 2;
-                    return q;
+                    return q.then(function (r) {
+                      return filtrarCapsulasVisiveis(r.data || [], window.__tnUserLogado || null);
+                    });
                   case 2:
                     _yield$q3 = _context214.v;
-                    data = _yield$q3.data;
+                    data = _yield$q3;
                     return _context214.a(2, (data || []).filter(function (m) {
                       return m.id !== momento.id;
                     }));
@@ -47406,10 +47418,12 @@ function GaleriaLugar(_ref211) {
               q = q.ilike("lugar", "%".concat(lugarNome, "%"));
             }
             _context148.n = 1;
-            return q;
+            return q.then(function (r) {
+              return filtrarCapsulasVisiveis(r.data || [], user);
+            });
           case 1:
             _yield$q = _context148.v;
-            data = _yield$q.data;
+            data = _yield$q;
             // v325j: 1 item por momento (não mais 1 por foto)
             lista = [];
             (data || []).forEach(function (m) {
