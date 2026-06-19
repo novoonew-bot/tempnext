@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v441 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v442 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -57589,7 +57589,7 @@ function TelaHistoria(_refHist) {
 // ═════════════════════════════════════════════════════════════════
 // v369: FaixaSecao - explica a tela. Visivel ate a pessoa realizar a acao; depois some. Chave = secao OU titulo normalizado.
 var TN_SECAO_TEXTO = {
-  inicio: "Lista dos momentos que voc\xEA registrou.",
+  inicio: "Pessoas, lugares e momentos que se aproximam de voc\xEA.",
   buscar: "Pesquise lugares e pessoas por nome, cidade ou CEP.",
   olhar: "Pessoas que registraram o mesmo lugar e per\xEDodo que voc\xEA.",
   perfil: "Seus lugares, momentos, c\xE1psulas e contatos.",
@@ -59784,6 +59784,7 @@ function App() {
       notificacoes: "notificacoes", alertas_regionais: "alertas_regionais", painel: "painel" };
     var sec = mapa[tela];
     if (!sec) return null;
+    if (tela === "inicio" && homeNivel > 0) return null;
     return /*#__PURE__*/React.createElement(FaixaSecao, { secao: sec, key: "faixa-" + sec });
   })(), tela === "historia" && /*#__PURE__*/React.createElement(TelaHistoria, {
     onBack: function onBackHist() { return setTela("inicio"); }
