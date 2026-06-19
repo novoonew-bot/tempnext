@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v439 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v440 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -53071,79 +53071,84 @@ function HV9LugarImersivo(_ref248) {
       display: "block"
     }
   }, gridItems.length === 0 ? null : (function () {
-    // v358: agrupa por ano (desc) e renderiza header + grid 3 colunas por bloco. Item 18b.
+    var todosMomentos = gridItems.map(function (g) { return g.momento; });
+    var NARR = 3;
+    var MES = ["janeiro", "fevereiro", "mar\xE7o", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+    var fmtMes = function (a) { var d = a ? new Date(a) : null; return d && !isNaN(d.getTime()) ? MES[d.getMonth()] : ""; };
+    var capInfo = function (m) {
+      var raw = m.ts || m.capsula_revela_em || m.capsula_abre_em || m.data_abertura || m.capsula_data_referencia || null;
+      var alvo = raw ? new Date(raw) : null;
+      if (!alvo || isNaN(alvo.getTime()) || alvo <= new Date()) return null;
+      var ms = alvo - new Date();
+      var dias = Math.floor(ms / 86400000);
+      return { anoAbre: alvo.getFullYear(), anos: Math.floor(dias / 365), meses: Math.floor(dias % 365 / 30), dias: dias % 365 % 30 };
+    };
+    var narrativa = gridItems.slice(0, NARR).map(function (it, idx) {
+      var m = it.momento;
+      var ehCap = m.tipo === "capsula";
+      var cd = ehCap ? capInfo(m) : null;
+      var txt = m.texto && m.texto.trim() ? m.texto.trim() : "";
+      var titulo = ehCap ? "C\xE1psula deste tempo" : txt ? txt.length > 48 ? txt.slice(0, 48) + "\u2026" : txt : "Um momento aqui";
+      return /*#__PURE__*/React.createElement("div", {
+        key: "narr-" + m.id,
+        onClick: ehCap ? undefined : function () { setGaleriaIdx(idx); setGaleriaItems(todosMomentos); },
+        style: { position: "relative", paddingLeft: 18, marginBottom: 16, cursor: ehCap ? "default" : "pointer" }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: { position: "absolute", left: 4, top: 8, bottom: -8, width: 1.5, background: "rgba(180,168,148,0.16)" }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: { position: "absolute", left: 0, top: 7, width: 9, height: 9, borderRadius: "50%", background: ehCap ? "#C17E3A" : "#6f9fd6", border: "2px solid #1b150d", boxShadow: ehCap ? "0 0 9px #C17E3A" : "0 0 7px rgba(111,159,214,0.55)" }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: { color: ehCap ? "#C17E3A" : "#6f9fd6", fontFamily: "'Cormorant Garamond','Georgia',serif", fontStyle: "italic", fontSize: 13, marginBottom: 5 }
+      }, it.ano), /*#__PURE__*/React.createElement("div", {
+        style: { position: "relative" }
+      }, /*#__PURE__*/React.createElement("img", {
+        src: it.fotoUrl, alt: "", loading: "lazy", onError: onFotoError,
+        style: { width: "100%", aspectRatio: "16/10", objectFit: "cover", borderRadius: 12, display: "block", filter: ehCap ? "brightness(0.4) saturate(0.7)" : "none" }
+      }), ehCap && /*#__PURE__*/React.createElement("div", {
+        style: { position: "absolute", top: 8, left: 8, background: "rgba(193,126,58,0.92)", color: "#fff", fontSize: 9, padding: "2px 8px", borderRadius: 10, fontStyle: "italic", fontFamily: "'Cormorant Garamond','Georgia',serif" }
+      }, "\uD83D\uDD12 lacrada")), /*#__PURE__*/React.createElement("div", {
+        style: { fontFamily: "'Cormorant Garamond','Georgia',serif", fontSize: 18, fontWeight: 600, color: "#f3ecdd", marginTop: 7, lineHeight: 1.15 }
+      }, titulo), ehCap ? /*#__PURE__*/React.createElement("div", {
+        style: { fontSize: 12, color: "#C17E3A", fontStyle: "italic", fontFamily: "'Cormorant Garamond','Georgia',serif", marginTop: 2 }
+      }, cd ? "algo deste lugar volta em " + cd.anoAbre : "uma lembran\xE7a deste lugar") : /*#__PURE__*/React.createElement("div", {
+        style: { fontSize: 11, color: "#8a7d66", marginTop: 2 }
+      }, (it.totalFotos > 1 ? it.totalFotos + " fotos" : "um momento") + (fmtMes(m.ts || m.created_at) ? " \xB7 " + fmtMes(m.ts || m.created_at) : "")), ehCap && cd && /*#__PURE__*/React.createElement("div", {
+        style: { fontSize: 10, color: "#9a8d79", marginTop: 4, fontFamily: "Georgia,serif" }
+      }, "abre em ", cd.anos, " anos \xB7 ", cd.meses, " meses \xB7 ", cd.dias, " dias"));
+    });
+    var resto = gridItems.slice(NARR);
     var grupos = [];
     var ultimoAno = null;
-    var idxGlobal = 0;
-    gridItems.forEach(function (it) {
-      if (it.ano !== ultimoAno) {
-        grupos.push({ ano: it.ano, items: [] });
-        ultimoAno = it.ano;
-      }
+    resto.forEach(function (it, i) {
+      var idxGlobal = i + NARR;
+      if (it.ano !== ultimoAno) { grupos.push({ ano: it.ano, items: [] }); ultimoAno = it.ano; }
       grupos[grupos.length - 1].items.push({ it: it, idxGlobal: idxGlobal });
-      idxGlobal++;
     });
-    var todosMomentos = gridItems.map(function (g) { return g.momento; });
-    return grupos.map(function (g, gi) {
+    var gridResto = grupos.map(function (g, gi) {
       return /*#__PURE__*/React.createElement(React.Fragment, { key: "ano-" + g.ano }, /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontFamily: "Georgia,serif",
-          fontStyle: "italic",
-          fontSize: 13,
-          color: "rgba(255,255,255,0.55)",
-          letterSpacing: "0.05em",
-          margin: gi === 0 ? "0 0 8px" : "14px 0 8px"
-        }
+        style: { fontFamily: "'Cormorant Garamond','Georgia',serif", fontStyle: "italic", fontSize: 13, color: "rgba(236,227,210,0.55)", letterSpacing: "0.05em", margin: "14px 0 8px" }
       }, g.ano), /*#__PURE__*/React.createElement("div", {
-        style: {
-          display: "grid",
-          gridTemplateColumns: "repeat(3,1fr)",
-          gap: 3
-        }
+        style: { display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 3 }
       }, g.items.map(function (entry) {
         var it = entry.it;
         var idx = entry.idxGlobal;
         return /*#__PURE__*/React.createElement("div", {
-      key: it.momento.id,
-      onClick: function onClick() {
-        setGaleriaIdx(idx);
-        setGaleriaItems(todosMomentos);
-      },
-      style: {
-        aspectRatio: 1,
-        borderRadius: 4,
-        overflow: "hidden",
-        cursor: "pointer",
-        background: "#1a1410",
-        position: "relative"
-      }
-    }, /*#__PURE__*/React.createElement("img", {
-      src: it.fotoUrl,
-      alt: "",
-      loading: "lazy",
-      onError: onFotoError,
-      style: {
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        display: "block"
-      }
-    }), it.totalFotos > 1 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        position: "absolute",
-        top: 4,
-        right: 4,
-        background: "rgba(0,0,0,0.55)",
-        color: "#fff",
-        fontSize: 8,
-        padding: "1px 4px",
-        borderRadius: 2,
-        fontWeight: 600,
-        lineHeight: 1
-      }
-    }, "+", it.totalFotos - 1));
+          key: it.momento.id,
+          onClick: function onClick() { setGaleriaIdx(idx); setGaleriaItems(todosMomentos); },
+          style: { aspectRatio: 1, borderRadius: 4, overflow: "hidden", cursor: "pointer", background: "#1a1410", position: "relative" }
+        }, /*#__PURE__*/React.createElement("img", {
+          src: it.fotoUrl, alt: "", loading: "lazy", onError: onFotoError,
+          style: { width: "100%", height: "100%", objectFit: "cover", display: "block" }
+        }), it.totalFotos > 1 && /*#__PURE__*/React.createElement("div", {
+          style: { position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.55)", color: "#fff", fontSize: 8, padding: "1px 4px", borderRadius: 2, fontWeight: 600, lineHeight: 1 }
+        }, "+", it.totalFotos - 1));
       })));
     });
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", null, narrativa), resto.length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: { display: "flex", alignItems: "center", gap: 10, margin: "8px 2px 12px" }
+    }, /*#__PURE__*/React.createElement("div", { style: { flex: 1, height: 0.5, background: "rgba(180,168,148,0.12)" } }), /*#__PURE__*/React.createElement("div", {
+      style: { fontSize: 10.5, color: "#7c7058", fontStyle: "italic", fontFamily: "'Cormorant Garamond','Georgia',serif" }
+    }, "mais registros deste lugar"), /*#__PURE__*/React.createElement("div", { style: { flex: 1, height: 0.5, background: "rgba(180,168,148,0.12)" } })), /*#__PURE__*/React.createElement("div", null, gridResto));
   })())), galeriaItems && galeriaItems.length > 0 && /*#__PURE__*/React.createElement(MomentGalleryViewer, {
     momentos: galeriaItems,
     indiceInicial: galeriaIdx,
