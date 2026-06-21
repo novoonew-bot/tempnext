@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v457 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v458 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -27891,6 +27891,7 @@ function Buscar(_ref122) {
       marginBottom: filtroAnosAtivo ? 10 : 0
     }
   }, /*#__PURE__*/React.createElement("input", {
+    key: "busca-ano-min",
     type: "number",
     placeholder: "De",
     value: anoMinInput,
@@ -27915,6 +27916,7 @@ function Buscar(_ref122) {
       fontSize: 13
     }
   }, "\u2014"), /*#__PURE__*/React.createElement("input", {
+    key: "busca-ano-max",
     type: "number",
     placeholder: "At\xE9",
     value: anoMaxInput,
@@ -28169,7 +28171,7 @@ function Buscar(_ref122) {
       color: T.muted,
       lineHeight: 1.7
     }
-  }, "Tente outro termo ou ajuste os filtros.", /*#__PURE__*/React.createElement("br", null), "A pessoa ou o lugar podem ainda n\xE3o ter sido cadastrados.")), !termo && !searched && !loading && /*#__PURE__*/React.createElement("div", null, (onAbrirContatos || onAbrirLugares) && /*#__PURE__*/React.createElement("div", {
+  }, "Tente outro termo ou ajuste os filtros.", /*#__PURE__*/React.createElement("br", null), "A pessoa ou o lugar podem ainda n\xE3o ter sido cadastrados.")), termo.trim().length < 2 && !searched && !loading && /*#__PURE__*/React.createElement("div", null, (onAbrirContatos || onAbrirLugares) && /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 10,
