@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v447 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v448 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -56024,7 +56024,7 @@ function HV9FeedItem(_refFI) {
   var titulo = t.pl || t.author || t.nm || (ehCap ? "Cápsula" : "um momento aqui");
   var sub = t.soulsCount || t.when || t.yr || t.meta || "";
   var dotColor = ehCap ? "#C17E3A" : "#6f9fd6";
-  if (grande && img) {
+  if (grande && img && (t.type === "place" || t.type === "post-photo")) {
     return /*#__PURE__*/React.createElement("div", {
       onClick: onClick,
       style: {

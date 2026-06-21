@@ -1,5 +1,5 @@
-// Tempnext Service Worker v447
-const SW_VERSION = "v447";
+// Tempnext Service Worker v448
+const SW_VERSION = "v448";
 const CACHE_NAME = "tempnext-" + SW_VERSION + "-" + Date.now();
 const ASSETS_HOST = ["fonts.googleapis.com", "fonts.gstatic.com", "images.unsplash.com"];
 
