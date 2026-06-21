@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v446 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v447 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -56015,6 +56015,185 @@ function HV9EstadoVazio(_ref264) {
     }
   }, "Conta hist\xF3ria,", /*#__PURE__*/React.createElement("br", null), "marca o presente", /*#__PURE__*/React.createElement("br", null), "e reserva o futuro.")));
 }
+function HV9FeedItem(_refFI) {
+  var t = _refFI.t,
+    grande = _refFI.grande,
+    onClick = _refFI.onClick;
+  var ehCap = t.type === "capsula";
+  var img = t.img || "";
+  var titulo = t.pl || t.author || t.nm || (ehCap ? "Cápsula" : "um momento aqui");
+  var sub = t.soulsCount || t.when || t.yr || t.meta || "";
+  var dotColor = ehCap ? "#C17E3A" : "#6f9fd6";
+  if (grande && img) {
+    return /*#__PURE__*/React.createElement("div", {
+      onClick: onClick,
+      style: {
+        position: "relative",
+        paddingLeft: 24,
+        marginBottom: 30,
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        position: "absolute",
+        left: 4,
+        top: 16,
+        width: 10,
+        height: 10,
+        borderRadius: "50%",
+        background: dotColor,
+        border: "2px solid #f3efe6",
+        boxShadow: "0 0 0 3px rgba(111,159,214,0.12)"
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#fbf8f1",
+        borderRadius: "18px 18px 4px 4px",
+        overflow: "hidden",
+        boxShadow: "0 5px 18px rgba(42,32,26,0.09)",
+        border: "0.5px solid rgba(120,108,90,0.1)"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "relative",
+        height: 290,
+        borderRadius: "18px 18px 0 0",
+        overflow: "hidden"
+      }
+    }, /*#__PURE__*/React.createElement("img", {
+      src: img,
+      alt: "",
+      loading: "lazy",
+      onError: onFotoError,
+      style: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        display: "block"
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        inset: 0,
+        background: "linear-gradient(to top, rgba(10,8,5,0.78) 2%, transparent 46%)"
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        left: 15,
+        right: 15,
+        bottom: 12,
+        color: "#fff"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        fontSize: 11,
+        color: "#e0d2b8",
+        opacity: 0.92
+      }
+    }, "guardado em"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontSize: 21,
+        fontWeight: 600,
+        lineHeight: 1,
+        marginTop: 1
+      }
+    }, titulo), sub ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        fontSize: 11,
+        color: "#cdbb9a",
+        marginTop: 2
+      }
+    }, sub) : null)), t.caption ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: "11px 15px 13px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        color: "#9a8a6e",
+        letterSpacing: "0.02em",
+        lineHeight: 1.5
+      }
+    }, t.caption)) : null));
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    onClick: onClick,
+    style: {
+      position: "relative",
+      paddingLeft: 24,
+      marginBottom: 16,
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: "absolute",
+      left: 5,
+      top: 18,
+      width: 8,
+      height: 8,
+      borderRadius: "50%",
+      background: dotColor,
+      border: "2px solid #f3efe6"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      alignItems: "center"
+    }
+  }, img ? /*#__PURE__*/React.createElement("img", {
+    src: img,
+    alt: "",
+    loading: "lazy",
+    onError: onFotoError,
+    style: {
+      width: 46,
+      height: 46,
+      borderRadius: 8,
+      objectFit: "cover",
+      flexShrink: 0
+    }
+  }) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 46,
+      height: 46,
+      borderRadius: 8,
+      flexShrink: 0,
+      background: "#e6ddca",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontFamily: "'Cormorant Garamond',Georgia,serif",
+      color: "#9a8a6e",
+      fontSize: 18
+    }
+  }, (titulo || "·").charAt(0)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "'Cormorant Garamond',Georgia,serif",
+      fontSize: 14,
+      fontWeight: 600,
+      lineHeight: 1.05,
+      color: "#23201b"
+    }
+  }, titulo), sub ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      marginTop: 1,
+      color: "#8a7a62"
+    }
+  }, sub) : null)));
+}
 function HomeV9Preview(_ref265) {
   var user = _ref265.user,
     onBack = _ref265.onBack,
@@ -56891,70 +57070,36 @@ function HomeV9Preview(_ref265) {
     style: {
       padding: "0 12px 100px"
     }
-  }, nivel === 1 ? lugarCardEl : null, nivel === 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(HV9Hero, {
-    hero: c.hero1,
-    onClick: function onClick() {
-      return handleHeroClick(c.hero1);
-    }
-  }), /*#__PURE__*/React.createElement("div", {
+  }, nivel === 1 ? lugarCardEl : null, nivel === 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
-      columnCount: 2,
-      columnGap: 8,
-      WebkitColumnGap: 8
+      background: "#f3efe6",
+      borderRadius: 18,
+      padding: "16px 14px 10px",
+      position: "relative"
     }
-  }, c.parte1.map(function (t, i) {
-    return /*#__PURE__*/React.createElement(HV9Tile, {
-      key: "p1-".concat(i, "-").concat(seed),
-      t: t,
-      onClick: function onClick() {
-        return handleTileClick(t);
-      }
-    });
-  })), lugarCardEl, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(HV9Hero, {
-    hero: c.hero2,
-    secondary: true,
-    onClick: function onClick() {
-      return handleHeroClick(c.hero2);
-    }
-  }), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
-      columnCount: 2,
-      columnGap: 8,
-      WebkitColumnGap: 8
+      position: "absolute",
+      left: 19,
+      top: 26,
+      bottom: 60,
+      width: 1.5,
+      background: "rgba(120,108,90,0.22)"
     }
-  }, c.parte2.map(function (t, i) {
-    return /*#__PURE__*/React.createElement(HV9Tile, {
-      key: "p2-".concat(i, "-").concat(seed),
-      t: t,
-      onClick: function onClick() {
-        return handleTileClick(t);
-      }
-    });
-  })), /*#__PURE__*/React.createElement(HV9MapBlock, {
-    c: c.cruz,
-    onClick: function onClick() {
-      return handleTileClick({
-        type: "mapa",
-        _uid: "mapa",
-        _navegar: null,
-        _cruz: c.cruz
+  }), function () {
+    var feed = [].concat(_toConsumableArray(c.parte1), _toConsumableArray(c.parte2), _toConsumableArray(c.parte3));
+    var padrao = [true, true, true, false, false, false, true, true, false, false, false];
+    return feed.map(function (t, i) {
+      return /*#__PURE__*/React.createElement(HV9FeedItem, {
+        key: "f0-" + i + "-" + seed,
+        t: t,
+        grande: padrao[i % padrao.length],
+        onClick: function onClick() {
+          return handleTileClick(t);
+        }
       });
-    }
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      columnCount: 2,
-      columnGap: 8,
-      WebkitColumnGap: 8
-    }
-  }, c.parte3.map(function (t, i) {
-    return /*#__PURE__*/React.createElement(HV9Tile, {
-      key: "p3-".concat(i, "-").concat(seed),
-      t: t,
-      onClick: function onClick() {
-        return handleTileClick(t);
-      }
     });
-  })), scrollExtra > 0 && function () {
+  }(), lugarCardEl), scrollExtra > 0 && function () {
     var pools = montarComposicaoReal({
       user: user,
       perfis: dados.perfis,
@@ -56967,42 +57112,46 @@ function HomeV9Preview(_ref265) {
     var tilesPool = pools.tiles;
     if (tilesPool.length === 0) return null;
     var extras = [];
-    // v339 (caminho B): só cicla o feed infinito se houver pool suficiente
-    // (>=6 tiles reais). Com poucos tiles, ciclar repetiria o mesmo card —
-    // mostra cada tile no máximo uma vez e para.
     var podeCiclar = tilesPool.length >= 6;
     var limite = podeCiclar ? scrollExtra : Math.min(scrollExtra, tilesPool.length);
-    // v326b: ciclo 3x mais longo — re-shuffle só após 3 voltas inteiras
     var tamanhoCiclo = tilesPool.length * 10;
     for (var i = 0; i < limite; i++) {
       var ciclo = Math.floor(i / tamanhoCiclo);
       var idxNoCiclo = i % tilesPool.length;
-      // Re-embaralha por ciclo pra ordem variar (sem repetir mesma ordem)
       var cicloSeed = (seed + ciclo * 37) % 1000;
       var poolEmbaralhado = ciclo === 0 ? tilesPool : hv9ShuffleSeeded(tilesPool, cicloSeed);
       var base = poolEmbaralhado[idxNoCiclo];
       if (base) extras.push(_objectSpread(_objectSpread({}, base), {}, {
-        _key: "inf0-".concat(i, "-").concat(seed),
-        _uidExtra: "inf0-".concat(i)
+        _key: "inf0-" + i + "-" + seed,
+        _uidExtra: "inf0-" + i
       }));
     }
     return /*#__PURE__*/React.createElement("div", {
       style: {
-        columnCount: 2,
-        columnGap: 8,
-        WebkitColumnGap: 8,
+        background: "#f3efe6",
+        borderRadius: 18,
+        padding: "6px 14px 10px",
+        position: "relative",
         marginTop: 8
       }
-    }, extras.map(function (t) {
-      return /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        left: 19,
+        top: 6,
+        bottom: 20,
+        width: 1.5,
+        background: "rgba(120,108,90,0.22)"
+      }
+    }), extras.map(function (t, i) {
+      return /*#__PURE__*/React.createElement(HV9FeedItem, {
         key: t._key,
-        id: "inf0-".concat(t._uidExtra)
-      }, /*#__PURE__*/React.createElement(HV9Tile, {
         t: t,
+        grande: i % 4 === 0,
         onClick: function onClick() {
           return handleTileClick(t);
         }
-      }));
+      });
     }));
   }(), /*#__PURE__*/React.createElement("div", {
     id: "hv9-sentinela-nivel0",
