@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v460 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v461 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -4035,6 +4035,45 @@ function _tnLugaresDeProfiles() {
   return _tnLugaresDeProfiles.apply(this, arguments);
 }
 if (typeof window !== "undefined") window.tnLugaresDeProfiles = tnLugaresDeProfiles;
+
+// v461 (Deploy B): ficha rica por lugar canonico. pessoas/anos/rostos vem de
+// place_profiles (place_id); momentos/capsulas de momentos.lugar (texto, ilike).
+// Retorna null em erro/vazio -> o card degrada pro estado simples (sem dado falso).
+async function tnFichaLugar(placeId, placeName) {
+  if (!placeId && !placeName) return null;
+  try {
+    var pessoas = 0, rostos = [], anoIni = null, anoFim = null, momentos = 0, capsulas = 0;
+    if (placeId) {
+      var pp = await dbRead.from("place_profiles").select("profile_id, year_start, year_end").eq("place_id", placeId);
+      var rows = pp.data || [];
+      var ids = [];
+      rows.forEach(function (r) {
+        if (r.profile_id && ids.indexOf(r.profile_id) === -1) ids.push(r.profile_id);
+        if (r.year_start != null) anoIni = anoIni == null ? r.year_start : Math.min(anoIni, r.year_start);
+        if (r.year_end != null) anoFim = anoFim == null ? r.year_end : Math.max(anoFim, r.year_end);
+      });
+      pessoas = ids.length;
+      if (ids.length) {
+        var pf = await dbRead.from("profiles").select("id, avatar_url").in("id", ids.slice(0, 12));
+        rostos = (pf.data || []).map(function (p) { return p.avatar_url; }).filter(Boolean).slice(0, 4);
+      }
+    }
+    if (placeName) {
+      var like = "%" + placeName + "%";
+      var tot = await dbRead.from("momentos").select("id", { count: "exact", head: true }).ilike("lugar", like);
+      var cap = await dbRead.from("momentos").select("id", { count: "exact", head: true }).ilike("lugar", like).eq("tipo", "capsula");
+      var totN = tot.count || 0, capN = cap.count || 0;
+      capsulas = capN;
+      momentos = Math.max(0, totN - capN);
+    }
+    if (!pessoas && !momentos && !capsulas) return null;
+    return { pessoas: pessoas, rostos: rostos, momentos: momentos, capsulas: capsulas, anoIni: anoIni, anoFim: anoFim };
+  } catch (e) {
+    console.warn("[tnFichaLugar] erro:", e);
+    return null;
+  }
+}
+if (typeof window !== "undefined") window.tnFichaLugar = tnFichaLugar;
 
 // ── v317: Helpers Bio Estendida (Cap I — bloco SOBRE) ────────
 var LABELS_BIO = {
@@ -51878,6 +51917,7 @@ function placeToTile(pl) {
     type: "place",
     img: pl.photo_url,
     pl: pl.name,
+    place_id: pl.id,
     soulsCount: pl.city || pl.state || "",
     _real: true,
     _uid: "place_".concat(pl.id),
@@ -56207,6 +56247,15 @@ function HV9FeedItem(_refFI) {
   var t = _refFI.t,
     grande = _refFI.grande,
     onClick = _refFI.onClick;
+  var _fiSt = useState(null),
+    ficha = _fiSt[0],
+    setFicha = _fiSt[1];
+  useEffect(function () {
+    if (!(grande && t.img && (t.type === "place" || t.type === "post-photo") && t.place_id)) return;
+    var vivo = true;
+    tnFichaLugar(t.place_id, t.pl).then(function (f) { if (vivo) setFicha(f); });
+    return function () { vivo = false; };
+  }, [t.place_id, grande]);
   var ehCap = t.type === "capsula";
   var img = t.img || "";
   var titulo = t.pl || t.author || t.nm || (ehCap ? "Cápsula" : "um momento aqui");
@@ -56289,7 +56338,22 @@ function HV9FeedItem(_refFI) {
         lineHeight: 1,
         marginTop: 1
       }
-    }, titulo), sub ? /*#__PURE__*/React.createElement("div", {
+    }, titulo), ficha ? [/*#__PURE__*/React.createElement("div", {
+      key: "fa",
+      style: { display: "flex", alignItems: "center", gap: 7, marginTop: 6 }
+    }, ficha.rostos && ficha.rostos.length ? /*#__PURE__*/React.createElement("div", {
+      style: { display: "flex" }
+    }, ficha.rostos.map(function (r, ri) {
+      return /*#__PURE__*/React.createElement("img", {
+        key: ri, src: r, onError: onFotoError,
+        style: { width: 18, height: 18, borderRadius: "50%", objectFit: "cover", border: "1.5px solid rgba(255,255,255,0.85)", marginLeft: ri ? -6 : 0 }
+      });
+    })) : null, /*#__PURE__*/React.createElement("div", {
+      style: { fontFamily: "'Cormorant Garamond',Georgia,serif", fontStyle: "italic", fontSize: 12, color: "#e0d2b8" }
+    }, ficha.pessoas > 0 ? (ficha.pessoas === 1 ? "1 guarda esse mesmo lugar" : ficha.pessoas + " guardam esse mesmo lugar") : "guardado por aqui")), /*#__PURE__*/React.createElement("div", {
+      key: "fb",
+      style: { fontSize: 10.5, color: "#cdbb9a", marginTop: 3, letterSpacing: "0.02em" }
+    }, [ficha.momentos ? ficha.momentos + (ficha.momentos === 1 ? " momento" : " momentos") : null, ficha.capsulas ? ficha.capsulas + (ficha.capsulas === 1 ? " c\u00e1psula" : " c\u00e1psulas") : null, ficha.anoIni && ficha.anoFim ? (ficha.anoIni === ficha.anoFim ? String(ficha.anoIni) : ficha.anoIni + "\u2013" + ficha.anoFim) : null].filter(Boolean).join(" \u00b7 "))] : (sub ? /*#__PURE__*/React.createElement("div", {
       style: {
         fontFamily: "'Cormorant Garamond',Georgia,serif",
         fontStyle: "italic",
@@ -56297,7 +56361,7 @@ function HV9FeedItem(_refFI) {
         color: "#cdbb9a",
         marginTop: 2
       }
-    }, sub) : null)), t.caption ? /*#__PURE__*/React.createElement("div", {
+    }, sub) : null))), t.caption ? /*#__PURE__*/React.createElement("div", {
       style: {
         padding: "11px 15px 13px"
       }
