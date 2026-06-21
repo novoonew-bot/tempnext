@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v454 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v455 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -19001,7 +19001,7 @@ function FormularioCapsulaUnificado(_ref86) {
       color: "#9A6B3F",
       fontWeight: 600
     }
-  }, dataLabel, " \xB7 ", horaCriacao), /*#__PURE__*/React.createElement("div", {
+  }, tipo === "passado" ? dataPassado || "ano?" : "".concat(dataLabel, " \xB7 ", horaCriacao)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: "'Cormorant Garamond',Georgia,serif",
       fontStyle: "italic",
@@ -19011,7 +19011,7 @@ function FormularioCapsulaUnificado(_ref86) {
       textTransform: "uppercase",
       marginTop: 2
     }
-  }, "agora")), /*#__PURE__*/React.createElement("div", {
+  }, tipo === "passado" ? "antes" : "agora")), /*#__PURE__*/React.createElement("div", {
     style: {
       width: "100%",
       background: "#FFFCF7",
@@ -19397,7 +19397,7 @@ function FormularioCapsulaUnificado(_ref86) {
       color: "#a89878",
       marginTop: 8
     }
-  }, "vis\xEDvel pra todos \xB7 agora"))) :
+  }, "vis\xEDvel pra todos \xB7 " + (tipo === "passado" ? dataPassado || "antes" : "agora")))) :
   /*#__PURE__*/
   // ═══ MODO CÁPSULA — render original com tampa, anel etc ═══
   React.createElement("div", {
