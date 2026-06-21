@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v452 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v453 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -13902,40 +13902,62 @@ function lerDuracaoVideo(file) {
 // Retorna {lat, lng} pra cidade/estado/país informados
 function tnUrlBuscaCidade(q, uf, pais) {
   var ehBrasil = !pais || pais === "Brasil";
-  var base = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=15&accept-language=pt-BR&featuretype=settlement&city=" + encodeURIComponent(q);
-  if (ehBrasil) {
-    base = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=15&accept-language=pt-BR&featuretype=settlement&countrycodes=br&city=" + encodeURIComponent(q);
-    if (uf) base += "&state=" + encodeURIComponent(uf);
-  } else if (pais) {
-    base += "&country=" + encodeURIComponent(pais);
-  }
-  return base;
+  // Busca em texto livre (q=) - acha nomes compostos como "Primavera do Leste"
+  // que a busca estruturada (city=) perdia. A filtragem/ranqueamento fica em tnRankCidades.
+  var termo = ehBrasil ? q + (uf ? ", " + uf : "") + ", Brasil" : q + (pais ? ", " + pais : "");
+  var url = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=12&accept-language=pt-BR&q=" + encodeURIComponent(termo);
+  if (ehBrasil) url += "&countrycodes=br";
+  return url;
 }
 function tnRankCidades(data, q, uf, pais) {
   var ehBrasil = !pais || pais === "Brasil";
-  var ql = (q || "").trim().toLowerCase();
-  var ordemTipo = { city: 0, municipality: 0, town: 1, village: 2, hamlet: 3 };
+  var ordemTipo = { city: 0, municipality: 0, town: 1, village: 2, hamlet: 3, administrative: 0 };
+  var clsRuim = { highway: 1, building: 1, amenity: 1, shop: 1, office: 1, tourism: 1, leisure: 1, natural: 1, waterway: 1, railway: 1, man_made: 1, historic: 1 };
+  function norm(x) {
+    return (x || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  }
   function nomeCidade(s) {
     var a = s.address || {};
     return (a.city || a.town || a.village || a.municipality || a.hamlet || (s.display_name || "").split(",")[0] || "").trim();
   }
-  var cidades = (data || []).filter(function (s) {
-    if (s["class"] !== "place") return false;
-    if (!(s.type in ordemTipo)) return false;
+  function ehCidade(s) {
+    if (clsRuim[s["class"]]) return false;
+    var at = s.addresstype || "";
+    if (at) return ["city", "town", "village", "hamlet", "municipality"].indexOf(at) !== -1;
+    if (s["class"] === "place") return ["city", "town", "village", "hamlet", "municipality"].indexOf(s.type) !== -1;
+    if (s["class"] === "boundary" && s.type === "administrative") return true;
+    return false;
+  }
+  var qn = norm(q);
+  var filtradas = (data || []).filter(function (s) {
+    if (!ehCidade(s)) return false;
     if (ehBrasil && uf) {
       var iso = (s.address && s.address["ISO3166-2-lvl4"]) || "";
       if (iso && iso.toUpperCase() !== "BR-" + uf.toUpperCase()) return false;
     }
     return true;
   });
+  // dedupe por nome de cidade (q= pode trazer o no place + a boundary do mesmo municipio)
+  var vistos = {},
+    cidades = [];
+  filtradas.forEach(function (s) {
+    var k = norm(nomeCidade(s));
+    if (!k || vistos[k]) return;
+    vistos[k] = 1;
+    cidades.push(s);
+  });
   cidades.sort(function (a, b) {
-    var na = nomeCidade(a).toLowerCase(), nb = nomeCidade(b).toLowerCase();
-    var sa = na.indexOf(ql) === 0 ? 0 : 1, sb = nb.indexOf(ql) === 0 ? 0 : 1;
+    var na = norm(nomeCidade(a)),
+      nb = norm(nomeCidade(b));
+    var sa = na.indexOf(qn) === 0 ? 0 : 1,
+      sb = nb.indexOf(qn) === 0 ? 0 : 1;
     if (sa !== sb) return sa - sb;
+    var ia = parseFloat(a.importance || 0),
+      ib = parseFloat(b.importance || 0);
+    if (ib !== ia) return ib - ia;
     var ta = ordemTipo[a.type] != null ? ordemTipo[a.type] : 9;
     var tb = ordemTipo[b.type] != null ? ordemTipo[b.type] : 9;
-    if (ta !== tb) return ta - tb;
-    return parseFloat(b.importance || 0) - parseFloat(a.importance || 0);
+    return ta - tb;
   });
   return cidades;
 }
