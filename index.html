@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v458 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v459 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -26826,6 +26826,7 @@ function tnScorearMatchLugar(lugar, termo) {
 }
 
 // ── Screen: Buscar (unificada) ───────────────────────────────
+var tnBuscaCache = null; // S05: preserva estado da busca ao abrir um lugar e voltar
 function Buscar(_ref122) {
   var user = _ref122.user,
     onView = _ref122.onView,
@@ -26944,6 +26945,35 @@ function Buscar(_ref122) {
   useEffect(function () {
     carregarLugaresEmAlta(6).then(setLugaresAlta);
   }, []);
+
+  // S05: restaura termo/filtro/periodo ao remontar (voltar de um lugar nao zera a busca)
+  useEffect(function () {
+    if (tnBuscaCache) {
+      setTermo(tnBuscaCache.termo);
+      setTipoFiltro(tnBuscaCache.tipoFiltro);
+      setAnoMin(tnBuscaCache.anoMin);
+      setAnoMax(tnBuscaCache.anoMax);
+      setAnoMinInput(tnBuscaCache.anoMinInput);
+      setAnoMaxInput(tnBuscaCache.anoMaxInput);
+      setFiltroAnosAtivo(tnBuscaCache.filtroAnosAtivo);
+    }
+  }, []);
+  var tnBuscaSalvouMontou = useRef(false);
+  useEffect(function () {
+    if (!tnBuscaSalvouMontou.current) {
+      tnBuscaSalvouMontou.current = true;
+      return;
+    }
+    tnBuscaCache = {
+      termo: termo,
+      tipoFiltro: tipoFiltro,
+      anoMin: anoMin,
+      anoMax: anoMax,
+      anoMinInput: anoMinInput,
+      anoMaxInput: anoMaxInput,
+      filtroAnosAtivo: filtroAnosAtivo
+    };
+  }, [termo, tipoFiltro, anoMin, anoMax, anoMinInput, anoMaxInput, filtroAnosAtivo]);
 
   // Auto-busca enquanto digita (debounced)
   useEffect(function () {
@@ -58162,6 +58192,9 @@ function App() {
     _useState582 = _slicedToArray(_useState581, 2),
     perfilLugarAtual = _useState582[0],
     setPerfilLugarAtual = _useState582[1];
+  var _useStateLugarOrigem = useState("inicio"),
+    lugarOrigem = _useStateLugarOrigem[0],
+    setLugarOrigem = _useStateLugarOrigem[1];
   var _useState583 = useState(false),
     _useState584 = _slicedToArray(_useState583, 2),
     showCuriosidade = _useState584[0],
@@ -60065,6 +60098,7 @@ function App() {
           tnExt: "lugar_perfil"
         }, "", window.location.href);
       } catch (_unused128) {}
+      setLugarOrigem("inicio");
       setPerfilLugarAtual(typeof lugar === "string" ? lugar : lugar);
       setTela("lugar_perfil");
     },
@@ -60138,7 +60172,9 @@ function App() {
     lugarId: _typeof(perfilLugarAtual) === "object" ? perfilLugarAtual.id : null,
     user: user,
     onFechar: function onFechar() {
-      return setTela("inicio");
+      var dest = lugarOrigem || "inicio";
+      setLugarOrigem("inicio");
+      return setTela(dest);
     }
   }), tela === "lugar_imersivo" && perfilLugarAtual && /*#__PURE__*/React.createElement(HV9LugarImersivoWrapper, {
     lugar: typeof perfilLugarAtual === "string" ? perfilLugarAtual : perfilLugarAtual,
@@ -60154,6 +60190,7 @@ function App() {
       addContact(p);
     },
     onLugar: function onLugar(lugar) {
+      setLugarOrigem("buscar");
       setPerfilLugarAtual(lugar);
       setTela("lugar_perfil");
     },
@@ -60242,6 +60279,7 @@ function App() {
       return setTela("perfil_vasculhar");
     },
     onLugar: function onLugar(lugar) {
+      setLugarOrigem("inicio");
       setPerfilLugarAtual(typeof lugar === "string" ? lugar : lugar);
       setTela("lugar_perfil");
     },
@@ -60285,6 +60323,7 @@ function App() {
       setMomentoVisualizando(m);
     },
     onLugar: function onLugar(lugar) {
+      setLugarOrigem("inicio");
       setPerfilLugarAtual(typeof lugar === "string" ? lugar : lugar);
       setTela("lugar_perfil");
       setMomentoVisualizando(null);
@@ -60302,6 +60341,7 @@ function App() {
       navAbrirPerfilOutro(p);
     },
     onAbrirLugar: function onAbrirLugar(lugar) {
+      setLugarOrigem("inicio");
       setPerfilLugarAtual(lugar);
       setTela("lugar_perfil");
     },
@@ -60355,6 +60395,7 @@ function App() {
       };
     }()),
     onAbrirLugar: function onAbrirLugar(lugar) {
+      setLugarOrigem("inicio");
       setPerfilLugarAtual(lugar);
       setTela("lugar_perfil");
     },
