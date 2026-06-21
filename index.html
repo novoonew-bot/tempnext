@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v456 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v457 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -15395,8 +15395,12 @@ function BigCard(_ref81) {
       opacity: faixa.bulletOpacity
     }
   }), /*#__PURE__*/React.createElement("span", null, faixa.texto)), /*#__PURE__*/React.createElement("div", {
+    onClick: function onClick() {
+      if (onView) onView(p);
+    },
     style: {
-      padding: "14px 16px"
+      padding: "14px 16px",
+      cursor: "pointer"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -27186,7 +27190,7 @@ function Buscar(_ref122) {
             setLugaresCruzState(lugaresCepMap);
             setResLugares([]); // busca por cep só retorna pessoas (places não tem cep ainda)
             setSearched(true);
-            addBuscaRecente(termoTrim);
+            addBuscaRecente(termo.trim());
             setRecentes(getBuscasRecentes());
             _context73.n = 24;
             break;
