@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v462 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v463 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -15473,13 +15473,12 @@ function BigCard(_ref81) {
     }
   }, "\"", p.nick, "\"")), p._motivo && /*#__PURE__*/React.createElement("span", {
     style: {
-      fontSize: 9,
-      color: T.muted,
-      fontFamily: "'Cormorant Garamond',Georgia,serif",
-      fontStyle: "italic",
-      background: "rgba(42,32,26,0.05)",
-      padding: "2px 7px",
-      borderRadius: 8,
+      fontSize: 10,
+      fontWeight: 600,
+      background: tnSeloMotivo(p._motivo).bg,
+      color: tnSeloMotivo(p._motivo).fg,
+      padding: "3px 9px",
+      borderRadius: 999,
       whiteSpace: "nowrap",
       flexShrink: 0
     }
