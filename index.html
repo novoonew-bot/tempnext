@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v449 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v450 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -41734,9 +41734,9 @@ function ModalRegistrandoAgora(_ref188) {
               });
             });
             _context124.p = 2;
-            escopo = locD.pais === "Brasil" ? "".concat(q, ", ").concat(locD.uf, ", Brasil") : "".concat(q, ", ").concat(locD.pais);
+            escopo = locD.pais === "Brasil" ? "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=8&accept-language=pt-BR&countrycodes=br&city=".concat(encodeURIComponent(q)).concat(locD.uf ? "&state=" + encodeURIComponent(locD.uf) : "") : "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=8&accept-language=pt-BR&city=".concat(encodeURIComponent(q), "&country=").concat(encodeURIComponent(locD.pais));
             _context124.n = 3;
-            return fetch("https://nominatim.openstreetmap.org/search?q=".concat(encodeURIComponent(escopo), "&format=json&addressdetails=1&limit=5&accept-language=pt-BR&featuretype=city"));
+            return fetch(escopo);
           case 3:
             r = _context124.v;
             _context124.n = 4;
@@ -41745,11 +41745,17 @@ function ModalRegistrandoAgora(_ref188) {
             data = _context124.v;
             cidades = data.filter(function (s) {
               var t = s.type || "";
-              return ["city", "town", "village", "municipality", "administrative"].includes(t) || s["class"] === "place";
+              var ehLugar = s["class"] === "place" && ["city", "town", "village", "municipality", "hamlet"].includes(t);
+              if (!ehLugar) return false;
+              if (locD.pais === "Brasil" && locD.uf) {
+                var iso = (s.address && s.address["ISO3166-2-lvl4"]) || "";
+                if (iso && iso.toUpperCase() !== "BR-".concat(locD.uf.toUpperCase())) return false;
+              }
+              return true;
             });
             setLocD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
-                citySugs: cidades.length > 0 ? cidades : data,
+                citySugs: cidades,
                 cityLoading: false
               });
             });
