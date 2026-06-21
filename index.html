@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v453 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v454 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -57151,12 +57151,36 @@ function HomeV9Preview(_ref265) {
     }
   }), function () {
     var feed = [].concat(_toConsumableArray(c.parte1), _toConsumableArray(c.parte2), _toConsumableArray(c.parte3));
+    var ehGrandeTile = function ehGrandeTile(t) {
+      return (t.type === "place" || t.type === "post-photo") && !!t.img;
+    };
+    // Tamanho segue o CONTEUDO (lugar/foto = grande), nao a posicao. A ordem
+    // intercala de proposito: puxa grandes pros primeiros slots, pequenos como respiro.
+    var grandesPool = feed.filter(ehGrandeTile);
+    var pequenosPool = feed.filter(function (t) {
+      return !ehGrandeTile(t);
+    });
     var padrao = [true, true, true, false, false, false, true, true, false, false, false];
-    return feed.map(function (t, i) {
+    var ordenado = [];
+    var gi = 0,
+      pi = 0,
+      k = 0;
+    while (gi < grandesPool.length || pi < pequenosPool.length) {
+      var querGrande = padrao[k % padrao.length];
+      k++;
+      var t = void 0;
+      if (querGrande) {
+        t = gi < grandesPool.length ? grandesPool[gi++] : pequenosPool[pi++];
+      } else {
+        t = pi < pequenosPool.length ? pequenosPool[pi++] : grandesPool[gi++];
+      }
+      if (t) ordenado.push(t);
+    }
+    return ordenado.map(function (t, i) {
       return /*#__PURE__*/React.createElement(HV9FeedItem, {
         key: "f0-" + i + "-" + seed,
         t: t,
-        grande: padrao[i % padrao.length],
+        grande: ehGrandeTile(t),
         onClick: function onClick() {
           return handleTileClick(t);
         }
@@ -57210,7 +57234,7 @@ function HomeV9Preview(_ref265) {
       return /*#__PURE__*/React.createElement(HV9FeedItem, {
         key: t._key,
         t: t,
-        grande: i % 4 === 0,
+        grande: (t.type === "place" || t.type === "post-photo") && !!t.img,
         onClick: function onClick() {
           return handleTileClick(t);
         }
