@@ -4036,45 +4036,6 @@ function _tnLugaresDeProfiles() {
 }
 if (typeof window !== "undefined") window.tnLugaresDeProfiles = tnLugaresDeProfiles;
 
-// v461 (Deploy B): ficha rica por lugar canonico. pessoas/anos/rostos vem de
-// place_profiles (place_id); momentos/capsulas de momentos.lugar (texto, ilike).
-// Retorna null em erro/vazio -> o card degrada pro estado simples (sem dado falso).
-async function tnFichaLugar(placeId, placeName) {
-  if (!placeId && !placeName) return null;
-  try {
-    var pessoas = 0, rostos = [], anoIni = null, anoFim = null, momentos = 0, capsulas = 0;
-    if (placeId) {
-      var pp = await dbRead.from("place_profiles").select("profile_id, year_start, year_end").eq("place_id", placeId);
-      var rows = pp.data || [];
-      var ids = [];
-      rows.forEach(function (r) {
-        if (r.profile_id && ids.indexOf(r.profile_id) === -1) ids.push(r.profile_id);
-        if (r.year_start != null) anoIni = anoIni == null ? r.year_start : Math.min(anoIni, r.year_start);
-        if (r.year_end != null) anoFim = anoFim == null ? r.year_end : Math.max(anoFim, r.year_end);
-      });
-      pessoas = ids.length;
-      if (ids.length) {
-        var pf = await dbRead.from("profiles").select("id, avatar_url").in("id", ids.slice(0, 12));
-        rostos = (pf.data || []).map(function (p) { return p.avatar_url; }).filter(Boolean).slice(0, 4);
-      }
-    }
-    if (placeName) {
-      var like = "%" + placeName + "%";
-      var tot = await dbRead.from("momentos").select("id", { count: "exact", head: true }).ilike("lugar", like);
-      var cap = await dbRead.from("momentos").select("id", { count: "exact", head: true }).ilike("lugar", like).eq("tipo", "capsula");
-      var totN = tot.count || 0, capN = cap.count || 0;
-      capsulas = capN;
-      momentos = Math.max(0, totN - capN);
-    }
-    if (!pessoas && !momentos && !capsulas) return null;
-    return { pessoas: pessoas, rostos: rostos, momentos: momentos, capsulas: capsulas, anoIni: anoIni, anoFim: anoFim };
-  } catch (e) {
-    console.warn("[tnFichaLugar] erro:", e);
-    return null;
-  }
-}
-if (typeof window !== "undefined") window.tnFichaLugar = tnFichaLugar;
-
 // ── v317: Helpers Bio Estendida (Cap I — bloco SOBRE) ────────
 var LABELS_BIO = {
   comida: "come",
@@ -26866,6 +26827,68 @@ function tnScorearMatchLugar(lugar, termo) {
 
 // ── Screen: Buscar (unificada) ───────────────────────────────
 var tnBuscaCache = null; // S05: preserva estado da busca ao abrir um lugar e voltar
+// v461 (Descobrir estagio 1): ficha de rostos por lugar + cor do selo de motivo.
+async function tnFichaLugar(placeId, placeName) {
+  if (!placeId && !placeName) return null;
+  try {
+    var pessoas = 0, rostos = [];
+    if (placeId) {
+      var pp = await dbRead.from("place_profiles").select("profile_id").eq("place_id", placeId);
+      var rows = pp.data || [], ids = [];
+      rows.forEach(function (r) { if (r.profile_id && ids.indexOf(r.profile_id) === -1) ids.push(r.profile_id); });
+      pessoas = ids.length;
+      if (ids.length) {
+        var pf = await dbRead.from("profiles").select("id, avatar_url").in("id", ids.slice(0, 12));
+        rostos = (pf.data || []).map(function (p) { return p.avatar_url; }).filter(Boolean).slice(0, 4);
+      }
+    }
+    return { pessoas: pessoas, rostos: rostos };
+  } catch (e) { console.warn("[tnFichaLugar] erro:", e); return null; }
+}
+if (typeof window !== "undefined") window.tnFichaLugar = tnFichaLugar;
+function tnSeloMotivo(m) {
+  var x = (m || "").toLowerCase();
+  if (x.indexOf("exato") !== -1) return { bg: "#E6EBDD", fg: "#5E7044" };
+  if (x.indexOf("cidade") !== -1) return { bg: "#F0E7D6", fg: "#9A7635" };
+  if (x.indexOf("estado") !== -1) return { bg: "#E2EAF2", fg: "#3F6EA0" };
+  if (x.indexOf("nome") !== -1) return { bg: "#F1E2D8", fg: "#B06138" };
+  if (x.indexOf("lugar") !== -1) return { bg: "#E2EAF2", fg: "#3F6EA0" };
+  return { bg: "rgba(42,32,26,0.06)", fg: "#7a6f5e" };
+}
+function CardResultadoLugar(_refRL) {
+  var l = _refRL.l, onLugar = _refRL.onLugar;
+  var _rl = useState([]), rostos = _rl[0], setRostos = _rl[1];
+  var _rlp = useState(l._count || 0), pess = _rlp[0], setPess = _rlp[1];
+  useEffect(function () {
+    if (!l.id) return;
+    var vivo = true;
+    tnFichaLugar(l.id, l.name).then(function (f) {
+      if (!vivo || !f) return;
+      if (f.rostos && f.rostos.length) setRostos(f.rostos);
+      if (!l._count && f.pessoas) setPess(f.pessoas);
+    });
+    return function () { vivo = false; };
+  }, [l.id]);
+  var selo = tnSeloMotivo(l._motivo);
+  var ini = (l.name || "?").trim().charAt(0).toUpperCase();
+  var localTxt = [l.city, l.state, l.country].filter(Boolean).join(", ");
+  return /*#__PURE__*/React.createElement("div", {
+    onClick: function () { return onLugar && onLugar(l); },
+    style: { display: "flex", gap: 13, padding: 12, background: "#fff", borderRadius: 16, border: "0.5px solid ".concat(T.border), marginBottom: 10, cursor: "pointer", alignItems: "center" }
+  }, l.thumb_url || l.image_url ? /*#__PURE__*/React.createElement(LugarThumb, { place: l, size: 88 }) : /*#__PURE__*/React.createElement("div", {
+    style: { width: 88, height: 88, borderRadius: 13, flexShrink: 0, background: "linear-gradient(135deg, var(--user-color-soft), var(--user-color))", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--user-text-on-color)", fontFamily: "'Cormorant Garamond',Georgia,serif", fontStyle: "italic", fontSize: 30 }
+  }, ini), /*#__PURE__*/React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /*#__PURE__*/React.createElement("div", {
+    style: { fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 19, fontWeight: 600, lineHeight: 1.05, color: T.text }
+  }, l.name), localTxt ? /*#__PURE__*/React.createElement("div", { style: { fontSize: 11, color: T.muted, marginTop: 2 } }, localTxt) : null, l._motivo ? /*#__PURE__*/React.createElement("span", {
+    style: { display: "inline-block", marginTop: 8, fontSize: 10.5, fontWeight: 600, padding: "4px 10px", borderRadius: 999, background: selo.bg, color: selo.fg }
+  }, l._motivo) : null, rostos.length || pess > 0 ? /*#__PURE__*/React.createElement("div", {
+    style: { display: "flex", alignItems: "center", gap: 8, marginTop: 9 }
+  }, rostos.length ? /*#__PURE__*/React.createElement("div", { style: { display: "flex" } }, rostos.map(function (r, ri) {
+    return /*#__PURE__*/React.createElement("img", { key: ri, src: r, onError: onFotoError, style: { width: 22, height: 22, borderRadius: "50%", objectFit: "cover", border: "2px solid #fff", marginLeft: ri ? -7 : 0 } });
+  })) : null, /*#__PURE__*/React.createElement("div", { style: { fontSize: 11.5, color: T.muted } }, pess > 0 ? (pess === 1 ? "1 pessoa viveu aqui" : pess + " pessoas viveram aqui") : "guardam esse lugar")) : null), /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 24 24", width: 18, height: 18, fill: "none", stroke: T.muted, strokeWidth: 2, style: { flexShrink: 0 }
+  }, /*#__PURE__*/React.createElement("path", { d: "m9 6 6 6-6 6" })));
+}
 function Buscar(_ref122) {
   var user = _ref122.user,
     onView = _ref122.onView,
@@ -28169,95 +28192,7 @@ function Buscar(_ref122) {
       color: T.muted
     }
   }, resLugares.length)), resLugares.map(function (l) {
-    // v235: iniciais pra fallback no avatar circular gradiente
-    var ini = (l.name || "?").trim().charAt(0).toUpperCase();
-    return /*#__PURE__*/React.createElement("div", {
-      key: l.id,
-      onClick: function onClick() {
-        return onLugar && onLugar(l);
-      },
-      style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        padding: "12px 14px",
-        background: "#fff",
-        borderRadius: 14,
-        border: "0.5px solid ".concat(T.border),
-        marginBottom: 8,
-        cursor: "pointer"
-      }
-    }, l.thumb_url || l.image_url ? /*#__PURE__*/React.createElement(LugarThumb, {
-      place: l,
-      size: 40
-    }) : /*#__PURE__*/React.createElement("div", {
-      style: {
-        width: 40,
-        height: 40,
-        borderRadius: "50%",
-        background: "linear-gradient(135deg, var(--user-color-soft), var(--user-color))",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-        color: "var(--user-text-on-color)",
-        fontFamily: "'Cormorant Garamond',Georgia,serif",
-        fontStyle: "italic",
-        fontSize: 18,
-        fontWeight: 500
-      }
-    }, ini), /*#__PURE__*/React.createElement("div", {
-      style: {
-        flex: 1,
-        minWidth: 0
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 6
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 14,
-        fontWeight: 500,
-        color: T.text,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-        flex: 1
-      }
-    }, l.name), l._motivo && /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 9,
-        color: T.muted,
-        fontFamily: "'Cormorant Garamond',Georgia,serif",
-        fontStyle: "italic",
-        background: "rgba(42,32,26,0.05)",
-        padding: "2px 7px",
-        borderRadius: 8,
-        flexShrink: 0
-      }
-    }, l._motivo)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 11,
-        color: T.muted,
-        marginTop: 3,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap"
-      }
-    }, [l.city, l.state, l.country].filter(Boolean).join(", "))), l._count > 0 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        fontWeight: 500,
-        color: "var(--user-color-deep)",
-        background: "var(--user-color-15)",
-        padding: "4px 9px",
-        borderRadius: 12,
-        flexShrink: 0
-      }
-    }, l._count, " ", l._count === 1 ? "pessoa" : "pessoas"));
+    return /*#__PURE__*/React.createElement(CardResultadoLugar, { key: l.id, l: l, onLugar: onLugar });
   })), resPessoas.length > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
@@ -51917,7 +51852,6 @@ function placeToTile(pl) {
     type: "place",
     img: pl.photo_url,
     pl: pl.name,
-    place_id: pl.id,
     soulsCount: pl.city || pl.state || "",
     _real: true,
     _uid: "place_".concat(pl.id),
@@ -56247,15 +56181,6 @@ function HV9FeedItem(_refFI) {
   var t = _refFI.t,
     grande = _refFI.grande,
     onClick = _refFI.onClick;
-  var _fiSt = useState(null),
-    ficha = _fiSt[0],
-    setFicha = _fiSt[1];
-  useEffect(function () {
-    if (!(grande && t.img && (t.type === "place" || t.type === "post-photo") && t.place_id)) return;
-    var vivo = true;
-    tnFichaLugar(t.place_id, t.pl).then(function (f) { if (vivo) setFicha(f); });
-    return function () { vivo = false; };
-  }, [t.place_id, grande]);
   var ehCap = t.type === "capsula";
   var img = t.img || "";
   var titulo = t.pl || t.author || t.nm || (ehCap ? "Cápsula" : "um momento aqui");
@@ -56338,22 +56263,7 @@ function HV9FeedItem(_refFI) {
         lineHeight: 1,
         marginTop: 1
       }
-    }, titulo), ficha ? [/*#__PURE__*/React.createElement("div", {
-      key: "fa",
-      style: { display: "flex", alignItems: "center", gap: 7, marginTop: 6 }
-    }, ficha.rostos && ficha.rostos.length ? /*#__PURE__*/React.createElement("div", {
-      style: { display: "flex" }
-    }, ficha.rostos.map(function (r, ri) {
-      return /*#__PURE__*/React.createElement("img", {
-        key: ri, src: r, onError: onFotoError,
-        style: { width: 18, height: 18, borderRadius: "50%", objectFit: "cover", border: "1.5px solid rgba(255,255,255,0.85)", marginLeft: ri ? -6 : 0 }
-      });
-    })) : null, /*#__PURE__*/React.createElement("div", {
-      style: { fontFamily: "'Cormorant Garamond',Georgia,serif", fontStyle: "italic", fontSize: 12, color: "#e0d2b8" }
-    }, ficha.pessoas > 0 ? (ficha.pessoas === 1 ? "1 guarda esse mesmo lugar" : ficha.pessoas + " guardam esse mesmo lugar") : "guardado por aqui")), /*#__PURE__*/React.createElement("div", {
-      key: "fb",
-      style: { fontSize: 10.5, color: "#cdbb9a", marginTop: 3, letterSpacing: "0.02em" }
-    }, [ficha.momentos ? ficha.momentos + (ficha.momentos === 1 ? " momento" : " momentos") : null, ficha.capsulas ? ficha.capsulas + (ficha.capsulas === 1 ? " c\u00e1psula" : " c\u00e1psulas") : null, ficha.anoIni && ficha.anoFim ? (ficha.anoIni === ficha.anoFim ? String(ficha.anoIni) : ficha.anoIni + "\u2013" + ficha.anoFim) : null].filter(Boolean).join(" \u00b7 "))] : (sub ? /*#__PURE__*/React.createElement("div", {
+    }, titulo), sub ? /*#__PURE__*/React.createElement("div", {
       style: {
         fontFamily: "'Cormorant Garamond',Georgia,serif",
         fontStyle: "italic",
@@ -56361,7 +56271,7 @@ function HV9FeedItem(_refFI) {
         color: "#cdbb9a",
         marginTop: 2
       }
-    }, sub) : null))), t.caption ? /*#__PURE__*/React.createElement("div", {
+    }, sub) : null)), t.caption ? /*#__PURE__*/React.createElement("div", {
       style: {
         padding: "11px 15px 13px"
       }
