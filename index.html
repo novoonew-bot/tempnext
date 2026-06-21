@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v450 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v451 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -13899,6 +13899,45 @@ function lerDuracaoVideo(file) {
 // ── Sincroniza lugares de um perfil pras tabelas places + place_profiles ──
 // ── Geocodificação (Nominatim) ───────────────────────────────
 // Retorna {lat, lng} pra cidade/estado/país informados
+function tnUrlBuscaCidade(q, uf, pais) {
+  var ehBrasil = !pais || pais === "Brasil";
+  var base = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=15&accept-language=pt-BR&featuretype=settlement&city=" + encodeURIComponent(q);
+  if (ehBrasil) {
+    base = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=15&accept-language=pt-BR&featuretype=settlement&countrycodes=br&city=" + encodeURIComponent(q);
+    if (uf) base += "&state=" + encodeURIComponent(uf);
+  } else if (pais) {
+    base += "&country=" + encodeURIComponent(pais);
+  }
+  return base;
+}
+function tnRankCidades(data, q, uf, pais) {
+  var ehBrasil = !pais || pais === "Brasil";
+  var ql = (q || "").trim().toLowerCase();
+  var ordemTipo = { city: 0, municipality: 0, town: 1, village: 2, hamlet: 3 };
+  function nomeCidade(s) {
+    var a = s.address || {};
+    return (a.city || a.town || a.village || a.municipality || a.hamlet || (s.display_name || "").split(",")[0] || "").trim();
+  }
+  var cidades = (data || []).filter(function (s) {
+    if (s["class"] !== "place") return false;
+    if (!(s.type in ordemTipo)) return false;
+    if (ehBrasil && uf) {
+      var iso = (s.address && s.address["ISO3166-2-lvl4"]) || "";
+      if (iso && iso.toUpperCase() !== "BR-" + uf.toUpperCase()) return false;
+    }
+    return true;
+  });
+  cidades.sort(function (a, b) {
+    var na = nomeCidade(a).toLowerCase(), nb = nomeCidade(b).toLowerCase();
+    var sa = na.indexOf(ql) === 0 ? 0 : 1, sb = nb.indexOf(ql) === 0 ? 0 : 1;
+    if (sa !== sb) return sa - sb;
+    var ta = ordemTipo[a.type] != null ? ordemTipo[a.type] : 9;
+    var tb = ordemTipo[b.type] != null ? ordemTipo[b.type] : 9;
+    if (ta !== tb) return ta - tb;
+    return parseFloat(b.importance || 0) - parseFloat(a.importance || 0);
+  });
+  return cidades;
+}
 function geocodificar(_x66, _x67, _x68) {
   return _geocodificar.apply(this, arguments);
 } // Backfill: percorre places sem lat/lng e preenche via Nominatim
@@ -28647,23 +28686,19 @@ function NovoLugar(_ref130) {
               });
             });
             _context76.p = 2;
-            escopo = d.pais === "Brasil" ? "".concat(q, ", ").concat(d.uf, ", Brasil") : "".concat(q, ", ").concat(d.pais);
+            escopo = tnUrlBuscaCidade(q, d.uf, d.pais);
             _context76.n = 3;
-            return fetch("https://nominatim.openstreetmap.org/search?q=".concat(encodeURIComponent(escopo), "&format=json&addressdetails=1&limit=5&accept-language=pt-BR&featuretype=city"));
+            return fetch(escopo);
           case 3:
             r = _context76.v;
             _context76.n = 4;
             return r.json();
           case 4:
             data = _context76.v;
-            // Filtra só resultados que são cidades/vilas (não rua/casa)
-            cidades = data.filter(function (s) {
-              var t = s.type || "";
-              return ["city", "town", "village", "municipality", "administrative"].includes(t) || s["class"] === "place";
-            });
+            cidades = tnRankCidades(data, q, d.uf, d.pais);
             setD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
-                citySugs: cidades.length > 0 ? cidades : data,
+                citySugs: cidades,
                 cityLoading: false
               });
             });
@@ -32161,20 +32196,17 @@ function ModalEditarPerfil(_ref148) {
           case 1:
             setCityLoading(true);
             _context88.p = 2;
-            escopo = f.currentCountry === "Brasil" ? "".concat(q, ", ").concat(f.currentState, ", Brasil") : "".concat(q, ", ").concat(f.currentCountry);
+            escopo = tnUrlBuscaCidade(q, f.currentState, f.currentCountry);
             _context88.n = 3;
-            return fetch("https://nominatim.openstreetmap.org/search?q=".concat(encodeURIComponent(escopo), "&format=json&addressdetails=1&limit=5&accept-language=pt-BR"));
+            return fetch(escopo);
           case 3:
             r = _context88.v;
             _context88.n = 4;
             return r.json();
           case 4:
             data = _context88.v;
-            cidades = data.filter(function (s) {
-              var t = s.type || "";
-              return ["city", "town", "village", "municipality", "administrative"].includes(t) || s["class"] === "place";
-            });
-            setCitySugs(cidades.length > 0 ? cidades : data);
+            cidades = tnRankCidades(data, q, f.currentState, f.currentCountry);
+            setCitySugs(cidades);
             setCityLoading(false);
             _context88.n = 6;
             break;
@@ -41734,7 +41766,7 @@ function ModalRegistrandoAgora(_ref188) {
               });
             });
             _context124.p = 2;
-            escopo = locD.pais === "Brasil" ? "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=8&accept-language=pt-BR&countrycodes=br&city=".concat(encodeURIComponent(q)).concat(locD.uf ? "&state=" + encodeURIComponent(locD.uf) : "") : "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=8&accept-language=pt-BR&city=".concat(encodeURIComponent(q), "&country=").concat(encodeURIComponent(locD.pais));
+            escopo = tnUrlBuscaCidade(q, locD.uf, locD.pais);
             _context124.n = 3;
             return fetch(escopo);
           case 3:
@@ -41743,16 +41775,7 @@ function ModalRegistrandoAgora(_ref188) {
             return r.json();
           case 4:
             data = _context124.v;
-            cidades = data.filter(function (s) {
-              var t = s.type || "";
-              var ehLugar = s["class"] === "place" && ["city", "town", "village", "municipality", "hamlet"].includes(t);
-              if (!ehLugar) return false;
-              if (locD.pais === "Brasil" && locD.uf) {
-                var iso = (s.address && s.address["ISO3166-2-lvl4"]) || "";
-                if (iso && iso.toUpperCase() !== "BR-".concat(locD.uf.toUpperCase())) return false;
-              }
-              return true;
-            });
+            cidades = tnRankCidades(data, q, locD.uf, locD.pais);
             setLocD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
                 citySugs: cidades,
@@ -42547,22 +42570,19 @@ function ModalMomento(_ref191) {
               });
             });
             _context126.p = 2;
-            escopo = locD.pais === "Brasil" ? "".concat(q, ", ").concat(locD.uf, ", Brasil") : "".concat(q, ", ").concat(locD.pais);
+            escopo = tnUrlBuscaCidade(q, locD.uf, locD.pais);
             _context126.n = 3;
-            return fetch("https://nominatim.openstreetmap.org/search?q=".concat(encodeURIComponent(escopo), "&format=json&addressdetails=1&limit=5&accept-language=pt-BR&featuretype=city"));
+            return fetch(escopo);
           case 3:
             r = _context126.v;
             _context126.n = 4;
             return r.json();
           case 4:
             data = _context126.v;
-            cidades = data.filter(function (s) {
-              var t = s.type || "";
-              return ["city", "town", "village", "municipality", "administrative"].includes(t) || s["class"] === "place";
-            });
+            cidades = tnRankCidades(data, q, locD.uf, locD.pais);
             setLocD(function (v) {
               return _objectSpread(_objectSpread({}, v), {}, {
-                citySugs: cidades.length > 0 ? cidades : data,
+                citySugs: cidades,
                 cityLoading: false
               });
             });
