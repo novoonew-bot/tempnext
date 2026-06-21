@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v455 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v456 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -17762,12 +17762,20 @@ function FormularioCapsulaUnificado(_ref86) {
 
   // v321l: parse AAAA → Date | null (1º de junho do ano)
   function parseDataPassado(s) {
-    var m = (s || "").trim().match(/^(\d{4})$/);
-    if (!m) return null;
-    var yy = parseInt(m[1]);
-    var d = new Date(yy, 5, 15, 12, 0, 0); // junho 15 — meio do ano
-    if (isNaN(d.getTime())) return null;
-    return d;
+    var t = (s || "").trim();
+    var mAno = t.match(/^(\d{4})$/);
+    if (mAno) {
+      var d = new Date(parseInt(mAno[1]), 5, 15, 12, 0, 0); // junho 15 — meio do ano
+      return isNaN(d.getTime()) ? null : d;
+    }
+    var mMes = t.match(/^(\d{4})-(\d{2})$/);
+    if (mMes) {
+      var mo = parseInt(mMes[2]);
+      if (mo < 1 || mo > 12) return null;
+      var d2 = new Date(parseInt(mMes[1]), mo - 1, 15, 12, 0, 0); // dia 15 do mes informado
+      return isNaN(d2.getTime()) ? null : d2;
+    }
+    return null;
   }
 
   // v321j: helper — calcula data ISO futura completa pra validar/salvar
@@ -17807,7 +17815,7 @@ function FormularioCapsulaUnificado(_ref86) {
   if (tipo === "passado" && dataPassado.trim() && !passadoValido()) {
     var d = parseDataPassado(dataPassado);
     var anoAtual = new Date().getFullYear();
-    if (!d) dataInvalidaMsg = "use 4 dígitos (ex: 1985)";else if (d.getFullYear() < 1900) dataInvalidaMsg = "ano deve ser a partir de 1900";else if (d.getFullYear() > anoAtual) dataInvalidaMsg = "ano deve ser at\xE9 ".concat(anoAtual);
+    if (!d) dataInvalidaMsg = "use AAAA ou AAAA-MM (ex: 2015 ou 2015-05)";else if (d.getFullYear() < 1900) dataInvalidaMsg = "ano deve ser a partir de 1900";else if (d.getFullYear() > anoAtual) dataInvalidaMsg = "ano deve ser at\xE9 ".concat(anoAtual);
   } else if (tipo === "futuro" && dataFuturo.trim() && !futuroValido()) {
     var _d = dataFuturoComoDate();
     if (!_d) dataInvalidaMsg = "data ou hora inválidas";else if (_d.getTime() <= Date.now() + 60 * 60 * 1000) dataInvalidaMsg = "futuro precisa ser pelo menos 1h depois de agora";else {
