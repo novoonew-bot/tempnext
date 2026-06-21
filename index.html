@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v459 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v460 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -27026,8 +27026,89 @@ function Buscar(_ref122) {
 
   // v211: Busca por proximidade postal — varre profiles cujo jsonb lugares
   // contém algum cep que comece com o setor (5 primeiros dígitos)
-  function executarBuscaPorCep(_x92) {
-    return _executarBuscaPorCep.apply(this, arguments);
+  // v460 (S01): busca por proximidade postal. Cruza por CEP (place.cep) E pela
+  // CIDADE resolvida no ViaCEP (place.city/uf) - a maioria dos lugares nao tem cep.
+  async function executarBuscaPorCep(cepData) {
+    if (tipoFiltro !== "pessoas" && tipoFiltro !== "tudo") setTipoFiltro("pessoas");
+    setCepInfo({ cep: cepData.cepFull || cepData.setor, setor: cepData.setor, regiao: null, loadingRegiao: true });
+
+    // 1. ViaCEP AWAITED: alimenta o display E o cruzamento por cidade
+    var cidadeAlvo = null, ufAlvo = null;
+    try {
+      var cepLook = cepData.cepFull ? cepData.cepFull.replace(/\D/g, "") : (cepData.setor + "999");
+      var rv = await fetch("https://viacep.com.br/ws/" + cepLook + "/json/");
+      var dv = await rv.json();
+      if (dv && !dv.erro) {
+        cidadeAlvo = dv.localidade || null;
+        ufAlvo = dv.uf || null;
+        var partes = [dv.bairro, dv.localidade, dv.uf].filter(Boolean);
+        setCepInfo(function (prev) { return prev ? _objectSpread(_objectSpread({}, prev), {}, { regiao: partes.join(", "), loadingRegiao: false }) : null; });
+      } else {
+        setCepInfo(function (prev) { return prev ? _objectSpread(_objectSpread({}, prev), {}, { regiao: null, loadingRegiao: false }) : null; });
+      }
+    } catch (eViaCep) {
+      setCepInfo(function (prev) { return prev ? _objectSpread(_objectSpread({}, prev), {}, { regiao: null, loadingRegiao: false }) : null; });
+    }
+
+    function nrmCep(x) { return (x == null ? "" : String(x)).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim(); }
+    var cidadeN = cidadeAlvo ? nrmCep(cidadeAlvo) : null;
+    var ufN = ufAlvo ? String(ufAlvo).toUpperCase().trim() : null;
+    var setor = cepData.setor, cepFull = cepData.cepFull;
+
+    try {
+      var resp = await dbRead.from("profiles").select("*").limit(500);
+      var profilesRaw = resp.data, error = resp.error;
+      if (error) { console.error("[BUSCAR CEP] erro:", error); setResPessoas([]); setResLugares([]); setSearched(true); return; }
+      var lugaresMapCep = await tnLugaresDeProfiles((profilesRaw || []).map(function (p) { return p.id; }));
+      var matches = [];
+      (profilesRaw || []).forEach(function (p) {
+        var lugaresP = lugaresMapCep.get(p.id) || [];
+        if (lugaresP.length === 0) return;
+        // prox: 3 cep exato, 2 setor full, 1 setor 4dig OU cidade igual, 0 setor 3dig, -1 sem match
+        var melhorProx = -1, cepMatch = null;
+        lugaresP.forEach(function (l) {
+          var lcep = String((l && l.cep) || "").replace(/\D/g, "");
+          if (lcep.length >= 5) {
+            var lsetor = lcep.slice(0, 5), prox = -1;
+            if (cepFull && lcep === cepFull.replace(/\D/g, "")) prox = 3;
+            else if (lsetor === setor) prox = 2;
+            else if (lsetor.slice(0, 4) === setor.slice(0, 4)) prox = 1;
+            else if (lsetor.slice(0, 3) === setor.slice(0, 3)) prox = 0;
+            if (prox > melhorProx) { melhorProx = prox; cepMatch = l.cep; }
+          }
+          // cruzamento pela CIDADE resolvida (resolve o caso "lugar sem cep")
+          if (cidadeN && melhorProx < 1) {
+            var lcidade = nrmCep(l && l.city);
+            var luf = String((l && l.uf) || "").toUpperCase().trim();
+            if (lcidade && lcidade === cidadeN && (!ufN || !luf || luf === ufN)) melhorProx = 1;
+          }
+        });
+        if (melhorProx >= 0) matches.push(_objectSpread(_objectSpread({}, p), {}, { _cepProx: melhorProx, _cepMatch: cepMatch }));
+      });
+      matches.sort(function (a, b) { return b._cepProx - a._cepProx; });
+      var pessoas = matches;
+      if (filtroAnosAtivo) {
+        pessoas = pessoas.filter(function (p) {
+          var ys = p.year_start, ye = p.year_end;
+          if (ys == null && ye == null) return true;
+          var inicio = ys != null ? ys : (ye != null ? ye : anoMin);
+          var fim = ye != null ? ye : (ys != null ? ys : anoMax);
+          return fim >= anoMin && inicio <= anoMax;
+        });
+      }
+      pessoas = pessoas.slice(0, 60);
+      var lugaresCepMap = new Map();
+      if (user) lugaresCepMap = await tnLugaresDeProfiles([user.id].concat(_toConsumableArray(pessoas.map(function (p) { return p.id; }))));
+      setResPessoas(pessoas);
+      setLugaresCruzState(lugaresCepMap);
+      setResLugares([]);
+      setSearched(true);
+      addBuscaRecente(termo.trim());
+      setRecentes(getBuscasRecentes());
+    } catch (eCep) {
+      console.error("[BUSCAR CEP] excecao:", eCep);
+      setResPessoas([]); setResLugares([]); setSearched(true);
+    }
   }
   function _executarBuscaPorCep() {
     _executarBuscaPorCep = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee73(cepData) {
