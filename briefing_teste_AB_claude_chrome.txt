@@ -1,0 +1,70 @@
+============================================================
+BRIEFING — TESTE A x B (TempnexT) para o Claude do Chrome
+App: https://tempnext-brown.vercel.app
+============================================================
+
+TAREFA
+Testar as interacoes entre dois usuarios reais no TempnexT: curtida,
+comentario, resposta, mensagem, notificacao e permissao (RLS).
+
+USUARIOS (ja estao logados — NAO faca login, NAO use Google/OAuth)
+- A = Josemar Nunes dos Reis
+- B = Suzane Krewer
+
+REGRAS DE SEGURANCA / OPERACAO
+- Voce opera UMA sessao por vez. Diga em qual janela/aba esta A e em
+  qual esta B. Se necessario, faca as acoes de A, peca pra trocar, e
+  depois faca as de B.
+- NAO faca login nem fluxo OAuth (as duas contas ja estao logadas).
+- NAO apague nenhum dado. No teste de permissao, apenas OBSERVE se a
+  opcao existe; nao force exclusao.
+- Voce confere o lado UI/UX. A confirmacao no banco de dados (Supabase)
+  e feita a parte, por SQL — nao e seu papel aqui.
+
+AVISO IMPORTANTE (nao e falha do teste)
+A conexao entre os dois e ASSIMETRICA no dado atual: so existe o vinculo
+aceito Suzane -> Josemar. Portanto a MENSAGEM precisa ser iniciada pela
+SUZANE (B). Se tentar mandar mensagem pelo lado do Josemar, vai aparecer
+"conecte-se primeiro" — isso e ESPERADO; registre e siga.
+
+------------------------------------------------------------
+PASSOS (relate cada um: o que clicou, o que apareceu, erros/toasts)
+------------------------------------------------------------
+0. Diga em qual janela/aba esta A (Josemar) e em qual esta B (Suzane).
+
+1. Com A, criar um momento PUBLICO num lugar. Anotar o lugar e o texto.
+
+2. Com B, abrir o feed e confirmar se o momento de A aparece.
+
+3. Com B, CURTIR o momento de A.
+   Voltar em A e ver se o contador subiu / se chegou notificacao.
+
+4. Com B, COMENTAR no momento de A.
+   Em A, ver se o comentario aparece e se chega notificacao.
+
+5. Com A, RESPONDER o comentario.
+   Em B, ver se a resposta aparece.
+
+6. Com B (Suzane), abrir o perfil/contato do Josemar e MANDAR UMA MENSAGEM.
+   Em A, ver se a mensagem chega; A RESPONDE; ver se a resposta volta pra B.
+   (Lembrete: iniciar pela Suzane — pelo lado do Josemar deve bloquear.)
+
+7. PERMISSAO (RLS): na janela de A, tentar achar a opcao de APAGAR o
+   comentario da Suzane. Ela NAO deve existir/funcionar (so o autor apaga).
+   Apenas observe; nao force.
+
+------------------------------------------------------------
+RELATORIO FINAL
+------------------------------------------------------------
+Para cada passo, informe:
+- O que foi clicado / digitado.
+- O que apareceu na tela (contadores, notificacoes, comentario/mensagem
+  visivel no outro lado).
+- Qualquer erro, toast ou comportamento inesperado.
+No fim: um resumo do que FUNCIONOU e do que NAO funcionou.
+
+============================================================
+(Depois cole esse relatorio de volta na conversa principal do Tempnext
+para cruzar com o codigo e o SQL — foco nos passos 3 (curtida) e 6
+(mensagem).)
+============================================================

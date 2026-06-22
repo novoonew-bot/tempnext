@@ -12,11 +12,11 @@ REM --- carimbo de data/hora AAAAMMDD_HHMMSS (independe de locale) ---
 for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmmss"') do set STAMP=%%i
 
 set SRC=C:\tempnext
-set DESTC=C:\tempnext_backups\%STAMP%_v424
-set DESTD=D:\tempnext_backups\%STAMP%_v424
+set DESTC=C:\tempnext_backups\%STAMP%_v464
+set DESTD=D:\tempnext_backups\%STAMP%_v464
 
 echo.
-echo === Tempnext backup %STAMP% (v424 / SW v421) ===
+echo === Tempnext backup %STAMP% (v464 / SW v464) ===
 echo.
 
 REM --- destino C: ---

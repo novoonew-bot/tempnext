@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v464 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v465 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -26892,7 +26892,7 @@ function CardResultadoLugar(_refRL) {
 function DescobrirLanding(_refDL) {
   var user = _refDL.user, lugares = _refDL.lugares || [], alta = _refDL.alta || [], contacts = _refDL.contacts || [], onLugar = _refDL.onLugar, onView = _refDL.onView, onAbrirContatos = _refDL.onAbrirContatos, onAbrirLugares = _refDL.onAbrirLugares;
   var destaque = lugares[0] || null;
-  var _dl = useState({ pessoas: 0, momentos: 0 }), stats = _dl[0], setStats = _dl[1];
+  var _dl = useState({ pessoas: 0, momentos: 0, car: false }), stats = _dl[0], setStats = _dl[1];
   useEffect(function () {
     if (!destaque) return;
     var vivo = true;
@@ -26904,7 +26904,7 @@ function DescobrirLanding(_refDL) {
           var mq = await dbRead.from("momentos").select("id", { count: "exact", head: true }).ilike("lugar", "%".concat(destaque.placeName, "%"));
           mc = mq.count || 0;
         }
-        if (vivo) setStats({ pessoas: f ? f.pessoas : 0, momentos: mc });
+        if (vivo) setStats({ pessoas: f ? f.pessoas : 0, momentos: mc, car: true });
       } catch (e) {}
     })();
     return function () { vivo = false; };
@@ -26918,7 +26918,7 @@ function DescobrirLanding(_refDL) {
   }
   var kids = [];
   if (destaque) {
-    kids.push(/*#__PURE__*/React.createElement("div", { key: "d", style: { marginTop: 6 } }, /*#__PURE__*/React.createElement("div", { style: { fontSize: 12.5, color: T.muted, marginBottom: 10, letterSpacing: 0.3 } }, "O tempo encontrou"), /*#__PURE__*/React.createElement("div", { onClick: function () { return onLugar && onLugar({ id: destaque.place_id, name: destaque.placeName, city: destaque.city, state: destaque.uf }); }, style: { position: "relative", borderRadius: 20, overflow: "hidden", cursor: "pointer", background: "linear-gradient(150deg, #2a2018 0%, #3a2c1f 55%, #6b4f37 100%)", padding: "22px 20px", minHeight: 190, display: "flex", flexDirection: "column", justifyContent: "flex-end", boxShadow: "0 8px 30px rgba(0,0,0,0.18)" } }, /*#__PURE__*/React.createElement("div", { style: { position: "absolute", top: 16, left: 16, width: 32, height: 32, borderRadius: "50%", background: "rgba(255,255,255,0.16)", display: "flex", alignItems: "center", justifyContent: "center" } }, /*#__PURE__*/React.createElement("svg", { viewBox: "0 0 24 24", width: 16, height: 16, fill: "none", stroke: "#fff", strokeWidth: 2 }, /*#__PURE__*/React.createElement("path", { d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" }), /*#__PURE__*/React.createElement("circle", { cx: 12, cy: 10, r: 3 }))), /*#__PURE__*/React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 30, fontWeight: 600, color: "#fff", lineHeight: 1.05 } }, destaque.placeName), destaque.y1 || destaque.y2 ? /*#__PURE__*/React.createElement("div", { style: { fontSize: 13, color: "rgba(255,255,255,0.75)", marginTop: 4 } }, (destaque.y1 || "?") + " \u2014 " + (destaque.y2 || "?")) : null, /*#__PURE__*/React.createElement("div", { style: { display: "flex", gap: 22, marginTop: 16 } }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", { style: { fontSize: 19, fontWeight: 700, color: "#fff" } }, stats.pessoas), /*#__PURE__*/React.createElement("div", { style: { fontSize: 10.5, color: "rgba(255,255,255,0.6)" } }, stats.pessoas === 1 ? "pessoa" : "pessoas")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", { style: { fontSize: 19, fontWeight: 700, color: "#fff" } }, stats.momentos), /*#__PURE__*/React.createElement("div", { style: { fontSize: 10.5, color: "rgba(255,255,255,0.6)" } }, stats.momentos === 1 ? "momento" : "momentos"))), /*#__PURE__*/React.createElement("div", { style: { marginTop: 16, background: "var(--user-color)", color: "var(--user-text-on-color)", textAlign: "center", padding: "11px", borderRadius: 12, fontSize: 13.5, fontWeight: 600 } }, "abrir tempo \u2192"))));
+    kids.push(/*#__PURE__*/React.createElement("div", { key: "d", style: { marginTop: 6 } }, /*#__PURE__*/React.createElement("div", { style: { fontSize: 12.5, color: T.muted, marginBottom: 10, letterSpacing: 0.3 } }, "O tempo encontrou"), /*#__PURE__*/React.createElement("div", { onClick: function () { return onLugar && onLugar({ id: destaque.place_id, name: destaque.placeName, city: destaque.city, state: destaque.uf }); }, style: { position: "relative", borderRadius: 20, overflow: "hidden", cursor: "pointer", background: "linear-gradient(150deg, #2a2018 0%, #3a2c1f 55%, #6b4f37 100%)", padding: "22px 20px", minHeight: 190, display: "flex", flexDirection: "column", justifyContent: "flex-end", boxShadow: "0 8px 30px rgba(0,0,0,0.18)" } }, /*#__PURE__*/React.createElement("div", { style: { position: "absolute", top: 16, left: 16, width: 32, height: 32, borderRadius: "50%", background: "rgba(255,255,255,0.16)", display: "flex", alignItems: "center", justifyContent: "center" } }, /*#__PURE__*/React.createElement("svg", { viewBox: "0 0 24 24", width: 16, height: 16, fill: "none", stroke: "#fff", strokeWidth: 2 }, /*#__PURE__*/React.createElement("path", { d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" }), /*#__PURE__*/React.createElement("circle", { cx: 12, cy: 10, r: 3 }))), /*#__PURE__*/React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 30, fontWeight: 600, color: "#fff", lineHeight: 1.05 } }, destaque.placeName), destaque.y1 || destaque.y2 ? /*#__PURE__*/React.createElement("div", { style: { fontSize: 13, color: "rgba(255,255,255,0.75)", marginTop: 4 } }, (destaque.y1 || "?") + " \u2014 " + (destaque.y2 || "?")) : null, /*#__PURE__*/React.createElement("div", { style: { display: "flex", gap: 22, marginTop: 16 } }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", { style: { fontSize: 19, fontWeight: 700, color: "#fff" } }, stats.car ? stats.pessoas : "·"), /*#__PURE__*/React.createElement("div", { style: { fontSize: 10.5, color: "rgba(255,255,255,0.6)" } }, stats.pessoas === 1 ? "pessoa" : "pessoas")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", { style: { fontSize: 19, fontWeight: 700, color: "#fff" } }, stats.car ? stats.momentos : "·"), /*#__PURE__*/React.createElement("div", { style: { fontSize: 10.5, color: "rgba(255,255,255,0.6)" } }, stats.momentos === 1 ? "momento" : "momentos"))), /*#__PURE__*/React.createElement("div", { style: { marginTop: 16, background: "var(--user-color)", color: "var(--user-text-on-color)", textAlign: "center", padding: "11px", borderRadius: 12, fontSize: 13.5, fontWeight: 600 } }, "abrir tempo \u2192"))));
   }
   if (lugares.length) {
     kids.push(/*#__PURE__*/React.createElement("div", { key: "l" }, secTitle("Sua linha do tempo", onAbrirLugares, "ver tudo"), /*#__PURE__*/React.createElement("div", { style: { display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, WebkitOverflowScrolling: "touch" } }, lugares.map(function (lg, i) {
@@ -55988,6 +55988,7 @@ function HV9FeedItem(_refFI) {
   var img = t.img || "";
   var titulo = t.pl || t.author || t.nm || (ehCap ? "Cápsula" : "um momento aqui");
   var sub = t.soulsCount || t.when || t.yr || t.meta || "";
+  if (sub && titulo && String(sub).trim().toLowerCase() === String(titulo).trim().toLowerCase()) sub = "";
   var dotColor = ehCap ? "#C17E3A" : "#6f9fd6";
   if (grande && img && (t.type === "place" || t.type === "post-photo")) {
     return /*#__PURE__*/React.createElement("div", {
