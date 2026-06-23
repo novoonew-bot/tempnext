@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v467 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v468 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -12252,7 +12252,7 @@ function CardMapaVida(_ref51) {
     onClick: function onClick() {
       if (statusSeguir === "nenhum" && onSeguir) onSeguir();
     }
-  }, statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar") : onEditarPerfil ? React.createElement("button", {
+  }, statusSeguir === "carregando" ? "·" : statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar") : onEditarPerfil ? React.createElement("button", {
     className: "cmv-acao-btn cmv-acao-editar",
     onClick: onEditarPerfil
   }, "editar perfil") : null);
@@ -36333,7 +36333,7 @@ function Perfil(_ref156) {
       fontFamily: "inherit",
       letterSpacing: "0.01em"
     }
-  }, statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar"), /*#__PURE__*/React.createElement("button", {
+  }, statusSeguir === "carregando" ? "·" : statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       if (statusSeguir !== "aceito") { if (window.tnToast) window.tnToast("conecte-se primeiro", "voc\xEAs precisam estar conectados para conversar"); return; }
       if (onMsg) onMsg(perfilExibido);
@@ -38192,7 +38192,7 @@ function ModalPerfil(_ref169) {
       fontFamily: "inherit",
       letterSpacing: "0.01em"
     }
-  }, statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar"), /*#__PURE__*/React.createElement("button", {
+  }, statusSeguir === "carregando" ? "·" : statusSeguir === "aceito" ? "Conectado" : statusSeguir === "pendente" ? "Solicitado" : "Conectar"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       if (statusSeguir !== "aceito") { if (window.tnToast) window.tnToast("conecte-se primeiro", "voc\xEAs precisam estar conectados para conversar"); return; }
       onChat(p, "msg");
@@ -58018,6 +58018,9 @@ function App() {
     _useState570 = _slicedToArray(_useState569, 2),
     contacts = _useState570[0],
     setContacts = _useState570[1];
+  var _useStateCsc = useState(false),
+    contactsCarregado = _useStateCsc[0],
+    setContactsCarregado = _useStateCsc[1];
   var _useState571 = useState(false),
     _useState572 = _slicedToArray(_useState571, 2),
     showLogin = _useState572[0],
@@ -59186,6 +59189,7 @@ function App() {
               });
             }).filter(Boolean);
             setContacts(loaded);
+            setContactsCarregado(true);
             try {
               localStorage.setItem("tn_contacts", JSON.stringify(loaded));
             } catch (_unused121) {}
@@ -59725,6 +59729,7 @@ function App() {
   };
   // v375: status do seguir: "nenhum" | "pendente" | "aceito"
   var statusSeguir = function statusSeguir(p) {
+    if (!contactsCarregado) return "carregando";
     var c = contacts.find(function (c) { return c.id === (p && p.id); });
     if (!c) return "nenhum";
     return c._status === "pendente" ? "pendente" : "aceito";
