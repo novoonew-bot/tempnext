@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v469 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v470 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -15527,6 +15527,168 @@ function BigCard(_ref81) {
 // header → mini card pessoa → triangulação → lugares → momentos →
 // citação → vasculhar mais (leva pro perfil técnico antigo)
 // ────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// v470: EncontroDeTempo — tela de perfil de outro user (substitui o
+// CardMapaVida no render de PerfilOutroFiltrado). Apresentacional puro:
+// recebe tudo ja computado por props. Dado real, sem mock.
+// ════════════════════════════════════════════════════════════════════
+function EncontroDeTempo(p) {
+  var h = React.createElement;
+  var GOLD = "#c8a76a", GOLDD = "#a8853f", NAVY = "#0f1b2d", AZUL = "#3878b8", VERDE = "#5ebb72", ROXO = "#8e7cc3", TERRA = "#c06a3e", INK = "#2a2118", MUT = "#8a7d6b", CREAM = "#f7f3ea", CARD = "#fffdf8", LINE = "rgba(42,32,26,.09)", SOFT = "#efe9dc";
+  var SERIF = "'Cormorant Garamond',Georgia,serif", DISP = "'Fraunces','Cormorant Garamond',Georgia,serif";
+  function ic(name, s, color, sw) {
+    s = s || 18; sw = sw || 1.8; var col = color || "currentColor"; var ch = [];
+    var P = function (d, w) { return h("path", { key: "p" + ch.length, d: d, fill: "none", stroke: col, strokeWidth: w || sw, strokeLinecap: "round", strokeLinejoin: "round" }); };
+    var C = function (cx, cy, r, fill) { return h("circle", { key: "c" + ch.length, cx: cx, cy: cy, r: r, fill: fill ? col : "none", stroke: fill ? "none" : col, strokeWidth: sw }); };
+    if (name === "pin") { ch.push(P("M12 21s-6-5.7-6-10a6 6 0 0 1 12 0c0 4.3-6 10-6 10z")); ch.push(C(12, 11, 2.2)); }
+    else if (name === "cal") { ch.push(h("rect", { key: "r", x: 4, y: 5, width: 16, height: 15, rx: 2, fill: "none", stroke: col, strokeWidth: sw })); ch.push(P("M4 9.5h16M8.5 3v4M15.5 3v4")); }
+    else if (name === "env") { ch.push(h("rect", { key: "r", x: 3, y: 6, width: 18, height: 12, rx: 2, fill: "none", stroke: col, strokeWidth: sw })); ch.push(P("M3.6 7.2l8.4 6 8.4-6")); }
+    else if (name === "ppl") { ch.push(C(9, 8, 3.2)); ch.push(P("M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5M16 6.6a3 3 0 0 1 0 5.6M20.5 19c0-2.3-1.4-4.1-3.4-4.7")); }
+    else if (name === "chev") ch.push(P("M9 6l6 6-6 6", 2));
+    else if (name === "back") ch.push(P("M15 6l-6 6 6 6", 2));
+    else if (name === "dots") { ch.push(C(5, 12, 1.6, 1)); ch.push(C(12, 12, 1.6, 1)); ch.push(C(19, 12, 1.6, 1)); }
+    else if (name === "star") ch.push(h("path", { key: "s", d: "M12 3l1.7 6.3L20 11l-6.3 1.7L12 19l-1.7-6.3L4 11l6.3-1.7z", fill: col }));
+    else if (name === "arr") ch.push(P("M5 12h13M12 6l6 6-6 6", 2));
+    else if (name === "lock") { ch.push(h("rect", { key: "r", x: 5, y: 11, width: 14, height: 9, rx: 2, fill: "none", stroke: col, strokeWidth: 1.6 })); ch.push(P("M8 11V8a4 4 0 0 1 8 0v3", 1.6)); }
+    return h("svg", { width: s, height: s, viewBox: "0 0 24 24", style: { display: "block", flex: "0 0 auto" } }, ch);
+  }
+  function rings(w) { w = w || 54; var d = Math.round(w * 0.56); return h("div", { style: { position: "relative", width: w, height: d, margin: "0 auto" } }, h("i", { style: { position: "absolute", top: 0, left: 0, width: d, height: d, border: "1.6px solid " + GOLD, borderRadius: "50%" } }), h("i", { style: { position: "absolute", top: 0, right: 0, width: d, height: d, border: "1.6px solid " + GOLD, borderRadius: "50%" } })); }
+  function avatar(url, nome, sz, bg) {
+    sz = sz || 88;
+    if (url) return h("img", { src: url, onError: onAvatarError, style: { width: sz, height: sz, borderRadius: "50%", objectFit: "cover", flex: "0 0 " + sz + "px", background: "#e3d8c4" } });
+    var ini = (nome || "?").trim().split(" ").filter(Boolean).slice(0, 2).map(function (w2) { return w2[0] ? w2[0].toUpperCase() : ""; }).join("") || "?";
+    return h("div", { style: { width: sz, height: sz, borderRadius: "50%", flex: "0 0 " + sz + "px", background: "linear-gradient(135deg," + (bg || TERRA) + ",#9c4f2c)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: DISP, fontSize: Math.round(sz * 0.3) } }, ini);
+  }
+
+  var pessoa = p.pessoa || {};
+  var nome = (pessoa.first_name || pessoa.name || "").split(" ")[0] || (pessoa.name || "alguém");
+  var nomeCompleto = pessoa.name || nome;
+  var localStr = (pessoa.city || "") + (pessoa.state ? ", " + pessoa.state : "");
+  var cruz = p.cruz;
+  var R = p.rastros || {};
+
+  // ── 1. HERO ──
+  var heroBg = p.fotoFundo
+    ? "linear-gradient(180deg,rgba(18,13,8,.62) 0%,rgba(18,13,8,.28) 40%,rgba(215,206,182,.45) 78%," + CREAM + " 99%), url(" + p.fotoFundo + ") center/cover"
+    : "radial-gradient(58% 40% at 50% 38%,rgba(255,196,120,.40),rgba(255,196,120,0) 62%), linear-gradient(180deg,#221d14 0%,#322a1d 24%,#5d4e36 48%,#9a8763 66%,#d8cdb4 82%," + CREAM + " 99%)";
+  var topBtn = function (icon, on) { return h("button", { onClick: on, style: { width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,.94)", border: 0, boxShadow: "0 2px 10px rgba(0,0,0,.16)", display: "flex", alignItems: "center", justifyContent: "center", color: "#2b2519", cursor: "pointer" } }, ic(icon, 20)); };
+  var hero = h("div", { style: { position: "relative", textAlign: "center", color: "#f7efe0", padding: "46px 22px 96px", background: heroBg } },
+    h("div", { style: { position: "absolute", top: 16, left: 16, right: 16, display: "flex", justifyContent: "space-between", zIndex: 3 } }, topBtn("back", p.onBack), topBtn("dots", p.onKebab)),
+    h("div", { style: { position: "relative", zIndex: 2 } },
+      h("div", { style: { marginBottom: 14 } }, rings(54)),
+      h("div", { style: { fontFamily: SERIF, fontStyle: "italic", fontWeight: 500, fontSize: 24, lineHeight: 1.18 } }, cruz ? ["Vocês estavam", h("br", { key: "b" }), "perto no tempo"] : "Caminhos que quase se tocaram"),
+      cruz && p.anoMin && p.anoMax ? h("div", { style: { marginTop: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 14, fontFamily: DISP, fontSize: 26, color: GOLD } },
+        h("span", null, String(p.anoMin)),
+        h("span", { style: { position: "relative", width: 96, height: 1, background: "rgba(200,167,106,.6)" } }, h("span", { style: { position: "absolute", top: "50%", left: "50%", width: 9, height: 9, borderRadius: "50%", background: "#ffe6a8", boxShadow: "0 0 12px 4px rgba(255,214,130,.8)", transform: "translate(-50%,-50%)" } })),
+        h("span", null, String(p.anoMax))
+      ) : null
+    )
+  );
+
+  // ── 2. CARD PESSOA ──
+  var cardPessoa = h("div", { style: { background: CARD, border: "1px solid " + LINE, borderRadius: 24, padding: 18, display: "flex", gap: 15, alignItems: "center", boxShadow: "0 12px 34px rgba(40,30,20,.12)" } },
+    avatar(pessoa.avatar_url, nomeCompleto, 88),
+    h("div", { style: { minWidth: 0 } },
+      h("div", { style: { fontFamily: DISP, fontSize: 25, fontWeight: 600, lineHeight: 1.05, color: INK } }, nomeCompleto),
+      localStr ? h("div", { style: { marginTop: 6, fontFamily: SERIF, fontSize: 16, color: "#4d4435", display: "flex", alignItems: "center", gap: 6 } }, ic("pin", 15, TERRA), localStr) : null,
+      p.desdeAno ? h("span", { style: { display: "inline-block", marginTop: 10, background: SOFT, color: "#6b5d45", fontFamily: SERIF, fontSize: 13, padding: "5px 12px", borderRadius: 999 } }, nome + " deixou rastros desde " + p.desdeAno) : null
+    )
+  );
+
+  // ── 3. CRUZAMENTO ──
+  var secH = function (titulo, lk, onLk) { return h("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", margin: "0 4px 11px" } },
+    h("span", { style: { fontFamily: DISP, fontSize: 18, fontWeight: 600, color: INK, display: "flex", alignItems: "center", gap: 6 } }, titulo, h("span", { style: { width: 15, height: 15, borderRadius: "50%", border: "1px solid " + MUT, color: MUT, fontSize: 10, lineHeight: "13px", textAlign: "center" } }, "i")),
+    lk ? h("button", { onClick: onLk, style: { background: "none", border: 0, fontFamily: SERIF, fontSize: 14, color: GOLDD, cursor: "pointer" } }, lk) : null
+  ); };
+  var bar = function (cor, left, width, yEnd) { return h("div", { style: { position: "relative", height: 10, marginTop: 7 } },
+    h("span", { style: { position: "absolute", top: "50%", left: left + "%", width: width + "%", height: 2, borderRadius: 2, background: cor, transform: "translateY(-50%)" } }),
+    h("span", { style: { position: "absolute", top: "50%", left: left + "%", width: 9, height: 9, borderRadius: "50%", background: cor, transform: "translate(-50%,-50%)" } }),
+    h("span", { style: { position: "absolute", top: "50%", left: (left + width) + "%", width: 9, height: 9, borderRadius: "50%", background: cor, transform: "translate(-50%,-50%)" } }),
+    h("span", { style: { position: "absolute", top: "50%", right: -4, transform: "translateY(-50%)", fontSize: 12, color: MUT } }, String(yEnd))
+  ); };
+  var cardCruz = cruz ? h("div", { style: { background: CARD, border: "1px solid " + LINE, borderRadius: 22, padding: 20, boxShadow: "0 8px 24px rgba(40,30,20,.07)" } },
+    h("div", { style: { display: "flex", gap: 16 } },
+      h("div", { style: { flex: "0 0 43%" } },
+        h("div", { style: { fontFamily: SERIF, fontSize: 18, color: "#4d4435", lineHeight: 1.32 } }, "Você e " + nome + " dividiram ", h("b", { style: { fontFamily: DISP, fontSize: 23, fontWeight: 600, color: GOLDD } }, cruz.anos + (cruz.anos === 1 ? " ano" : " anos")), " no mesmo lugar"),
+        h("div", { style: { marginTop: 12, fontFamily: SERIF, fontSize: 15, color: "#4d4435", display: "flex", alignItems: "center", gap: 6 } }, ic("pin", 15, TERRA), cruz.lugar),
+        h("button", { onClick: p.onVerLugares, style: { marginTop: 14, display: "inline-flex", alignItems: "center", gap: 8, background: SOFT, border: 0, color: "#6b5d45", fontSize: 13, padding: "9px 13px", borderRadius: 12, cursor: "pointer" } }, ic("ppl", 15), "ver lugares em comum")
+      ),
+      h("div", { style: { flex: 1, borderLeft: "1px solid " + LINE, paddingLeft: 14, position: "relative" } },
+        h("div", { style: { position: "absolute", top: 6, bottom: 44, left: cruz.bandL + "%", width: cruz.bandW + "%", background: "rgba(200,167,106,.14)", borderRadius: 4 } }),
+        h("div", { style: { marginBottom: 18, position: "relative" } }, h("div", { style: { fontFamily: SERIF, fontSize: 13, color: MUT } }, "Seu tempo", h("b", { style: { display: "block", fontSize: 17, color: INK, fontFamily: DISP, fontWeight: 500 } }, String(cruz.voceS))), bar(NAVY, cruz.voceL, cruz.voceW, cruz.voceE)),
+        h("div", { style: { marginBottom: 18, position: "relative" } }, h("div", { style: { fontFamily: SERIF, fontSize: 13, color: MUT } }, "Tempo de " + nome, h("b", { style: { display: "block", fontSize: 17, color: INK, fontFamily: DISP, fontWeight: 500 } }, String(cruz.delaS))), bar(GOLD, cruz.delaL, cruz.delaW, cruz.delaE)),
+        h("div", { style: { textAlign: "center", marginTop: 6 } }, h("div", { style: { marginBottom: 4 } }, rings(40)), h("div", { style: { fontFamily: SERIF, fontSize: 13, color: MUT } }, "Período em comum"), h("div", { style: { fontFamily: DISP, fontSize: 18, color: GOLDD, fontWeight: 600 } }, cruz.from + " \u2013 " + cruz.to))
+      )
+    )
+  ) : h("div", { style: { background: CARD, border: "1px solid " + LINE, borderRadius: 22, padding: "28px 22px", textAlign: "center" } },
+    h("div", { style: { marginBottom: 14 } }, rings(46)),
+    h("div", { style: { fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "#4d4435", lineHeight: 1.4 } }, "Vocês ainda não dividiram um mesmo lugar e tempo — mas " + nome + " deixou rastros que você pode percorrer.")
+  );
+
+  // ── 4. MAIS PESSOAS ──
+  var mais = p.mais || [];
+  var card4 = mais.length ? h("div", { style: { marginTop: 20 } },
+    secH("Mais pessoas desse tempo", mais.length > 3 ? "ver todas (" + mais.length + ")" : null, p.onMais),
+    h("div", { style: { display: "flex", gap: 11, overflowX: "auto", padding: "8px 4px 6px" } },
+      mais.slice(0, 6).map(function (m, i) {
+        return h("button", { key: m.id || i, onClick: function () { return p.onPessoa(m.raw); }, style: { flex: "0 0 140px", background: CARD, border: "1px solid " + LINE, borderRadius: 18, padding: "16px 12px", textAlign: "center", position: "relative", cursor: "pointer" } },
+          i === 0 ? h("span", { style: { position: "absolute", top: -9, left: "50%", transform: "translateX(-50%)", whiteSpace: "nowrap", background: GOLD, color: "#fff", fontSize: 10, padding: "3px 9px", borderRadius: 999 } }, "mais tempo juntos") : null,
+          h("div", { style: { margin: "2px auto 9px", width: 54 } }, avatar(m.foto, m.nome, 54, ["#4f9d64", "#8e7cc3", "#3878b8", "#c8a76a"][i % 4])),
+          h("div", { style: { fontFamily: DISP, fontSize: 16, fontWeight: 600, color: INK } }, m.nome),
+          m.local ? h("div", { style: { fontSize: 11, color: MUT, marginTop: 2 } }, m.local) : null,
+          m.range ? h("div", { style: { fontFamily: SERIF, fontSize: 13, color: "#5d5343", marginTop: 1 } }, m.range) : null,
+          h("span", { style: { display: "inline-block", marginTop: 9, background: SOFT, color: "#6b5d45", fontSize: 11, padding: "4px 9px", borderRadius: 999 } }, (m.anos || 0) + (m.anos === 1 ? " ano" : " anos") + " em comum")
+        );
+      })
+    )
+  ) : null;
+
+  // ── 5. RASTROS ──
+  var rcard = function (icon, bg, col, num, lab, lk, on) { return h("button", { onClick: on, style: { flex: "0 0 152px", background: CARD, border: "1px solid " + LINE, borderRadius: 18, padding: 15, textAlign: "left", cursor: "pointer" } },
+    h("div", { style: { display: "flex", alignItems: "center", gap: 11 } }, h("span", { style: { width: 38, height: 38, borderRadius: 11, background: bg, color: col, display: "flex", alignItems: "center", justifyContent: "center" } }, ic(icon, 19)), h("span", { style: { fontFamily: DISP, fontSize: 30, fontWeight: 600, lineHeight: 1, color: INK } }, p.loading ? "·" : String(num))),
+    h("div", { style: { marginTop: 9, fontSize: 13, color: "#4d4435", lineHeight: 1.25 } }, lab),
+    h("div", { style: { marginTop: 9, fontFamily: SERIF, fontSize: 13, color: GOLDD } }, lk + " \u203A")
+  ); };
+  var card5 = h("div", { style: { marginTop: 20 } },
+    secH("Rastros deixados", null, null),
+    h("div", { style: { display: "flex", gap: 10, overflowX: "auto", padding: "2px 4px 4px" } },
+      rcard("pin", "#e6eef5", AZUL, R.lugares, "lugares vividos", "ver todos", p.onLugares),
+      rcard("cal", SOFT, GOLDD, R.anos, "anos registrados", "ver linha do tempo", p.onLinhaTempo),
+      rcard("env", "#ece6f5", ROXO, R.esperando, "memórias esperando", "ver cápsulas", p.onCapsulas),
+      rcard("ppl", "#e6efe1", "#3f7a4e", R.cruzamentos, "cruzamentos com você", "ver detalhes", p.onCruzamentos)
+    )
+  );
+
+  // ── 6. MOMENTOS ──
+  var thumbs = p.momThumbs || [];
+  var card6 = (thumbs.length || p.momTotal) ? h("div", { style: { marginTop: 20 } },
+    h("button", { onClick: p.onMomentos, style: { width: "100%", background: CARD, border: "1px solid " + LINE, borderRadius: 20, padding: 14, display: "flex", alignItems: "center", gap: 14, cursor: "pointer", textAlign: "left" } },
+      h("div", { style: { flex: "0 0 132px", height: 84, position: "relative" } }, thumbs.slice(0, 3).map(function (u, i) {
+        var pos = [{ left: 0, top: 3, transform: "rotate(-5deg)", zIndex: 1 }, { left: 35, top: 0, zIndex: 3 }, { left: 70, top: 3, transform: "rotate(5deg)", zIndex: 2 }][i];
+        return h("img", { key: i, src: u, onError: onFotoError, style: Object.assign({ position: "absolute", width: 62, height: 78, borderRadius: 13, objectFit: "cover", boxShadow: "0 3px 10px rgba(0,0,0,.16)" }, pos) });
+      })),
+      h("div", { style: { flex: 1 } }, h("b", { style: { fontFamily: DISP, fontSize: 18, fontWeight: 600, lineHeight: 1.15, display: "block", color: INK } }, "Momentos que marcaram esse tempo"), h("span", { style: { fontSize: 13, color: MUT } }, p.momTotal + (p.momTotal === 1 ? " momento registrado" : " momentos registrados"))),
+      h("div", { style: { width: 42, height: 42, borderRadius: "50%", border: "1px solid " + LINE, display: "flex", alignItems: "center", justifyContent: "center", color: "#6b5d45", flex: "0 0 42px" } }, ic("chev", 18))
+    )
+  ) : null;
+
+  // ── 7. CTA + privacidade ──
+  var cta = h("button", { onClick: p.onVasculhar, style: { marginTop: 22, width: "100%", border: 0, borderRadius: 18, padding: 18, background: NAVY, color: "#f4efe4", fontFamily: DISP, fontSize: 18, fontWeight: 500, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, cursor: "pointer" } }, ic("star", 18, "#f4efe4"), "Abrir nosso tempo", ic("arr", 20, "#f4efe4"));
+  var priv = h("div", { style: { marginTop: 13, textAlign: "center", fontFamily: SERIF, fontSize: 13, color: MUT, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 } }, ic("lock", 14, MUT), "Só vocês podem ver o que é seu.");
+
+  return h("div", { style: { paddingBottom: 100, background: CREAM, minHeight: "100vh" } },
+    hero,
+    h("div", { style: { padding: "0 16px 22px", marginTop: -66, position: "relative", zIndex: 4 } },
+      cardPessoa,
+      h("div", { style: { marginTop: 20 } }, cruz ? secH("O encontro", "ver detalhes", p.onCruzamentos) : null, cardCruz),
+      card4,
+      card5,
+      card6,
+      cta,
+      priv
+    )
+  );
+}
 function PerfilOutroFiltrado(_ref82) {
   var pessoa = _ref82.pessoa,
     userLogado = _ref82.userLogado,
@@ -15594,6 +15756,10 @@ function PerfilOutroFiltrado(_ref82) {
     _useState30 = _slicedToArray(_useState29, 2),
     pessoasReaisCount = _useState30[0],
     setPessoasReaisCount = _useState30[1];
+  var _useStateMT = useState(0),
+    _useStateMT2 = _slicedToArray(_useStateMT, 2),
+    momTotal = _useStateMT2[0],
+    setMomTotal = _useStateMT2[1];
 
   // v254/v255/v266: lê URL e reseta states quando pessoa muda (corrige bug de navegação)
   // - Mount inicial: lê URL e abre o que pediu (deep link)
@@ -16207,6 +16373,16 @@ function PerfilOutroFiltrado(_ref82) {
       cancelled = true;
     };
   }, [mostrandoLivro, pessoa === null || pessoa === void 0 ? void 0 : pessoa.id]);
+
+  // v470: contagem exata de momentos dela (o load principal limita a 8)
+  useEffect(function () {
+    if (!(pessoa && pessoa.id)) return;
+    var cancelled = false;
+    dbRead.from("momentos").select("id", { count: "exact", head: true }).eq("user_id", pessoa.id).or("tipo.is.null,tipo.eq.momento").then(function (r) {
+      if (!cancelled) setMomTotal(r && r.count || 0);
+    });
+    return function () { cancelled = true; };
+  }, [pessoa && pessoa.id]);
   if (!pessoa) return null;
 
   // v254/v255: hierarquia de renderização
@@ -16375,218 +16551,91 @@ function PerfilOutroFiltrado(_ref82) {
       dados: dadosLivro
     });
   }
-  return /*#__PURE__*/React.createElement(TelaPadrao, {
-    user: userLogado,
-    titulo: "perfil de ".concat(((pessoa === null || pessoa === void 0 ? void 0 : pessoa.first_name) || (pessoa === null || pessoa === void 0 ? void 0 : pessoa.name) || "").split(" ")[0]),
-    onVoltar: function onVoltar() {
-      return onBack && onBack();
-    },
-    acoes: React.createElement("button", {
-      onClick: function onClick() {
-        return setKebabAberto(true);
-      },
-      title: "Mais opções",
-      style: {
-        width: 32,
-        height: 32,
-        borderRadius: "50%",
-        background: "transparent",
-        border: "none",
-        cursor: "pointer",
-        color: "inherit",
-        padding: 0,
-        opacity: 0.85,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }
-    }, React.createElement("svg", {
-      width: 18,
-      height: 18,
-      viewBox: "0 0 24 24",
-      fill: "none"
-    }, React.createElement("circle", {
-      cx: 12,
-      cy: 5,
-      r: 1.6,
-      fill: "currentColor"
-    }), React.createElement("circle", {
-      cx: 12,
-      cy: 12,
-      r: 1.6,
-      fill: "currentColor"
-    }), React.createElement("circle", {
-      cx: 12,
-      cy: 19,
-      r: 1.6,
-      fill: "currentColor"
-    })))
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "0 14px"
-    }
-  }, /*#__PURE__*/React.createElement(CardMapaVida, {
-    pessoa: pessoa,
-    ehDono: false,
-    isContact: isContact,
-    onSeguir: function onSeguir() {
-      return onFollow && onFollow(pessoa);
-    },
-    onExplorar: abrirLivro,
-    dados: function (_2) {
-      // Lugares onde morou (com geo via lugarParaMercator)
-      var lugaresRaw = lugaresDela || [];
-      var lugaresMorou = lugaresRaw.map(function (l) {
-        var m = lugarParaMercator(l);
-        if (!m) return null;
-        return {
-          x: m.x,
-          y: m.y,
-          label: l.city,
-          anos: "".concat(l.y1 || "", "-").concat(l.y2 || "")
-        };
-      }).filter(Boolean);
-
-      // Meu local (do user logado, se existir)
-      var meuLocal = null;
-      if (userLogado) {
-        var meusLugares = meusLugaresState || [];
-        var principal = meusLugares[meusLugares.length - 1] || meusLugares[0] || {
-          city: userLogado.city
-        };
-        var m = lugarParaMercator(principal);
-        if (m) meuLocal = {
-          x: m.x,
-          y: m.y
-        };
-      }
-
-      // Memórias com geo: cada momento tem campo `lugar` (string tipo "Cuiabá, MT")
-      // v251: fallback pra UF da pessoa quando geo da memória falha
-      var ufFallback = ((_2 = (lugaresDela || [])[0]) === null || _2 === void 0 ? void 0 : _2.uf) || pessoa.state || "";
-      var memoriasGeo = (momentosDela || []).map(function (mom) {
-        // 1. Tenta direto pelo lugar da memória
-        var m = lugarParaMercator(mom.lugar);
-        // 2. Fallback: lugar pode ser objeto string sem UF; tenta com UF da pessoa
-        if (!m && mom.lugar && ufFallback) {
-          m = lugarParaMercator({
-            city: mom.lugar,
-            uf: ufFallback
-          });
-        }
-        if (!m) return null;
-        return {
-          x: m.x,
-          y: m.y
-        };
-      }).filter(Boolean);
-
-      // Memórias recentes: últimas 3 com geo
-      var memoriasRecentes = memoriasGeo.slice(0, 3);
-
-      // v251: contagens RAW por sub-filtro (pra label/foot dizerem a verdade
-      // mesmo se geo falhou)
-      var totalMemoriasRaw = (momentosDela || []).length;
-      var totalMemoriasRecentesRaw = Math.min(3, totalMemoriasRaw);
-
-      // Quote em destaque (do destaqueMom já calculado)
-      var quote = destaqueMom ? {
-        texto: destaqueMom.texto,
-        cidade: (destaqueMom.lugar || "").split(",")[0].trim(),
-        ano: destaqueMom.ts ? new Date(destaqueMom.ts).getFullYear() : null
-      } : null;
-
-      // v336 (plano A): fim do mock. Cada lugar onde a pessoa morou vira 1 pino real
-      // no mapa — sem multiplicador inventado de "2-8 pessoas por lugar".
-      // A contagem real de pessoas que cruzaram vem de pessoasReaisCount (query no banco).
-      var pessoasNuvem = lugaresMorou.map(function (l) {
-        return {
-          x: l.x,
-          y: l.y,
-          n: 1,
-          sigma: 0
-        };
+  // ── v470: render Encontro de Tempo (dado real, sem mock) ──
+  var _agora = new Date().getFullYear();
+  var _todosL = [].concat(meusLugaresState || [], lugaresDela || []);
+  var anoMin = null, anoMax = null;
+  _todosL.forEach(function (l) {
+    var y1 = parseInt(l.y1 || l.year_start) || 0;
+    var y2 = parseInt(l.y2 || l.year_end) || 0;
+    if (y1) anoMin = anoMin === null ? y1 : Math.min(anoMin, y1);
+    var ey = y2 || _agora;
+    anoMax = anoMax === null ? ey : Math.max(anoMax, ey);
+  });
+  var desdeAno = null, herMax = null;
+  (lugaresDela || []).forEach(function (l) {
+    var y1 = parseInt(l.y1 || l.year_start) || 0;
+    if (y1) desdeAno = desdeAno === null ? y1 : Math.min(desdeAno, y1);
+    var y2 = parseInt(l.y2 || l.year_end) || 0;
+    var ey = y2 || _agora;
+    herMax = herMax === null ? ey : Math.max(herMax, ey);
+  });
+  (momentosDela || []).forEach(function (m) {
+    if (m.ts) { var y = new Date(m.ts).getFullYear(); if (y) { desdeAno = desdeAno === null ? y : Math.min(desdeAno, y); herMax = herMax === null ? y : Math.max(herMax, y); } }
+  });
+  var anosRegistrados = desdeAno && herMax ? herMax - desdeAno + 1 : 0;
+  var melhorX = (matches || []).slice().sort(function (a, b) { return (b.anos || 0) - (a.anos || 0); })[0] || null;
+  var cruz = null;
+  if (melhorX) {
+    var _cc = (melhorX.city || "").toLowerCase().trim();
+    var _flt = function (arr) { return (arr || []).filter(function (l) { return (l.city || "").toLowerCase().trim() === _cc; }); };
+    var _rng = function (arr) {
+      var s = null, e = null;
+      arr.forEach(function (l) {
+        var y1 = parseInt(l.y1 || l.year_start) || 0;
+        var y2 = parseInt(l.y2 || l.year_end) || 0;
+        if (y1) s = s === null ? y1 : Math.min(s, y1);
+        var ey = y2 || _agora;
+        e = e === null ? ey : Math.max(e, ey);
       });
-
-      // v270: cápsulas com geo — substituiu o mock {passado:[], presente:[], futuro:[]}
-      // que estava hardcoded a zero desde a v245 ("etapa 2"). Agora usa capsulasReais
-      // já carregado pelo useEffect (linha ~6988), aplicando lugarParaMercator no campo lugar
-      // pra obter coordenadas. Cápsulas sem geo continuam contando no totalRaw.
-      var capsulasComGeo = function capsulasComGeo(lista) {
-        return (lista || []).map(function (c) {
-          var m = lugarParaMercator(c.lugar);
-          if (!m && c.lugar && ufFallback) {
-            m = lugarParaMercator({
-              city: c.lugar,
-              uf: ufFallback
-            });
-          }
-          if (!m) return null;
-          return {
-            x: m.x,
-            y: m.y
-          };
-        }).filter(Boolean);
-      };
-      var capsulasGeo = {
-        passado: capsulasComGeo(capsulasReais.passado),
-        presente: capsulasComGeo(capsulasReais.presente),
-        futuro: capsulasComGeo(capsulasReais.futuro)
-      };
-      var totalCapsulasPassadoRaw = (capsulasReais.passado || []).length;
-      var totalCapsulasPresenteRaw = (capsulasReais.presente || []).length;
-      var totalCapsulasFuturoRaw = (capsulasReais.futuro || []).length;
-      var totalCapsulasRaw = totalCapsulasPassadoRaw + totalCapsulasPresenteRaw + totalCapsulasFuturoRaw;
-      return {
-        _carregando: loading,
-        lugaresMorou: lugaresMorou,
-        lugaresPassou: [],
-        memorias: memoriasGeo,
-        memoriasRecentes: memoriasRecentes,
-        capsulas: capsulasGeo,
-        // v270: real, não mais hardcoded
-        pessoasNuvem: pessoasNuvem,
-        conexoes: [],
-        meuLocal: meuLocal,
-        quoteDestaque: quote,
-        // Contagens RAW (mostra número correto mesmo se geo falhou)
-        totalLugaresRaw: lugaresRaw.length,
-        totalMemoriasRaw: totalMemoriasRaw,
-        totalMemoriasRecentesRaw: totalMemoriasRecentesRaw,
-        totalCapsulasRaw: totalCapsulasRaw,
-        // v270: real
-        totalCapsulasPassadoRaw: totalCapsulasPassadoRaw,
-        // v270: real
-        totalCapsulasPresenteRaw: totalCapsulasPresenteRaw,
-        // v270: real
-        totalCapsulasFuturoRaw: totalCapsulasFuturoRaw,
-        // v270: real
-        // v336 (plano A): contagem real de pessoas que cruzaram (query no banco,
-        // count por cidade em comum). Não mais soma de mock.
-        totalPessoasRaw: pessoasReaisCount,
-        totalConexoesRaw: 0 // etapa 2
-      };
-    }()
-  }), loading && /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "24px",
-      textAlign: "center"
-    }
-  }, /*#__PURE__*/React.createElement(Spinner, {
-    size: 20
-  })), !loading && /*#__PURE__*/React.createElement(React.Fragment, null), kebabAberto && /*#__PURE__*/React.createElement(ShareMenu, {
+      return [s, e];
+    };
+    var _lm = _flt(meusLugaresState), _ld = _flt(lugaresDela);
+    var _vr = _rng(_lm), _dr = _rng(_ld);
+    var _vS = _vr[0] || melhorX.from, _vE = _vr[1] || melhorX.to;
+    var _dS = _dr[0] || melhorX.from, _dE = _dr[1] || melhorX.to;
+    var _rmin = Math.min(_vS, _dS), _rmax = Math.max(_vE, _dE);
+    var _spn = Math.max(1, _rmax - _rmin);
+    cruz = {
+      anos: melhorX.anos, lugar: melhorX.city, from: melhorX.from, to: melhorX.to,
+      voceS: _vS, voceE: _vE, delaS: _dS, delaE: _dE,
+      voceL: (_vS - _rmin) / _spn * 100, voceW: (_vE - _vS) / _spn * 100,
+      delaL: (_dS - _rmin) / _spn * 100, delaW: (_dE - _dS) / _spn * 100,
+      bandL: (melhorX.from - _rmin) / _spn * 100, bandW: Math.max(2, (melhorX.to - melhorX.from) / _spn * 100),
+      lugarObj: _ld[0] || _lm[0] || null
+    };
+  }
+  var fotoFundo = (cruz && cruz.lugarObj && cruz.lugarObj.photo) || ((lugaresDela || []).find(function (l) { return l.photo; }) || {}).photo || null;
+  var momThumbs = (momentosDela || []).map(getFotoUrl).filter(Boolean).slice(0, 3);
+  var maisLista = (triangulacao || []).map(function (t) {
+    return {
+      id: t.id, nome: ((t.first_name || t.name || "").split(" ")[0]) || (t.name || ""),
+      foto: t.avatar_url, local: (t.lugarComum || t.city || "") + (t.state ? ", " + t.state : ""),
+      range: t.year_start && t.year_end ? t.year_start + " \u2013 " + t.year_end : "", anos: t.anosComum, raw: t
+    };
+  });
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(EncontroDeTempo, {
+    pessoa: pessoa, isContact: isContact, loading: loading,
+    anoMin: anoMin, anoMax: anoMax, desdeAno: desdeAno, fotoFundo: fotoFundo,
+    cruz: cruz, momThumbs: momThumbs, momTotal: momTotal || (momentosDela || []).length,
+    rastros: { lugares: (lugaresDela || []).length, anos: anosRegistrados, esperando: (capsulasReais.futuro || []).length, cruzamentos: (matches || []).length },
+    mais: maisLista,
+    onBack: function () { return onBack && onBack(); },
+    onKebab: function () { return setKebabAberto(true); },
+    onVerLugares: function () { if (cruz && cruz.lugarObj && onLugar) onLugar(cruz.lugarObj); else abrirCapitulo("lugares"); },
+    onVasculhar: function () { return onVasculhar ? onVasculhar(pessoa) : abrirLivro(); },
+    onMomentos: function () { return abrirCapitulo("memorias"); },
+    onLugares: function () { return abrirCapitulo("lugares"); },
+    onLinhaTempo: function () { return abrirLivro(); },
+    onCapsulas: function () { return abrirCapitulo("capsulas"); },
+    onCruzamentos: function () { return abrirCapitulo("pessoas"); },
+    onMais: function () { return abrirCapitulo("pessoas"); },
+    onPessoa: function (raw) { return onView && onView(raw); }
+  }), kebabAberto && /*#__PURE__*/React.createElement(ShareMenu, {
     titulo: pessoa.name || "este perfil",
-    opcoes: [{
-      label: "Compartilhar perfil",
-      descricao: pessoa.city ? "".concat(pessoa.city).concat(pessoa.state ? ", " + pessoa.state : "") : "",
-      titulo: pessoa.name || "Tempnext",
-      texto: "Conhe\xE7a ".concat(pessoa.name || "este perfil", " no Tempnext"),
-      url: "".concat(window.location.origin, "/?perfil=").concat(pessoa.id)
-    }],
-    onClose: function onClose() {
-      return setKebabAberto(false);
-    }
-  })));
+    opcoes: [].concat(isContact && onMsg ? [{ label: "Enviar mensagem", descricao: "Vocês estão conectados", onClick: function () { return onMsg(pessoa); } }] : onFollow ? [{ label: "Conectar", descricao: "Pedir conexão com " + (pessoa.first_name || pessoa.name || ""), onClick: function () { return onFollow(pessoa); } }] : [], [{ label: "Compartilhar perfil", descricao: pessoa.city ? "" + pessoa.city + (pessoa.state ? ", " + pessoa.state : "") : "", titulo: pessoa.name || "Tempnext", texto: "Conhe\xE7a " + (pessoa.name || "este perfil") + " no Tempnext", url: "" + window.location.origin + "/?perfil=" + pessoa.id }]),
+    onClose: function () { return setKebabAberto(false); }
+  }));
 }
 
 // ────────────────────────────────────────────────────────────────
