@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v468 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v469 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -12227,7 +12227,7 @@ function CardMapaVida(_ref51) {
     }
     // Tem livro: mostra botão + subtítulo
     var labelBtn = livroInfo.tipo === "minimo" ? "ver registros" : ehDono ? "Meus Registros" : "Registros de ".concat((pessoa === null || pessoa === void 0 || (_pessoa$name3 = pessoa.name) === null || _pessoa$name3 === void 0 ? void 0 : _pessoa$name3.split(" ")[0]) || "");
-    var subBtn = livroInfo.tipo === "minimo" ? "".concat(livroInfo.capitulos.length, " ").concat(livroInfo.capitulos.length === 1 ? "capítulo" : "capítulos", " dispon\xEDveis") : "".concat(livroInfo.capitulos.length, " cap\xEDtulos \xB7 ").concat(livroInfo.totalItens, " ").concat(livroInfo.totalItens === 1 ? "item" : "itens");
+    var subBtn = dados && dados._carregando ? "…" : livroInfo.tipo === "minimo" ? "".concat(livroInfo.capitulos.length, " ").concat(livroInfo.capitulos.length === 1 ? "capítulo" : "capítulos", " dispon\xEDveis") : "".concat(livroInfo.capitulos.length, " cap\xEDtulos \xB7 ").concat(livroInfo.totalItens, " ").concat(livroInfo.totalItens === 1 ? "item" : "itens");
     return React.createElement(React.Fragment, null,
     // v313c: no perfil próprio (ehDono), botão "Meus Registros" é redundante — esconde
     !ehDono && onExplorar ? React.createElement("button", {
@@ -16538,6 +16538,7 @@ function PerfilOutroFiltrado(_ref82) {
       var totalCapsulasFuturoRaw = (capsulasReais.futuro || []).length;
       var totalCapsulasRaw = totalCapsulasPassadoRaw + totalCapsulasPresenteRaw + totalCapsulasFuturoRaw;
       return {
+        _carregando: loading,
         lugaresMorou: lugaresMorou,
         lugaresPassou: [],
         memorias: memoriasGeo,
@@ -35266,6 +35267,7 @@ function Perfil(_ref156) {
   var dadosLivroProprio = function () {
     if (modoVisualizacao) return null; // só monta no perfil próprio
     return {
+      _carregando: false,
       lugaresMorou: (lugaresPerfilState || []).map(function (l) {
         var m = typeof lugarParaMercator === "function" ? lugarParaMercator(l) : null;
         var periodo = l.y1 && l.y2 ? "".concat(l.y1, " \u2014 ").concat(l.y2) : l.y1 ? "desde ".concat(l.y1) : "";
