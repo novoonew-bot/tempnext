@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v473 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v474 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -15791,39 +15791,34 @@ function PerfilOutroFiltrado(_ref82) {
     setItemAberto(null);
 
     // Lê URL e abre conforme params (cobre tanto mount quanto troca de perfil)
-    if (params.get("livro") === "1") {
-      setMostrandoLivro(true);
-      var cap = params.get("cap");
-      if (cap === "lugares" || cap === "memorias" || cap === "capsulas" || cap === "pessoas" || cap === "quem-e") {
-        setCapituloAberto(cap);
-        // v259/v265: se tem &id= reabre item da camada 4
-        var id = params.get("id");
-        if (id && cap === "memorias") {
-          setItemAberto({
-            tipo: "memoria",
-            id: id,
-            _aguardandoCarga: true
-          });
-        } else if (id && cap === "lugares") {
-          setItemAberto({
-            tipo: "lugar",
-            id: id,
-            _aguardandoCarga: true
-          });
-        } else if (id && cap === "capsulas") {
-          setItemAberto({
-            tipo: "capsula",
-            id: id,
-            _aguardandoCarga: true
-          });
-        }
-      } else {
-        // URL diz livro=1 mas sem cap → fecha capítulo se tinha
-        setCapituloAberto(null);
+    // v474: hidrata o capitulo a partir da URL no mount/troca de perfil
+    // (deep-link + F5 + voltar/avancar), independente de livro=1 —
+    // abrirCapitulo grava so ?cap=, entao o cap manda na view.
+    setMostrandoLivro(params.get("livro") === "1");
+    var cap = params.get("cap");
+    if (cap === "lugares" || cap === "memorias" || cap === "capsulas" || cap === "pessoas" || cap === "quem-e") {
+      setCapituloAberto(cap);
+      var id = params.get("id");
+      if (id && cap === "memorias") {
+        setItemAberto({
+          tipo: "memoria",
+          id: id,
+          _aguardandoCarga: true
+        });
+      } else if (id && cap === "lugares") {
+        setItemAberto({
+          tipo: "lugar",
+          id: id,
+          _aguardandoCarga: true
+        });
+      } else if (id && cap === "capsulas") {
+        setItemAberto({
+          tipo: "capsula",
+          id: id,
+          _aguardandoCarga: true
+        });
       }
     } else {
-      // URL não tem livro=1 → reseta tudo (perfil limpo)
-      setMostrandoLivro(false);
       setCapituloAberto(null);
     }
   }, [pessoa === null || pessoa === void 0 ? void 0 : pessoa.id]);
@@ -16643,7 +16638,7 @@ function PerfilOutroFiltrado(_ref82) {
       anoIni: t._anoIni || null, anoFim: t._anoFim || null, anos: t.anosComum || 0, raw: t
     };
   });
-  // v473: dados extra do PerfilCompleto
+  // v474: dados extra do PerfilCompleto
   var ehDono = !!(pessoa && userLogado && pessoa.id === userLogado.id);
   var _lugFotoNome = (cruz && cruz.lugar) || (((lugaresDela || []).find(function (l) { return l.photo; }) || {}).city) || ((lugaresDela || [])[0] || {}).city || "";
   var _pcount = {};
