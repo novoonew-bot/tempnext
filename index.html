@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v475 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v476 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -15585,8 +15585,8 @@ function PerfilCompleto(p) {
 
   // ── 1. CAPA (legenda no topo — v473) ──
   var coverBg = p.coverUrl
-    ? "linear-gradient(180deg,rgba(13,15,9,.30),rgba(13,15,9,.32) 60%,rgba(13,15,9,.52))," + "url(" + p.coverUrl + ") center/cover"
-    : "linear-gradient(160deg,#2a2317,#5b4d34 60%,#8a7651)";
+    ? "linear-gradient(180deg,rgba(13,15,9,.48) 0%,rgba(13,15,9,.16) 32%,rgba(247,243,238,0) 58%,rgba(247,243,238,.9) 86%,#f7f3ee 100%)," + "url(" + p.coverUrl + ") center/cover"
+    : "linear-gradient(180deg,#2a2317 0%,#5b4d34 45%,#a98a55 72%,#f7f3ee 100%)";
   var TXSH = "0 1px 3px rgba(0,0,0,.45)";
   var topBtn = function (icon, on) { return h("button", { onClick: on, style: { width: 38, height: 38, borderRadius: "50%", background: "rgba(255,255,255,.92)", border: 0, display: "flex", alignItems: "center", justifyContent: "center", color: "#2b2519", cursor: "pointer", boxShadow: SH } }, ic(icon, 18)); };
   var capa = h("div", { style: { position: "relative", height: 200, background: coverBg, color: "#fff" } },
@@ -16643,7 +16643,7 @@ function PerfilOutroFiltrado(_ref82) {
       anoIni: t._anoIni || null, anoFim: t._anoFim || null, anos: t.anosComum || 0, raw: t
     };
   });
-  // v475: dados extra do PerfilCompleto
+  // v476: dados extra do PerfilCompleto
   var ehDono = !!(pessoa && userLogado && pessoa.id === userLogado.id);
   var _lugFotoNome = (cruz && cruz.lugar) || (((lugaresDela || []).find(function (l) { return l.photo; }) || {}).city) || ((lugaresDela || [])[0] || {}).city || "";
   var _pcount = {};
