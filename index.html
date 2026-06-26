@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v478 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v479 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -38418,6 +38418,23 @@ function ModalChat(_ref172) {
     _useState362 = _slicedToArray(_useState361, 2),
     dbMsgs = _useState362[0],
     setDbMsgs = _useState362[1];
+  var _useStateAttach = useState(false),
+    _useStateAttach2 = _slicedToArray(_useStateAttach, 2),
+    showAttach = _useStateAttach2[0],
+    setShowAttach = _useStateAttach2[1];
+  var _useStatePickerTipo = useState(null),
+    _useStatePickerTipo2 = _slicedToArray(_useStatePickerTipo, 2),
+    pickerTipo = _useStatePickerTipo2[0],
+    setPickerTipo = _useStatePickerTipo2[1];
+  var _useStatePickerItens = useState([]),
+    _useStatePickerItens2 = _slicedToArray(_useStatePickerItens, 2),
+    pickerItens = _useStatePickerItens2[0],
+    setPickerItens = _useStatePickerItens2[1];
+  var _useStatePickerLoad = useState(false),
+    _useStatePickerLoad2 = _slicedToArray(_useStatePickerLoad, 2),
+    pickerLoading = _useStatePickerLoad2[0],
+    setPickerLoading = _useStatePickerLoad2[1];
+  var fileRef = useRef(null);
   var recorderRef = useRef(null);
   var endRef = useRef();
 
@@ -38469,7 +38486,8 @@ function ModalChat(_ref172) {
     return {
       from: m.from_id,
       text: m.text,
-      ts: new Date(m.created_at).getTime()
+      ts: new Date(m.created_at).getTime(),
+      meta: m.meta || null
     };
   });
   var localIds = new Set(localMs.map(function (m) {
@@ -38486,6 +38504,343 @@ function ModalChat(_ref172) {
       behavior: "smooth"
     });
   }, [ms.length]);
+  function sendShare(meta) {
+    var ts = Date.now();
+    onSend(cid, {
+      from: user.id,
+      text: "",
+      ts: ts,
+      meta: meta
+    });
+    setShowAttach(false);
+    setPickerTipo(null);
+    db.from("messages").insert({
+      conv_id: cid,
+      from_id: user.id,
+      text: meta.title || "[compartilhado]",
+      meta: meta
+    })["catch"](function () {});
+  }
+  function abrirPicker(tp) {
+    setPickerTipo(tp);
+    setPickerLoading(true);
+    setPickerItens([]);
+    dbRead.from("momentos").select("id,texto,lugar,fotos,ts,tipo,capsula_data_referencia,capsula_estado").eq("user_id", user.id).order("ts", {
+      ascending: false
+    }).limit(60).then(function (r) {
+      var arr = (r.data || []).filter(function (m) {
+        return tp === "capsula" ? m.tipo === "capsula" : m.tipo !== "capsula";
+      });
+      setPickerItens(arr);
+      setPickerLoading(false);
+    })["catch"](function () {
+      setPickerLoading(false);
+    });
+  }
+  function escolherItem(m) {
+    var ehCap = m.tipo === "capsula";
+    var cover = Array.isArray(m.fotos) && m.fotos.length ? m.fotos[0] : null;
+    var ano = "";
+    try {
+      ano = new Date(ehCap && m.capsula_data_referencia ? m.capsula_data_referencia : m.ts).getFullYear();
+    } catch (e) {}
+    var titulo = (m.texto || "").trim();
+    if (titulo.length > 60) titulo = titulo.slice(0, 57) + "...";
+    sendShare({
+      kind: ehCap ? "capsula" : "momento",
+      ref_id: m.id,
+      title: titulo || (ehCap ? "Uma c\xE1psula" : "Um momento"),
+      subtitle: ehCap ? (m.capsula_estado === "lacrada" ? "abre em " : "") + ano : (m.lugar || "") + (ano ? " \xB7 " + ano : ""),
+      cover_url: cover
+    });
+  }
+  function compartilharMeuPerfil() {
+    var ano = "";
+    try {
+      ano = user.created_at ? new Date(user.created_at).getFullYear() : "";
+    } catch (e) {}
+    sendShare({
+      kind: "perfil",
+      ref_id: user.id,
+      title: user.name || "Meu perfil",
+      subtitle: ano ? "guarda hist\xF3rias desde " + ano : "no Tempnext",
+      cover_url: user.avatar_url || null
+    });
+  }
+  function shareCardBubble(meta, mine) {
+    var lbl = meta.kind === "capsula" ? "um futuro" : meta.kind === "perfil" ? "uma hist\xF3ria" : "um momento";
+    if (meta.kind === "perfil") {
+      return /*#__PURE__*/React.createElement("div", {
+        style: {
+          maxWidth: "80%",
+          background: "#fff",
+          border: "1px solid ".concat(T.border),
+          borderRadius: mine ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
+          overflow: "hidden",
+          boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
+          display: "flex",
+          alignItems: "center",
+          gap: 11,
+          padding: "11px 13px"
+        }
+      }, /*#__PURE__*/React.createElement(AvatarSmart, {
+        userId: meta.ref_id,
+        name: meta.title,
+        src: meta.cover_url,
+        size: 42
+      }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 9.5,
+          letterSpacing: "0.16em",
+          textTransform: "uppercase",
+          color: "#a8853f",
+          fontWeight: 600
+        }
+      }, lbl), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "Fraunces,Georgia,serif",
+          fontSize: 16,
+          color: "#241c12"
+        }
+      }, meta.title), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "'Cormorant Garamond',Georgia,serif",
+          fontStyle: "italic",
+          color: T.muted,
+          fontSize: 13
+        }
+      }, meta.subtitle)));
+    }
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        maxWidth: "80%",
+        background: "#fff",
+        border: "1px solid ".concat(T.border),
+        borderRadius: mine ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
+        overflow: "hidden",
+        boxShadow: "0 1px 6px rgba(0,0,0,0.06)"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9.5,
+        letterSpacing: "0.16em",
+        textTransform: "uppercase",
+        color: "#a8853f",
+        fontWeight: 600,
+        padding: "10px 13px 0"
+      }
+    }, lbl), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "Fraunces,Georgia,serif",
+        fontSize: 16,
+        padding: "2px 13px 0",
+        color: "#241c12"
+      }
+    }, meta.title), meta.subtitle && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        color: T.muted,
+        fontSize: 13,
+        padding: "1px 13px 11px"
+      }
+    }, meta.subtitle), meta.cover_url && /*#__PURE__*/React.createElement("img", {
+      src: meta.cover_url,
+      alt: "",
+      onError: onFotoError,
+      style: {
+        display: "block",
+        width: "100%",
+        maxHeight: 120,
+        objectFit: "cover"
+      }
+    }));
+  }
+  function attachOpt(ic, icbg, iccol, titulo, desc, onClick) {
+    return /*#__PURE__*/React.createElement("div", {
+      onClick: onClick,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 13,
+        padding: "12px 8px",
+        borderRadius: 12,
+        cursor: "pointer"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 40,
+        height: 40,
+        borderRadius: 11,
+        background: icbg,
+        color: iccol,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 18,
+        flexShrink: 0
+      }
+    }, ic), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "Fraunces,Georgia,serif",
+        fontSize: 15,
+        color: "#241c12"
+      }
+    }, titulo), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        fontSize: 12.5,
+        color: T.muted
+      }
+    }, desc)));
+  }
+  function attachSheet() {
+    if (!showAttach) return null;
+    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        setShowAttach(false);
+      },
+      style: {
+        position: "fixed",
+        inset: 0,
+        background: "rgba(20,15,10,0.28)",
+        zIndex: 140,
+        maxWidth: 430,
+        margin: "0 auto"
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "fixed",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        maxWidth: 430,
+        margin: "0 auto",
+        background: "#fff",
+        borderRadius: "20px 20px 0 0",
+        boxShadow: "0 -8px 30px rgba(0,0,0,0.16)",
+        padding: "10px 14px 26px",
+        zIndex: 141
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 38,
+        height: 4,
+        borderRadius: 3,
+        background: T.border,
+        margin: "4px auto 12px"
+      }
+    }), attachOpt("\u25A3", "#eaf2fb", "#3d6ea8", "Foto ou v\xEDdeo", "da sua galeria", function () {
+      setShowAttach(false);
+      if (fileRef.current) fileRef.current.click();
+    }), attachOpt("\u25F7", "#f6ecdd", "#a8853f", "Um momento", "algo que voc\xEA guardou", function () {
+      abrirPicker("momento");
+    }), attachOpt("\u25A1", "#e6e9f0", "#0d1b2a", "Uma c\xE1psula", "um futuro que abrir\xE1", function () {
+      abrirPicker("capsula");
+    }), attachOpt("\u25D0", "#f0e7e0", "#9A5E27", "Um perfil", "o seu", compartilharMeuPerfil)));
+  }
+  function pickerOverlay() {
+    if (!pickerTipo) return null;
+    return /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        setPickerTipo(null);
+      },
+      style: {
+        position: "fixed",
+        inset: 0,
+        background: "rgba(20,15,10,0.4)",
+        zIndex: 150,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-end",
+        maxWidth: 430,
+        margin: "0 auto"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick(e) {
+        e.stopPropagation();
+      },
+      style: {
+        background: "#fff",
+        borderRadius: "20px 20px 0 0",
+        maxHeight: "70%",
+        overflowY: "auto",
+        padding: "16px 14px 26px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "Fraunces,Georgia,serif",
+        fontSize: 17,
+        color: "#241c12",
+        marginBottom: 10
+      }
+    }, pickerTipo === "capsula" ? "Escolha uma c\xE1psula" : "Escolha um momento"), pickerLoading && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        color: T.muted,
+        padding: "20px 0",
+        textAlign: "center"
+      }
+    }, "buscando..."), !pickerLoading && pickerItens.length === 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        color: T.muted,
+        padding: "20px 0",
+        textAlign: "center"
+      }
+    }, pickerTipo === "capsula" ? "nenhuma c\xE1psula ainda" : "nenhum momento ainda"), pickerItens.map(function (m) {
+      var cover = Array.isArray(m.fotos) && m.fotos.length ? m.fotos[0] : null;
+      var t = (m.texto || "").trim();
+      if (t.length > 70) t = t.slice(0, 67) + "...";
+      return /*#__PURE__*/React.createElement("div", {
+        key: m.id,
+        onClick: function onClick() {
+          escolherItem(m);
+        },
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 11,
+          padding: "10px 6px",
+          borderBottom: "1px solid ".concat(T.border),
+          cursor: "pointer"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 46,
+          height: 46,
+          borderRadius: 9,
+          background: T.faint,
+          flexShrink: 0,
+          backgroundImage: cover ? "url(".concat(cover, ")") : "none",
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          minWidth: 0
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 14,
+          color: "#241c12",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis"
+        }
+      }, t || (pickerTipo === "capsula" ? "Uma c\xE1psula" : "Um momento")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontFamily: "'Cormorant Garamond',Georgia,serif",
+          fontStyle: "italic",
+          color: T.muted,
+          fontSize: 12
+        }
+      }, m.lugar || "")));
+    })));
+  }
   function send() {
     return _send.apply(this, arguments);
   }
@@ -38782,7 +39137,7 @@ function ModalChat(_ref172) {
         display: "flex",
         justifyContent: mine ? "flex-end" : "flex-start"
       }
-    }, /*#__PURE__*/React.createElement("div", {
+    }, m.meta ? shareCardBubble(m.meta, mine) : /*#__PURE__*/React.createElement("div", {
       style: {
         background: mine ? "linear-gradient(135deg,".concat(T.accent, ",").concat(T.accentDk, ")") : "#fff",
         color: mine ? "#fff" : T.text,
@@ -38894,51 +39249,41 @@ function ModalChat(_ref172) {
       justifyContent: "center",
       fontWeight: 700
     }
-  }, "\xD7")), /*#__PURE__*/React.createElement("div", {
+  }, "\xD7")), attachSheet(), pickerOverlay(), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 8,
       alignItems: "center"
     }
-  }, /*#__PURE__*/React.createElement("label", {
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      setShowAttach(true);
+    },
     style: {
       width: 38,
       height: 38,
       borderRadius: "50%",
-      background: T.faint,
-      border: "1px solid ".concat(T.border),
+      background: showAttach ? T.accent : T.faint,
+      border: "1px solid ".concat(showAttach ? T.accent : T.border),
+      color: showAttach ? "#fff" : T.muted,
       cursor: "pointer",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      flexShrink: 0
+      flexShrink: 0,
+      fontSize: 22,
+      fontWeight: 300,
+      lineHeight: 1,
+      transition: "transform .2s, background .2s",
+      transform: showAttach ? "rotate(45deg)" : "none"
     }
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: "16",
-    height: "16",
-    viewBox: "0 0 16 16",
-    fill: "none"
-  }, /*#__PURE__*/React.createElement("rect", {
-    x: "1",
-    y: "3",
-    width: "14",
-    height: "10",
-    rx: "2",
-    stroke: T.muted,
-    strokeWidth: "1.4"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "5.5",
-    cy: "6.5",
-    r: "1",
-    fill: T.muted
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M1 10l4-3 3 3 2-2 5 4",
-    stroke: T.muted,
-    strokeWidth: "1.3",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  })), /*#__PURE__*/React.createElement("input", {
+  }, "+"), /*#__PURE__*/React.createElement("label", {
+    style: {
+      display: "none"
+    }
+  }, /*#__PURE__*/React.createElement("input", {
     type: "file",
+    ref: fileRef,
     accept: "image/*,video/*",
     onChange: (/*#__PURE__*/function () {
       var _ref174 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee112(e) {
