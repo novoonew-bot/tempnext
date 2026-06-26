@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v480 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v481 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -38389,6 +38389,7 @@ function ModalChat(_ref172) {
     type = _ref172$type === void 0 ? "msg" : _ref172$type,
     msgs = _ref172.msgs,
     onSend = _ref172.onSend,
+    onAbrirRef = _ref172.onAbrirRef,
     onClose = _ref172.onClose;
   var _useState349 = useState(""),
     _useState350 = _slicedToArray(_useState349, 2),
@@ -38593,6 +38594,9 @@ function ModalChat(_ref172) {
     var lbl = meta.kind === "capsula" ? "um futuro" : meta.kind === "perfil" ? "uma hist\xF3ria" : "um momento";
     if (meta.kind === "perfil") {
       return /*#__PURE__*/React.createElement("div", {
+        onClick: function onClick() {
+          if (onAbrirRef) onAbrirRef(meta);
+        },
         style: {
           maxWidth: "80%",
           background: "#fff",
@@ -38600,6 +38604,7 @@ function ModalChat(_ref172) {
           borderRadius: mine ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
           overflow: "hidden",
           boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
+          cursor: "pointer",
           display: "flex",
           alignItems: "center",
           gap: 11,
@@ -38634,13 +38639,17 @@ function ModalChat(_ref172) {
       }, meta.subtitle)));
     }
     return /*#__PURE__*/React.createElement("div", {
+      onClick: function onClick() {
+        if (onAbrirRef) onAbrirRef(meta);
+      },
       style: {
         maxWidth: "80%",
         background: "#fff",
         border: "1px solid ".concat(T.border),
         borderRadius: mine ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
         overflow: "hidden",
-        boxShadow: "0 1px 6px rgba(0,0,0,0.06)"
+        boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
+        cursor: "pointer"
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
@@ -60142,6 +60151,22 @@ function App() {
       type: type
     });
   }
+  function abrirRefDoChat(meta) {
+    if (!meta || !meta.ref_id) return;
+    setChat(null);
+    if (meta.kind === "perfil") {
+      dbRead.from("profiles").select("*").eq("id", meta.ref_id).maybeSingle().then(function (r) {
+        if (r && r.data) navAbrirPerfilOutro(r.data);
+      })["catch"](function () {});
+    } else if (meta.kind === "momento" || meta.kind === "capsula") {
+      dbRead.from("momentos").select("*").eq("id", meta.ref_id).maybeSingle().then(function (r) {
+        if (r && r.data) {
+          setMomentoVisualizando(r.data);
+          setTela("momento_perfil");
+        }
+      })["catch"](function () {});
+    }
+  }
 
   // v332a: agora async — espera signOut() completar antes de redirecionar.
   // Sem isso, race condition: redirect antes da sessão limpar → onAuthStateChange
@@ -61325,6 +61350,7 @@ function App() {
     type: chat.type || "msg",
     msgs: msgs,
     onSend: enviar,
+    onAbrirRef: abrirRefDoChat,
     onClose: function onClose() {
       return setChat(null);
     }
