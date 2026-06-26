@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v476 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v477 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -58165,6 +58165,9 @@ function App() {
   var _useStateLugarOrigem = useState("inicio"),
     lugarOrigem = _useStateLugarOrigem[0],
     setLugarOrigem = _useStateLugarOrigem[1];
+  var _useStateFormOrigem = useState("inicio"),
+    formOrigem = _useStateFormOrigem[0],
+    setFormOrigem = _useStateFormOrigem[1];
   var _useState583 = useState(false),
     _useState584 = _slicedToArray(_useState583, 2),
     showCuriosidade = _useState584[0],
@@ -60094,6 +60097,7 @@ function App() {
       if (verificarPerfilCompleto()) setShowMenuRapido(true);
     },
     onAbrirCapsula: function onAbrirCapsula() {
+      setFormOrigem(tela);
       setTela("capsula_nova");
     },
     onAbrirPerfilProprio: function onAbrirPerfilProprio() {
@@ -60394,7 +60398,7 @@ function App() {
     user: user,
     tipoInicial: "momento",
     onBack: function onBack() {
-      return setTela("inicio");
+      return setTela(formOrigem);
     },
     onSave: (/*#__PURE__*/function () {
       var _ref282 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee164(cap) {
@@ -60440,7 +60444,7 @@ function App() {
     user: user,
     tipoInicial: "presente",
     onBack: function onBack() {
-      return setTela("inicio");
+      return setTela(formOrigem);
     },
     onSave: (/*#__PURE__*/function () {
       var _ref283 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee165(cap) {
@@ -60801,12 +60805,14 @@ function App() {
       return setShowMenuRapido(false);
     },
     onMomento: function onMomento() {
+      setFormOrigem(tela);
       return setTela("momento_novo");
     },
     onPassagem: function onPassagem() {
       return setShowPassagem(true);
     },
     onCapsula: function onCapsula() {
+      setFormOrigem(tela);
       return setTela("capsula_nova");
     },
     onOndeVouEstar: function onOndeVouEstar() {
