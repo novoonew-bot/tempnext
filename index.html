@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v479 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v480 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -38435,6 +38435,10 @@ function ModalChat(_ref172) {
     pickerLoading = _useStatePickerLoad2[0],
     setPickerLoading = _useStatePickerLoad2[1];
   var fileRef = useRef(null);
+  var _useStateMediaUrls = useState({}),
+    _useStateMediaUrls2 = _slicedToArray(_useStateMediaUrls, 2),
+    mediaUrls = _useStateMediaUrls2[0],
+    setMediaUrls = _useStateMediaUrls2[1];
   var recorderRef = useRef(null);
   var endRef = useRef();
 
@@ -38448,6 +38452,24 @@ function ModalChat(_ref172) {
       if (data) setDbMsgs(data);
     })["catch"](function () {});
   }, [cid]);
+  useEffect(function () {
+    var paths = dbMsgs.filter(function (m) {
+      return m.meta && m.meta.kind === "media" && m.meta.media_path;
+    }).map(function (m) {
+      return m.meta.media_path;
+    });
+    if (!paths.length) return;
+    db.storage.from("chat-media").createSignedUrls(paths, 3600).then(function (r) {
+      if (!r || !r.data) return;
+      var map = {};
+      r.data.forEach(function (o) {
+        if (o.signedUrl) map[o.path] = o.signedUrl;
+      });
+      setMediaUrls(function (prev) {
+        return Object.assign({}, prev, map);
+      });
+    })["catch"](function () {});
+  }, [dbMsgs]);
   function toggleRecord() {
     if (isRecording) {
       var _recorderRef$current;
@@ -38841,6 +38863,90 @@ function ModalChat(_ref172) {
       }, m.lugar || "")));
     })));
   }
+  function sendMedia(file) {
+    if (!file) return;
+    var t = file.type && file.type.indexOf("video") === 0 ? "video" : "image";
+    if (file.size > 25 * 1024 * 1024) {
+      alert("Arquivo muito grande (max 25MB)");
+      return;
+    }
+    var ext = file.name && file.name.indexOf(".") >= 0 ? file.name.split(".").pop().toLowerCase() : t === "video" ? "mp4" : "jpg";
+    var path = cid + "/" + Date.now() + "_" + Math.random().toString(36).slice(2, 8) + "." + ext;
+    var localUrl = URL.createObjectURL(file);
+    setShowAttach(false);
+    onSend(cid, {
+      from: user.id,
+      text: "",
+      ts: Date.now(),
+      meta: {
+        kind: "media",
+        media_type: t,
+        media_url: localUrl
+      }
+    });
+    db.storage.from("chat-media").upload(path, file, {
+      contentType: file.type || (t === "video" ? "video/mp4" : "image/jpeg"),
+      upsert: false
+    }).then(function (res) {
+      if (res && res.error) return;
+      db.from("messages").insert({
+        conv_id: cid,
+        from_id: user.id,
+        text: "[midia]",
+        meta: {
+          kind: "media",
+          media_type: t,
+          media_path: path
+        }
+      })["catch"](function () {});
+    })["catch"](function () {});
+  }
+  function renderMedia(meta, mine) {
+    var url = meta.media_url || mediaUrls[meta.media_path] || null;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: 4,
+        borderRadius: 16,
+        background: "#fff",
+        border: "1px solid ".concat(T.border),
+        overflow: "hidden",
+        maxWidth: "62%"
+      }
+    }, !url ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 200,
+        height: 140,
+        borderRadius: 12,
+        background: T.faint,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "'Cormorant Garamond',Georgia,serif",
+        fontStyle: "italic",
+        color: T.muted,
+        fontSize: 13
+      }
+    }, "carregando...") : meta.media_type === "video" ? /*#__PURE__*/React.createElement("video", {
+      src: url,
+      controls: true,
+      style: {
+        display: "block",
+        width: "100%",
+        maxWidth: 240,
+        borderRadius: 12
+      }
+    }) : /*#__PURE__*/React.createElement("img", {
+      src: url,
+      alt: "",
+      onError: onFotoError,
+      style: {
+        display: "block",
+        width: "100%",
+        maxWidth: 240,
+        borderRadius: 12
+      }
+    }));
+  }
   function send() {
     return _send.apply(this, arguments);
   }
@@ -39137,7 +39243,7 @@ function ModalChat(_ref172) {
         display: "flex",
         justifyContent: mine ? "flex-end" : "flex-start"
       }
-    }, m.meta ? shareCardBubble(m.meta, mine) : /*#__PURE__*/React.createElement("div", {
+    }, m.meta && m.meta.kind === "media" ? renderMedia(m.meta, mine) : m.meta ? shareCardBubble(m.meta, mine) : /*#__PURE__*/React.createElement("div", {
       style: {
         background: mine ? "linear-gradient(135deg,".concat(T.accent, ",").concat(T.accentDk, ")") : "#fff",
         color: mine ? "#fff" : T.text,
@@ -39285,36 +39391,11 @@ function ModalChat(_ref172) {
     type: "file",
     ref: fileRef,
     accept: "image/*,video/*",
-    onChange: (/*#__PURE__*/function () {
-      var _ref174 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee112(e) {
-        var file, t, b64;
-        return _regenerator().w(function (_context113) {
-          while (1) switch (_context113.n) {
-            case 0:
-              file = e.target.files[0];
-              if (file) {
-                _context113.n = 1;
-                break;
-              }
-              return _context113.a(2);
-            case 1:
-              t = file.type.startsWith("video") ? "video" : "image";
-              _context113.n = 2;
-              return fileToB64(file);
-            case 2:
-              b64 = _context113.v;
-              setMediaPreview(URL.createObjectURL(file));
-              setMediaFile(b64);
-              setMediaType(t);
-            case 3:
-              return _context113.a(2);
-          }
-        }, _callee112);
-      }));
-      return function (_x108) {
-        return _ref174.apply(this, arguments);
-      };
-    }()),
+    onChange: function onChange(e) {
+      var file = e.target.files[0];
+      if (file) sendMedia(file);
+      e.target.value = "";
+    },
     style: {
       display: "none"
     }
