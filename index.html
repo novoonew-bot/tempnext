@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v484 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v485 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -38513,7 +38513,7 @@ function ModalChat(_ref172) {
           var blob = new Blob(chunks, {
             type: "audio/webm"
           });
-          setAudioBlob(URL.createObjectURL(blob));
+          sendAudio(blob);
           stream.getTracks().forEach(function (t) {
             return t.stop();
           });
@@ -38933,7 +38933,11 @@ function ModalChat(_ref172) {
       contentType: file.type || (t === "video" ? "video/mp4" : "image/jpeg"),
       upsert: false
     }).then(function (res) {
-      if (res && res.error) return;
+      if (res && res.error) {
+        if (window.tnToast) window.tnToast("nao consegui enviar a midia", "tente de novo");
+        console.error("[CHAT] upload midia erro:", res.error);
+        return;
+      }
       db.from("messages").insert({
         conv_id: cid,
         from_id: user.id,
@@ -38971,7 +38975,15 @@ function ModalChat(_ref172) {
         color: T.muted,
         fontSize: 13
       }
-    }, "carregando...") : meta.media_type === "video" ? /*#__PURE__*/React.createElement("video", {
+    }, "carregando...") : meta.media_type === "audio" ? /*#__PURE__*/React.createElement("audio", {
+      src: url,
+      controls: true,
+      style: {
+        display: "block",
+        width: 220,
+        maxWidth: "100%"
+      }
+    }) : meta.media_type === "video" ? /*#__PURE__*/React.createElement("video", {
       src: url,
       controls: true,
       style: {
@@ -38991,6 +39003,43 @@ function ModalChat(_ref172) {
         borderRadius: 12
       }
     }));
+  }
+  function sendAudio(blob) {
+    if (!blob) return;
+    var path = cid + "/" + Date.now() + "_" + Math.random().toString(36).slice(2, 8) + ".webm";
+    var localUrl = URL.createObjectURL(blob);
+    onSend(cid, {
+      from: user.id,
+      text: "",
+      ts: Date.now(),
+      meta: {
+        kind: "media",
+        media_type: "audio",
+        media_url: localUrl
+      }
+    });
+    db.storage.from("chat-media").upload(path, blob, {
+      contentType: "audio/webm",
+      upsert: false
+    }).then(function (res) {
+      if (res && res.error) {
+        if (window.tnToast) window.tnToast("nao consegui enviar o audio", "tente de novo");
+        console.error("[CHAT] upload audio erro:", res.error);
+        return;
+      }
+      db.from("messages").insert({
+        conv_id: cid,
+        from_id: user.id,
+        text: "[audio]",
+        meta: {
+          kind: "media",
+          media_type: "audio",
+          media_path: path
+        }
+      })["catch"](function () {});
+    })["catch"](function (e) {
+      console.error("[CHAT] upload audio excecao:", e);
+    });
   }
   function send() {
     return _send.apply(this, arguments);
