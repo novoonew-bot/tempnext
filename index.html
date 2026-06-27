@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v483 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v484 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -38480,7 +38480,7 @@ function ModalChat(_ref172) {
       filter: "conv_id=eq.".concat(cid)
     }, function (payload) {
       var row = payload && payload["new"];
-      if (!row || !row.id || row.from_id === user.id) return;
+      if (!row || !row.id) return;
       setDbMsgs(function (prev) {
         if (prev.some(function (m) {
           return m.id === row.id;
@@ -38527,23 +38527,36 @@ function ModalChat(_ref172) {
     }
   }
   var localMs = msgs[cid] || [];
-  // Combina mensagens do banco com locais (sem duplicar)
-  var dbConverted = dbMsgs.map(function (m) {
+  // v484: ordem estavel — servidor por created_at (relogio unico) + otimistas no fim;
+  // dedup otimista<->eco do servidor por chave 1:1 (texto / midia / compartilhado).
+  function _msgKey(m) {
+    if (m.meta && m.meta.kind === "media") return m.from + "|media";
+    if (m.meta) return m.from + "|" + m.meta.kind + "|" + (m.meta.ref_id || "");
+    return m.from + "|t|" + (m.text || "");
+  }
+  var serverMsgs = dbMsgs.map(function (m) {
     return {
       from: m.from_id,
       text: m.text,
       ts: new Date(m.created_at).getTime(),
       meta: m.meta || null
     };
-  });
-  var localIds = new Set(localMs.map(function (m) {
-    return m.ts;
-  }));
-  var ms = [].concat(_toConsumableArray(dbConverted.filter(function (m) {
-    return !localIds.has(m.ts);
-  })), _toConsumableArray(localMs)).sort(function (a, b) {
+  }).sort(function (a, b) {
     return a.ts - b.ts;
   });
+  var _serverKeys = serverMsgs.map(_msgKey);
+  var _usados = {};
+  var pendentes = localMs.filter(function (m) {
+    var k = _msgKey(m);
+    for (var i = 0; i < _serverKeys.length; i++) {
+      if (_serverKeys[i] === k && !_usados[i]) {
+        _usados[i] = true;
+        return false;
+      }
+    }
+    return true;
+  });
+  var ms = [].concat(_toConsumableArray(serverMsgs), _toConsumableArray(pendentes));
   useEffect(function () {
     var _endRef$current;
     (_endRef$current = endRef.current) === null || _endRef$current === void 0 || _endRef$current.scrollIntoView({
