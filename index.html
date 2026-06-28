@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v487 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v488 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -56838,7 +56838,7 @@ function HomeEditorial(props) {
   }, [dados, seed]);
 
   function node(extra) {
-    return React.createElement("div", { style: Object.assign({ position: "absolute", width: 9, height: 9, borderRadius: "50%", background: AZUL, boxShadow: "0 0 0 3px " + CREME, zIndex: 3 }, extra || {}) });
+    return React.createElement("div", { style: Object.assign({ position: "absolute", width: 6, height: 6, borderRadius: "50%", background: AZUL, boxShadow: "0 0 0 2px " + CREME, zIndex: 3 }, extra || {}) });
   }
   function eyebrow(txt, mb) {
     return React.createElement("div", { style: { fontSize: 9.5, letterSpacing: "0.22em", textTransform: "uppercase", color: OURO, marginBottom: mb == null ? 9 : mb } }, txt);
@@ -56904,7 +56904,6 @@ function HomeEditorial(props) {
     if (side.type === "navy") sideEl = React.createElement("div", { style: { width: 116, flex: "0 0 auto", background: NAVY, display: "flex", alignItems: "center", justifyContent: "center", color: CREME, fontFamily: "'Fraunces',serif", fontSize: 24 } }, side.initials);
     else sideEl = React.createElement("div", { style: { width: 116, flex: "0 0 auto", background: side.grad || "linear-gradient(155deg,#d8b873,#c89a4b)", position: "relative" } }, side.img ? React.createElement("img", { src: side.img, alt: "", onError: onFotoError, style: { width: "100%", height: "100%", objectFit: "cover", display: "block" } }) : null);
     return React.createElement("div", { style: { position: "relative", zIndex: 2 } },
-      node({ left: -18, top: "50%", transform: "translateY(-50%)" }),
       React.createElement("div", { onClick: opts.onClick, style: { background: "#fff", borderRadius: "16px 16px 0 0", boxShadow: "0 4px 16px rgba(0,0,0,.06)", overflow: "hidden", display: "flex", flexDirection: "row-reverse", cursor: "pointer" } },
         sideEl,
         React.createElement("div", { style: { padding: "15px 16px 16px", flex: 1 } },
@@ -56928,10 +56927,10 @@ function HomeEditorial(props) {
   var icPessoa = React.createElement(React.Fragment, null, React.createElement("circle", { cx: 12, cy: 8, r: 3.1 }), React.createElement("path", { d: "M5.6 19a6.4 6.4 0 0 1 12.8 0" }));
   var icClock = React.createElement(React.Fragment, null, React.createElement("circle", { cx: 12, cy: 12, r: 8 }), React.createElement("path", { d: "M12 8v4l3 1.6" }));
 
-  function pequeno(ic, titulo, sub, onClick) {
+  function pequeno(ic, titulo, sub, onClick, primeiro) {
     if (!titulo) return null;
     return React.createElement("div", { style: { position: "relative", zIndex: 2, marginBottom: 12 } },
-      node({ left: -18, top: "50%", transform: "translateY(-50%)" }),
+      primeiro ? node({ left: -18, top: "50%", transform: "translateY(-50%)" }) : null,
       React.createElement("div", { onClick: onClick, style: { background: "#fff", borderRadius: "14px 14px 0 0", boxShadow: "0 4px 16px rgba(0,0,0,.06)", display: "flex", alignItems: "center", gap: 13, padding: "13px 16px", cursor: "pointer" } },
         icon(ic),
         React.createElement("div", { style: { flex: 1 } },
@@ -56941,7 +56940,7 @@ function HomeEditorial(props) {
 
   var pequenos = React.createElement("div", { style: { position: "relative", padding: "34px 24px 22px" } },
     eyebrow("Descobrir", 16),
-    pequeno(icPin, c.peqLugar && c.peqLugar.pl, "um lugar que guarda hist\u00f3rias", function () { if (c.peqLugar) onAbrirLugar(c.peqLugar.pl); }),
+    pequeno(icPin, c.peqLugar && c.peqLugar.pl, "um lugar que guarda hist\u00f3rias", function () { if (c.peqLugar) onAbrirLugar(c.peqLugar.pl); }, true),
     pequeno(icSpark, c.peqMomento && (c.peqMomento._momento && c.peqMomento._momento.lugar && String(c.peqMomento._momento.lugar).split(",")[0] || c.peqMomento.author), "uma nova mem\u00f3ria deste lugar", function () { if (c.peqMomento && c.peqMomento._momento && perfilMap[c.peqMomento._momento.user_id]) onAbrirPerfil(perfilMap[c.peqMomento._momento.user_id]); }),
     pequeno(icPessoa, c.peqPessoa && c.peqPessoa.nm, "esteve no mesmo tempo que voc\u00ea", function () { if (c.peqPessoa) abrirPessoaUid(c.peqPessoa._uid); }),
     pequeno(icClock, c.peqCaps && (c.peqCaps.yr || c.peqCaps.badge || "uma c\u00e1psula"), "o tempo guarda algo por aqui", function () { onAbrirCapsula(); }));
@@ -56957,7 +56956,7 @@ function HomeEditorial(props) {
       eyebrow(c.hero2.badge || "um momento"),
       React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 27, lineHeight: 1.08 } }, c.hero2.title || "O pr\u00f3ximo cap\u00edtulo"))) : null;
 
-  var spine = React.createElement("div", { style: { position: "absolute", left: 9, top: 60, bottom: 30, width: 2, borderRadius: 2, background: "linear-gradient(180deg,rgba(111,159,214,0)," + AZUL + " 4%," + AZUL + " 96%,rgba(111,159,214,0))", zIndex: 1 } });
+  var spine = React.createElement("div", { style: { position: "absolute", left: 10, top: 60, bottom: 30, width: 1, borderRadius: 1, background: "linear-gradient(180deg,rgba(111,159,214,0)," + AZUL + " 6%," + AZUL + " 94%,rgba(111,159,214,0))", zIndex: 1 } });
 
   return React.createElement("div", { style: { position: "relative", background: CREME, minHeight: "100vh", paddingBottom: 90, color: "#1b1b1b", fontFamily: "'Inter',sans-serif" } },
     header, spine, hero, grandes, pequenos, seal, hero2);
