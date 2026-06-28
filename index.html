@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v486 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v487 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -56794,6 +56794,174 @@ function HV9FeedItem(_refFI) {
     }
   }, sub) : null)));
 }
+function HomeEditorial(props) {
+  var user = props.user;
+  var dados = props.dados || {};
+  var seed = props.seed;
+  var onAbrirPerfil = props.onAbrirPerfil || function () {};
+  var onAbrirLugar = props.onAbrirLugar || function () {};
+  var onAbrirBuscar = props.onAbrirBuscar || function () {};
+  var onAbrirCapsula = props.onAbrirCapsula || function () {};
+  var onAbrirMenuRapido = props.onAbrirMenuRapido || function () {};
+  var onAbrirPerfilProprio = props.onAbrirPerfilProprio || function () {};
+  try { if (typeof injetarFontesV9 === "function") injetarFontesV9(); } catch (e) {}
+
+  var OURO = "#a8853f", AZUL = "#6f9fd6", CREME = "#f7f3ee", SUB = "#5b5142", META = "#8a8276", LINHA = "#ece6db", NAVY = "#0d1b2a", TERRA = "#c06a3e";
+
+  var perfilMap = {};
+  (dados.perfis || []).forEach(function (p) { perfilMap[p.id] = p; });
+
+  var comp = React.useMemo(function () {
+    if (!dados || dados.loading) return null;
+    var pools;
+    try {
+      pools = montarComposicaoReal({
+        user: user, perfis: dados.perfis || [], momentos: dados.momentos || [],
+        capsulas: dados.capsulas || [], places: dados.places || [],
+        cruzosComigo: dados.cruzosComigo || [], lugaresMap: dados.lugaresMap || new Map()
+      });
+    } catch (e) { return null; }
+    var tiles = pools.tiles || [];
+    var heros = pools.heros || [];
+    var pick = function (pred, exc) {
+      for (var i = 0; i < tiles.length; i++) { if (tiles[i] !== exc && pred(tiles[i])) return tiles[i]; }
+      return null;
+    };
+    var momento = pick(function (t) { return t.type === "post-photo" && t.img; });
+    var lugar = pick(function (t) { return t.type === "place"; });
+    var pessoa = pick(function (t) { return t.type === "photo-cross"; });
+    var peqLugar = pick(function (t) { return t.type === "place"; }, lugar) || lugar;
+    var peqMomento = pick(function (t) { return t.type === "post-photo" || t.type === "postcard"; }, momento);
+    var peqPessoa = pick(function (t) { return t.type === "photo-cross"; }, pessoa) || pessoa;
+    var peqCaps = pick(function (t) { return t.type === "capsula"; });
+    return { hero: heros[0] || null, hero2: heros[1] || null, momento: momento, lugar: lugar, pessoa: pessoa, peqLugar: peqLugar, peqMomento: peqMomento, peqPessoa: peqPessoa, peqCaps: peqCaps };
+  }, [dados, seed]);
+
+  function node(extra) {
+    return React.createElement("div", { style: Object.assign({ position: "absolute", width: 9, height: 9, borderRadius: "50%", background: AZUL, boxShadow: "0 0 0 3px " + CREME, zIndex: 3 }, extra || {}) });
+  }
+  function eyebrow(txt, mb) {
+    return React.createElement("div", { style: { fontSize: 9.5, letterSpacing: "0.22em", textTransform: "uppercase", color: OURO, marginBottom: mb == null ? 9 : mb } }, txt);
+  }
+  function hair(m) {
+    return React.createElement("div", { style: { height: 1, background: LINHA, margin: m || "24px 6px" } });
+  }
+  function initiais(nm) {
+    nm = (nm || "").trim(); if (!nm) return "?";
+    var p = nm.split(/\s+/);
+    return ((p[0] || "")[0] || "") + ((p[1] || "")[0] || "");
+  }
+  function abrirPessoaUid(uid) {
+    if (!uid) return;
+    var id = String(uid).replace("perfil_", "");
+    var p = perfilMap[id]; if (p) onAbrirPerfil(p);
+  }
+  function abrirHero(h) {
+    if (!h) return;
+    if (h._perfilHero) onAbrirPerfil(h._perfilHero);
+    else if (h._lugarHero) onAbrirLugar(h._lugarHero.name || h._lugarHero);
+    else if (h._momento && perfilMap[h._momento.user_id]) onAbrirPerfil(perfilMap[h._momento.user_id]);
+  }
+
+  if (!comp) {
+    return React.createElement("div", { style: { minHeight: 320, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Cormorant Garamond',Georgia,serif", fontStyle: "italic", color: META, padding: 40, textAlign: "center", background: CREME } }, dados.loading ? "o tempo se organiza\u2026" : "ainda n\u00e3o h\u00e1 hist\u00f3rias por aqui");
+  }
+  var c = comp;
+
+  var header = React.createElement("div", { style: { position: "absolute", top: 0, left: 0, right: 0, zIndex: 6, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 22px" } },
+    React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 20, fontWeight: 500, color: "#fff", textShadow: "0 1px 6px rgba(0,0,0,.3)" } }, "Tempnext", React.createElement("span", { style: { color: "#e8c97e" } }, ".")),
+    React.createElement("div", { onClick: onAbrirPerfilProprio, style: { width: 34, height: 34, borderRadius: "50%", background: "rgba(255,255,255,.85)", color: TERRA, fontFamily: "'Fraunces',serif", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" } }, initiais((user && (user.first_name || user.name)) || "")));
+
+  var heroImg = c.hero && c.hero.img;
+  var hero = React.createElement(React.Fragment, null,
+    React.createElement("div", { onClick: function () { abrirHero(c.hero); }, style: { height: 300, position: "relative", cursor: "pointer", background: "linear-gradient(165deg,#e09a6f,#c06a3e 55%,#a85733)", WebkitMaskImage: "linear-gradient(#000 60%,transparent)", maskImage: "linear-gradient(#000 60%,transparent)" } },
+      heroImg ? React.createElement("img", { src: heroImg, alt: "", onError: onFotoError, style: { width: "100%", height: "100%", objectFit: "cover", display: "block", WebkitMaskImage: "linear-gradient(#000 60%,transparent)", maskImage: "linear-gradient(#000 60%,transparent)" } }) : null),
+    React.createElement("div", { style: { padding: "0 26px 0 44px", marginTop: -46, position: "relative", zIndex: 2 } },
+      node({ left: 20, top: 4 }),
+      eyebrow(c.hero && c.hero.badge ? c.hero.badge : "um momento"),
+      React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 29, lineHeight: 1.08, marginBottom: 9 } }, c.hero && c.hero.title || "Um instante guardado"),
+      c.hero && (c.hero.quote || c.hero.subtitle) ? React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 18, lineHeight: 1.4, color: SUB } }, c.hero.quote || c.hero.subtitle) : null,
+      c.hero && c.hero.meta ? React.createElement("div", { style: { fontSize: 11, color: META, marginTop: 10 } }, c.hero.meta) : null));
+
+  function cardMomento(t) {
+    if (!t) return null;
+    var m = t._momento || {};
+    var titulo = (m.texto ? String(m.texto).split("\n")[0] : t.author) || "Um momento";
+    if (titulo.length > 52) titulo = titulo.slice(0, 50) + "\u2026";
+    var subq = (m.lugar ? String(m.lugar).split(",")[0] : "") + (t.when ? (m.lugar ? " \u00b7 " : "") + t.when : "");
+    return React.createElement("div", { style: { position: "relative", zIndex: 2 } },
+      node({ left: -18, top: 28 }),
+      React.createElement("div", { onClick: function () { if (perfilMap[m.user_id]) onAbrirPerfil(perfilMap[m.user_id]); }, style: { background: "#fff", borderRadius: "18px 18px 0 0", boxShadow: "0 4px 16px rgba(0,0,0,.06)", overflow: "hidden", cursor: "pointer" } },
+        React.createElement("div", { style: { height: 188, background: "linear-gradient(155deg,#d98a63,#c06a3e)", position: "relative" } }, t.img ? React.createElement("img", { src: t.img, alt: "", onError: onFotoError, style: { width: "100%", height: "100%", objectFit: "cover", display: "block" } }) : null),
+        React.createElement("div", { style: { padding: "16px 18px 18px" } },
+          eyebrow("Um momento", 7),
+          React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 21, lineHeight: 1.12, marginBottom: 6 } }, titulo),
+          subq ? React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 17, lineHeight: 1.38, color: SUB } }, subq) : null)));
+  }
+
+  function cardMeia(opts) {
+    var side = opts.side, sideEl;
+    if (side.type === "navy") sideEl = React.createElement("div", { style: { width: 116, flex: "0 0 auto", background: NAVY, display: "flex", alignItems: "center", justifyContent: "center", color: CREME, fontFamily: "'Fraunces',serif", fontSize: 24 } }, side.initials);
+    else sideEl = React.createElement("div", { style: { width: 116, flex: "0 0 auto", background: side.grad || "linear-gradient(155deg,#d8b873,#c89a4b)", position: "relative" } }, side.img ? React.createElement("img", { src: side.img, alt: "", onError: onFotoError, style: { width: "100%", height: "100%", objectFit: "cover", display: "block" } }) : null);
+    return React.createElement("div", { style: { position: "relative", zIndex: 2 } },
+      node({ left: -18, top: "50%", transform: "translateY(-50%)" }),
+      React.createElement("div", { onClick: opts.onClick, style: { background: "#fff", borderRadius: "16px 16px 0 0", boxShadow: "0 4px 16px rgba(0,0,0,.06)", overflow: "hidden", display: "flex", flexDirection: "row-reverse", cursor: "pointer" } },
+        sideEl,
+        React.createElement("div", { style: { padding: "15px 16px 16px", flex: 1 } },
+          eyebrow(opts.eyebrow, 6),
+          React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 18, lineHeight: 1.12, marginBottom: 5 } }, opts.title),
+          opts.sub ? React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 15.5, lineHeight: 1.34, color: SUB } }, opts.sub) : null)));
+  }
+
+  var grandes = React.createElement("div", { style: { padding: "34px 24px 0", position: "relative" } },
+    cardMomento(c.momento),
+    c.momento && c.lugar ? hair("26px 6px") : null,
+    c.lugar ? cardMeia({ eyebrow: "Um lugar", title: c.lugar.pl || "Um lugar", sub: c.lugar.soulsCount || "Voc\u00ea passou por aqui.", onClick: function () { onAbrirLugar(c.lugar.pl); }, side: { type: "img", img: c.lugar.img, grad: "linear-gradient(155deg,#d8b873,#c89a4b)" } }) : null,
+    c.lugar && c.pessoa ? hair("22px 6px") : null,
+    c.pessoa ? cardMeia({ eyebrow: "Uma hist\u00f3ria", title: c.pessoa.nm || "Algu\u00e9m", sub: c.pessoa.yr || "No mesmo tempo e lugar.", onClick: function () { abrirPessoaUid(c.pessoa._uid); }, side: { type: c.pessoa.img ? "img" : "navy", img: c.pessoa.img, grad: "linear-gradient(155deg,#3a4a5a,#0d1b2a)", initials: initiais(c.pessoa.nm) } }) : null);
+
+  function icon(child) {
+    return React.createElement("svg", { width: 18, height: 18, viewBox: "0 0 24 24", fill: "none", stroke: OURO, strokeWidth: 1.3, strokeLinecap: "round", strokeLinejoin: "round" }, child);
+  }
+  var icPin = React.createElement(React.Fragment, null, React.createElement("path", { d: "M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z" }), React.createElement("circle", { cx: 12, cy: 10, r: 2.3 }));
+  var icSpark = React.createElement("path", { d: "M12 4l1.7 5.1L19 11l-5.3 1.8L12 18l-1.7-5.1L5 11l5.3-1.8z" });
+  var icPessoa = React.createElement(React.Fragment, null, React.createElement("circle", { cx: 12, cy: 8, r: 3.1 }), React.createElement("path", { d: "M5.6 19a6.4 6.4 0 0 1 12.8 0" }));
+  var icClock = React.createElement(React.Fragment, null, React.createElement("circle", { cx: 12, cy: 12, r: 8 }), React.createElement("path", { d: "M12 8v4l3 1.6" }));
+
+  function pequeno(ic, titulo, sub, onClick) {
+    if (!titulo) return null;
+    return React.createElement("div", { style: { position: "relative", zIndex: 2, marginBottom: 12 } },
+      node({ left: -18, top: "50%", transform: "translateY(-50%)" }),
+      React.createElement("div", { onClick: onClick, style: { background: "#fff", borderRadius: "14px 14px 0 0", boxShadow: "0 4px 16px rgba(0,0,0,.06)", display: "flex", alignItems: "center", gap: 13, padding: "13px 16px", cursor: "pointer" } },
+        icon(ic),
+        React.createElement("div", { style: { flex: 1 } },
+          React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 15, lineHeight: 1.1 } }, titulo),
+          sub ? React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 1 } }, sub) : null)));
+  }
+
+  var pequenos = React.createElement("div", { style: { position: "relative", padding: "34px 24px 22px" } },
+    eyebrow("Descobrir", 16),
+    pequeno(icPin, c.peqLugar && c.peqLugar.pl, "um lugar que guarda hist\u00f3rias", function () { if (c.peqLugar) onAbrirLugar(c.peqLugar.pl); }),
+    pequeno(icSpark, c.peqMomento && (c.peqMomento._momento && c.peqMomento._momento.lugar && String(c.peqMomento._momento.lugar).split(",")[0] || c.peqMomento.author), "uma nova mem\u00f3ria deste lugar", function () { if (c.peqMomento && c.peqMomento._momento && perfilMap[c.peqMomento._momento.user_id]) onAbrirPerfil(perfilMap[c.peqMomento._momento.user_id]); }),
+    pequeno(icPessoa, c.peqPessoa && c.peqPessoa.nm, "esteve no mesmo tempo que voc\u00ea", function () { if (c.peqPessoa) abrirPessoaUid(c.peqPessoa._uid); }),
+    pequeno(icClock, c.peqCaps && (c.peqCaps.yr || c.peqCaps.badge || "uma c\u00e1psula"), "o tempo guarda algo por aqui", function () { onAbrirCapsula(); }));
+
+  var seal = React.createElement("div", { style: { position: "relative", zIndex: 2, padding: "8px 24px 30px", display: "flex", alignItems: "center", gap: 14 } },
+    React.createElement("div", { style: { position: "absolute", left: 4, top: 8, width: 13, height: 13, borderRadius: "50%", background: AZUL, boxShadow: "0 0 0 4px rgba(111,159,214,.16),0 0 0 8px " + CREME, zIndex: 3 } }),
+    React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 15, color: AZUL } }, "o tempo segue"));
+
+  var hero2 = c.hero2 ? React.createElement(React.Fragment, null,
+    React.createElement("div", { onClick: function () { abrirHero(c.hero2); }, style: { height: 150, position: "relative", cursor: "pointer", background: "linear-gradient(165deg,#cf9a6a,#b07a44)", WebkitMaskImage: "linear-gradient(#000 70%,transparent)", maskImage: "linear-gradient(#000 70%,transparent)" } }, c.hero2.img ? React.createElement("img", { src: c.hero2.img, alt: "", onError: onFotoError, style: { width: "100%", height: "100%", objectFit: "cover", display: "block", WebkitMaskImage: "linear-gradient(#000 70%,transparent)", maskImage: "linear-gradient(#000 70%,transparent)" } }) : null),
+    React.createElement("div", { style: { padding: "0 26px 40px 44px", marginTop: -26, position: "relative", zIndex: 2 } },
+      node({ left: 20, top: 2 }),
+      eyebrow(c.hero2.badge || "um momento"),
+      React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 27, lineHeight: 1.08 } }, c.hero2.title || "O pr\u00f3ximo cap\u00edtulo"))) : null;
+
+  var spine = React.createElement("div", { style: { position: "absolute", left: 9, top: 60, bottom: 30, width: 2, borderRadius: 2, background: "linear-gradient(180deg,rgba(111,159,214,0)," + AZUL + " 4%," + AZUL + " 96%,rgba(111,159,214,0))", zIndex: 1 } });
+
+  return React.createElement("div", { style: { position: "relative", background: CREME, minHeight: "100vh", paddingBottom: 90, color: "#1b1b1b", fontFamily: "'Inter',sans-serif" } },
+    header, spine, hero, grandes, pequenos, seal, hero2);
+}
 function HomeV9Preview(_ref265) {
   var user = _ref265.user,
     onBack = _ref265.onBack,
@@ -60596,7 +60764,7 @@ function App() {
     return /*#__PURE__*/React.createElement(FaixaSecao, { secao: sec, key: "faixa-" + sec });
   })(), tela === "historia" && /*#__PURE__*/React.createElement(TelaHistoria, {
     onBack: function onBackHist() { return setTela("inicio"); }
-  }), tela === "inicio" && /*#__PURE__*/React.createElement(HomeV9Preview, {
+  }), tela === "inicio" && /*#__PURE__*/React.createElement(HomeEditorial, {
     user: user,
     onBack: null,
     seed: homeSeed,
