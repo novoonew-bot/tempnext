@@ -58,6 +58,10 @@ input:focus,select:focus,textarea:focus{
 @keyframes tn-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.55;transform:scale(0.8)}}
 @keyframes tnsPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.85}50%{transform:translate(-50%,-50%) scale(1.1);opacity:.48}}
 @keyframes tnFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes tnspark{0%{transform:scale(1);opacity:.5}70%{transform:scale(2.6);opacity:0}100%{opacity:0}}
+@keyframes tnrise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.nosb{scrollbar-width:none}
+.nosb::-webkit-scrollbar{display:none}
 .tncad-line{width:100%;box-sizing:border-box;background:transparent;border:none;border-bottom:1px solid rgba(180,168,148,.3);color:#f3ecdd;font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;text-align:center;padding:8px 4px;outline:none;transition:border-color .25s}
 .tncad-line:focus{border-color:#6f9fd6}
 .tncad-line::placeholder{color:#6f6552}
@@ -786,7 +790,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v491 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v492 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -27002,6 +27006,79 @@ function CardResultadoLugar(_refRL) {
     viewBox: "0 0 24 24", width: 18, height: 18, fill: "none", stroke: T.muted, strokeWidth: 2, style: { flexShrink: 0 }
   }, /*#__PURE__*/React.createElement("path", { d: "m9 6 6 6-6 6" })));
 }
+function DescobrirLandingV2(_refDL) {
+  var user = _refDL.user, lugares = _refDL.lugares || [], contacts = _refDL.contacts || [], onLugar = _refDL.onLugar, onView = _refDL.onView;
+  var _dl = useState({ linhas: [], lugaresDivididos: [], car: false }), dados = _dl[0], setDados = _dl[1];
+  useEffect(function () {
+    var vivo = true;
+    if (!user || !user.id || !contacts.length) { setDados({ linhas: [], lugaresDivididos: [], car: true }); return function () {}; }
+    (async function () {
+      try {
+        var ids = [user.id].concat(contacts.map(function (c) { return c.id; }));
+        var mapa = await tnLugaresDeProfiles(ids);
+        var luUser = mapa.get(user.id) || [];
+        var luByName = {};
+        luUser.forEach(function (l) { if (l.placeName) luByName[String(l.placeName).trim()] = l; });
+        var linhas = [];
+        var agg = {};
+        contacts.forEach(function (c) {
+          var cz = calcularCruzamento(user, c, luUser, mapa.get(c.id) || []);
+          if (!cz || cz.tipo === "nenhum" || !cz.texto) return;
+          linhas.push({ c: c, texto: cz.texto, score: cz.score || 0 });
+          var chave = (cz.placeName || "").trim();
+          if (chave && luByName[chave]) {
+            var lu = luByName[chave];
+            if (!agg[chave]) agg[chave] = { nome: chave, place_id: lu.place_id, city: lu.city, uf: lu.uf, n: 0 };
+            agg[chave].n += 1;
+          }
+        });
+        linhas.sort(function (x, y) { return y.score - x.score; });
+        linhas = linhas.slice(0, 6);
+        var divididos = Object.keys(agg).map(function (k) { return agg[k]; }).sort(function (x, y) { return y.n - x.n; }).slice(0, 6);
+        if (vivo) setDados({ linhas: linhas, lugaresDivididos: divididos, car: true });
+      } catch (e) { if (vivo) setDados({ linhas: [], lugaresDivididos: [], car: true }); }
+    })();
+    return function () { vivo = false; };
+  }, [user && user.id, contacts.length]);
+
+  var destaque = lugares[0] || null;
+  var temAlgo = dados.linhas.length || dados.lugaresDivididos.length || destaque;
+  if (dados.car && !temAlgo) {
+    return React.createElement("div", { style: { textAlign: "center", color: "#8a8276", fontSize: 15, lineHeight: 1.7, marginTop: 30, padding: "0 30px", fontFamily: "'Cormorant Garamond',Georgia,serif", fontStyle: "italic" } }, "Esta \u00e9poca ainda \u00e9 s\u00f3 sua.");
+  }
+
+  function icRelogio() { return React.createElement("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "#b7ab97", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round", style: { flexShrink: 0 } }, React.createElement("circle", { cx: "12", cy: "12", r: "9" }), React.createElement("path", { d: "M12 8v4l3 1.6" })); }
+  function icPessoas() { return React.createElement("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "#b7ab97", strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round", style: { flexShrink: 0 } }, React.createElement("circle", { cx: "9", cy: "8", r: "3.2" }), React.createElement("path", { d: "M2.5 20a6.5 6.5 0 0 1 13 0" }), React.createElement("circle", { cx: "17.5", cy: "9", r: "2.6" }), React.createElement("path", { d: "M16 20a6 6 0 0 1 6-1.5" })); }
+  function icChevron() { return React.createElement("svg", { width: "17", height: "17", viewBox: "0 0 24 24", fill: "none", stroke: "#cbb9a0", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round", style: { flexShrink: 0 } }, React.createElement("path", { d: "M9 18l6-6-6-6" })); }
+  function nodo(top, sz) { sz = sz || 11; return React.createElement("div", { style: { position: "absolute", left: sz >= 15 ? -22 : -21, top: top, width: sz, height: sz, borderRadius: "50%", background: "#6f9fd6", boxShadow: "0 0 0 " + (sz >= 15 ? 4 : 3) + "px #f7f3ee", zIndex: 2 } }); }
+
+  var blocos = [];
+  if (destaque && destaque.placeName) {
+    blocos.push(React.createElement("div", { key: "frase", style: { margin: "22px 8px 4px", display: "flex", gap: 13, alignItems: "flex-start" } }, React.createElement("div", { style: { position: "relative", width: 9, height: 9, marginTop: 7, flexShrink: 0 } }, React.createElement("div", { style: { position: "absolute", inset: 0, borderRadius: "50%", background: "#6f9fd6", border: "1.5px solid #6f9fd6", animation: "tnspark 3.4s ease-out infinite" } }), React.createElement("div", { style: { position: "absolute", inset: 0, borderRadius: "50%", background: "#6f9fd6" } })), React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',Georgia,serif", fontStyle: "italic", fontWeight: 500, fontSize: 18, lineHeight: 1.4, color: "#4a4236" } }, "Hoje o tempo encontrou uma nova hist\u00f3ria em ", React.createElement("span", { style: { color: "#a8853f" } }, destaque.placeName), ".")));
+  }
+
+  var tl = [];
+  tl.push(React.createElement("div", { key: "spine", style: { position: "absolute", left: 9, top: 0, bottom: 54, width: 1.5, background: "linear-gradient(180deg,rgba(111,159,214,0),rgba(111,159,214,.85) 7%,rgba(111,159,214,.85) 93%,rgba(111,159,214,0))", zIndex: 0 } }));
+  if (dados.linhas.length) {
+    tl.push(React.createElement("div", { key: "eb1", style: { position: "relative" } }, React.createElement("div", { style: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#a8853f", marginBottom: 16 } }, "Pelo seu tempo")));
+    dados.linhas.forEach(function (ln, i) {
+      var c = ln.c, ini = (c.name || "?").trim().charAt(0).toUpperCase();
+      tl.push(React.createElement("div", { key: "p" + (c.id || i), style: { position: "relative", marginBottom: 13 } }, nodo(20), React.createElement("div", { onClick: function () { return onView && onView(c); }, style: { background: "#fff", borderRadius: "18px 18px 0 0", boxShadow: "0 4px 16px rgba(0,0,0,.06)", display: "flex", alignItems: "center", gap: 13, padding: "14px 16px", cursor: "pointer" } }, c.avatar_url ? React.createElement("img", { src: c.avatar_url, onError: onFotoError, style: { width: 46, height: 46, borderRadius: "50%", objectFit: "cover", flexShrink: 0 } }) : React.createElement("div", { style: { width: 46, height: 46, borderRadius: "50%", background: "#0d1b2a", color: "#f7f3ee", fontFamily: "'Fraunces',Georgia,serif", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 } }, ini), React.createElement("div", { style: { flex: 1, minWidth: 0 } }, React.createElement("div", { style: { fontFamily: "'Fraunces',Georgia,serif", fontSize: 16, lineHeight: 1.1, color: "#1b1b1b" } }, c.name), React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 6, marginTop: 4 } }, icRelogio(), React.createElement("span", { style: { fontSize: 12, color: "#5b5142" } }, ln.texto))), icChevron())));
+    });
+  }
+  if (dados.lugaresDivididos.length) {
+    tl.push(React.createElement("div", { key: "eb2", style: { position: "relative", marginBottom: 14, marginTop: dados.linhas.length ? 11 : 0 } }, nodo(2), React.createElement("div", { style: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#a8853f" } }, "Lugares que voc\u00eas dividiram")));
+    tl.push(React.createElement("div", { key: "faixa", className: "nosb", style: { display: "flex", gap: 12, overflowX: "auto", paddingBottom: 4, marginBottom: 24 } }, dados.lugaresDivididos.map(function (lg, i) {
+      var nome = lg.nome || "";
+      var hash = nome.split("").reduce(function (s, ch) { return s + ch.charCodeAt(0); }, 0);
+      var grads = ["linear-gradient(135deg,#D4A574,#B8860B)", "linear-gradient(135deg,#C49A68,#A67B3E)", "linear-gradient(135deg,#B8925F,#8B6F3F)"];
+      return React.createElement("div", { key: i, onClick: function () { return onLugar && lg.place_id && onLugar({ id: lg.place_id, name: nome, city: lg.city, state: lg.uf }); }, style: { flex: "0 0 150px", cursor: lg.place_id ? "pointer" : "default" } }, React.createElement("div", { style: { position: "relative", height: 100, borderRadius: "18px 18px 0 0", overflow: "hidden", background: grads[hash % 3] } }, React.createElement("div", { style: { position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(40,28,14,.22))" } })), React.createElement("div", { style: { fontFamily: "'Fraunces',Georgia,serif", fontSize: 15, marginTop: 8, lineHeight: 1.1, color: "#1b1b1b" } }, nome), React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 5, marginTop: 3 } }, icPessoas(), React.createElement("span", { style: { fontSize: 11.5, color: "#8a8276" } }, lg.n, " ", lg.n === 1 ? "pessoa do seu tempo" : "pessoas do seu tempo")));
+    })));
+  }
+  tl.push(React.createElement("div", { key: "selo", style: { position: "relative", textAlign: "center", padding: "0 0 30px" } }, nodo(2, 15), React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',Georgia,serif", fontStyle: "italic", fontWeight: 500, fontSize: 16, color: "#6f9fd6" } }, "o tempo segue")));
+  blocos.push(React.createElement("div", { key: "tl", style: { position: "relative", padding: "24px 8px 0 34px" } }, tl));
+  return React.createElement("div", null, blocos);
+}
 function DescobrirLanding(_refDL) {
   var user = _refDL.user, lugares = _refDL.lugares || [], alta = _refDL.alta || [], contacts = _refDL.contacts || [], onLugar = _refDL.onLugar, onView = _refDL.onView, onAbrirContatos = _refDL.onAbrirContatos, onAbrirLugares = _refDL.onAbrirLugares;
   var destaque = lugares[0] || null;
@@ -27982,173 +28059,34 @@ function Buscar(_ref122) {
       marginTop: 4,
       letterSpacing: "0.01em"
     }
-  }, "o tempo guarda quem esteve perto")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#fff",
-      borderRadius: 12,
-      boxShadow: "0 4px 20px rgba(42,32,26,0.06)",
-      overflow: "hidden",
-      marginBottom: 10
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "center",
-      padding: "18px 24px"
-    }
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: "19",
-    height: "19",
-    viewBox: "0 0 16 16",
-    fill: "none",
-    style: {
-      flexShrink: 0,
-      marginRight: 14
-    }
-  }, /*#__PURE__*/React.createElement("circle", {
-    cx: "7",
-    cy: "7",
-    r: "5",
-    stroke: T.muted,
-    strokeWidth: "1.5"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M11 11l3 3",
-    stroke: T.muted,
-    strokeWidth: "1.5",
-    strokeLinecap: "round"
-  })), /*#__PURE__*/React.createElement("input", {
-    placeholder: "nome, lugar, cidade, estado ou CEP\u2026",
+  }, "o tempo guarda quem esteve perto")), React.createElement("div", {
+    style: { marginTop: 18 }
+  }, React.createElement("div", {
+    style: { display: "flex", alignItems: "center", gap: 11, background: "#fff", border: "1px solid #ece6db", borderRadius: 14, padding: "13px 15px", boxShadow: "0 4px 16px rgba(0,0,0,0.05)" }
+  }, React.createElement("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "#a8853f", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round", style: { flexShrink: 0 } }, React.createElement("circle", { cx: "11", cy: "11", r: "7" }), React.createElement("path", { d: "M21 21l-4-4" })), React.createElement("input", {
+    placeholder: "um nome, um lugar, um ano\u2026",
     value: termo,
-    onChange: function onChange(e) {
-      return setTermo(e.target.value);
-    },
-    onKeyDown: function onKeyDown(e) {
-      return e.key === "Enter" && executarBusca();
-    },
-    style: {
-      flex: 1,
-      border: "none",
-      outline: "none",
-      fontSize: 17,
-      fontFamily: "inherit",
-      color: T.text,
-      background: "transparent",
-      padding: 0,
-      minWidth: 0,
-      lineHeight: 1.4
-    }
-  }), termo && /*#__PURE__*/React.createElement("button", {
+    onChange: function onChange(e) { return setTermo(e.target.value); },
+    onKeyDown: function onKeyDown(e) { return e.key === "Enter" && executarBusca(); },
+    style: { flex: 1, border: "none", outline: "none", fontSize: 15, fontFamily: "inherit", color: "#1b1b1b", background: "transparent", padding: 0, minWidth: 0, lineHeight: 1.4 }
+  }), termo && React.createElement("button", {
     onClick: limpar,
-    style: {
-      background: "rgba(42,32,26,0.06)",
-      border: "none",
-      cursor: "pointer",
-      color: T.muted,
-      width: 24,
-      height: 24,
-      borderRadius: "50%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 0,
-      fontSize: 14,
-      lineHeight: 1,
-      flexShrink: 0,
-      fontFamily: "inherit"
-    }
-  }, "\xD7")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      height: 1,
-      background: "rgba(42,32,26,0.08)",
-      margin: "0 16px"
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: "10px 12px",
-      display: "flex",
-      alignItems: "center",
-      gap: 6
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      background: "rgba(42,32,26,0.05)",
-      borderRadius: 999,
-      padding: 3,
-      gap: 2,
-      flex: 1
-    }
-  }, [{
-    id: "tudo",
-    label: "Tudo"
-  }, {
-    id: "pessoas",
-    label: "Pessoas"
-  }, {
-    id: "lugares",
-    label: "Lugares"
-  }].map(function (opt) {
+    style: { background: "rgba(42,32,26,0.06)", border: "none", cursor: "pointer", color: "#8a8276", width: 24, height: 24, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", padding: 0, fontSize: 14, lineHeight: 1, flexShrink: 0, fontFamily: "inherit" }
+  }, "\u00D7")), React.createElement("div", {
+    className: "nosb",
+    style: { display: "flex", gap: 8, marginTop: 24, overflowX: "auto", paddingBottom: 2 }
+  }, [{ id: "tudo", label: "Tudo" }, { id: "pessoas", label: "Pessoas" }, { id: "lugares", label: "Lugares" }].map(function (opt) {
     var ativo = tipoFiltro === opt.id;
-    return /*#__PURE__*/React.createElement("button", {
+    return React.createElement("button", {
       key: opt.id,
-      onClick: function onClick() {
-        return setTipoFiltro(opt.id);
-      },
-      style: {
-        flex: 1,
-        padding: "6px 10px",
-        borderRadius: 999,
-        border: "none",
-        background: ativo ? "var(--user-color)" : "transparent",
-        color: ativo ? "var(--user-text-on-color)" : "#5a4a38",
-        fontFamily: "inherit",
-        fontSize: 11,
-        fontWeight: 500,
-        cursor: "pointer",
-        letterSpacing: "0.02em",
-        transition: "all 0.15s ease"
-      }
+      onClick: function onClick() { return setTipoFiltro(opt.id); },
+      style: { flexShrink: 0, fontSize: 12, padding: "7px 15px", borderRadius: 999, border: ativo ? "1px solid #0d1b2a" : "1px solid #ece6db", background: ativo ? "#0d1b2a" : "#fff", color: ativo ? "#f7f3ee" : "#5b5142", fontFamily: "inherit", cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s ease" }
     }, opt.label);
-  })), /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      return setMostrarFiltros(function (v) {
-        return !v;
-      });
-    },
-    title: filtroAnosAtivo ? "".concat(anoMin, "\u2014").concat(anoMax) : "restringir época",
-    style: {
-      width: 32,
-      height: 32,
-      borderRadius: "50%",
-      border: "none",
-      background: filtroAnosAtivo ? "var(--user-color-15)" : "rgba(42,32,26,0.05)",
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 0,
-      flexShrink: 0,
-      transition: "background 0.15s ease"
-    }
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: "14",
-    height: "14",
-    viewBox: "0 0 16 16",
-    fill: "none"
-  }, /*#__PURE__*/React.createElement("rect", {
-    x: "2",
-    y: "3",
-    width: "12",
-    height: "11",
-    rx: "1.5",
-    stroke: filtroAnosAtivo ? "var(--user-color-deep)" : "#5a4a38",
-    strokeWidth: "1.3"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M2 6h12M5.5 1.5v3M10.5 1.5v3",
-    stroke: filtroAnosAtivo ? "var(--user-color-deep)" : "#5a4a38",
-    strokeWidth: "1.3",
-    strokeLinecap: "round"
-  }))))), termo && parseCepFromTermo(termo) && /*#__PURE__*/React.createElement("div", {
+  }), React.createElement("button", {
+    key: "periodos",
+    onClick: function onClick() { return setMostrarFiltros(function (v) { return !v; }); },
+    style: { flexShrink: 0, fontSize: 12, padding: "7px 15px", borderRadius: 999, border: filtroAnosAtivo ? "1px solid #0d1b2a" : "1px solid #ece6db", background: filtroAnosAtivo ? "#0d1b2a" : "#fff", color: filtroAnosAtivo ? "#f7f3ee" : "#5b5142", fontFamily: "inherit", cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s ease" }
+  }, filtroAnosAtivo ? anoMin + "\u2013" + anoMax : "Per\u00EDodos"))), termo && parseCepFromTermo(termo) && /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 11,
       color: T.accent,
@@ -28419,7 +28357,7 @@ function Buscar(_ref122) {
       color: T.muted,
       lineHeight: 1.7
     }
-  }, "Tente outro termo ou ajuste os filtros.", /*#__PURE__*/React.createElement("br", null), "A pessoa ou o lugar podem ainda n\xE3o ter sido cadastrados.")), termo.trim().length < 2 && !searched && !loading && /*#__PURE__*/React.createElement(DescobrirLanding, { user: user, lugares: meusLugaresBuscar, alta: lugaresAlta, contacts: contacts, onLugar: onLugar, onView: onView, onAbrirContatos: onAbrirContatos, onAbrirLugares: onAbrirLugares })));
+  }, "Tente outro termo ou ajuste os filtros.", /*#__PURE__*/React.createElement("br", null), "A pessoa ou o lugar podem ainda n\xE3o ter sido cadastrados.")), termo.trim().length < 2 && !searched && !loading && /*#__PURE__*/React.createElement(DescobrirLandingV2, { user: user, lugares: meusLugaresBuscar, alta: lugaresAlta, contacts: contacts, onLugar: onLugar, onView: onView, onAbrirContatos: onAbrirContatos, onAbrirLugares: onAbrirLugares })));
 }
 
 // ── Componente: Adicionar Lugar ───────────────────────────────
