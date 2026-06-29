@@ -790,7 +790,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v493 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v494 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -34692,7 +34692,7 @@ function PerfilLivro(props) {
   function icon(d, sz, st, sw) { return React.createElement("svg", { width: sz || 15, height: sz || 15, viewBox: "0 0 24 24", fill: "none", stroke: st || "#b7ab97", strokeWidth: sw || 1.5, strokeLinecap: "round", strokeLinejoin: "round" }, d.map(function (p, i) { return React.createElement("path", { key: i, d: p }); })); }
   function hatch(rl) { return React.createElement("div", { style: { position: "absolute", inset: 0, background: "repeating-linear-gradient(125deg,rgba(255,255,255,.08) 0 2px,rgba(255,255,255,0) 2px 10px)" } }); }
   function eyebrowEl(txt, cor) { return React.createElement("div", { style: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: cor || OURO } }, txt); }
-  function nodoEl(era, isOpen, i) { return React.createElement("div", { style: { position: "absolute", left: -32, top: 8, width: 22, height: 22, borderRadius: "50%", background: isOpen ? era.num : era.bg, border: "1.5px solid " + era.ac, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 } }, React.createElement("span", { style: { fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: romano(i).length > 2 ? 8 : 9, color: isOpen ? "#fff" : era.num } }, romano(i))); }
+  function nodoEl(era, isOpen, i) { return React.createElement("div", { style: { position: "absolute", left: -32, top: 8, width: 22, height: 22, borderRadius: "50%", background: isOpen ? era.num : "#f7f3ee", border: "1.5px solid " + era.ac, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 } }, React.createElement("span", { style: { fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: romano(i).length > 2 ? 8 : 9, color: isOpen ? "#fff" : era.num } }, romano(i))); }
   function verLink(cap) { return React.createElement("div", { onClick: function (e) { e.stopPropagation(); onAbrirCapitulo(cap); }, style: { fontSize: 11, color: OURO, cursor: "pointer" } }, "ver todos \u2192"); }
 
   function cardFechado(g, i) {
@@ -34703,7 +34703,7 @@ function PerfilLivro(props) {
         React.createElement("div", { style: { height: 120, background: era.grad, position: "relative" } }, hatch()),
         React.createElement("div", { style: { padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 } },
           React.createElement("div", null,
-            React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 17, lineHeight: 1.1 } }, g.cidade),
+            React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 17, lineHeight: 1.1 } }, g.cidade + (g.uf ? ", " + g.uf : "")),
             React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 3 } }, periodoTxt(g) + (mc ? " \u00b7 " + mc + " momento" + (mc === 1 ? "" : "s") : ""))),
           chevron())));
   }
@@ -34715,7 +34715,6 @@ function PerfilLivro(props) {
     var momComFoto = moms.filter(function (m) { return m.foto_url || (m.fotos && m.fotos.length); }).length;
 
     var secs = [];
-    secs.push(React.createElement("div", { key: "per", style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 16, lineHeight: 1.4, color: "#3a342b", marginTop: 2 } }, g.uf ? g.cidade + " \u00b7 " + g.uf : g.cidade));
 
     if (moms.length) {
       var thumbs = moms.slice(0, 8).map(function (m, k) {
@@ -34773,11 +34772,11 @@ function PerfilLivro(props) {
 
     return React.createElement("div", { key: "c" + i, style: { position: "relative", marginBottom: 16 } },
       nodoEl(era, true, i),
-      React.createElement("div", { style: { background: era.bg, border: "1px solid " + era.ac, borderRadius: 16, overflow: "hidden" } },
+      React.createElement("div", { style: { background: era.bg, border: "1px solid " + era.ac + "55", borderRadius: 16, overflow: "hidden" } },
         React.createElement("div", { onClick: function () { setAberto(null); }, style: { padding: "16px 16px 12px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", cursor: "pointer" } },
           React.createElement("div", null,
             React.createElement("div", { style: { fontSize: 9.5, letterSpacing: "0.2em", textTransform: "uppercase", color: era.num } }, "Cap\u00edtulo " + romano(i) + " de " + romano(nCap - 1)),
-            React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 20, lineHeight: 1.12, marginTop: 5 } }, g.cidade),
+            React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 20, lineHeight: 1.12, marginTop: 5 } }, g.cidade + (g.uf ? ", " + g.uf : "")),
             React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 3 } }, periodoTxt(g))),
           React.createElement("div", { style: { display: "flex", gap: 10, alignItems: "center", flexShrink: 0 } },
             React.createElement("span", { onClick: function (e) { e.stopPropagation(); onAbrirCapitulo("lugares"); }, style: { cursor: "pointer", display: "inline-flex" } }, icon(["M12 20h9", "M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"], 16, "#b7ab97")),
@@ -36043,12 +36042,12 @@ function Perfil(_ref156) {
     style: {
       paddingTop: 8
     }
-  }), !modoVisualizacao && /*#__PURE__*/React.createElement(ProgressoPerfil, {
+  }), false && /*#__PURE__*/React.createElement(ProgressoPerfil, {
     user: user,
     onAbrir: function onAbrir(id) {
       return setCompletarCampo(id);
     }
-  }), !modoVisualizacao && /*#__PURE__*/React.createElement("div", {
+  }), false && /*#__PURE__*/React.createElement("div", {
     style: {
       marginLeft: -18,
       marginRight: -18,
@@ -36131,7 +36130,7 @@ function Perfil(_ref156) {
       lineHeight: 1.05,
       marginTop: 6
     }
-  }, user.name))), !modoVisualizacao && /*#__PURE__*/React.createElement("div", {
+  }, user.name))), false && /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#fff",
       borderRadius: 18,
