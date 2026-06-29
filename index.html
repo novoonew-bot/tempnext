@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v488 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v489 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -56804,6 +56804,7 @@ function HomeEditorial(props) {
   var onAbrirCapsula = props.onAbrirCapsula || function () {};
   var onAbrirMenuRapido = props.onAbrirMenuRapido || function () {};
   var onAbrirPerfilProprio = props.onAbrirPerfilProprio || function () {};
+  var onAbrirGuia = props.onAbrirGuia || function () {};
   try { if (typeof injetarFontesV9 === "function") injetarFontesV9(); } catch (e) {}
 
   var OURO = "#a8853f", AZUL = "#6f9fd6", CREME = "#f7f3ee", SUB = "#5b5142", META = "#8a8276", LINHA = "#ece6db", NAVY = "#0d1b2a", TERRA = "#c06a3e";
@@ -56869,7 +56870,7 @@ function HomeEditorial(props) {
   var c = comp;
 
   var header = React.createElement("div", { style: { position: "absolute", top: 0, left: 0, right: 0, zIndex: 6, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 22px" } },
-    React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 20, fontWeight: 500, color: "#fff", textShadow: "0 1px 6px rgba(0,0,0,.3)" } }, "Tempnext", React.createElement("span", { style: { color: "#e8c97e" } }, ".")),
+    React.createElement("div", { onClick: onAbrirGuia, style: { fontFamily: "'Fraunces',serif", fontSize: 20, fontWeight: 600, color: "#fff", textShadow: "0 1px 8px rgba(0,0,0,.4)", cursor: "pointer", display: "inline-flex", alignItems: "center" } }, "Tempnex", React.createElement("span", { style: { position: "relative", display: "inline-block", marginLeft: 2 } }, React.createElement("span", { style: { color: "#9cc3ee" } }, "T"), React.createElement("span", { "aria-hidden": true, style: { position: "absolute", top: "48%", left: "52%", width: 26, height: 26, border: "1.2px solid rgba(180,210,245,0.85)", borderRadius: "50%", boxShadow: "0 0 10px rgba(111,159,214,.5)", transform: "translate(-50%,-50%)", pointerEvents: "none" } }))),
     React.createElement("div", { onClick: onAbrirPerfilProprio, style: { width: 34, height: 34, borderRadius: "50%", background: "rgba(255,255,255,.85)", color: TERRA, fontFamily: "'Fraunces',serif", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" } }, initiais((user && (user.first_name || user.name)) || "")));
 
   var heroImg = c.hero && c.hero.img;
@@ -56877,7 +56878,7 @@ function HomeEditorial(props) {
     React.createElement("div", { onClick: function () { abrirHero(c.hero); }, style: { height: 300, position: "relative", cursor: "pointer", background: "linear-gradient(165deg,#e09a6f,#c06a3e 55%,#a85733)", WebkitMaskImage: "linear-gradient(#000 60%,transparent)", maskImage: "linear-gradient(#000 60%,transparent)" } },
       heroImg ? React.createElement("img", { src: heroImg, alt: "", onError: onFotoError, style: { width: "100%", height: "100%", objectFit: "cover", display: "block", WebkitMaskImage: "linear-gradient(#000 60%,transparent)", maskImage: "linear-gradient(#000 60%,transparent)" } }) : null),
     React.createElement("div", { style: { padding: "0 26px 0 44px", marginTop: -46, position: "relative", zIndex: 2 } },
-      node({ left: 20, top: 4 }),
+      node({ left: 6, top: 4 }),
       eyebrow(c.hero && c.hero.badge ? c.hero.badge : "um momento"),
       React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 29, lineHeight: 1.08, marginBottom: 9 } }, c.hero && c.hero.title || "Um instante guardado"),
       c.hero && (c.hero.quote || c.hero.subtitle) ? React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 18, lineHeight: 1.4, color: SUB } }, c.hero.quote || c.hero.subtitle) : null,
@@ -56892,7 +56893,7 @@ function HomeEditorial(props) {
     return React.createElement("div", { style: { position: "relative", zIndex: 2 } },
       node({ left: -18, top: 28 }),
       React.createElement("div", { onClick: function () { if (perfilMap[m.user_id]) onAbrirPerfil(perfilMap[m.user_id]); }, style: { background: "#fff", borderRadius: "18px 18px 0 0", boxShadow: "0 4px 16px rgba(0,0,0,.06)", overflow: "hidden", cursor: "pointer" } },
-        React.createElement("div", { style: { height: 188, background: "linear-gradient(155deg,#d98a63,#c06a3e)", position: "relative" } }, t.img ? React.createElement("img", { src: t.img, alt: "", onError: onFotoError, style: { width: "100%", height: "100%", objectFit: "cover", display: "block" } }) : null),
+        React.createElement("div", { style: { height: 188, background: "linear-gradient(155deg,#d98a63,#c06a3e)", position: "relative" } }, t.img ? React.createElement("img", { src: t.img, alt: "", onError: onFotoError, style: { width: "100%", height: "100%", objectFit: "cover", display: "block" } }) : null, React.createElement("div", { style: { position: "absolute", left: 0, right: 0, bottom: 0, height: 56, background: "linear-gradient(to bottom, rgba(255,255,255,0), #fff)", pointerEvents: "none" } })),
         React.createElement("div", { style: { padding: "16px 18px 18px" } },
           eyebrow("Um momento", 7),
           React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 21, lineHeight: 1.12, marginBottom: 6 } }, titulo),
@@ -56946,17 +56947,17 @@ function HomeEditorial(props) {
     pequeno(icClock, c.peqCaps && (c.peqCaps.yr || c.peqCaps.badge || "uma c\u00e1psula"), "o tempo guarda algo por aqui", function () { onAbrirCapsula(); }));
 
   var seal = React.createElement("div", { style: { position: "relative", zIndex: 2, padding: "8px 24px 30px", display: "flex", alignItems: "center", gap: 14 } },
-    React.createElement("div", { style: { position: "absolute", left: 4, top: 8, width: 13, height: 13, borderRadius: "50%", background: AZUL, boxShadow: "0 0 0 4px rgba(111,159,214,.16),0 0 0 8px " + CREME, zIndex: 3 } }),
+    node({ left: 6, top: 8, width: 8, height: 8 }),
     React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 15, color: AZUL } }, "o tempo segue"));
 
   var hero2 = c.hero2 ? React.createElement(React.Fragment, null,
     React.createElement("div", { onClick: function () { abrirHero(c.hero2); }, style: { height: 150, position: "relative", cursor: "pointer", background: "linear-gradient(165deg,#cf9a6a,#b07a44)", WebkitMaskImage: "linear-gradient(#000 70%,transparent)", maskImage: "linear-gradient(#000 70%,transparent)" } }, c.hero2.img ? React.createElement("img", { src: c.hero2.img, alt: "", onError: onFotoError, style: { width: "100%", height: "100%", objectFit: "cover", display: "block", WebkitMaskImage: "linear-gradient(#000 70%,transparent)", maskImage: "linear-gradient(#000 70%,transparent)" } }) : null),
     React.createElement("div", { style: { padding: "0 26px 40px 44px", marginTop: -26, position: "relative", zIndex: 2 } },
-      node({ left: 20, top: 2 }),
+      node({ left: 6, top: 2 }),
       eyebrow(c.hero2.badge || "um momento"),
       React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 27, lineHeight: 1.08 } }, c.hero2.title || "O pr\u00f3ximo cap\u00edtulo"))) : null;
 
-  var spine = React.createElement("div", { style: { position: "absolute", left: 10, top: 60, bottom: 30, width: 1, borderRadius: 1, background: "linear-gradient(180deg,rgba(111,159,214,0)," + AZUL + " 6%," + AZUL + " 94%,rgba(111,159,214,0))", zIndex: 1 } });
+  var spine = React.createElement("div", { style: { position: "absolute", left: 9, top: 60, bottom: 30, width: 1, borderRadius: 1, background: "linear-gradient(180deg,rgba(111,159,214,0)," + AZUL + " 6%," + AZUL + " 94%,rgba(111,159,214,0))", zIndex: 1 } });
 
   return React.createElement("div", { style: { position: "relative", background: CREME, minHeight: "100vh", paddingBottom: 90, color: "#1b1b1b", fontFamily: "'Inter',sans-serif" } },
     header, spine, hero, grandes, pequenos, seal, hero2);
@@ -60813,6 +60814,10 @@ function App() {
       // v472: 1.0 via perfil_outro
       if (!user) { setTela("perfil"); return; }
       navAbrirPerfilOutro(user);
+    },
+    onAbrirGuia: function onAbrirGuia() {
+      try { window.history.pushState({ tnExt: "historia" }, "", window.location.href); } catch (e) {}
+      setTela("historia");
     }
     // v236: handlers da nova barra fina
     ,
