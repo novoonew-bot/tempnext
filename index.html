@@ -786,7 +786,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v490 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v491 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -34651,6 +34651,91 @@ function GradeUnificadaPerfil(_ref154) {
     }, etiquetaItem(entry))));
   }));
 }
+function PerfilLivro(props) {
+  var perfil = props.perfil || {};
+  var dados = props.dados || {};
+  var onAbrirCapitulo = props.onAbrirCapitulo || function () {};
+  var onAdd = props.onAdd || function () {};
+  var onFoto = props.onFoto || function () {};
+
+  var OURO = "#a8853f", CREME = "#f7f3ee", META = "#8a8276", LINHA = "#ece6db", NAVY = "#0d1b2a";
+
+  function initiais(nm) {
+    nm = (nm || "").trim(); if (!nm) return "?";
+    var p = nm.split(/\s+/);
+    return ((p[0] || "")[0] || "").toUpperCase() + ((p[1] || "")[0] || "").toUpperCase();
+  }
+
+  var lugares = dados.lugaresMorou || [];
+  var totLug = dados.totalLugaresRaw != null ? dados.totalLugaresRaw : (lugares.length || 0);
+  var totMom = dados.totalMemoriasRaw != null ? dados.totalMemoriasRaw : ((dados.memoriasCompletas || []).length || 0);
+  var totPes = dados.totalPessoasReais || 0;
+  var totCap = dados.totalCapsulasRaw || 0;
+
+  var anoDesde = "";
+  var anos = lugares.map(function (l) { return parseInt(l.y1, 10); }).filter(function (n) { return !!n && !isNaN(n); });
+  if (anos.length) anoDesde = String(Math.min.apply(null, anos));
+  else if (perfil.year_start) anoDesde = String(perfil.year_start);
+
+  function chevron() {
+    return React.createElement("svg", { width: 18, height: 18, viewBox: "0 0 24 24", fill: "none", stroke: "#cbb9a0", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M9 18l6-6-6-6" }));
+  }
+
+  var capa = React.createElement("div", { style: { height: 220, margin: "0 -18px", background: "linear-gradient(165deg,#e6a875 0%,#c06a3e 58%,#8f4827 100%)", position: "relative", WebkitMaskImage: "linear-gradient(#000 78%,transparent)", maskImage: "linear-gradient(#000 78%,transparent)" } },
+    perfil.avatar_url ? React.createElement("img", { src: perfil.avatar_url, alt: "", onError: typeof onFotoError === "function" ? onFotoError : null, style: { width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: 0.45, WebkitMaskImage: "linear-gradient(#000 78%,transparent)", maskImage: "linear-gradient(#000 78%,transparent)" } }) : null,
+    React.createElement("div", { style: { position: "absolute", inset: 0, background: "repeating-linear-gradient(122deg,rgba(255,255,255,.06) 0 2px,rgba(255,255,255,0) 2px 12px)" } }));
+
+  var identidade = React.createElement("div", { style: { marginTop: -44, position: "relative", zIndex: 3, textAlign: "center" } },
+    React.createElement("div", { style: { position: "relative", width: 80, margin: "0 auto" } },
+      React.createElement("div", { onClick: function () { if (perfil.avatar_url) onFoto(perfil.avatar_url); }, style: { width: 80, height: 80, borderRadius: "50%", background: perfil.avatar_url ? ("url(" + perfil.avatar_url + ") center/cover") : "linear-gradient(155deg,#d98a63,#c06a3e)", border: "4px solid " + CREME, color: "#fff", fontFamily: "'Fraunces',serif", fontSize: 30, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(0,0,0,.12)", cursor: perfil.avatar_url ? "zoom-in" : "default" } }, perfil.avatar_url ? "" : initiais(perfil.name)),
+      React.createElement("div", { style: { position: "absolute", right: -1, bottom: -1, width: 26, height: 26, borderRadius: "50%", background: NAVY, border: "3px solid " + CREME, display: "flex", alignItems: "center", justifyContent: "center" } },
+        React.createElement("svg", { width: 12, height: 12, viewBox: "0 0 24 24", fill: "none", stroke: CREME, strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" }), React.createElement("circle", { cx: 12, cy: 13, r: 3.2 })))),
+    React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 26, lineHeight: 1.08, marginTop: 13 } }, perfil.name || "Sua hist\u00f3ria"),
+    anoDesde ? React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 16, color: META, marginTop: 3 } }, "guardando hist\u00f3rias desde " + anoDesde) : null);
+
+  var sep = React.createElement("span", { style: { color: "#d8cdba" } }, " \u00b7 ");
+  var numeros = React.createElement("div", { style: { margin: "18px 8px 0", paddingTop: 14, borderTop: "1px solid " + LINHA, textAlign: "center", fontSize: 12, color: META } },
+    totLug + " lugares", sep, totMom + " momentos", sep, totPes + " pessoas", sep, totCap + " c\u00e1psulas");
+
+  var bioTxt = (perfil.bio || perfil.note || "").trim();
+  var bio = bioTxt ? React.createElement("div", { style: { margin: "16px 12px 0", textAlign: "center", fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 19, lineHeight: 1.45, color: "#3a342b" } }, bioTxt.split("\n")[0]) : null;
+
+  var caps = [
+    { id: "lugares", num: "I", titulo: "Lugares", sub: totLug + " lugares na sua hist\u00f3ria", grad: "linear-gradient(155deg,#dcc486,#b8902f)", aro: "#c89a4b", numCor: "#b8902f", numBg: CREME },
+    { id: "memorias", num: "II", titulo: "Momentos", sub: totMom + " momentos guardados", grad: "linear-gradient(155deg,#aab084,#7e8a55)", aro: "#8a9a64", numCor: "#fff", numBg: "#8a9a64" },
+    { id: "capsulas", num: "III", titulo: "C\u00e1psulas", sub: totCap + " c\u00e1psulas no tempo", grad: "linear-gradient(155deg,#9fb6cf,#6f8faf)", aro: "#6f9fd6", numCor: "#4f7fb0", numBg: CREME },
+    { id: "pessoas", num: "IV", titulo: "Pessoas", sub: totPes + " pessoas no seu tempo", grad: "linear-gradient(155deg,#9aa9a6,#6b817f)", aro: "#5f8088", numCor: "#466069", numBg: CREME }
+  ];
+
+  function cardCapitulo(cap, ultimo) {
+    return React.createElement("div", { key: cap.id, style: { position: "relative", marginBottom: ultimo ? 6 : 16 } },
+      React.createElement("div", { style: { position: "absolute", left: -32, top: 8, width: 22, height: 22, borderRadius: "50%", background: cap.numBg, border: "1.5px solid " + cap.aro, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 } },
+        React.createElement("span", { style: { fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: cap.num.length > 2 ? 8 : 9, color: cap.numCor } }, cap.num)),
+      React.createElement("div", { onClick: function () { onAbrirCapitulo(cap.id); }, style: { cursor: "pointer", background: "#fff", borderRadius: 16, boxShadow: "0 4px 16px rgba(0,0,0,.06)", overflow: "hidden" } },
+        React.createElement("div", { style: { height: 120, background: cap.grad, position: "relative" } },
+          React.createElement("div", { style: { position: "absolute", inset: 0, background: "repeating-linear-gradient(125deg,rgba(255,255,255,.08) 0 2px,rgba(255,255,255,0) 2px 10px)" } })),
+        React.createElement("div", { style: { padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" } },
+          React.createElement("div", null,
+            React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 17, lineHeight: 1.1 } }, cap.titulo),
+            React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 3 } }, cap.sub)),
+          chevron())));
+  }
+
+  var capitulos = React.createElement("div", { style: { padding: "30px 8px 0" } },
+    React.createElement("div", { style: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: OURO, marginBottom: 18 } }, "Cap\u00edtulos da vida"),
+    React.createElement("div", { style: { position: "relative", paddingLeft: 32 } },
+      React.createElement("div", { style: { position: "absolute", left: 10, top: 8, bottom: 30, width: 1.5, background: "rgba(120,108,90,.28)" } }),
+      caps.map(function (cap, i) { return cardCapitulo(cap, i === caps.length - 1); })),
+    React.createElement("div", { onClick: onAdd, style: { marginTop: 18, border: "1px dashed #e4dccd", borderRadius: 16, padding: "14px 16px", display: "flex", alignItems: "center", gap: 13, cursor: "pointer" } },
+      React.createElement("div", { style: { width: 38, height: 38, borderRadius: "50%", background: "#efe8dc", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" } },
+        React.createElement("svg", { width: 19, height: 19, viewBox: "0 0 24 24", fill: "none", stroke: OURO, strokeWidth: 1.6, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M12 5v14M5 12h14" }))),
+      React.createElement("div", null,
+        React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 15, lineHeight: 1.1 } }, "Adicionar novo cap\u00edtulo"),
+        React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 2 } }, "registre um novo lugar na sua hist\u00f3ria"))));
+
+  return React.createElement("div", { style: { paddingBottom: 40, color: "#1b1b1b", fontFamily: "'Inter',sans-serif" } },
+    capa, identidade, numeros, bio, capitulos);
+}
 function Perfil(_ref156) {
   var _lugaresPerfilState$, _momentoAberto$fotos;
   var user = _ref156.user,
@@ -36497,7 +36582,7 @@ function Perfil(_ref156) {
     stroke: T.sub,
     strokeWidth: "1.3",
     strokeLinecap: "round"
-  }))))), !modoVisualizacao && dadosLivroProprio && function () {
+  }))))), !modoVisualizacao && dadosLivroProprio && /*#__PURE__*/React.createElement(PerfilLivro, { perfil: perfilExibido, dados: dadosLivroProprio, onAbrirCapitulo: abrirCapituloPerfil, onAdd: function () {}, onFoto: setFotoExpandida }), !modoVisualizacao && false && function () {
     // Helper: header do capítulo (com ou sem "ver tudo →")
     // v315b: aceita prop onAdicionar — quando passado, mostra botão "+ adicionar" (ex: Cap II)
     var CapHeader = function CapHeader(_ref166) {
