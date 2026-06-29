@@ -790,7 +790,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v492 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v493 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -34638,41 +34638,168 @@ function PerfilLivro(props) {
   var bioTxt = (perfil.bio || perfil.note || "").trim();
   var bio = bioTxt ? React.createElement("div", { style: { margin: "16px 12px 0", textAlign: "center", fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 19, lineHeight: 1.45, color: "#3a342b" } }, bioTxt.split("\n")[0]) : null;
 
-  var caps = [
-    { id: "lugares", num: "I", titulo: "Lugares", sub: totLug + " lugares na sua hist\u00f3ria", grad: "linear-gradient(155deg,#dcc486,#b8902f)", aro: "#c89a4b", numCor: "#b8902f", numBg: CREME },
-    { id: "memorias", num: "II", titulo: "Momentos", sub: totMom + " momentos guardados", grad: "linear-gradient(155deg,#aab084,#7e8a55)", aro: "#8a9a64", numCor: "#fff", numBg: "#8a9a64" },
-    { id: "capsulas", num: "III", titulo: "C\u00e1psulas", sub: totCap + " c\u00e1psulas no tempo", grad: "linear-gradient(155deg,#9fb6cf,#6f8faf)", aro: "#6f9fd6", numCor: "#4f7fb0", numBg: CREME },
-    { id: "pessoas", num: "IV", titulo: "Pessoas", sub: totPes + " pessoas no seu tempo", grad: "linear-gradient(155deg,#9aa9a6,#6b817f)", aro: "#5f8088", numCor: "#466069", numBg: CREME }
+  // ---- agrupa lugares por cidade -> capitulos-era ----
+  var memorias = dados.memoriasCompletas || [];
+  var capsObj = dados.capsulasCompletas || { passado: [], presente: [], futuro: [] };
+  var capsTodas = [].concat(capsObj.passado || [], capsObj.presente || [], capsObj.futuro || []);
+  var grupos = {};
+  lugares.forEach(function (l) {
+    var cidade = (l.city || l.placeName || "").trim(); if (!cidade) return;
+    var k = cidade.toLowerCase();
+    if (!grupos[k]) grupos[k] = { cidade: cidade, uf: l.uf || "", y1: null, y2: null, placeIds: [] };
+    var g = grupos[k], ya = parseInt(l.y1, 10), yb = parseInt(l.y2, 10);
+    if (!isNaN(ya)) g.y1 = g.y1 == null ? ya : Math.min(g.y1, ya);
+    if (!isNaN(yb)) g.y2 = g.y2 == null ? yb : Math.max(g.y2, yb);
+    if (l.place_id && g.placeIds.indexOf(l.place_id) === -1) g.placeIds.push(l.place_id);
+  });
+  var capitulos = Object.keys(grupos).map(function (k) { return grupos[k]; }).sort(function (x, y) { return (x.y1 || 9999) - (y.y1 || 9999); });
+  var nCap = capitulos.length;
+  var ERAS = [
+    { ac: "#c89a4b", num: "#b8902f", bg: "#fbf7ec", grad: "linear-gradient(155deg,#dcc486,#b8902f)" },
+    { ac: "#8a9a64", num: "#7e8a55", bg: "#f5f7ef", grad: "linear-gradient(155deg,#aab084,#7e8a55)" },
+    { ac: "#6f9fd6", num: "#5a86bf", bg: "#f1f5fa", grad: "linear-gradient(155deg,#9fb6cf,#6f8faf)" },
+    { ac: "#5f8088", num: "#466069", bg: "#f0f5f5", grad: "linear-gradient(155deg,#9aa9a6,#6b817f)" }
   ];
+  var ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+  function eraDe(i) { if (nCap <= 1) return ERAS[0]; var bk = Math.round(i * 3 / (nCap - 1)); return ERAS[Math.max(0, Math.min(3, bk))]; }
+  function romano(i) { return ROMAN[i] || String(i + 1); }
+  function periodoTxt(g) { if (g.y1 && g.y2) return g.y1 + " \u2014 " + g.y2; if (g.y1) return "desde " + g.y1; return ""; }
+  function momentosDe(g) { var c = g.cidade.toLowerCase(); return memorias.filter(function (m) { return (m.lugar || "").trim().toLowerCase() === c; }); }
+  function capsulasDe(g) { var c = g.cidade.toLowerCase(); return capsTodas.filter(function (cp) { return (cp.cidade || "").trim().toLowerCase() === c; }); }
+  function mesAno(ts) { if (!ts) return ""; try { var d = new Date(ts); var ms = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"]; return ms[d.getMonth()] + "/" + d.getFullYear(); } catch (e) { return ""; } }
 
-  function cardCapitulo(cap, ultimo) {
-    return React.createElement("div", { key: cap.id, style: { position: "relative", marginBottom: ultimo ? 6 : 16 } },
-      React.createElement("div", { style: { position: "absolute", left: -32, top: 8, width: 22, height: 22, borderRadius: "50%", background: cap.numBg, border: "1.5px solid " + cap.aro, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 } },
-        React.createElement("span", { style: { fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: cap.num.length > 2 ? 8 : 9, color: cap.numCor } }, cap.num)),
-      React.createElement("div", { onClick: function () { onAbrirCapitulo(cap.id); }, style: { cursor: "pointer", background: "#fff", borderRadius: 16, boxShadow: "0 4px 16px rgba(0,0,0,.06)", overflow: "hidden" } },
-        React.createElement("div", { style: { height: 120, background: cap.grad, position: "relative" } },
-          React.createElement("div", { style: { position: "absolute", inset: 0, background: "repeating-linear-gradient(125deg,rgba(255,255,255,.08) 0 2px,rgba(255,255,255,0) 2px 10px)" } })),
-        React.createElement("div", { style: { padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" } },
+  var _o = useState(nCap ? nCap - 1 : null), aberto = _o[0], setAberto = _o[1];
+  var _pc = useState({}), pessoasCache = _pc[0], setPessoasCache = _pc[1];
+  useEffect(function () {
+    if (aberto == null) return function () {};
+    var g = capitulos[aberto]; if (!g) return function () {};
+    var key = g.cidade.toLowerCase();
+    if (pessoasCache[key]) return function () {};
+    if (!g.placeIds.length) { setPessoasCache(function (p) { var n = Object.assign({}, p); n[key] = { n: 0, rostos: [] }; return n; }); return function () {}; }
+    var vivo = true;
+    (async function () {
+      try {
+        var pp = await dbRead.from("place_profiles").select("profile_id").in("place_id", g.placeIds);
+        var ids = []; (pp.data || []).forEach(function (r) { if (r.profile_id && ids.indexOf(r.profile_id) === -1) ids.push(r.profile_id); });
+        var rostos = [];
+        if (ids.length) { var pf = await dbRead.from("profiles").select("id,avatar_url").in("id", ids.slice(0, 12)); rostos = (pf.data || []).map(function (p) { return p.avatar_url; }).filter(Boolean).slice(0, 5); }
+        if (vivo) setPessoasCache(function (p) { var n = Object.assign({}, p); n[key] = { n: ids.length, rostos: rostos }; return n; });
+      } catch (e) { if (vivo) setPessoasCache(function (p) { var n = Object.assign({}, p); n[key] = { n: 0, rostos: [] }; return n; }); }
+    })();
+    return function () { vivo = false; };
+  }, [aberto]);
+
+  function icon(d, sz, st, sw) { return React.createElement("svg", { width: sz || 15, height: sz || 15, viewBox: "0 0 24 24", fill: "none", stroke: st || "#b7ab97", strokeWidth: sw || 1.5, strokeLinecap: "round", strokeLinejoin: "round" }, d.map(function (p, i) { return React.createElement("path", { key: i, d: p }); })); }
+  function hatch(rl) { return React.createElement("div", { style: { position: "absolute", inset: 0, background: "repeating-linear-gradient(125deg,rgba(255,255,255,.08) 0 2px,rgba(255,255,255,0) 2px 10px)" } }); }
+  function eyebrowEl(txt, cor) { return React.createElement("div", { style: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: cor || OURO } }, txt); }
+  function nodoEl(era, isOpen, i) { return React.createElement("div", { style: { position: "absolute", left: -32, top: 8, width: 22, height: 22, borderRadius: "50%", background: isOpen ? era.num : era.bg, border: "1.5px solid " + era.ac, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 } }, React.createElement("span", { style: { fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: romano(i).length > 2 ? 8 : 9, color: isOpen ? "#fff" : era.num } }, romano(i))); }
+  function verLink(cap) { return React.createElement("div", { onClick: function (e) { e.stopPropagation(); onAbrirCapitulo(cap); }, style: { fontSize: 11, color: OURO, cursor: "pointer" } }, "ver todos \u2192"); }
+
+  function cardFechado(g, i) {
+    var era = eraDe(i), mc = momentosDe(g).length;
+    return React.createElement("div", { key: "c" + i, style: { position: "relative", marginBottom: 16 } },
+      nodoEl(era, false, i),
+      React.createElement("div", { onClick: function () { setAberto(i); }, style: { cursor: "pointer", background: "#fff", borderRadius: 16, boxShadow: "0 4px 16px rgba(0,0,0,.06)", overflow: "hidden" } },
+        React.createElement("div", { style: { height: 120, background: era.grad, position: "relative" } }, hatch()),
+        React.createElement("div", { style: { padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 } },
           React.createElement("div", null,
-            React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 17, lineHeight: 1.1 } }, cap.titulo),
-            React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 3 } }, cap.sub)),
+            React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 17, lineHeight: 1.1 } }, g.cidade),
+            React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 3 } }, periodoTxt(g) + (mc ? " \u00b7 " + mc + " momento" + (mc === 1 ? "" : "s") : ""))),
           chevron())));
   }
 
-  var capitulos = React.createElement("div", { style: { padding: "30px 8px 0" } },
+  function cardAberto(g, i) {
+    var era = eraDe(i), moms = momentosDe(g), caps = capsulasDe(g);
+    var key = g.cidade.toLowerCase(), pc = pessoasCache[key];
+    var next = capitulos[i + 1], nera = next ? eraDe(i + 1) : null;
+    var momComFoto = moms.filter(function (m) { return m.foto_url || (m.fotos && m.fotos.length); }).length;
+
+    var secs = [];
+    secs.push(React.createElement("div", { key: "per", style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 16, lineHeight: 1.4, color: "#3a342b", marginTop: 2 } }, g.uf ? g.cidade + " \u00b7 " + g.uf : g.cidade));
+
+    if (moms.length) {
+      var thumbs = moms.slice(0, 8).map(function (m, k) {
+        var f = m.foto_url || (m.fotos && m.fotos[0]);
+        return React.createElement("div", { key: k, style: { flex: "0 0 80px", width: 80, height: 80, borderRadius: 11, position: "relative", overflow: "hidden", background: f ? "#ddd" : era.grad } },
+          f ? React.createElement("img", { src: f, onError: typeof onFotoError === "function" ? onFotoError : null, style: { width: "100%", height: "100%", objectFit: "cover", display: "block" } }) : hatch());
+      });
+      secs.push(React.createElement("div", { key: "mom", style: { marginTop: 16 } },
+        React.createElement("div", { style: { display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 9 } }, eyebrowEl("Momentos", era.num), verLink("memorias")),
+        React.createElement("div", { style: { display: "flex", gap: 8, overflowX: "auto", paddingBottom: 2 } }, thumbs)));
+    }
+
+    var pessoasEl;
+    if (pc == null) pessoasEl = React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: 14, color: META } }, "carregando\u2026");
+    else if (pc.n > 0) {
+      var faces = pc.rostos.slice(0, 5).map(function (r, k) { return React.createElement("img", { key: k, src: r, onError: typeof onFotoError === "function" ? onFotoError : null, style: { width: 34, height: 34, borderRadius: "50%", objectFit: "cover", marginLeft: k ? -10 : 0, border: "2px solid " + era.bg } }); });
+      var resto = pc.n - pc.rostos.slice(0, 5).length;
+      if (resto > 0) faces.push(React.createElement("div", { key: "more", style: { width: 34, height: 34, borderRadius: "50%", marginLeft: -10, background: "#efe8dc", color: "#5b5142", fontSize: 11, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid " + era.bg } }, "+" + resto));
+      pessoasEl = React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } }, React.createElement("div", { style: { display: "flex" } }, faces), React.createElement("span", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: 15, color: "#5b5142" } }, "fizeram parte"));
+    } else pessoasEl = React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: 14, color: META } }, "s\u00f3 voc\u00ea por aqui, por enquanto.");
+    secs.push(React.createElement("div", { key: "pes", style: { marginTop: 16 } },
+      React.createElement("div", { style: { display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 9 } }, eyebrowEl("Pessoas", era.num), verLink("pessoas")), pessoasEl));
+
+    if (caps.length) {
+      var capEls = caps.slice(0, 4).map(function (cp, k) {
+        var linha = "C\u00e1psula" + (cp.ano ? " aberta em " + cp.ano : "") + (mesAno(cp.ts) ? " \u00b7 escrita " + mesAno(cp.ts) : "");
+        return React.createElement("div", { key: k, onClick: function () { onAbrirCapitulo("capsulas"); }, style: { background: "#fff", borderRadius: 12, padding: "11px 13px", display: "flex", alignItems: "center", gap: 10, border: "0.5px solid " + LINHA, marginBottom: 8, cursor: "pointer" } },
+          icon(["M4 9h16M4 9a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3M4 9v6a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V9", "M12 6v12"], 16, OURO),
+          React.createElement("div", { style: { flex: 1, fontSize: 12.5, color: "#5b5142" } }, linha), chevron());
+      });
+      secs.push(React.createElement("div", { key: "cap", style: { marginTop: 16 } }, eyebrowEl("C\u00e1psulas", era.num), React.createElement("div", { style: { marginTop: 9 } }, capEls)));
+    }
+
+    var disc = [];
+    if (i === 0 && g.y1) disc.push({ ic: ["M12 3v9", "M12 12c-3 0-5 2-5 5", "M12 12c3 0 5 2 5 5"], t: "Onde sua hist\u00f3ria come\u00e7ou", s: " \u00b7 " + g.y1 });
+    if (pc && pc.n > 0) disc.push({ ic: ["M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1", "M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"], t: pc.n + (pc.n === 1 ? " pessoa esteve aqui" : " pessoas estiveram aqui"), s: " \u00b7 no seu tempo" });
+    if (momComFoto > 0) disc.push({ ic: ["M3 7a2 2 0 0 1 2-2h3l2-2h4l2 2h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z", "M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"], t: momComFoto + (momComFoto === 1 ? " momento com foto" : " momentos com foto"), s: " \u00b7 por voc\u00ea" });
+    if (disc.length) {
+      secs.push(React.createElement("div", { key: "dsc", style: { marginTop: 16 } }, eyebrowEl("Descobertas", era.num),
+        React.createElement("div", { style: { marginTop: 9 } }, disc.map(function (d, k) {
+          return React.createElement("div", { key: k, style: { display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderBottom: k < disc.length - 1 ? "0.5px solid " + LINHA : "none" } },
+            icon(d.ic, 15, "#b7ab97"),
+            React.createElement("div", { style: { flex: 1, fontSize: 13, color: "#5b5142" } }, d.t),
+            React.createElement("span", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: 13, color: META } }, d.s));
+        }))));
+    }
+
+    if (next) {
+      secs.push(React.createElement("div", { key: "next", style: { marginTop: 18, borderRadius: 12, padding: 16, textAlign: "center", background: nera.bg, border: "1px solid " + nera.ac } },
+        React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: 15, color: nera.num } }, "O tempo seguiu\u2026"),
+        React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 18, marginTop: 4 } }, next.cidade),
+        next.y1 ? React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 2 } }, String(next.y1)) : null,
+        React.createElement("div", { onClick: function () { setAberto(i + 1); }, style: { marginTop: 10, fontSize: 13, color: nera.num, fontWeight: 600, cursor: "pointer" } }, "Continuar lendo \u2193")));
+    }
+
+    return React.createElement("div", { key: "c" + i, style: { position: "relative", marginBottom: 16 } },
+      nodoEl(era, true, i),
+      React.createElement("div", { style: { background: era.bg, border: "1px solid " + era.ac, borderRadius: 16, overflow: "hidden" } },
+        React.createElement("div", { onClick: function () { setAberto(null); }, style: { padding: "16px 16px 12px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", cursor: "pointer" } },
+          React.createElement("div", null,
+            React.createElement("div", { style: { fontSize: 9.5, letterSpacing: "0.2em", textTransform: "uppercase", color: era.num } }, "Cap\u00edtulo " + romano(i) + " de " + romano(nCap - 1)),
+            React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 20, lineHeight: 1.12, marginTop: 5 } }, g.cidade),
+            React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 3 } }, periodoTxt(g))),
+          React.createElement("div", { style: { display: "flex", gap: 10, alignItems: "center", flexShrink: 0 } },
+            React.createElement("span", { onClick: function (e) { e.stopPropagation(); onAbrirCapitulo("lugares"); }, style: { cursor: "pointer", display: "inline-flex" } }, icon(["M12 20h9", "M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"], 16, "#b7ab97")),
+            React.createElement("span", { style: { display: "inline-flex", transform: "rotate(180deg)" } }, icon(["M6 9l6 6 6-6"], 16, "#b7ab97")))),
+        React.createElement("div", { style: { padding: "0 16px 16px" } }, secs)));
+  }
+
+  var capitulosBloco = React.createElement("div", { style: { padding: "30px 8px 0" } },
     React.createElement("div", { style: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: OURO, marginBottom: 18 } }, "Cap\u00edtulos da vida"),
-    React.createElement("div", { style: { position: "relative", paddingLeft: 32 } },
+    nCap ? React.createElement("div", { style: { position: "relative", paddingLeft: 32 } },
       React.createElement("div", { style: { position: "absolute", left: 10, top: 8, bottom: 30, width: 1.5, background: "rgba(120,108,90,.28)" } }),
-      caps.map(function (cap, i) { return cardCapitulo(cap, i === caps.length - 1); })),
+      capitulos.map(function (g, i) { return aberto === i ? cardAberto(g, i) : cardFechado(g, i); })) :
+      React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: 16, color: META, padding: "0 8px" } }, "Sua hist\u00f3ria ainda n\u00e3o tem cap\u00edtulos. Adicione um lugar."),
     React.createElement("div", { onClick: onAdd, style: { marginTop: 18, border: "1px dashed #e4dccd", borderRadius: 16, padding: "14px 16px", display: "flex", alignItems: "center", gap: 13, cursor: "pointer" } },
       React.createElement("div", { style: { width: 38, height: 38, borderRadius: "50%", background: "#efe8dc", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" } },
-        React.createElement("svg", { width: 19, height: 19, viewBox: "0 0 24 24", fill: "none", stroke: OURO, strokeWidth: 1.6, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M12 5v14M5 12h14" }))),
+        icon(["M12 5v14", "M5 12h14"], 19, OURO, 1.6)),
       React.createElement("div", null,
         React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 15, lineHeight: 1.1 } }, "Adicionar novo cap\u00edtulo"),
         React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 2 } }, "registre um novo lugar na sua hist\u00f3ria"))));
 
   return React.createElement("div", { style: { paddingBottom: 40, color: "#1b1b1b", fontFamily: "'Inter',sans-serif" } },
-    capa, identidade, numeros, bio, capitulos);
+    capa, identidade, numeros, bio, capitulosBloco);
 }
 function Perfil(_ref156) {
   var _lugaresPerfilState$, _momentoAberto$fotos;
