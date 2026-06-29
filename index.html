@@ -790,7 +790,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v494 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v495 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -16674,7 +16674,22 @@ function PerfilOutroFiltrado(_ref82) {
     var _cry = _cr ? new Date(_cr).getFullYear() : null; if (_cry && isNaN(_cry)) _cry = null;
     return { titulo: c2.titulo || c2.title || c2.nome || "Cápsula", criada: _cry, abrir: _aby };
   });
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(PerfilCompleto, {
+  var dadosVisita = {
+    lugaresMorou: (lugaresDela || []).map(function (l) { return { city: l.city || l.place_label || "", uf: l.uf || l.state || "", y1: l.y1 || l.year_start || null, y2: l.y2 || l.year_end || null, place_id: l.place_id || l.id || null, placeName: l.place_label || l.city || "" }; }),
+    memoriasCompletas: (momentosDela || []).map(function (m) { return { lugar: ((m.lugar || m.city || m.place_label || "") + "").split(",")[0].trim(), foto_url: (typeof getFotoUrl === "function" ? getFotoUrl(m) : (m.foto_url || null)) || null, fotos: m.fotos || null }; }),
+    capsulasCompletas: { passado: [], presente: [], futuro: ((capsulasReais && capsulasReais.futuro) || []).map(function (c2) { var _ab = c2.abre_em || c2.data || c2.open_at || c2.abrir_em || c2.capsula_revela_em; return { cidade: ((c2.lugar || c2.cidade || "") + "").split(",")[0].trim(), ano: _ab ? new Date(_ab).getFullYear() : "", ts: c2.created_at || c2.criada_em || c2.ts || null }; }) },
+    totalLugaresRaw: (lugaresDela || []).length,
+    totalMemoriasRaw: (momentosDela || []).length,
+    totalPessoasReais: (triangulacao || []).length,
+    totalCapsulasRaw: ((capsulasReais && capsulasReais.futuro) || []).length
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(PerfilLivro, {
+    perfil: avatarLocal ? Object.assign({}, pessoa, { avatar_url: avatarLocal }) : pessoa,
+    ehDono: ehDono,
+    dados: dadosVisita,
+    onAbrirCapitulo: function (c) { return abrirCapitulo(c); },
+    onAdd: function () {},
+    onFoto: function () {},
     pessoa: avatarLocal ? Object.assign({}, pessoa, { avatar_url: avatarLocal }) : pessoa,
     ehDono: ehDono, isContact: isContact, loading: loading,
     lastSeen: pessoa.last_seen_at || null,
@@ -34595,6 +34610,7 @@ function PerfilLivro(props) {
   var onAbrirCapitulo = props.onAbrirCapitulo || function () {};
   var onAdd = props.onAdd || function () {};
   var onFoto = props.onFoto || function () {};
+  var ehDono = props.ehDono !== false;
 
   var OURO = "#a8853f", CREME = "#f7f3ee", META = "#8a8276", LINHA = "#ece6db", NAVY = "#0d1b2a";
 
@@ -34626,7 +34642,7 @@ function PerfilLivro(props) {
   var identidade = React.createElement("div", { style: { marginTop: -44, position: "relative", zIndex: 3, textAlign: "center" } },
     React.createElement("div", { style: { position: "relative", width: 80, margin: "0 auto" } },
       React.createElement("div", { onClick: function () { if (perfil.avatar_url) onFoto(perfil.avatar_url); }, style: { width: 80, height: 80, borderRadius: "50%", background: perfil.avatar_url ? ("url(" + perfil.avatar_url + ") center/cover") : "linear-gradient(155deg,#d98a63,#c06a3e)", border: "4px solid " + CREME, color: "#fff", fontFamily: "'Fraunces',serif", fontSize: 30, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(0,0,0,.12)", cursor: perfil.avatar_url ? "zoom-in" : "default" } }, perfil.avatar_url ? "" : initiais(perfil.name)),
-      React.createElement("div", { style: { position: "absolute", right: -1, bottom: -1, width: 26, height: 26, borderRadius: "50%", background: NAVY, border: "3px solid " + CREME, display: "flex", alignItems: "center", justifyContent: "center" } },
+      ehDono && React.createElement("div", { style: { position: "absolute", right: -1, bottom: -1, width: 26, height: 26, borderRadius: "50%", background: NAVY, border: "3px solid " + CREME, display: "flex", alignItems: "center", justifyContent: "center" } },
         React.createElement("svg", { width: 12, height: 12, viewBox: "0 0 24 24", fill: "none", stroke: CREME, strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round" }, React.createElement("path", { d: "M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" }), React.createElement("circle", { cx: 12, cy: 13, r: 3.2 })))),
     React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 26, lineHeight: 1.08, marginTop: 13 } }, perfil.name || "Sua hist\u00f3ria"),
     anoDesde ? React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontWeight: 500, fontSize: 16, color: META, marginTop: 3 } }, "guardando hist\u00f3rias desde " + anoDesde) : null);
@@ -34779,7 +34795,7 @@ function PerfilLivro(props) {
             React.createElement("div", { style: { fontFamily: "'Fraunces',serif", fontSize: 20, lineHeight: 1.12, marginTop: 5 } }, g.cidade + (g.uf ? ", " + g.uf : "")),
             React.createElement("div", { style: { fontSize: 12, color: META, marginTop: 3 } }, periodoTxt(g))),
           React.createElement("div", { style: { display: "flex", gap: 10, alignItems: "center", flexShrink: 0 } },
-            React.createElement("span", { onClick: function (e) { e.stopPropagation(); onAbrirCapitulo("lugares"); }, style: { cursor: "pointer", display: "inline-flex" } }, icon(["M12 20h9", "M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"], 16, "#b7ab97")),
+            ehDono && React.createElement("span", { onClick: function (e) { e.stopPropagation(); onAbrirCapitulo("lugares"); }, style: { cursor: "pointer", display: "inline-flex" } }, icon(["M12 20h9", "M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"], 16, "#b7ab97")),
             React.createElement("span", { style: { display: "inline-flex", transform: "rotate(180deg)" } }, icon(["M6 9l6 6 6-6"], 16, "#b7ab97")))),
         React.createElement("div", { style: { padding: "0 16px 16px" } }, secs)));
   }
@@ -34790,7 +34806,7 @@ function PerfilLivro(props) {
       React.createElement("div", { style: { position: "absolute", left: 10, top: 8, bottom: 30, width: 1.5, background: "rgba(120,108,90,.28)" } }),
       capitulos.map(function (g, i) { return aberto === i ? cardAberto(g, i) : cardFechado(g, i); })) :
       React.createElement("div", { style: { fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: 16, color: META, padding: "0 8px" } }, "Sua hist\u00f3ria ainda n\u00e3o tem cap\u00edtulos. Adicione um lugar."),
-    React.createElement("div", { onClick: onAdd, style: { marginTop: 18, border: "1px dashed #e4dccd", borderRadius: 16, padding: "14px 16px", display: "flex", alignItems: "center", gap: 13, cursor: "pointer" } },
+    ehDono && React.createElement("div", { onClick: onAdd, style: { marginTop: 18, border: "1px dashed #e4dccd", borderRadius: 16, padding: "14px 16px", display: "flex", alignItems: "center", gap: 13, cursor: "pointer" } },
       React.createElement("div", { style: { width: 38, height: 38, borderRadius: "50%", background: "#efe8dc", display: "flex", alignItems: "center", justifyContent: "center", flex: "0 0 auto" } },
         icon(["M12 5v14", "M5 12h14"], 19, OURO, 1.6)),
       React.createElement("div", null,
