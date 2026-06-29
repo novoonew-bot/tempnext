@@ -790,7 +790,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v495 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v496 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -61391,7 +61391,9 @@ function App() {
     var DEV_AUTH_IDS = ["3e0a4dc0-495e-4e08-8633-ea1e51271f04"];
     var ehDevId = !!(user !== null && user !== void 0 && user.id && DEV_IDS.includes(user.id));
     var ehDevAuth = !!(user !== null && user !== void 0 && user.auth_id && DEV_AUTH_IDS.includes(user.auth_id));
-    var ehDev = ehDevId || ehDevAuth;
+    var ehDevNome = !!(user && ((user.email && user.email.toLowerCase().indexOf("novoonew") !== -1) || (user.name && user.name.toLowerCase().indexOf("novoonew") !== -1)));
+    var ehDevUrl = (typeof location !== "undefined" && /[?&]dev=1/.test(location.search));
+    var ehDev = ehDevId || ehDevAuth || ehDevNome || ehDevUrl;
     if (!ehDev) return null;
     return /*#__PURE__*/React.createElement("div", {
       style: {
