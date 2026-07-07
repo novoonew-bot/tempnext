@@ -790,7 +790,7 @@ input:focus,select:focus,textarea:focus{
 <div id="root"></div>
 <div id="loading" style="position:fixed;inset:0;background:radial-gradient(circle at 50% 43%, #1b150d 0%, #110c07 72%);z-index:9999"></div>
 <script>
-console.log("%c Tempnext v496 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
+console.log("%c Tempnext v497 ", "background:#1a1410;color:#FAF6EC;padding:4px 10px;border-radius:4px;font-family:Georgia,serif;font-style:italic;");
 // Som harmônico suave ao carregar
 function tocarSomEntrada(){
   try{
@@ -948,16 +948,10 @@ var db = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
   }
 });
 
-// Client sem auth — pra queries que não precisam de sessão (feed, busca, etc)
-var dbRead = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
-  auth: {
-    storage: memStorage,
-    autoRefreshToken: false,
-    persistSession: false,
-    detectSessionInUrl: false,
-    storageKey: "tempnext-dbread"
-  }
-});
+// v497: dbRead virou alias do client autenticado. A RLS da F1 matou leitura anon
+// (contacts/notificacoes/etc) e as chamadas dbRead quebravam silenciosamente.
+// Varredura completa dbRead->db resolvida em 1 ponto, sem tocar 492 call sites.
+var dbRead = db;
 
 // v322: expor db pra módulos auxiliares (TN_AFINIDADE etc)
 window.supabaseDb = db;

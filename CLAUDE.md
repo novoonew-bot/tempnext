@@ -45,5 +45,40 @@ Mockup com 2-4 variacoes ANTES de implementar. Jo escolhe -> so entao implementa
 ## Auditoria
 Rodar `python audit.py` (na raiz) pra numeros reais. Nunca estimar de memoria — medir contra o arquivo.
 
+### F1 - Storage (convencao obrigatoria do app novo)
+Upload sempre em `<profile_id>/arquivo.ext` (pasta = id do profile). As policies de
+storage (avatars/photos/videos/covers) so aceitam escrita quando
+(storage.foldername(name))[1] = current_profile_id(). Subir flat = escrita negada.
+chat-media: pasta = ids dos participantes juntos por '_'.
+
+## Reescrita F1+ (governa a fase atual — index.html vira ESPECIFICACAO, nao fonte)
+Nao e migracao, e reescrita. So Supabase + decisoes de design atravessam. Nada do blob
+compilado vira codigo. Stack: Vite + React + TS + Capacitor. Android-first, PWA+convite no
+minimo convidavel; Capacitor ativa so na F5 (aditivo, nao bifurcacao). Web-first, fronteiras
+limpas (nada so-web sem fallback). Minimo convidavel = onboarding+home+perfil+registro.
+
+### Portoes (audit.py em CI, limiar = 0 — build quebra se passar de 0)
+- 0 componentes orfaos
+- 0 catch{} mudo — todo catch trata (UI de fallback) OU registra (captureException); nunca engole
+- 0 strings user-facing cruz* / alma*
+- 0 unsplash hardcoded (asset versionado ou vazio honesto)
+
+### Definition of Done por bloco (F3)
+- Passa nos portoes acima
+- Entrega COM seus testes (auth / convite / RLS) — vitest + playwright, montados na F2
+- Zero codigo morto do bloco anterior carregado adiante
+
+### Fundacao (nasce na F2, nao e fase final)
+- Error-boundary global + Sentry no shell
+- Harness de teste antes do 1o bloco de F3
+
+### F1 — primeira acao (NAO escrever policy antes disto)
+Dump de pg_policies + RLS-enabled das 16 tabelas. Ler o chao antes de afirmar buraco
+(briefing de junho errou sobre momentos 2x). F1 NAO e greenfield: contacts/momentos ja tem
+blindagem de junho — verificar, nao reescrever. Depois: 4 RPCs security definer
+(notificacoes/messages/interacoes/likes, ator do token nunca do payload) · matar seed dev
+(?dev=1 / popularTeste / limparTeste) · confirmar buckets avatars/covers · confirmar estado
+real de momentos_select.
+
 ## Estilo de resposta
 Direto ao ponto. Mostrar so o que Jo precisa decidir + o arquivo pronto (versionado). Nao narrar raciocinio, nao explicar codigo linha a linha, nao listar o que verificou.
